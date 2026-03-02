@@ -26,6 +26,17 @@ describe('recommendation eligibility rule', () => {
 
     expect(
       isRecommendationEligibleMovie({
+        posterUrl: '/api/posters/123',
+        ratings: [
+          { source: 'IMDB' },
+          { source: 'ROTTEN_TOMATOES' },
+          { source: 'METACRITIC' },
+        ],
+      }),
+    ).toBe(false);
+
+    expect(
+      isRecommendationEligibleMovie({
         posterUrl: 'https://img/1.jpg',
         ratings: [
           { source: 'IMDB' },

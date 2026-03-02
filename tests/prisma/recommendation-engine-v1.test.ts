@@ -80,4 +80,30 @@ describe('RecommendationEngine v1', () => {
     expect(result.cards[0]?.ratings.imdb).toBeDefined();
     expect(result.cards[0]?.ratings.additional.length).toBeGreaterThanOrEqual(1);
   });
+
+  it('refresh generation rotates away from the immediately previous batch', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Rotate' } });
+
+    const movies = await Promise.all(
+      Array.from({ length: 12 }).map((_, index) =>
+        prisma.movie.create({
+          data: {
+            tmdbId: 5000 + index,
+            title: `Rotate ${index}`,
+            year: 1990 + index,
+            posterUrl: `https://image.tmdb.org/t/p/w500/r${index}.jpg`,
+            genres: ['horror', index % 2 === 0 ? 'slasher' : 'supernatural'],
+          },
+        }),
+      ),
+    );
+    await Promise.all(movies.map((movie) => addRatings(movie.id)));
+
+    const batchOne = await generateRecommendationBatchV1(user.id, prisma);
+    const batchTwo = await generateRecommendationBatchV1(user.id, prisma);
+
+    const batchOneIds = new Set(batchOne.cards.map((card) => card.movie.tmdbId));
+    const overlap = batchTwo.cards.filter((card) => batchOneIds.has(card.movie.tmdbId));
+    expect(overlap).toHaveLength(0);
+  });
 });

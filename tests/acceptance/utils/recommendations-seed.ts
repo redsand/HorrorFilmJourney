@@ -22,6 +22,7 @@ export async function resetAcceptanceDatabase(prisma: PrismaClient): Promise<voi
   await prisma.movieEmbedding.deleteMany();
   await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.userCredential.deleteMany();
   await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
@@ -30,6 +31,8 @@ export async function resetAcceptanceDatabase(prisma: PrismaClient): Promise<voi
 export async function seedRecommendationAcceptance(prisma: PrismaClient): Promise<{
   userAId: string;
   userBId: string;
+  userAEmail: string;
+  userBEmail: string;
 }> {
   const userA = await prisma.user.create({ data: { displayName: 'userA' } });
   const userB = await prisma.user.create({ data: { displayName: 'userB' } });
@@ -92,5 +95,27 @@ export async function seedRecommendationAcceptance(prisma: PrismaClient): Promis
     },
   });
 
-  return { userAId: userA.id, userBId: userB.id };
+  await prisma.userCredential.createMany({
+    data: [
+      {
+        userId: userA.id,
+        email: 'acceptance.user.a@example.com',
+        passwordHash: 'test-only',
+        isAdmin: false,
+      },
+      {
+        userId: userB.id,
+        email: 'acceptance.user.b@example.com',
+        passwordHash: 'test-only',
+        isAdmin: false,
+      },
+    ],
+  });
+
+  return {
+    userAId: userA.id,
+    userBId: userB.id,
+    userAEmail: 'acceptance.user.a@example.com',
+    userBEmail: 'acceptance.user.b@example.com',
+  };
 }

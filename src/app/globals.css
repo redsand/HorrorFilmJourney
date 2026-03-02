@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050506;
+  --bg-elevated: #0b0b0d;
+  --text: #f5f2f0;
+  --text-muted: #b7b2ae;
+  --accent: #9b111e;
+  --accent-strong: #c1121f;
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #101014 0%, var(--bg) 38%);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}

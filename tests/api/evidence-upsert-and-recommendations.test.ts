@@ -1,6 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const testDbUrl = buildTestDatabaseUrl('evidence_upsert_and_recommendations_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
@@ -44,7 +45,6 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  process.env.ADMIN_TOKEN = 'test-admin-token';
   delete process.env.REC_ENGINE_MODE;
 
   await prisma.recommendationDiagnostics.deleteMany();
@@ -67,8 +67,7 @@ describe('evidence upsert + recommendations evidence propagation', () => {
     const reqInit = {
       method: 'POST',
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': userId,
+        cookie: makeSessionCookie(userId, true),
         'content-type': 'application/json',
       },
       body: JSON.stringify({
@@ -97,8 +96,7 @@ describe('evidence upsert + recommendations evidence propagation', () => {
       new Request('http://localhost/api/evidence/upsert', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': userId,
+          cookie: makeSessionCookie(userId, true),
           'content-type': 'application/json',
         },
         body: JSON.stringify({
@@ -115,8 +113,7 @@ describe('evidence upsert + recommendations evidence propagation', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': userId,
+          cookie: makeSessionCookie(userId),
         },
       }),
     );

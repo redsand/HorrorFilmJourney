@@ -5,7 +5,7 @@ CREATE TABLE "MovieEmbedding" (
   "model" TEXT NOT NULL,
   "dim" INTEGER NOT NULL,
   "vectorJson" JSON NOT NULL,
-  "updatedAt" DATETIME NOT NULL,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "MovieEmbedding_movieId_fkey" FOREIGN KEY ("movieId") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE "UserEmbeddingSnapshot" (
   "model" TEXT NOT NULL,
   "dim" INTEGER NOT NULL,
   "vectorJson" JSON NOT NULL,
-  "computedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "computedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "UserEmbeddingSnapshot_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE "EvidencePacket" (
   "sourceName" TEXT NOT NULL,
   "url" TEXT NOT NULL,
   "snippet" TEXT NOT NULL,
-  "retrievedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "retrievedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "hash" TEXT,
   CONSTRAINT "EvidencePacket_movieId_fkey" FOREIGN KEY ("movieId") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -42,7 +42,7 @@ CREATE TABLE "RecommendationDiagnostics" (
   "diversityStats" JSON NOT NULL,
   "explorationUsed" BOOLEAN NOT NULL DEFAULT false,
   "notes" TEXT,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "RecommendationDiagnostics_batchId_fkey" FOREIGN KEY ("batchId") REFERENCES "RecommendationBatch" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 

@@ -2,8 +2,8 @@
 CREATE TABLE "User" (
   "id" TEXT NOT NULL PRIMARY KEY,
   "displayName" TEXT NOT NULL,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" DATETIME NOT NULL
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -13,8 +13,8 @@ CREATE TABLE "UserProfile" (
   "tolerance" INTEGER NOT NULL DEFAULT 3,
   "pacePreference" TEXT,
   "horrorDNA" JSON,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" DATETIME NOT NULL,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -28,8 +28,8 @@ CREATE TABLE "Movie" (
   "genres" JSON,
   "director" TEXT,
   "castTop" JSON,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" DATETIME NOT NULL
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -46,10 +46,9 @@ CREATE TABLE "UserMovieInteraction" (
   "recommend" BOOLEAN,
   "note" TEXT,
   "recommendationItemId" TEXT,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "UserMovieInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "UserMovieInteraction_movieId_fkey" FOREIGN KEY ("movieId") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "UserMovieInteraction_recommendationItemId_fkey" FOREIGN KEY ("recommendationItemId") REFERENCES "RecommendationItem" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT "UserMovieInteraction_movieId_fkey" FOREIGN KEY ("movieId") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -58,7 +57,7 @@ CREATE TABLE "RecommendationBatch" (
   "userId" TEXT NOT NULL,
   "journeyNode" TEXT,
   "rationale" TEXT,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "RecommendationBatch_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -95,3 +94,8 @@ CREATE INDEX "RecommendationBatch_userId_createdAt_idx" ON "RecommendationBatch"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RecommendationItem_batchId_movieId_key" ON "RecommendationItem"("batchId", "movieId");
+
+-- AddForeignKey
+ALTER TABLE "UserMovieInteraction"
+ADD CONSTRAINT "UserMovieInteraction_recommendationItemId_fkey"
+FOREIGN KEY ("recommendationItemId") REFERENCES "RecommendationItem"("id") ON DELETE SET NULL ON UPDATE CASCADE;

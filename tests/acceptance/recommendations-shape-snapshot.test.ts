@@ -6,6 +6,7 @@ import {
   seedRecommendationAcceptance,
   setupAcceptanceDatabase,
 } from './utils/recommendations-seed';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const acceptanceSchemaName = 'recommendations_shape_snapshot_test';
 const acceptancePrisma = createAcceptancePrisma(acceptanceSchemaName);
@@ -22,7 +23,6 @@ describe('recommendations next response shape snapshot', () => {
   });
 
   beforeEach(async () => {
-    process.env.ADMIN_TOKEN = 'acceptance-admin-token';
     delete process.env.REC_ENGINE_MODE;
     await resetAcceptanceDatabase(acceptancePrisma);
   });
@@ -34,8 +34,7 @@ describe('recommendations next response shape snapshot', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userAId,
+          cookie: makeSessionCookie(userAId),
         },
       }),
     );

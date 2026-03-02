@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/movies/upsert/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, movieUpsertMock, movieRatingUpsertMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -17,22 +18,20 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('POST /api/movies/upsert', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     movieUpsertMock.mockReset();
     movieRatingUpsertMock.mockReset();
   });
 
   it('requires posterUrl', async () => {
-    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'admin_1' });
 
     const request = new Request('http://localhost/api/movies/upsert', {
       method: 'POST',
       body: JSON.stringify({ tmdbId: 1, title: 'Alien' }),
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('admin_1', true),
       },
     });
 
@@ -41,7 +40,7 @@ describe('POST /api/movies/upsert', () => {
   });
 
   it('stores normalized ratings and upserts duplicate sources', async () => {
-    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    userFindUniqueMock.mockResolvedValue({ id: 'admin_1' });
     movieUpsertMock.mockResolvedValue({
       id: 'movie_1',
       tmdbId: 1,
@@ -67,8 +66,7 @@ describe('POST /api/movies/upsert', () => {
       }),
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('admin_1', true),
       },
     });
 
@@ -78,7 +76,7 @@ describe('POST /api/movies/upsert', () => {
   });
 
   it('rejects invalid rating source', async () => {
-    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    userFindUniqueMock.mockResolvedValue({ id: 'admin_1' });
 
     const request = new Request('http://localhost/api/movies/upsert', {
       method: 'POST',
@@ -90,8 +88,7 @@ describe('POST /api/movies/upsert', () => {
       }),
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('admin_1', true),
       },
     });
 

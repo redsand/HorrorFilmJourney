@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/history/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, historyFindManyMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -15,18 +16,15 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('GET /api/history', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     historyFindManyMock.mockReset();
   });
 
-  it('returns 400 when X-User-Id is missing', async () => {
-    const request = new Request('http://localhost/api/history', {
-      headers: { 'x-admin-token': 'test-admin-token' },
-    });
+  it('returns 401 when auth session is missing', async () => {
+    const request = new Request('http://localhost/api/history');
 
     const response = await GET(request);
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   it('returns user-scoped history only', async () => {
@@ -63,8 +61,7 @@ describe('GET /api/history', () => {
 
     const request = new Request('http://localhost/api/history?limit=10', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 
@@ -106,8 +103,7 @@ describe('GET /api/history', () => {
 
     const request = new Request('http://localhost/api/history?limit=2', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 

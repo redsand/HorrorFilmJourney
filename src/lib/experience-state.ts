@@ -12,6 +12,7 @@ export type ExperiencePayload = {
   bundle?: {
     id: string;
     createdAt: string;
+    journeyNode?: string | null;
     cards: Array<{
       id: string;
       rank: number;
@@ -21,6 +22,12 @@ export type ExperiencePayload = {
         title: string;
         year: number | null;
         posterUrl: string;
+        ratings: Array<{
+          source: string;
+          value: number;
+          scale: string;
+          rawValue: string | null;
+        }>;
       };
       narrative: {
         whyImportant: string;
@@ -28,6 +35,9 @@ export type ExperiencePayload = {
         historicalContext: string;
         nextStepHint: string;
         watchFor: unknown;
+        reception: unknown;
+        castHighlights: unknown;
+        streaming: unknown;
         spoilerPolicy: string;
       };
     }>;
@@ -50,6 +60,62 @@ export async function getExperience(
   userId: string,
   prisma: PrismaClient,
 ): Promise<ExperiencePayload> {
+  function mapBatch(
+    latestBatch: {
+      id: string;
+      createdAt: Date;
+      journeyNode: string | null;
+      items: Array<{
+        id: string;
+        rank: number;
+        whyImportant: string;
+        whatItTeaches: string;
+        historicalContext: string;
+        nextStepHint: string;
+        watchFor: unknown;
+        reception: unknown;
+        castHighlights: unknown;
+        streaming: unknown;
+        spoilerPolicy: string;
+        movie: {
+          id: string;
+          tmdbId: number;
+          title: string;
+          year: number | null;
+          posterUrl: string;
+          ratings: Array<{
+            source: string;
+            value: number;
+            scale: string;
+            rawValue: string | null;
+          }>;
+        };
+      }>;
+    },
+  ) {
+    return {
+      id: latestBatch.id,
+      createdAt: latestBatch.createdAt.toISOString(),
+      journeyNode: latestBatch.journeyNode,
+      cards: latestBatch.items.map((item) => ({
+        id: item.id,
+        rank: item.rank,
+        movie: item.movie,
+        narrative: {
+          whyImportant: item.whyImportant,
+          whatItTeaches: item.whatItTeaches,
+          historicalContext: item.historicalContext,
+          nextStepHint: item.nextStepHint,
+          watchFor: item.watchFor,
+          reception: item.reception,
+          castHighlights: item.castHighlights,
+          streaming: item.streaming,
+          spoilerPolicy: item.spoilerPolicy,
+        },
+      })),
+    };
+  }
+
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { profile: true },
@@ -76,6 +142,14 @@ export async function getExperience(
               title: true,
               year: true,
               posterUrl: true,
+              ratings: {
+                select: {
+                  source: true,
+                  value: true,
+                  scale: true,
+                  rawValue: true,
+                },
+              },
             },
           },
         },
@@ -102,23 +176,7 @@ export async function getExperience(
   ) {
     return {
       state: 'SHOW_RECOMMENDATION_BUNDLE',
-      bundle: {
-        id: latestBatch.id,
-        createdAt: latestBatch.createdAt.toISOString(),
-        cards: latestBatch.items.map((item) => ({
-          id: item.id,
-          rank: item.rank,
-          movie: item.movie,
-          narrative: {
-            whyImportant: item.whyImportant,
-            whatItTeaches: item.whatItTeaches,
-            historicalContext: item.historicalContext,
-            nextStepHint: item.nextStepHint,
-            watchFor: item.watchFor,
-            spoilerPolicy: item.spoilerPolicy,
-          },
-        })),
-      },
+      bundle: mapBatch(latestBatch),
     };
   }
 
@@ -128,29 +186,14 @@ export async function getExperience(
       quickPoll: {
         prompt: 'Tell us quickly how the latest watch decision felt.',
       },
+      bundle: mapBatch(latestBatch),
     };
   }
 
   if (latestBatch.items.length > 0) {
     return {
       state: 'SHOW_RECOMMENDATION_BUNDLE',
-      bundle: {
-        id: latestBatch.id,
-        createdAt: latestBatch.createdAt.toISOString(),
-        cards: latestBatch.items.map((item) => ({
-          id: item.id,
-          rank: item.rank,
-          movie: item.movie,
-          narrative: {
-            whyImportant: item.whyImportant,
-            whatItTeaches: item.whatItTeaches,
-            historicalContext: item.historicalContext,
-            nextStepHint: item.nextStepHint,
-            watchFor: item.watchFor,
-            spoilerPolicy: item.spoilerPolicy,
-          },
-        })),
-      },
+      bundle: mapBatch(latestBatch),
     };
   }
 

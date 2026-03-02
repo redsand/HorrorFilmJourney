@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/experience/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, getExperienceMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -18,32 +19,30 @@ vi.mock('@/lib/experience-state', () => ({
 
 describe('GET /api/experience', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     getExperienceMock.mockReset();
   });
 
-  it('returns 401 when admin token is missing', async () => {
+  it('returns 401 when auth session is missing', async () => {
     const request = new Request('http://localhost/api/experience');
     const response = await GET(request);
 
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toEqual({
       data: null,
-      error: { code: 'UNAUTHORIZED', message: 'Invalid admin token' },
+      error: { code: 'UNAUTHORIZED', message: 'Authentication required' },
     });
   });
 
-  it('returns 400 when X-User-Id is missing', async () => {
-    const request = new Request('http://localhost/api/experience', {
-      headers: { 'x-admin-token': 'test-admin-token' },
-    });
+  it('returns 401 when cookie user does not exist', async () => {
+    userFindUniqueMock.mockResolvedValueOnce(null);
+    const request = new Request('http://localhost/api/experience', { headers: { cookie: makeSessionCookie('missing_user') } });
     const response = await GET(request);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
     await expect(response.json()).resolves.toEqual({
       data: null,
-      error: { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' },
+      error: { code: 'UNAUTHORIZED', message: 'Invalid session' },
     });
   });
 
@@ -53,8 +52,7 @@ describe('GET /api/experience', () => {
 
     const request = new Request('http://localhost/api/experience', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
     const response = await GET(request);

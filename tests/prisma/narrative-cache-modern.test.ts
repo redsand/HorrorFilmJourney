@@ -17,6 +17,7 @@ import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
 const testDbUrl = buildTestDatabaseUrl('narrative_cache_modern_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
+const expectedGeminiModel = process.env.GEMINI_MODEL ?? 'gemini-1.5-flash';
 
 beforeAll(() => {
   prismaDbPush(testDbUrl);
@@ -117,7 +118,7 @@ describe('narrative cache in modern generation', () => {
             streaming: [],
             spoilerPolicy: 'NO_SPOILERS',
             narrativeVersion: NARRATIVE_VERSION,
-            narrativeModel: 'gemini-1.5-flash',
+            narrativeModel: expectedGeminiModel,
             narrativeHash: hash,
             narrativeGeneratedAt: new Date('2026-01-01T00:00:00.000Z'),
           },
@@ -177,7 +178,7 @@ describe('narrative cache in modern generation', () => {
             streaming: [],
             spoilerPolicy: 'NO_SPOILERS',
             narrativeVersion: NARRATIVE_VERSION,
-            narrativeModel: 'gemini-1.5-flash',
+            narrativeModel: expectedGeminiModel,
             narrativeHash: oldHash,
             narrativeGeneratedAt: new Date('2026-01-01T00:00:00.000Z'),
           },
@@ -236,6 +237,6 @@ describe('narrative cache in modern generation', () => {
 
     expect(latestItem?.narrativeHash).toBe(expectedNewHash);
     expect(latestItem?.narrativeVersion).toBe(NARRATIVE_VERSION);
-    expect(latestItem?.narrativeModel).toBe('gemini-1.5-flash');
+    expect(latestItem?.narrativeModel).toBe(expectedGeminiModel);
   });
 });

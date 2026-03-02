@@ -19,6 +19,88 @@ function dedupeHash(input: string): string {
   return createHash('sha256').update(input).digest('hex');
 }
 
+const posterUrlCache = new Map<number, string>();
+
+function canUseRemotePosters(): boolean {
+  if (process.env.NODE_ENV === 'test') {
+    return false;
+  }
+  if (!process.env.TMDB_API_KEY) {
+    return false;
+  }
+  if (process.env.SEED_DISABLE_REMOTE_POSTERS === 'true') {
+    return false;
+  }
+  return true;
+}
+
+async function resolvePosterUrl(movie: SeedMovie): Promise<string> {
+  const cached = posterUrlCache.get(movie.tmdbId);
+  if (cached) {
+    return cached;
+  }
+
+  const fallback = `/api/posters/${movie.tmdbId}`;
+  if (!canUseRemotePosters()) {
+    posterUrlCache.set(movie.tmdbId, fallback);
+    return fallback;
+  }
+
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) {
+    posterUrlCache.set(movie.tmdbId, fallback);
+    return fallback;
+  }
+
+  try {
+    const tmdbResponse = await fetch(
+      `https://api.themoviedb.org/3/movie/${movie.tmdbId}?api_key=${apiKey}`,
+      { method: 'GET' },
+    );
+
+    if (!tmdbResponse.ok) {
+      // Fall through to title/year search because local curriculum IDs are synthetic.
+    } else {
+      const payload = (await tmdbResponse.json()) as { poster_path?: string | null };
+      if (typeof payload.poster_path === 'string' && payload.poster_path.trim().length > 0) {
+        const resolved = `https://image.tmdb.org/t/p/w500${payload.poster_path}`;
+        posterUrlCache.set(movie.tmdbId, resolved);
+        return resolved;
+      }
+    }
+  } catch {
+    // Continue to search fallback.
+  }
+
+  try {
+    const searchUrl = new URL('https://api.themoviedb.org/3/search/movie');
+    searchUrl.searchParams.set('api_key', apiKey);
+    searchUrl.searchParams.set('query', movie.title);
+    searchUrl.searchParams.set('year', String(movie.year));
+    searchUrl.searchParams.set('include_adult', 'false');
+
+    const searchResponse = await fetch(searchUrl.toString(), { method: 'GET' });
+    if (searchResponse.ok) {
+      const searchPayload = (await searchResponse.json()) as {
+        results?: Array<{ poster_path?: string | null; release_date?: string; title?: string }>;
+      };
+      const firstWithPoster = (searchPayload.results ?? []).find((item) =>
+        typeof item.poster_path === 'string' && item.poster_path.trim().length > 0,
+      );
+      if (firstWithPoster?.poster_path) {
+        const resolved = `https://image.tmdb.org/t/p/w500${firstWithPoster.poster_path}`;
+        posterUrlCache.set(movie.tmdbId, resolved);
+        return resolved;
+      }
+    }
+  } catch {
+    // Use fallback poster when search lookup fails.
+  }
+
+  posterUrlCache.set(movie.tmdbId, fallback);
+  return fallback;
+}
+
 const CURRICULUM: SeedMovie[] = [
   { tmdbId: 7001, title: 'Nosferatu', year: 1922, genres: ['horror', 'gothic'], director: 'F. W. Murnau', castTop: [{ name: 'Max Schreck', role: 'Count Orlok' }], ratings: { imdb: '7.8/10', rottenTomatoes: '97%', metacritic: '89/100' } },
   { tmdbId: 7002, title: 'Psycho', year: 1960, genres: ['horror', 'psychological'], director: 'Alfred Hitchcock', castTop: [{ name: 'Anthony Perkins', role: 'Norman Bates' }], ratings: { imdb: '8.5/10', rottenTomatoes: '96%', metacritic: '97/100' } },
@@ -63,13 +145,14 @@ export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<Se
   let evidenceCount = 0;
 
   for (const movie of CURRICULUM) {
+    const posterUrl = await resolvePosterUrl(movie);
     const persisted = await prisma.movie.upsert({
       where: { tmdbId: movie.tmdbId },
       create: {
         tmdbId: movie.tmdbId,
         title: movie.title,
         year: movie.year,
-        posterUrl: `https://image.tmdb.org/t/p/w500/${movie.tmdbId}.jpg`,
+        posterUrl,
         genres: movie.genres,
         director: movie.director,
         castTop: movie.castTop.slice(0, 6),
@@ -77,7 +160,7 @@ export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<Se
       update: {
         title: movie.title,
         year: movie.year,
-        posterUrl: `https://image.tmdb.org/t/p/w500/${movie.tmdbId}.jpg`,
+        posterUrl,
         genres: movie.genres,
         director: movie.director,
         castTop: movie.castTop.slice(0, 6),

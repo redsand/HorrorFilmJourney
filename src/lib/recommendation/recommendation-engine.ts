@@ -11,13 +11,13 @@ import {
   isRecommendationEligibleMovie,
   MIN_RATING_SOURCES_FOR_ELIGIBILITY,
   normalizeGenres,
-  pickDiverseMovies,
   type CandidateMovie,
   type RecommendationBatchResult,
   type RecommendationEngineOptions,
 } from '@/lib/recommendation/recommendation-engine-v1';
 import { DeterministicStubStreamingProvider } from '@/lib/streaming/streaming-provider';
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
+import { syncTmdbHorrorCandidates } from '@/lib/tmdb/live-candidate-sync';
 import {
   computeEvidenceHashes,
   computeNarrativeHash,
@@ -26,6 +26,13 @@ import {
 } from '@/lib/recommendation/narrative-cache';
 
 type RatingBundle = CandidateMovie['ratings'];
+function nowMs(): number {
+  return Date.now();
+}
+
+function elapsedMs(startedAt: number): number {
+  return nowMs() - startedAt;
+}
 
 function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
@@ -86,7 +93,28 @@ export interface CandidateGenerator {
 
 export interface Reranker {
   rerank(userId: string, candidateIds: CandidateMovieId[], context: RecommendationContext): Promise<RankedMovieId[]>;
+  getLastRerankDiagnostics?(): RerankDiagnostics | null;
 }
+
+type RerankComponentScores = {
+  trend: number;
+  quality: number;
+  confidence: number;
+};
+
+type RerankCandidateDiagnostics = {
+  tmdbId: number;
+  genres: string[];
+  modelScore: number;
+  components: RerankComponentScores;
+};
+
+type RerankDiagnostics = {
+  recommendationStyle: RecommendationStyle;
+  candidateCount: number;
+  selectedCount: number;
+  topModelSample: RerankCandidateDiagnostics[];
+};
 
 export interface ExplorationPolicy {
   chooseExploration(rankedIds: RankedMovieId[], userProfile: unknown, context: ExplorationContext): Promise<ExplorationResult>;
@@ -222,6 +250,100 @@ function summarizeProfileSignals(userProfile: unknown): string | undefined {
   return entries.map(([key, value]) => `${key}:${String(value)}`).join('|');
 }
 
+function normalizeInteractionSignal(input: {
+  status: InteractionStatus;
+  rating: number | null;
+  recommend: boolean | null;
+  recencyWeight: number;
+}): number {
+  const statusBase =
+    input.status === InteractionStatus.WATCHED ? 0.8
+      : input.status === InteractionStatus.ALREADY_SEEN ? 0.6
+        : input.status === InteractionStatus.WANT_TO_WATCH ? 0.3
+          : -0.7;
+
+  const ratingSignal = typeof input.rating === 'number' ? (input.rating - 3) * 0.25 : 0;
+  const recommendSignal = input.recommend === null ? 0 : input.recommend ? 0.3 : -0.3;
+  return (statusBase + ratingSignal + recommendSignal) * input.recencyWeight;
+}
+
+function movieDecade(year: number | null): number | null {
+  if (!year) {
+    return null;
+  }
+  return Math.floor(year / 10) * 10;
+}
+
+function parsePopularityRating(ratings: Array<{ source: string; value: number }>): number {
+  const popularity = ratings.find((rating) => rating.source === 'TMDB_POPULARITY');
+  if (!popularity || !Number.isFinite(popularity.value)) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, popularity.value / 100));
+}
+
+function normalizeScore(value: number, scale: string): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  const parsedScale = Number(scale);
+  if (Number.isFinite(parsedScale) && parsedScale > 0) {
+    return Math.max(0, Math.min(1, value / parsedScale));
+  }
+  return Math.max(0, Math.min(1, value / 100));
+}
+
+function parseQualityScore(ratings: RatingBundle): number {
+  const qualityRatings = [ratings.imdb, ...ratings.additional.filter((rating) => rating.source !== 'TMDB_POPULARITY')];
+  if (qualityRatings.length === 0) {
+    return 0;
+  }
+  const normalized = qualityRatings.map((rating) => normalizeScore(rating.value, rating.scale));
+  return normalized.reduce((sum, value) => sum + value, 0) / normalized.length;
+}
+
+function parseConfidenceScore(ratings: RatingBundle): number {
+  const confidenceSourceCount = new Set(
+    [ratings.imdb, ...ratings.additional.filter((rating) => rating.source !== 'TMDB_POPULARITY')]
+      .map((rating) => rating.source),
+  ).size;
+  return Math.max(0, Math.min(1, confidenceSourceCount / 3));
+}
+
+function computeBlendedPopularityScore(ratings: RatingBundle): number {
+  const trendScore = parsePopularityRating(ratings.additional.map((rating) => ({
+    source: rating.source,
+    value: rating.value,
+  })));
+  const qualityScore = parseQualityScore(ratings);
+  const confidenceScore = parseConfidenceScore(ratings);
+  return (trendScore * 0.55) + (qualityScore * 0.3) + (confidenceScore * 0.15);
+}
+
+function computePopularityComponents(ratings: RatingBundle): RerankComponentScores {
+  return {
+    trend: parsePopularityRating(ratings.additional.map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+    }))),
+    quality: parseQualityScore(ratings),
+    confidence: parseConfidenceScore(ratings),
+  };
+}
+
+type RecommendationStyle = 'diversity' | 'popularity';
+
+function resolveRecommendationStyle(horrorDna: unknown): RecommendationStyle {
+  if (!horrorDna || typeof horrorDna !== 'object') {
+    return 'diversity';
+  }
+  const value = (horrorDna as Record<string, unknown>).recommendationStyle;
+  if (value === 'popularity' || value === 'diversity') {
+    return value;
+  }
+  return 'diversity';
+}
+
 function rankFromJourneyNode(journeyNode: string): number {
   const rankMatch = journeyNode.match(/RANK_(\d+)$/);
   return rankMatch ? Number(rankMatch[1]) : 1;
@@ -276,6 +398,11 @@ export async function composeCardNarrative(input: {
     }));
 
   try {
+    const llmStartedAt = nowMs();
+    console.info('[recommendations.llm] compose started', {
+      tmdbId: input.movie.tmdbId,
+      provider: input.llmProvider.name(),
+    });
     const generated = await input.llmProvider.generateJson<unknown>({
       schemaName: 'RecommendationCardNarrative',
       jsonSchema: RECOMMENDATION_CARD_NARRATIVE_JSON_SCHEMA,
@@ -310,8 +437,19 @@ export async function composeCardNarrative(input: {
       throw new LlmSchemaError(`Narrative contains invalid evidence refs: ${invalidRefs.join(', ')}`);
     }
 
+    console.info('[recommendations.llm] compose completed', {
+      tmdbId: input.movie.tmdbId,
+      durationMs: elapsedMs(llmStartedAt),
+      provider: input.llmProvider.name(),
+    });
     return parsed.data;
-  } catch {
+  } catch (error) {
+    console.warn('[recommendations.llm] compose fallback', {
+      tmdbId: input.movie.tmdbId,
+      provider: input.llmProvider.name(),
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+      errorMessage: error instanceof Error ? error.message : 'unknown',
+    });
     return fallback;
   }
 }
@@ -350,21 +488,90 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     });
 
     const excludedMovieIds = new Set(seenInteractions.map((item) => item.movieId));
+    const latestBatch = await this.prisma.recommendationBatch.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        items: { select: { movieId: true } },
+      },
+    });
+    latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
     const allMovies = await this.prisma.movie.findMany({
       orderBy: { tmdbId: 'asc' },
-      select: { id: true, posterUrl: true, ratings: { select: { source: true } } },
+      select: { id: true, tmdbId: true, posterUrl: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
     });
-    return allMovies
+    const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
-      .filter((movie) => isRecommendationEligibleMovie({ posterUrl: movie.posterUrl, ratings: movie.ratings }))
-      .map((movie) => movie.id);
+      .filter((movie) => isRecommendationEligibleMovie({
+        posterUrl: movie.posterUrl,
+        posterLastValidatedAt: movie.posterLastValidatedAt,
+        ratings: movie.ratings,
+      }));
+    console.info('[recommendations.engine] candidate poster quality', {
+      totalMovies: allMovies.length,
+      eligibleMovies: eligible.length,
+      validated: allMovies.filter((movie) => Boolean(movie.posterLastValidatedAt)).length,
+      fallbackApi: allMovies.filter((movie) => movie.posterUrl.startsWith('/api/posters/')).length,
+      tmdbHost: allMovies.filter((movie) => movie.posterUrl.startsWith('https://image.tmdb.org/')).length,
+      eligibleTmdbHost: eligible.filter((movie) => movie.posterUrl.startsWith('https://image.tmdb.org/')).length,
+      eligibleFallbackApi: eligible.filter((movie) => movie.posterUrl.startsWith('/api/posters/')).length,
+      sampleEligible: eligible.slice(0, 5).map((movie) => ({ tmdbId: movie.tmdbId, posterUrl: movie.posterUrl })),
+    });
+    return eligible.map((movie) => movie.id);
   }
 }
 
 export class HeuristicRerankerV1 implements Reranker {
+  private lastDiagnostics: RerankDiagnostics | null = null;
+
   constructor(private readonly prisma: PrismaClient) {}
 
+  getLastRerankDiagnostics(): RerankDiagnostics | null {
+    return this.lastDiagnostics;
+  }
+
   async rerank(_userId: string, candidateIds: CandidateMovieId[], context: RecommendationContext): Promise<RankedMovieId[]> {
+    const [profile, history] = await Promise.all([
+      this.prisma.userProfile.findUnique({
+        where: { userId: _userId },
+        select: { tolerance: true, pacePreference: true, horrorDNA: true },
+      }),
+      this.prisma.userMovieInteraction.findMany({
+        where: { userId: _userId },
+        orderBy: { createdAt: 'desc' },
+        take: 120,
+        select: {
+          status: true,
+          rating: true,
+          recommend: true,
+          movie: { select: { genres: true, year: true } },
+        },
+      }),
+    ]);
+
+    const genreAffinity = new Map<string, number>();
+    const decadeAffinity = new Map<number, number>();
+    const recommendationStyle = resolveRecommendationStyle(profile?.horrorDNA);
+    const historySize = history.length;
+    history.forEach((interaction, index) => {
+      const recencyWeight = historySize > 0 ? 0.6 + ((historySize - index) / historySize) * 0.4 : 1;
+      const signal = normalizeInteractionSignal({
+        status: interaction.status,
+        rating: interaction.rating,
+        recommend: interaction.recommend,
+        recencyWeight,
+      });
+
+      normalizeGenres(interaction.movie.genres).forEach((genre) => {
+        genreAffinity.set(genre, (genreAffinity.get(genre) ?? 0) + signal);
+      });
+      const decade = movieDecade(interaction.movie.year);
+      if (decade !== null) {
+        decadeAffinity.set(decade, (decadeAffinity.get(decade) ?? 0) + signal * 0.6);
+      }
+    });
+
     const movies = await this.prisma.movie.findMany({
       where: { id: { in: candidateIds } },
       select: { id: true, tmdbId: true, title: true, year: true, posterUrl: true, genres: true, ratings: { select: { source: true, value: true, scale: true, rawValue: true } } },
@@ -387,7 +594,85 @@ export class HeuristicRerankerV1 implements Reranker {
       })
       .filter((movie): movie is CandidateMovie => movie !== null);
 
-    return pickDiverseMovies(mapped, context.targetCount).map((movie) => movie.id);
+    const scored = mapped.map((movie) => {
+      const genres = movie.genres;
+      const genreScore = genres.length > 0
+        ? genres.reduce((sum, genre) => sum + (genreAffinity.get(genre) ?? 0), 0) / genres.length
+        : 0;
+      const decadeScore = (() => {
+        const decade = movieDecade(movie.year);
+        return decade !== null ? (decadeAffinity.get(decade) ?? 0) : 0;
+      })();
+      const popularityComponents = computePopularityComponents(movie.ratings);
+      const popularityScore = computeBlendedPopularityScore(movie.ratings);
+      const paceBias = profile?.pacePreference === 'slowburn'
+        ? (genres.includes('psychological') || genres.includes('gothic') ? 0.15 : 0)
+        : profile?.pacePreference === 'shock'
+          ? (genres.includes('slasher') || genres.includes('body-horror') ? 0.15 : 0)
+          : 0;
+      const tolerancePenalty = typeof profile?.tolerance === 'number' && profile.tolerance <= 2
+        ? (genres.includes('body-horror') ? -0.2 : 0)
+        : 0;
+
+      const popularityWeight = recommendationStyle === 'popularity' ? 1 : 0.2;
+      const affinityWeight = recommendationStyle === 'popularity' ? 0.7 : 1;
+      const modelScore = (genreScore + decadeScore) * affinityWeight + popularityScore * popularityWeight + paceBias + tolerancePenalty;
+      return { movie, modelScore, popularityComponents };
+    });
+
+    const rankedByModel = scored
+      .sort((a, b) => (b.modelScore - a.modelScore) || (a.movie.tmdbId - b.movie.tmdbId))
+      .map((entry) => entry);
+
+    const selected = rankedByModel.slice(0, context.targetCount).map((entry) => entry.movie);
+    const selectedIds = new Set(selected.map((movie) => movie.id));
+    const selectedGenres = new Set(selected.flatMap((movie) => movie.genres));
+    const selectedDecades = new Set(selected.map((movie) => movieDecade(movie.year)).filter((decade): decade is number => decade !== null));
+    const tailPool = rankedByModel
+      .slice(context.targetCount, Math.max(context.targetCount * 8, context.targetCount))
+      .filter((entry) => !selectedIds.has(entry.movie.id));
+
+    // Post-step diversity constraint: only swap when we can increase diversity without sacrificing too much model score.
+    if (recommendationStyle === 'diversity' && selected.length > 0 && tailPool.length > 0) {
+      const lastSelectedScore = rankedByModel.find((entry) => entry.movie.id === selected[selected.length - 1]!.id)?.modelScore ?? 0;
+      const swapCandidate = tailPool.find((entry) => {
+        const decade = movieDecade(entry.movie.year);
+        const addsGenre = entry.movie.genres.some((genre) => !selectedGenres.has(genre));
+        const addsDecade = decade !== null && !selectedDecades.has(decade);
+        const scoreGap = lastSelectedScore - entry.modelScore;
+        return (addsGenre || addsDecade) && scoreGap <= 0.35;
+      });
+
+      if (swapCandidate) {
+        selected[selected.length - 1] = swapCandidate.movie;
+      }
+    }
+
+    const reranked = selected;
+    const topModelSample = rankedByModel.slice(0, 5).map((entry) => ({
+      tmdbId: entry.movie.tmdbId,
+      genres: entry.movie.genres,
+      modelScore: Number(entry.modelScore.toFixed(4)),
+      components: {
+        trend: Number(entry.popularityComponents.trend.toFixed(4)),
+        quality: Number(entry.popularityComponents.quality.toFixed(4)),
+        confidence: Number(entry.popularityComponents.confidence.toFixed(4)),
+      },
+    }));
+    this.lastDiagnostics = {
+      candidateCount: mapped.length,
+      selectedCount: reranked.length,
+      recommendationStyle,
+      topModelSample,
+    };
+    console.info('[recommendations.engine] reranker model scoring', {
+      candidateCount: mapped.length,
+      poolCount: rankedByModel.length,
+      selectedCount: reranked.length,
+      recommendationStyle,
+      topModelSample,
+    });
+    return reranked.map((movie) => movie.id);
   }
 }
 
@@ -453,9 +738,26 @@ export async function generateRecommendationBatchModern(
   deps: RecommendationEngineDeps,
   options: RecommendationEngineOptions = {},
 ): Promise<RecommendationBatchResult> {
+  const startedAt = nowMs();
+  console.info('[recommendations.engine] modern started');
+  const userProfile = await prisma.userProfile.findUnique({
+    where: { userId },
+    select: {
+      tolerance: true,
+      pacePreference: true,
+      horrorDNA: true,
+    },
+  });
+  console.info('[recommendations.engine] modern user profile', {
+    hasProfile: Boolean(userProfile),
+    pacePreference: userProfile?.pacePreference ?? null,
+    tolerance: userProfile?.tolerance ?? null,
+    recommendationStyle: resolveRecommendationStyle(userProfile?.horrorDNA),
+  });
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const excludeRecentSkippedDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
 
+  const countersStartedAt = nowMs();
   const [excludedSeenCount, excludedSkippedRecentCount, allMovieCount] = await Promise.all([
     prisma.userMovieInteraction.count({ where: { userId, status: { in: [InteractionStatus.WATCHED, InteractionStatus.ALREADY_SEEN] } } }),
     prisma.userMovieInteraction.count({
@@ -467,15 +769,44 @@ export async function generateRecommendationBatchModern(
     }),
     prisma.movie.count(),
   ]);
+  console.info('[recommendations.engine] modern counters loaded', {
+    durationMs: elapsedMs(countersStartedAt),
+    excludedSeenCount,
+    excludedSkippedRecentCount,
+    allMovieCount,
+  });
 
+  const candidateStartedAt = nowMs();
   const candidateIds = await deps.candidateGenerator.generateCandidates(userId, { targetCount, excludeRecentSkippedDays });
+  console.info('[recommendations.engine] modern candidates generated', {
+    durationMs: elapsedMs(candidateStartedAt),
+    candidateCount: candidateIds.length,
+  });
+
+  const rerankStartedAt = nowMs();
   const rankedIds = await deps.reranker.rerank(userId, candidateIds, { targetCount });
-  const exploration = await deps.explorationPolicy.chooseExploration(rankedIds, null, {});
+  console.info('[recommendations.engine] modern rerank completed', {
+    durationMs: elapsedMs(rerankStartedAt),
+    rankedCount: rankedIds.length,
+  });
+
+  const exploreStartedAt = nowMs();
+  const exploration = await deps.explorationPolicy.chooseExploration(rankedIds, userProfile, {});
+  console.info('[recommendations.engine] modern exploration completed', {
+    durationMs: elapsedMs(exploreStartedAt),
+    explorationUsed: exploration.explorationUsed,
+  });
 
   const selectedIds = exploration.finalRankedIds.slice(0, targetCount);
+  const moviesStartedAt = nowMs();
   const movies = await prisma.movie.findMany({
     where: { id: { in: selectedIds } },
     select: { id: true, tmdbId: true, title: true, year: true, posterUrl: true, genres: true, ratings: { select: { source: true, value: true, scale: true, rawValue: true } } },
+  });
+  console.info('[recommendations.engine] modern movies loaded', {
+    durationMs: elapsedMs(moviesStartedAt),
+    selectedCount: selectedIds.length,
+    loadedCount: movies.length,
   });
   const movieById = new Map(
     movies
@@ -502,7 +833,14 @@ export async function generateRecommendationBatchModern(
   );
 
   const orderedMovies = selectedIds.map((id) => movieById.get(id)).filter((movie): movie is CandidateMovie => Boolean(movie));
+  console.info('[recommendations.engine] selected poster quality', {
+    selectedCount: orderedMovies.length,
+    tmdbHost: orderedMovies.filter((movie) => movie.posterUrl.startsWith('https://image.tmdb.org/')).length,
+    fallbackApi: orderedMovies.filter((movie) => movie.posterUrl.startsWith('/api/posters/')).length,
+    sample: orderedMovies.map((movie) => ({ tmdbId: movie.tmdbId, posterUrl: movie.posterUrl })),
+  });
   const streamingLookup = new StreamingLookupService(prisma, new DeterministicStubStreamingProvider());
+  const streamingStartedAt = nowMs();
   const streamingByMovieId = new Map(
     await Promise.all(
       orderedMovies.map(async (movie) => {
@@ -511,7 +849,12 @@ export async function generateRecommendationBatchModern(
       }),
     ),
   );
+  console.info('[recommendations.engine] modern streaming resolved', {
+    durationMs: elapsedMs(streamingStartedAt),
+    movieCount: orderedMovies.length,
+  });
 
+  const narrativeStartedAt = nowMs();
   const itemData = await Promise.all(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
@@ -528,7 +871,7 @@ export async function generateRecommendationBatchModern(
         },
         journeyNode,
         evidenceHashes: computeEvidenceHashes(evidence),
-        profileSummary: summarizeProfileSignals(null),
+        profileSummary: summarizeProfileSignals(userProfile),
         narrativeVersion: NARRATIVE_VERSION,
       });
 
@@ -571,7 +914,7 @@ export async function generateRecommendationBatchModern(
         };
       }
 
-      const narrative = await deps.narrativeComposer.compose(movie, null, journeyNode, evidence);
+      const narrative = await deps.narrativeComposer.compose(movie, userProfile, journeyNode, evidence);
       return {
         movie,
         rank,
@@ -587,7 +930,12 @@ export async function generateRecommendationBatchModern(
       };
     }),
   );
+  console.info('[recommendations.engine] modern narratives resolved', {
+    durationMs: elapsedMs(narrativeStartedAt),
+    itemCount: itemData.length,
+  });
 
+  const persistStartedAt = nowMs();
   const batch = await prisma.recommendationBatch.create({
     data: {
       userId,
@@ -620,6 +968,37 @@ export async function generateRecommendationBatchModern(
       },
     },
   });
+  console.info('[recommendations.engine] modern batch persisted', {
+    durationMs: elapsedMs(persistStartedAt),
+    batchId: batch.id,
+    itemCount: batch.items.length,
+  });
+
+  const diagnosticsStartedAt = nowMs();
+  const rerankDiagnostics = typeof deps.reranker.getLastRerankDiagnostics === 'function'
+    ? deps.reranker.getLastRerankDiagnostics()
+    : null;
+  const recentInteractions = await prisma.userMovieInteraction.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    take: 40,
+    select: { status: true },
+  });
+  const recentCount = recentInteractions.length;
+  const watchedOrSeenCount = recentInteractions.filter((item) =>
+    item.status === InteractionStatus.WATCHED || item.status === InteractionStatus.ALREADY_SEEN).length;
+  const skippedCount = recentInteractions.filter((item) => item.status === InteractionStatus.SKIPPED).length;
+  const olderSlice = recentInteractions.slice(20);
+  const newerSlice = recentInteractions.slice(0, 20);
+  const olderPositiveRate = olderSlice.length > 0
+    ? olderSlice.filter((item) => item.status === InteractionStatus.WATCHED || item.status === InteractionStatus.ALREADY_SEEN).length / olderSlice.length
+    : null;
+  const newerPositiveRate = newerSlice.length > 0
+    ? newerSlice.filter((item) => item.status === InteractionStatus.WATCHED || item.status === InteractionStatus.ALREADY_SEEN).length / newerSlice.length
+    : null;
+  const engagementTrend = (olderPositiveRate !== null && newerPositiveRate !== null)
+    ? Number((newerPositiveRate - olderPositiveRate).toFixed(4))
+    : null;
 
   await prisma.recommendationDiagnostics.create({
     data: {
@@ -630,10 +1009,26 @@ export async function generateRecommendationBatchModern(
       diversityStats: {
         candidatePool: allMovieCount,
         selectedCount: orderedMovies.length,
+        engagement: {
+          recentInteractionCount: recentCount,
+          watchedOrSeenCount,
+          skippedCount,
+          watchedOrSeenRate: recentCount > 0 ? Number((watchedOrSeenCount / recentCount).toFixed(4)) : null,
+          skippedRate: recentCount > 0 ? Number((skippedCount / recentCount).toFixed(4)) : null,
+          positiveRateTrendLast20VsPrev20: engagementTrend,
+        },
+        reranker: rerankDiagnostics,
       },
       explorationUsed: exploration.explorationUsed,
       notes: 'modern mode diagnostics',
     },
+  });
+  console.info('[recommendations.engine] modern diagnostics persisted', {
+    durationMs: elapsedMs(diagnosticsStartedAt),
+  });
+  console.info('[recommendations.engine] modern completed', {
+    durationMs: elapsedMs(startedAt),
+    batchId: batch.id,
   });
 
   return {
@@ -674,7 +1069,15 @@ export async function generateRecommendationBatch(
   prisma: PrismaClient,
   options: RecommendationEngineOptions = {},
 ): Promise<RecommendationBatchResult> {
+  const startedAt = nowMs();
+  const tmdbSyncStartedAt = nowMs();
+  await syncTmdbHorrorCandidates(prisma);
+  console.info('[recommendations.engine] tmdb sync completed', {
+    durationMs: elapsedMs(tmdbSyncStartedAt),
+  });
+
   let llmProvider: LlmProvider | undefined;
+  const llmProviderStartedAt = nowMs();
   if (process.env.LLM_PROVIDER) {
     try {
       llmProvider = getLlmProviderFromEnv();
@@ -682,13 +1085,23 @@ export async function generateRecommendationBatch(
       llmProvider = undefined;
     }
   }
+  console.info('[recommendations.engine] llm provider resolved', {
+    durationMs: elapsedMs(llmProviderStartedAt),
+    provider: llmProvider?.name() ?? 'disabled',
+  });
 
   const mode = process.env.REC_ENGINE_MODE === 'modern' ? 'modern' : 'v1';
+  console.info('[recommendations.engine] mode selected', { mode });
   if (mode === 'v1') {
-    return generateRecommendationBatchV1(userId, prisma, options);
+    const result = await generateRecommendationBatchV1(userId, prisma, options);
+    console.info('[recommendations.engine] v1 completed', {
+      durationMs: elapsedMs(startedAt),
+      batchId: result.batchId,
+    });
+    return result;
   }
 
-  return generateRecommendationBatchModern(
+  const result = await generateRecommendationBatchModern(
     userId,
     prisma,
     {
@@ -700,4 +1113,9 @@ export async function generateRecommendationBatch(
     },
     options,
   );
+  console.info('[recommendations.engine] modern wrapper completed', {
+    durationMs: elapsedMs(startedAt),
+    batchId: result.batchId,
+  });
+  return result;
 }

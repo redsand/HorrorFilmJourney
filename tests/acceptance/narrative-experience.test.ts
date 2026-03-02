@@ -5,6 +5,7 @@ import {
   resetAcceptanceDatabase,
   setupAcceptanceDatabase,
 } from './utils/recommendations-seed';
+import { asAdmin, signupAndLogin, type RequestAgent } from '../helpers/auth';
 
 const acceptanceSchemaName = 'narrative_experience_acceptance_test';
 const acceptancePrisma = createAcceptancePrisma(acceptanceSchemaName);
@@ -14,6 +15,8 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 const { POST: POST_USERS } = await import('@/app/api/users/route');
+const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
+const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
@@ -86,40 +89,61 @@ describe('narrative experience acceptance', () => {
   });
 
   beforeEach(async () => {
-    process.env.ADMIN_TOKEN = 'acceptance-admin-token';
+    process.env.ADMIN_EMAIL = 'admin@local.test';
+    process.env.ADMIN_PASSWORD = 'dev-admin-password';
     delete process.env.REC_ENGINE_MODE;
     await resetAcceptanceDatabase(acceptancePrisma);
     await seedMovieCatalog();
   });
 
   it('enforces onboarding -> recommendations -> interactions -> history -> companion flow', async () => {
+    const authAgent: RequestAgent = (path, init = {}) => {
+      const method = (init.method ?? 'GET').toUpperCase();
+      const headers = new Headers(init.headers);
+      if (init.json !== undefined) {
+        headers.set('content-type', 'application/json');
+      }
+      const body = init.json !== undefined ? JSON.stringify(init.json) : (init.body as BodyInit | null | undefined);
+      const request = new Request(`http://localhost${path}`, { ...init, method, headers, body });
+      if (path === '/api/auth/login' && method === 'POST') {
+        return POST_AUTH_LOGIN(request);
+      }
+      if (path === '/api/auth/signup' && method === 'POST') {
+        return POST_AUTH_SIGNUP(request);
+      }
+      throw new Error(`Unsupported auth route: ${method} ${path}`);
+    };
+
+    const { cookieHeader: adminCookie } = await asAdmin(authAgent);
+    const { cookieHeader: userCookie, user } = await signupAndLogin(authAgent, {
+      email: 'narrative.user.a@example.com',
+      password: 'password-123',
+      displayName: 'NarrativeUserA',
+    });
+    const { cookieHeader: otherUserCookie } = await signupAndLogin(authAgent, {
+      email: 'narrative.user.b@example.com',
+      password: 'password-123',
+      displayName: 'NarrativeUserB',
+    });
+
     const createUserResponse = await POST_USERS(
       new Request('http://localhost/api/users', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
+          cookie: adminCookie,
         },
         body: JSON.stringify({ displayName: 'NarrativeUserA' }),
       }),
     );
 
     expect(createUserResponse.status).toBe(200);
-    const createUserBody = await createUserResponse.json();
-    const userId = createUserBody.data.id as string;
-
-    const otherUser = await acceptancePrisma.user.create({
-      data: {
-        displayName: 'NarrativeUserB',
-        profile: { create: { tolerance: 3, pacePreference: 'balanced' } },
-      },
-    });
+    const userId = user.id;
 
     const experienceBeforeOnboarding = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -133,8 +157,7 @@ describe('narrative experience acceptance', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tolerance: 4,
@@ -148,8 +171,7 @@ describe('narrative experience acceptance', () => {
     const experienceAfterOnboarding = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -161,8 +183,7 @@ describe('narrative experience acceptance', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -194,8 +215,7 @@ describe('narrative experience acceptance', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[0]!.movie.tmdbId,
@@ -210,8 +230,7 @@ describe('narrative experience acceptance', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[1]!.movie.tmdbId,
@@ -226,8 +245,7 @@ describe('narrative experience acceptance', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[0]!.movie.tmdbId,
@@ -247,8 +265,7 @@ describe('narrative experience acceptance', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[1]!.movie.tmdbId,
@@ -263,24 +280,25 @@ describe('narrative experience acceptance', () => {
     );
     expect(watchedWithQuickPoll.status).toBe(200);
 
-    const otherUserMovie = await acceptancePrisma.movie.findUniqueOrThrow({
-      where: { tmdbId: 1106 },
-      select: { id: true },
-    });
-    await acceptancePrisma.userMovieInteraction.create({
-      data: {
-        userId: otherUser.id,
-        movieId: otherUserMovie.id,
-        status: 'WATCHED',
-        rating: 2,
-      },
-    });
+    await POST_INTERACTIONS(
+      new Request('http://localhost/api/interactions', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: otherUserCookie,
+        },
+        body: JSON.stringify({
+          tmdbId: 1106,
+          status: 'WATCHED',
+          rating: 2,
+        }),
+      }),
+    );
 
     const historyResponse = await GET_HISTORY(
       new Request('http://localhost/api/history?limit=20', {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -295,8 +313,7 @@ describe('narrative experience acceptance', () => {
     const historySummaryResponse = await GET_HISTORY_SUMMARY(
       new Request('http://localhost/api/history/summary', {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -309,8 +326,7 @@ describe('narrative experience acceptance', () => {
     const companionResponse = await GET_COMPANION(
       new Request(`http://localhost/api/companion?tmdbId=${cards[0]!.movie.tmdbId}&spoilerPolicy=NO_SPOILERS`, {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );

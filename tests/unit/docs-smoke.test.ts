@@ -11,6 +11,7 @@ const docsToCheck = [
   { path: 'docs/release/user-testing-runbook.md', heading: '# User Testing Runbook' },
   { path: 'docs/release/first-user-checklist.md', heading: '# Ready for First Real User Checklist' },
   { path: 'docs/release/e2e-truths.md', heading: '# E2E Truths' },
+  { path: 'docs/ui.md', heading: '# UI Foundation' },
 ];
 
 const designRequirementHeadings = [

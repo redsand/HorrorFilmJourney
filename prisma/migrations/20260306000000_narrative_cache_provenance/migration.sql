@@ -3,7 +3,7 @@ ALTER TABLE "RecommendationItem"
 ADD COLUMN "narrativeVersion" TEXT,
 ADD COLUMN "narrativeModel" TEXT,
 ADD COLUMN "narrativeHash" TEXT,
-ADD COLUMN "narrativeGeneratedAt" DATETIME;
+ADD COLUMN "narrativeGeneratedAt" TIMESTAMP(3);
 
 CREATE INDEX "RecommendationItem_movieId_narrativeHash_idx"
 ON "RecommendationItem"("movieId", "narrativeHash");

@@ -16,6 +16,7 @@ export interface LlmProvider {
 
 const DEFAULT_GEMINI_MODEL = 'gemini-1.5-flash';
 const DEFAULT_OLLAMA_HOST = 'http://localhost:11434';
+const DEFAULT_LLM_TIMEOUT_MS = 20_000;
 
 export class LlmSchemaError extends Error {
   code = 'LLM_SCHEMA_ERROR' as const;
@@ -68,6 +69,14 @@ function buildInstruction(args: GenerateJsonArgs): string {
   ].join('\n');
 }
 
+function llmTimeoutMs(): number {
+  const parsed = Number.parseInt(process.env.LLM_TIMEOUT_MS ?? '', 10);
+  if (Number.isInteger(parsed) && parsed >= 2_000) {
+    return parsed;
+  }
+  return DEFAULT_LLM_TIMEOUT_MS;
+}
+
 export class GeminiProvider implements LlmProvider {
   constructor(
     private readonly apiKey: string,
@@ -80,8 +89,10 @@ export class GeminiProvider implements LlmProvider {
 
   async generateJson<T>(args: GenerateJsonArgs): Promise<T> {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
+    const startedAt = Date.now();
     const response = await fetch(url, {
       method: 'POST',
+      signal: AbortSignal.timeout(llmTimeoutMs()),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -114,6 +125,7 @@ export class GeminiProvider implements LlmProvider {
 
     const parsed = extractJsonObject(text);
     validateBySchemaShape(parsed, args.jsonSchema);
+    console.info('[llm.gemini] completed', { durationMs: Date.now() - startedAt });
     return parsed as T;
   }
 }
@@ -129,9 +141,12 @@ export class OllamaProvider implements LlmProvider {
   }
 
   async generateJson<T>(args: GenerateJsonArgs): Promise<T> {
-    const url = `${this.host.replace(/\/$/, '')}/api/generate`;
-    const response = await fetch(url, {
+    const baseUrl = this.host.replace(/\/$/, '');
+    const generateUrl = `${baseUrl}/api/generate`;
+    const startedAt = Date.now();
+    const response = await fetch(generateUrl, {
       method: 'POST',
+      signal: AbortSignal.timeout(llmTimeoutMs()),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -151,12 +166,50 @@ export class OllamaProvider implements LlmProvider {
     }
 
     const body = (await response.json()) as { response?: string };
-    if (typeof body.response !== 'string') {
+    if (typeof body.response === 'string' && body.response.trim().length > 0) {
+      const parsed = extractJsonObject(body.response);
+      validateBySchemaShape(parsed, args.jsonSchema);
+      console.info('[llm.ollama] generate completed', { durationMs: Date.now() - startedAt });
+      return parsed as T;
+    }
+
+    // Fallback path: some Ollama/cloud model responses can return empty `response` in /api/generate.
+    // Retry using /api/chat with explicit JSON schema format.
+    const chatUrl = `${baseUrl}/api/chat`;
+    const chatResponse = await fetch(chatUrl, {
+      method: 'POST',
+      signal: AbortSignal.timeout(llmTimeoutMs()),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: this.model,
+        stream: false,
+        messages: [
+          { role: 'system', content: args.system },
+          { role: 'user', content: buildInstruction(args) },
+        ],
+        format: args.jsonSchema,
+        options: {
+          temperature: args.temperature ?? 0.2,
+          num_predict: args.maxTokens ?? 1024,
+        },
+      }),
+    });
+
+    if (!chatResponse.ok) {
+      throw new Error(`Ollama chat fallback failed with status ${chatResponse.status}`);
+    }
+
+    const chatBody = (await chatResponse.json()) as { message?: { content?: string } };
+    const content = chatBody.message?.content;
+    if (typeof content !== 'string' || content.trim().length === 0) {
       throw new LlmSchemaError('Ollama response did not include response text');
     }
 
-    const parsed = extractJsonObject(body.response);
+    const parsed = extractJsonObject(content);
     validateBySchemaShape(parsed, args.jsonSchema);
+    console.info('[llm.ollama] chat fallback completed', { durationMs: Date.now() - startedAt });
     return parsed as T;
   }
 }

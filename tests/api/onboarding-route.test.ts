@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/onboarding/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, profileFindUniqueMock, profileUpsertMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -16,7 +17,6 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('POST /api/onboarding', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     profileFindUniqueMock.mockReset();
     profileUpsertMock.mockReset();
@@ -30,8 +30,7 @@ describe('POST /api/onboarding', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
         },
         body: JSON.stringify({ tolerance: 9, pacePreference: 'balanced' }),
       }),
@@ -48,8 +47,7 @@ describe('POST /api/onboarding', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
         },
         body: JSON.stringify({ tolerance: 4 }),
       }),
@@ -66,8 +64,7 @@ describe('POST /api/onboarding', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
         },
         body: JSON.stringify({ tolerance: 4, pacePreference: 'fast' }),
       }),
@@ -89,8 +86,7 @@ describe('POST /api/onboarding', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
         },
         body: JSON.stringify({
           tolerance: 4,
@@ -112,7 +108,7 @@ describe('POST /api/onboarding', () => {
           tolerance: 4,
           pacePreference: 'balanced',
           onboardingCompleted: true,
-          horrorDNA: {},
+          horrorDNA: { recommendationStyle: 'diversity' },
         }),
         update: expect.objectContaining({
           tolerance: 4,

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/history/summary/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, historyFindManyMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -15,7 +16,6 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('GET /api/history/summary', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     historyFindManyMock.mockReset();
   });
@@ -59,8 +59,7 @@ describe('GET /api/history/summary', () => {
 
     const request = new Request('http://localhost/api/history/summary', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 
@@ -95,8 +94,7 @@ describe('GET /api/history/summary', () => {
 
     const request = new Request('http://localhost/api/history/summary', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 

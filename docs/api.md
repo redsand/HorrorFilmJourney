@@ -5,11 +5,12 @@ All responses use the stable envelope:
 - Success: `{ "data": ..., "error": null }`
 - Error: `{ "data": null, "error": { "code": "...", "message": "...", "details"?: ... } }`
 
-## Required headers
+## Authentication
 
-- All routes: `x-admin-token: <ADMIN_TOKEN>`
-- User-scoped routes (everything except `/api/users` and `/api/health`):
-  - `x-user-id: <existing user id>`
+- Use cookie-session auth from `/api/auth/signup` and `/api/auth/login`.
+- Protected routes return:
+  - `401` when session cookie is missing/invalid.
+  - `403` for admin routes when user is not admin.
 
 ---
 
@@ -117,11 +118,6 @@ Guarantees:
 
 Upserts onboarding profile answers for the current user.
 
-### Required headers
-
-- `x-admin-token: <ADMIN_TOKEN>`
-- `x-user-id: <existing user id>`
-
 ### Body
 
 ```json
@@ -153,11 +149,6 @@ Upserts onboarding profile answers for the current user.
 ## GET /api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS|LIGHT|FULL
 
 Companion Mode endpoint for in-movie mobile usage.
-
-Required headers:
-
-- `x-admin-token: <ADMIN_TOKEN>`
-- `x-user-id: <existing user id>`
 
 ### Query params
 

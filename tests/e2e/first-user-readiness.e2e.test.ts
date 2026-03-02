@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { zMovieCardVM } from '@/contracts/movieCardVM';
 import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 import { seedStarterHorrorCatalog } from '@/lib/testing/catalog-seed';
+import { asAdmin, signupAndLogin, type RequestAgent } from '../helpers/auth';
 
 const schemaName = 'first_user_readiness_e2e_test';
 const databaseUrl = buildTestDatabaseUrl(schemaName);
@@ -13,6 +14,8 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 const { POST: POST_USERS } = await import('@/app/api/users/route');
+const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
+const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
@@ -26,7 +29,8 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  process.env.ADMIN_TOKEN = 'first-user-admin-token';
+  process.env.ADMIN_EMAIL = 'admin@local.test';
+  process.env.ADMIN_PASSWORD = 'dev-admin-password';
   process.env.USE_LLM = 'false';
   delete process.env.LLM_PROVIDER;
 
@@ -56,28 +60,58 @@ type RecCard = {
 
 describe('first real user readiness e2e', () => {
   it('covers onboarding, recommendations, interactions, history, regeneration, and companion with API-only flow', async () => {
+    const authAgent: RequestAgent = (path, init = {}) => {
+      const method = (init.method ?? 'GET').toUpperCase();
+      const headers = new Headers(init.headers);
+      if (init.json !== undefined) {
+        headers.set('content-type', 'application/json');
+      }
+      const body = init.json !== undefined ? JSON.stringify(init.json) : (init.body as BodyInit | null | undefined);
+      const request = new Request(`http://localhost${path}`, { ...init, method, headers, body });
+
+      if (path === '/api/auth/login' && method === 'POST') {
+        return POST_AUTH_LOGIN(request);
+      }
+      if (path === '/api/auth/signup' && method === 'POST') {
+        return POST_AUTH_SIGNUP(request);
+      }
+      throw new Error(`Unsupported auth route: ${method} ${path}`);
+    };
+
+    const { cookieHeader: adminCookie } = await asAdmin(authAgent);
+    const { cookieHeader: userACookie, user: userA } = await signupAndLogin(authAgent, {
+      email: 'first.user.a@example.com',
+      password: 'password-123',
+      displayName: 'FirstUserA',
+    });
+    const { cookieHeader: userBCookie, user: userB } = await signupAndLogin(authAgent, {
+      email: 'first.user.b@example.com',
+      password: 'password-123',
+      displayName: 'FirstUserB',
+    });
+
     const createUserA = await POST_USERS(
       new Request('http://localhost/api/users', {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-admin-token': 'first-user-admin-token' },
+        headers: { 'content-type': 'application/json', cookie: adminCookie },
         body: JSON.stringify({ displayName: 'FirstUserA' }),
       }),
     );
     const createUserB = await POST_USERS(
       new Request('http://localhost/api/users', {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-admin-token': 'first-user-admin-token' },
+        headers: { 'content-type': 'application/json', cookie: adminCookie },
         body: JSON.stringify({ displayName: 'FirstUserB' }),
       }),
     );
     expect(createUserA.status).toBe(200);
     expect(createUserB.status).toBe(200);
-    const userAId = (await createUserA.json()).data.id as string;
-    const userBId = (await createUserB.json()).data.id as string;
+    const userAId = userA.id;
+    const userBId = userB.id;
 
     const experienceBefore = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(experienceBefore.status).toBe(200);
@@ -88,8 +122,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({ tolerance: 9, pacePreference: 'fast' }),
       }),
@@ -101,8 +134,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tolerance: 4,
@@ -116,8 +148,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userBId,
+          cookie: userBCookie,
         },
         body: JSON.stringify({
           tolerance: 3,
@@ -132,7 +163,7 @@ describe('first real user readiness e2e', () => {
 
     const experienceAfter = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(experienceAfter.status).toBe(200);
@@ -141,7 +172,7 @@ describe('first real user readiness e2e', () => {
     const recommendationsA = await POST_RECOMMENDATIONS_NEXT(
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(recommendationsA.status).toBe(200);
@@ -178,8 +209,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tmdbId: cardsA[0]!.movie.tmdbId,
@@ -194,8 +224,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tmdbId: cardsA[0]!.movie.tmdbId,
@@ -214,8 +243,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tmdbId: cardsA[1]!.movie.tmdbId,
@@ -231,7 +259,7 @@ describe('first real user readiness e2e', () => {
     const recommendationsB = await POST_RECOMMENDATIONS_NEXT(
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userBId },
+        headers: { cookie: userBCookie },
       }),
     );
     const cardsB = (await recommendationsB.json()).data.cards as RecCard[];
@@ -240,8 +268,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userBId,
+          cookie: userBCookie,
         },
         body: JSON.stringify({
           tmdbId: cardsB[0]!.movie.tmdbId,
@@ -256,8 +283,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tmdbId: cardsA[2]!.movie.tmdbId,
@@ -274,8 +300,7 @@ describe('first real user readiness e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'first-user-admin-token',
-          'x-user-id': userAId,
+          cookie: userACookie,
         },
         body: JSON.stringify({
           tmdbId: cardsA[3]!.movie.tmdbId,
@@ -291,7 +316,7 @@ describe('first real user readiness e2e', () => {
 
     const historyA = await GET_HISTORY(
       new Request('http://localhost/api/history', {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(historyA.status).toBe(200);
@@ -302,7 +327,7 @@ describe('first real user readiness e2e', () => {
 
     const historyB = await GET_HISTORY(
       new Request('http://localhost/api/history', {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userBId },
+        headers: { cookie: userBCookie },
       }),
     );
     const historyBBody = await historyB.json();
@@ -311,7 +336,7 @@ describe('first real user readiness e2e', () => {
 
     const summaryA = await GET_HISTORY_SUMMARY(
       new Request('http://localhost/api/history/summary', {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(summaryA.status).toBe(200);
@@ -322,12 +347,12 @@ describe('first real user readiness e2e', () => {
 
     const companionNoSpoilers = await GET_COMPANION(
       new Request(`http://localhost/api/companion?tmdbId=${cardsA[4]!.movie.tmdbId}&spoilerPolicy=NO_SPOILERS`, {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     const companionLight = await GET_COMPANION(
       new Request(`http://localhost/api/companion?tmdbId=${cardsA[4]!.movie.tmdbId}&spoilerPolicy=LIGHT`, {
-        headers: { 'x-admin-token': 'first-user-admin-token', 'x-user-id': userAId },
+        headers: { cookie: userACookie },
       }),
     );
     expect(companionNoSpoilers.status).toBe(200);

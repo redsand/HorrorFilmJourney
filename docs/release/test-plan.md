@@ -59,15 +59,26 @@ This plan validates the core narrative loop for initial real-user testing with d
 Required for full RC validation:
 
 - `ADMIN_TOKEN`
+- `DATABASE_URL`
 - `DATABASE_URL_TEST` (recommended) or `TEST_DATABASE_URL`
 
 Example `.env.test` template:
 
 ```env
 ADMIN_TOKEN=rc-admin-token
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/horror_film_journey?schema=public
 DATABASE_URL_TEST=postgresql://postgres:postgres@localhost:5432/postgres?schema=rc_validation_test
 USE_LLM=false
 ```
+
+Optional provider/runtime vars:
+
+- `REC_ENGINE_MODE` (`v1` or `modern`)
+- `LLM_PROVIDER` (`gemini` or `ollama`)
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL`
+- `OLLAMA_MODEL`
+- `OLLAMA_HOST`
 
 ## Commands and Expected Output
 

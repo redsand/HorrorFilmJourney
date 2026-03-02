@@ -7,14 +7,15 @@ Run a structured first-pass user test on the narrative recommendation loop and c
 ## Setup
 
 1. Configure environment variables:
-   - `ADMIN_TOKEN`
    - `DATABASE_URL`
+   - `INITIAL_ADMIN_EMAIL`
+   - `INITIAL_ADMIN_PASSWORD`
+   - `SESSION_SECRET`
    - `USE_LLM=false` for deterministic testing
-2. Initialize database schema and seed starter catalog:
+2. Initialize schema, bootstrap admin, and seed starter catalog:
 
 ```bash
-npx prisma db push --skip-generate
-npm run seed:catalog
+npm run setup:dev
 ```
 
 3. Start app:
@@ -25,31 +26,24 @@ npm run dev
 
 ## Tester Flow (API-backed)
 
-1. Create test user:
-   - `POST /api/users` with `x-admin-token`
-   - Save returned `user.id`
-2. Impersonate tester:
-   - Include `x-user-id: <user.id>` on user-scoped calls.
-3. Confirm onboarding gate:
-   - `GET /api/experience`
-   - Expected: `ONBOARDING_NEEDED`
-4. Submit onboarding:
-   - `POST /api/onboarding` with `{ tolerance, pacePreference, horrorDNA }`
-5. Generate recommendations:
-   - `POST /api/recommendations/next`
-   - Expected: exactly 5 cards, each with `streaming` and `evidence` keys
-6. Mark one recommendation `ALREADY_SEEN` with rating:
-   - `POST /api/interactions` with status + rating + optional quick-poll fields
-7. Mark one recommendation `WATCHED` with rating:
-   - `POST /api/interactions`
-8. Verify history:
-   - `GET /api/history`
-   - `GET /api/history/summary`
-9. Open companion mode while watching:
-   - `GET /api/companion?tmdbId=<id>&spoilerPolicy=NO_SPOILERS`
-10. Verify streaming section appears on cards:
-   - `streaming.region` exists
-   - `streaming.offers` exists (can be empty)
+1. Login with admin account:
+   - Open `/login`
+   - Use `INITIAL_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD`
+2. Create a test user:
+   - Open `/signup`
+   - Create a non-admin tester account and login as that user
+3. Run the journey loop in UI:
+   - Confirm onboarding appears (`ONBOARDING_NEEDED` behavior)
+   - Submit onboarding (tolerance + pace)
+   - Generate recommendation bundle (5 cards)
+   - Mark one card `ALREADY_SEEN` with rating
+   - Mark one card `WATCHED` with rating
+   - Open `/history` and verify interactions + summary
+   - Open companion mode from a card with `NO_SPOILERS`
+4. Verify contract cues in UI:
+   - cards have poster + ratings + codex sections
+   - streaming section exists (offers may be empty)
+   - evidence section exists (may be empty)
 
 ## What to Record During User Testing
 
@@ -74,3 +68,16 @@ npm run reset:test-db
 npm run validate:rc
 ```
 
+## UI Manual QA Checklist
+
+- [ ] `/login` loads and authenticates with session cookie
+- [ ] `/signup` creates a user and lands on Journey
+- [ ] Journey page loads without manual auth headers
+- [ ] Onboarding submit works and transitions to recommendations
+- [ ] Card actions (`Watch`, `Already seen`, `Skip`) succeed while authenticated
+- [ ] `/history` loads user-scoped interactions
+- [ ] `/profile` shows display name, email, role badge, and logout
+- [ ] Admin account sees `/admin/users` entry in profile
+- [ ] Non-admin account does not see `/admin/users` entry
+- [ ] `/admin/users` supports search, create, and edit flows
+- [ ] Admin demotion of the last admin is blocked with visible safety message

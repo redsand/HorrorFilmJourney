@@ -1,7 +1,6 @@
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUserId } from '@/lib/request-context';
+import { requireAuth } from '@/lib/auth/guards';
 import { z } from 'zod';
 
 const onboardingSchema = z.object({
@@ -10,15 +9,21 @@ const onboardingSchema = z.object({
   horrorDNA: z.unknown().optional(),
 });
 
-export async function POST(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
+function ensureDefaultRecommendationStyle(horrorDNA: unknown): Record<string, unknown> {
+  const base = horrorDNA && typeof horrorDNA === 'object' ? horrorDNA as Record<string, unknown> : {};
+  if (base.recommendationStyle === 'diversity' || base.recommendationStyle === 'popularity') {
+    return base;
   }
+  return {
+    ...base,
+    recommendationStyle: 'diversity',
+  };
+}
 
-  const { userId, error } = await getCurrentUserId(request, prisma);
-  if (error || !userId) {
-    return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
+export async function POST(request: Request): Promise<Response> {
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const body = await request.json().catch(() => null);
@@ -36,22 +41,25 @@ export async function POST(request: Request): Promise<Response> {
       400,
     );
   }
-  const existingProfile = await prisma.userProfile.findUnique({ where: { userId } });
+  const existingProfile = await prisma.userProfile.findUnique({ where: { userId: auth.userId } });
+  const normalizedHorrorDna = ensureDefaultRecommendationStyle(
+    parsed.data.horrorDNA ?? existingProfile?.horrorDNA ?? {},
+  );
 
   await prisma.userProfile.upsert({
-    where: { userId },
+    where: { userId: auth.userId },
     create: {
-      userId,
+      userId: auth.userId,
       onboardingCompleted: true,
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
-      horrorDNA: parsed.data.horrorDNA ?? {},
+      horrorDNA: normalizedHorrorDna,
     },
     update: {
       onboardingCompleted: true,
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
-      horrorDNA: parsed.data.horrorDNA ?? existingProfile?.horrorDNA ?? {},
+      horrorDNA: normalizedHorrorDna,
     },
   });
 

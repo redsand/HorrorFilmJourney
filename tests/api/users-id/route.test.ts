@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/users/[id]/route';
+import { makeSessionCookie } from '../../helpers/session-cookie';
 
 const { findUniqueMock } = vi.hoisted(() => ({
   findUniqueMock: vi.fn(),
@@ -15,11 +16,10 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('/api/users/[id] route', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     findUniqueMock.mockReset();
   });
 
-  it('returns 401 when admin token is missing', async () => {
+  it('returns 401 when admin session is missing', async () => {
     const request = new Request('http://localhost/api/users/user_1');
     const response = await GET(request, { params: { id: 'user_1' } });
 
@@ -38,7 +38,7 @@ describe('/api/users/[id] route', () => {
     });
 
     const request = new Request('http://localhost/api/users/user_1', {
-      headers: { 'x-admin-token': 'test-admin-token' },
+      headers: { cookie: makeSessionCookie('admin_1', true) },
     });
     const response = await GET(request, { params: { id: 'user_1' } });
 

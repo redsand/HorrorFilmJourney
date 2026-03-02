@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { zMovieCardVM } from '@/contracts/movieCardVM';
 import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 import { seedStarterHorrorCatalog } from '@/lib/testing/catalog-seed';
+import { asAdmin, signupAndLogin, type RequestAgent } from '../helpers/auth';
 
 const schemaName = 'narrative_loop_e2e_test';
 const databaseUrl = buildTestDatabaseUrl(schemaName);
@@ -13,6 +14,8 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 const { POST: POST_USERS } = await import('@/app/api/users/route');
+const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
+const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
@@ -26,7 +29,8 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  process.env.ADMIN_TOKEN = 'e2e-admin-token';
+  process.env.ADMIN_EMAIL = 'admin@local.test';
+  process.env.ADMIN_PASSWORD = 'dev-admin-password';
   process.env.USE_LLM = 'false';
   delete process.env.LLM_PROVIDER;
 
@@ -46,25 +50,48 @@ beforeEach(async () => {
 
 describe('narrative loop e2e', () => {
   it('proves the core narrative loop end-to-end with deterministic behavior', async () => {
+    const authAgent: RequestAgent = (path, init = {}) => {
+      const method = (init.method ?? 'GET').toUpperCase();
+      const headers = new Headers(init.headers);
+      if (init.json !== undefined) {
+        headers.set('content-type', 'application/json');
+      }
+      const body = init.json !== undefined ? JSON.stringify(init.json) : (init.body as BodyInit | null | undefined);
+      const request = new Request(`http://localhost${path}`, { ...init, method, headers, body });
+
+      if (path === '/api/auth/login' && method === 'POST') {
+        return POST_AUTH_LOGIN(request);
+      }
+      if (path === '/api/auth/signup' && method === 'POST') {
+        return POST_AUTH_SIGNUP(request);
+      }
+      throw new Error(`Unsupported auth route: ${method} ${path}`);
+    };
+
+    const { cookieHeader: adminCookie } = await asAdmin(authAgent);
+    const { cookieHeader: userCookie, user } = await signupAndLogin(authAgent, {
+      email: 'e2e.tester@example.com',
+      password: 'password-123',
+      displayName: 'E2E Tester',
+    });
+
     const createUserResponse = await POST_USERS(
       new Request('http://localhost/api/users', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
+          cookie: adminCookie,
         },
         body: JSON.stringify({ displayName: 'E2E Tester' }),
       }),
     );
     expect(createUserResponse.status).toBe(200);
-    const user = (await createUserResponse.json()).data as { id: string };
     const userId = user.id;
 
     const beforeOnboardingResponse = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -77,8 +104,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tolerance: 4,
@@ -92,8 +118,7 @@ describe('narrative loop e2e', () => {
     const afterOnboardingResponse = await GET_EXPERIENCE(
       new Request('http://localhost/api/experience', {
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -106,8 +131,7 @@ describe('narrative loop e2e', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -144,8 +168,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[0]!.movie.tmdbId,
@@ -161,8 +184,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[0]!.movie.tmdbId,
@@ -182,8 +204,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[1]!.movie.tmdbId,
@@ -200,8 +221,7 @@ describe('narrative loop e2e', () => {
     const historyResponse = await GET_HISTORY(
       new Request('http://localhost/api/history', {
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -215,8 +235,7 @@ describe('narrative loop e2e', () => {
     const summaryResponse = await GET_HISTORY_SUMMARY(
       new Request('http://localhost/api/history/summary', {
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -229,8 +248,7 @@ describe('narrative loop e2e', () => {
     const companionResponse = await GET_COMPANION(
       new Request(`http://localhost/api/companion?tmdbId=${cards[0]!.movie.tmdbId}&spoilerPolicy=NO_SPOILERS`, {
         headers: {
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
       }),
     );
@@ -245,8 +263,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[2]!.movie.tmdbId,
@@ -263,8 +280,7 @@ describe('narrative loop e2e', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-admin-token': 'e2e-admin-token',
-          'x-user-id': userId,
+          cookie: userCookie,
         },
         body: JSON.stringify({
           tmdbId: cards[3]!.movie.tmdbId,

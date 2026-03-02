@@ -1,18 +1,12 @@
 import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUserId } from '@/lib/request-context';
 import { buildEvidenceDedupKey } from '@/lib/evidence/evidence-dedupe';
 
 export async function POST(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { error } = await getCurrentUserId(request, prisma);
-  if (error) {
-    return fail(error, 400);
+  const auth = await validateAdminToken(request);
+  if (auth.error) {
+    return fail(auth.error, auth.status ?? 401);
   }
 
   const body = await request.json().catch(() => null);

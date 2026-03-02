@@ -1,8 +1,7 @@
 import { InteractionStatus } from '@prisma/client';
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUserId } from '@/lib/request-context';
+import { requireAuth } from '@/lib/auth/guards';
 
 function bucketDecade(year: number | null): string | null {
   if (!year) {
@@ -24,18 +23,13 @@ function addTags(counter: Map<string, number>, values: unknown): void {
 }
 
 export async function GET(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { userId, error } = await getCurrentUserId(request, prisma);
-  if (error || !userId) {
-    return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const interactions = await prisma.userMovieInteraction.findMany({
-    where: { userId },
+    where: { userId: auth.userId },
     include: {
       movie: {
         select: {

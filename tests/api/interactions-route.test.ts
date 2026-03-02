@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/interactions/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const {
   userFindUniqueMock,
@@ -32,7 +33,6 @@ vi.mock('@/lib/recommendation/recommendation-engine', () => ({
 
 describe('POST /api/interactions', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     interactionCreateMock.mockReset();
@@ -49,8 +49,7 @@ describe('POST /api/interactions', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
       body: JSON.stringify({ tmdbId: 1, status: 'WATCHED' }),
     });
@@ -83,8 +82,7 @@ describe('POST /api/interactions', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
       body: JSON.stringify({ tmdbId: 1, status: 'WATCHED', rating: 5 }),
     });
@@ -126,8 +124,7 @@ describe('POST /api/interactions', () => {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
-            'x-admin-token': 'test-admin-token',
-            'x-user-id': 'user_1',
+            cookie: makeSessionCookie('user_1'),
           },
           body: JSON.stringify({ tmdbId: 1, status: 'ALREADY_SEEN', rating: 5, recommendationItemId: 'rec_item_1' }),
         }),

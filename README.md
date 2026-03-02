@@ -18,6 +18,23 @@ Next.js App Router + TypeScript scaffold with Prisma (PostgreSQL), admin-token r
 
    Ensure PostgreSQL is running locally with credentials `postgres/postgres`, and create database `horror_film_journey` if it does not already exist.
 
+   Minimum required vars:
+
+   - `DATABASE_URL`
+   - `ADMIN_TOKEN`
+
+   Additional supported vars:
+
+   - `REC_ENGINE_MODE` (`v1` or `modern`)
+   - `DATABASE_URL_TEST` (dedicated test DB/schema URL)
+   - `TEST_DATABASE_URL` (alternate test DB URL used by helpers/scripts)
+   - `LLM_PROVIDER` (`gemini` or `ollama`)
+   - `GEMINI_API_KEY` (required for `LLM_PROVIDER=gemini`)
+   - `GEMINI_MODEL` (optional override; default `gemini-1.5-flash`)
+   - `OLLAMA_MODEL` (required for `LLM_PROVIDER=ollama`)
+   - `OLLAMA_HOST` (optional; default `http://localhost:11434`)
+   - `USE_LLM` (test determinism toggle; commonly `false` in test/E2E)
+
 3. Generate Prisma client and apply migration:
 
    ```bash

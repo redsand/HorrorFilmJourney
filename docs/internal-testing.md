@@ -1,63 +1,50 @@
 # Internal Testing Guide
 
-## Create test users
+Use the UI login flow. Do not use legacy auth headers.
 
-Use `POST /api/users` with the admin token.
+## 1) Start app
 
 ```bash
-curl -s -X POST http://localhost:3000/api/users \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "content-type: application/json" \
-  -d '{"displayName":"Test User"}'
+npm run dev
 ```
 
-Response includes `data.id` (the user id).
+Open `http://localhost:3000`.
 
-## Select a user via `X-User-Id`
+## 2) Create account
 
-Most user-scoped endpoints require:
+- Open `http://localhost:3000/signup`
+- Enter display name, email, password.
+- Submit and confirm you land on Journey (`/`).
 
-- `x-admin-token: <ADMIN_TOKEN>`
-- `x-user-id: <existing user id>`
+## 3) Login existing account
 
-Example:
+- Open `http://localhost:3000/login`
+- Enter email + password.
+- Submit and confirm Journey loads.
 
-```bash
-curl -s http://localhost:3000/api/experience \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "x-user-id: $USER_ID"
-```
+## 4) Exercise core loop in UI
 
-## Common curl flows
+1. Complete onboarding.
+2. Generate recommendation bundle.
+3. Mark one movie `WATCHED` with rating.
+4. Mark one movie `ALREADY_SEEN` with rating.
+5. Open `/history` and confirm both interactions.
+6. Open companion from a card and test spoiler policy toggle.
 
-### Upsert movie
+## 5) Admin-only routes
 
-```bash
-curl -s -X POST http://localhost:3000/api/movies/upsert \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "x-user-id: $USER_ID" \
-  -H "content-type: application/json" \
-  -d '{"tmdbId":603,"title":"The Matrix","year":1999,"posterUrl":"https://image.tmdb.org/t/p/w500/example.jpg"}'
-```
+Admin routes require an admin session cookie (`isAdmin=true`), not headers.
 
-### Create interaction
+## Optional API seed example
 
 ```bash
-curl -s -X POST http://localhost:3000/api/interactions \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "x-user-id: $USER_ID" \
-  -H "content-type: application/json" \
-  -d '{"tmdbId":603,"status":"WATCHED","rating":5}'
-```
-
-### Get history and summary
-
-```bash
-curl -s "http://localhost:3000/api/history?limit=20" \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "x-user-id: $USER_ID"
-
-curl -s http://localhost:3000/api/history/summary \
-  -H "x-admin-token: $ADMIN_TOKEN" \
-  -H "x-user-id: $USER_ID"
+curl -X POST "http://localhost:3000/api/movies/upsert" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tmdbId": 9999,
+    "title": "Internal Seed Title",
+    "posterUrl": "https://image.tmdb.org/t/p/w500/example.jpg",
+    "year": 1999,
+    "genres": ["horror"]
+  }'
 ```

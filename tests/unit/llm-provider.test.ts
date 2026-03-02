@@ -104,6 +104,35 @@ describe('provider request building and schema errors', () => {
     expect(payload.options.num_predict).toBe(1024);
   });
 
+  it('falls back to /api/chat when /api/generate returns empty response text', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ response: '' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ message: { content: '{"answer":"ok-from-chat"}' } }),
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new OllamaProvider('glm-5:cloud', 'http://localhost:11434');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+    });
+
+    expect(result).toEqual({ answer: 'ok-from-chat' });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const [firstUrl] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const [secondUrl] = fetchMock.mock.calls[1] as [string, RequestInit];
+    expect(firstUrl).toBe('http://localhost:11434/api/generate');
+    expect(secondUrl).toBe('http://localhost:11434/api/chat');
+  });
+
   it('throws LLM_SCHEMA_ERROR when provider returns invalid JSON', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

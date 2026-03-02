@@ -1,18 +1,12 @@
 import { InteractionStatus } from '@prisma/client';
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUserId } from '@/lib/request-context';
+import { requireAuth } from '@/lib/auth/guards';
 
 export async function GET(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { userId, error } = await getCurrentUserId(request, prisma);
-  if (error || !userId) {
-    return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const url = new URL(request.url);
@@ -31,7 +25,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const interactions = await prisma.userMovieInteraction.findMany({
     where: {
-      userId,
+      userId: auth.userId,
       ...(status ? { status: status as InteractionStatus } : {}),
     },
     orderBy: { createdAt: 'desc' },

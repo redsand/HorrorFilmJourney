@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     env: { ...process.env, DATABASE_URL: databaseUrl },
   });
 
-  execSync('node --experimental-strip-types scripts/seed.ts', {
+  execSync('node --experimental-strip-types scripts/seed-catalog.ts', {
     stdio: 'inherit',
     env: { ...process.env, DATABASE_URL: databaseUrl },
   });

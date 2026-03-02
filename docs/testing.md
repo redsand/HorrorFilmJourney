@@ -6,6 +6,16 @@
 - Prisma integration tests use PostgreSQL with suite-specific schemas.
 - Test setup creates schema with `prisma db push --skip-generate` through `tests/helpers/test-db.ts`.
 
+## Authentication in tests
+
+- Header-based test auth (`X-Admin-Token`, `X-User-Id`) has been replaced by cookie sessions.
+- Use `tests/helpers/auth.ts`:
+  - `signupAndLogin(agent, { email, password, displayName })`
+  - `login(agent, { email, password })`
+  - `asAdmin(agent)`
+- Helpers call `/api/auth/signup` and `/api/auth/login`, parse `Set-Cookie`, and return a `cookieHeader` you pass to subsequent requests as `Cookie`.
+- For route-unit tests that do not dispatch auth routes, use `tests/helpers/session-cookie.ts` to generate a signed test session cookie.
+
 ## Vitest mock hoisting rule
 
 - Use `vi.hoisted(() => ({ ... }))` for mock fns consumed by `vi.mock` factories.
@@ -24,6 +34,7 @@ npm test
 npm test -- tests/api/history-route.test.ts tests/api/history-summary-route.test.ts
 npm test -- tests/acceptance/narrative-experience.test.ts
 npm run test:e2e
+npm run test:ollama:local
 npm run validate:rc
 ```
 
@@ -33,9 +44,9 @@ If dependencies are unavailable in a constrained environment, run these in CI or
 
 - `tests/acceptance/narrative-experience.test.ts` enforces end-to-end UX behavior, not only schema plumbing.
 - Covered path:
-  - user creation
+  - user signup/login
   - onboarding required state
-  - onboarding submission simulation (profile persisted)
+  - onboarding submission via API (profile persisted)
   - recommendation generation (exactly 5 cards)
   - interaction validation (`WATCHED`/`ALREADY_SEEN` require rating)
   - history and history summary user scoping
@@ -57,3 +68,13 @@ If dependencies are unavailable in a constrained environment, run these in CI or
   - `docs/release/user-testing-runbook.md`
 - One-command validation:
   - `npm run validate:rc`
+
+## Local Ollama proof test
+
+- Command: `npm run test:ollama:local`
+- Purpose: executes a real local Ollama request through `OllamaProvider.generateJson` and asserts schema-conformant JSON.
+- Requirements:
+  - `OLLAMA_HOST` reachable (default `http://localhost:11434`)
+  - `OLLAMA_MODEL` set and available in local Ollama (`ollama list` should include it)
+- Guardrail:
+  - The test allows network calls only to `localhost`/`127.0.0.1`; non-local calls fail.

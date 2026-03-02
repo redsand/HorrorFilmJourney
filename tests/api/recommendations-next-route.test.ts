@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/recommendations/next/route';
+import { TmdbSyncUnavailableError } from '@/lib/tmdb/live-candidate-sync';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { userFindUniqueMock, generateRecommendationBatchMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
@@ -18,19 +20,18 @@ vi.mock('@/lib/recommendation/recommendation-engine', () => ({
 
 describe('POST /api/recommendations/next', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     generateRecommendationBatchMock.mockReset();
   });
 
-  it('returns 401 when admin token is missing', async () => {
+  it('returns 401 when auth session is missing', async () => {
     const request = new Request('http://localhost/api/recommendations/next', { method: 'POST' });
     const response = await POST(request);
 
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toEqual({
       data: null,
-      error: { code: 'UNAUTHORIZED', message: 'Invalid admin token' },
+      error: { code: 'UNAUTHORIZED', message: 'Authentication required' },
     });
   });
 
@@ -50,8 +51,7 @@ describe('POST /api/recommendations/next', () => {
     const request = new Request('http://localhost/api/recommendations/next', {
       method: 'POST',
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 
@@ -65,5 +65,26 @@ describe('POST /api/recommendations/next', () => {
     expect(body.data.cards.every((card: { movie: { posterUrl: string } }) => Boolean(card.movie.posterUrl))).toBe(true);
     expect(body.data.cards.every((card: { ratings: { imdb?: unknown; additional: unknown[] } }) => Boolean(card.ratings.imdb))).toBe(true);
     expect(body.data.cards.every((card: { ratings: { additional: unknown[] } }) => card.ratings.additional.length >= 1)).toBe(true);
+  });
+
+  it('returns 503 when TMDB sync is unavailable', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    generateRecommendationBatchMock.mockRejectedValueOnce(
+      new TmdbSyncUnavailableError('TMDB is currently unavailable. Please try again in a moment.'),
+    );
+
+    const request = new Request('http://localhost/api/recommendations/next', {
+      method: 'POST',
+      headers: {
+        cookie: makeSessionCookie('user_1'),
+      },
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      data: null,
+      error: { code: 'TMDB_UNAVAILABLE', message: 'TMDB is currently unavailable. Please try again in a moment.' },
+    });
   });
 });

@@ -2,21 +2,15 @@ import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { normalizeRating } from '@/lib/ratings/rating-normalizer';
-import { getCurrentUserId } from '@/lib/request-context';
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
 export async function POST(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { error } = await getCurrentUserId(request, prisma);
-  if (error) {
-    return fail(error, 400);
+  const auth = await validateAdminToken(request);
+  if (auth.error) {
+    return fail(auth.error, auth.status ?? 401);
   }
 
   const body = await request.json().catch(() => null);

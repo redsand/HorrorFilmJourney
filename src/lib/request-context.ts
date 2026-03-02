@@ -1,4 +1,5 @@
 import type { PrismaClient, User } from '@prisma/client';
+import { requireAuth } from '@/lib/auth/guards';
 
 type ValidationError = { code: 'VALIDATION_ERROR'; message: string };
 
@@ -6,30 +7,17 @@ export async function getCurrentUserId(
   request: Request,
   prisma: PrismaClient,
 ): Promise<{ userId: string | null; error: ValidationError | null }> {
-  const userId = request.headers.get('x-user-id');
-
-  if (!userId) {
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
     return {
       userId: null,
       error: {
         code: 'VALIDATION_ERROR',
-        message: 'Missing X-User-Id header',
+        message: auth.error.message,
       },
     };
   }
-
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) {
-    return {
-      userId: null,
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'X-User-Id does not map to an existing user',
-      },
-    };
-  }
-
-  return { userId: user.id, error: null };
+  return { userId: auth.userId, error: null };
 }
 
 export async function resolveCurrentUser(
@@ -48,7 +36,7 @@ export async function resolveCurrentUser(
       user: null,
       error: {
         code: 'VALIDATION_ERROR',
-        message: 'X-User-Id does not map to an existing user',
+        message: 'Authenticated user does not exist',
       },
     };
   }

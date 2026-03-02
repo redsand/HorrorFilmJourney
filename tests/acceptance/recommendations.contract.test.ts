@@ -6,6 +6,7 @@ import {
   setupAcceptanceDatabase,
 } from './utils/recommendations-seed';
 import { zMovieCardVM } from '@/contracts/movieCardVM';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const acceptanceSchemaName = 'recommendations_contract_acceptance_test';
 const acceptancePrisma = createAcceptancePrisma(acceptanceSchemaName);
@@ -21,11 +22,10 @@ beforeAll(() => {
   setupAcceptanceDatabase(acceptanceSchemaName);
 });
 
-beforeEach(async () => {
-  process.env.ADMIN_TOKEN = 'acceptance-admin-token';
-  delete process.env.REC_ENGINE_MODE;
-  await resetAcceptanceDatabase(acceptancePrisma);
-});
+  beforeEach(async () => {
+    delete process.env.REC_ENGINE_MODE;
+    await resetAcceptanceDatabase(acceptancePrisma);
+  });
 
 describe('recommendations contract acceptance', () => {
   it('returns 200, exactly 5 unique cards, and all cards validate against MovieCardVM', async () => {
@@ -34,8 +34,7 @@ describe('recommendations contract acceptance', () => {
     const request = new Request('http://localhost/api/recommendations/next', {
       method: 'POST',
       headers: {
-        'x-admin-token': 'acceptance-admin-token',
-        'x-user-id': userAId,
+        cookie: makeSessionCookie(userAId),
       },
     });
 
@@ -79,8 +78,7 @@ describe('recommendations contract acceptance', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userAId,
+          cookie: makeSessionCookie(userAId),
         },
       }),
     );
@@ -89,8 +87,7 @@ describe('recommendations contract acceptance', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userBId,
+          cookie: makeSessionCookie(userBId),
         },
       }),
     );
@@ -120,8 +117,7 @@ describe('recommendations contract acceptance', () => {
       new Request('http://localhost/api/recommendations/next', {
         method: 'POST',
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
-          'x-user-id': userAId,
+          cookie: makeSessionCookie(userAId),
         },
       }),
     );
@@ -141,7 +137,7 @@ describe('recommendations contract acceptance', () => {
     const diagnosticsResponse = await GET_DIAGNOSTICS(
       new Request(`http://localhost/api/recommendations/${batchId}/diagnostics`, {
         headers: {
-          'x-admin-token': 'acceptance-admin-token',
+          cookie: makeSessionCookie(userAId, true),
         },
       }),
       { params: { batchId } },

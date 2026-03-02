@@ -61,21 +61,31 @@ function decadeOf(year: number | null): number | null {
 }
 
 export function buildNarrative(movie: CandidateMovie, rank: number): RecommendationCardNarrative {
+  const primaryGenre = movie.genres[0] ?? 'horror';
+  const secondaryGenre = movie.genres[1];
+  const genreLabel = secondaryGenre ? `${primaryGenre}/${secondaryGenre}` : primaryGenre;
+  const additionalRating = movie.ratings.additional[0];
+  const ratingSignal = additionalRating?.rawValue
+    ? `${additionalRating.source.replaceAll('_', ' ')} ${additionalRating.rawValue}`
+    : additionalRating
+      ? `${additionalRating.source.replaceAll('_', ' ')} ${additionalRating.value}/${additionalRating.scale}`
+      : 'multi-source reception';
+
   const watchFor = [
-    `How ${movie.title} builds tension scene-by-scene`,
-    'A key style choice that shapes mood',
-    'One performance beat that pays off late',
+    `How ${movie.title} stages ${genreLabel} tension scene-by-scene`,
+    `A craft choice that aligns with its ${movie.year ? `${Math.floor(movie.year / 10) * 10}s` : 'era'} horror style`,
+    `One character or performance beat that explains its ${ratingSignal} reception`,
   ];
 
   return recommendationCardNarrativeSchema.parse({
-    whyImportant: `${movie.title} expands your horror map with a distinct tone and craft approach.`,
-    whatItTeaches: 'How to spot structure, suspense pacing, and genre technique quickly.',
+    whyImportant: `${movie.title} broadens your journey with a ${genreLabel} angle and a clear stylistic signature.`,
+    whatItTeaches: `How to read pacing, visual language, and tone decisions in ${genreLabel} horror.`,
     watchFor,
     historicalContext: movie.year
-      ? `Released in ${movie.year}, it reflects genre trends of that era while still feeling useful for modern viewing.`
+      ? `Released in ${movie.year}, it shows how ${genreLabel} conventions evolved in that period and why they still influence modern horror.`
       : 'A useful genre waypoint that helps connect broader horror trends across eras.',
     reception: {
-      summary: 'Included by engine v1 using deterministic template rationale.',
+      summary: `Signal check: IMDb ${movie.ratings.imdb.rawValue ?? `${movie.ratings.imdb.value}/${movie.ratings.imdb.scale}`}${additionalRating ? `, ${ratingSignal}` : ''}.`,
     },
     castHighlights: [],
     streaming: [],
@@ -120,9 +130,17 @@ function toRatings(
 
 export function isRecommendationEligibleMovie(input: {
   posterUrl: string;
+  posterLastValidatedAt?: Date | null;
   ratings: Array<{ source: string }>;
 }): boolean {
-  if (input.posterUrl.trim().length === 0) {
+  const posterUrl = input.posterUrl.trim();
+  if (posterUrl.length === 0) {
+    return false;
+  }
+  if (posterUrl.startsWith('/api/posters/')) {
+    return false;
+  }
+  if (process.env.NODE_ENV !== 'test' && !input.posterLastValidatedAt) {
     return false;
   }
 
@@ -207,6 +225,17 @@ export async function generateRecommendationBatchV1(
   });
 
   const excludedMovieIds = new Set(seenInteractions.map((item) => item.movieId));
+  const latestBatch = await prisma.recommendationBatch.findFirst({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      items: {
+        select: { movieId: true },
+      },
+    },
+  });
+  latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
 
   const allMovies = await prisma.movie.findMany({
     orderBy: { tmdbId: 'asc' },
@@ -216,6 +245,7 @@ export async function generateRecommendationBatchV1(
       title: true,
       year: true,
       posterUrl: true,
+      posterLastValidatedAt: true,
       genres: true,
       ratings: {
         select: { source: true, value: true, scale: true, rawValue: true },
@@ -223,9 +253,21 @@ export async function generateRecommendationBatchV1(
     },
   });
 
+  const posterQualityStats = {
+    total: allMovies.length,
+    validated: allMovies.filter((movie) => Boolean(movie.posterLastValidatedAt)).length,
+    fallbackApi: allMovies.filter((movie) => movie.posterUrl.startsWith('/api/posters/')).length,
+    tmdbHost: allMovies.filter((movie) => movie.posterUrl.startsWith('https://image.tmdb.org/')).length,
+  };
+  console.info('[recommendations.engine] v1 poster quality', posterQualityStats);
+
   const candidates = allMovies
     .filter((movie) => !excludedMovieIds.has(movie.id))
-    .filter((movie) => isRecommendationEligibleMovie({ posterUrl: movie.posterUrl, ratings: movie.ratings }))
+    .filter((movie) => isRecommendationEligibleMovie({
+      posterUrl: movie.posterUrl,
+      posterLastValidatedAt: movie.posterLastValidatedAt,
+      ratings: movie.ratings,
+    }))
     .map((movie) => {
       const ratings = toRatings(movie.ratings);
       if (!ratings) {
@@ -245,6 +287,12 @@ export async function generateRecommendationBatchV1(
     .filter((movie): movie is CandidateMovie => movie !== null);
 
   const selectedMovies = pickDiverseMovies(candidates, targetCount);
+  console.info('[recommendations.engine] v1 selected posters', {
+    selectedCount: selectedMovies.length,
+    tmdbHost: selectedMovies.filter((movie) => movie.posterUrl.startsWith('https://image.tmdb.org/')).length,
+    fallbackApi: selectedMovies.filter((movie) => movie.posterUrl.startsWith('/api/posters/')).length,
+    sample: selectedMovies.slice(0, 5).map((movie) => ({ tmdbId: movie.tmdbId, posterUrl: movie.posterUrl })),
+  });
   const streamingLookup = new StreamingLookupService(prisma, new DeterministicStubStreamingProvider());
   const streamingByMovieId = new Map(
     await Promise.all(

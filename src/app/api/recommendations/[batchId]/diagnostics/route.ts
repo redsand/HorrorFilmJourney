@@ -9,9 +9,9 @@ type Context = {
 };
 
 export async function GET(request: Request, context: Context): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
+  const auth = await validateAdminToken(request);
+  if (auth.error) {
+    return fail(auth.error, auth.status ?? 401);
   }
 
   const diagnostics = await prisma.recommendationDiagnostics.findUnique({

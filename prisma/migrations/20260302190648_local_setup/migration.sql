@@ -1,0 +1,3 @@
+-- No-op migration retained for historical continuity.
+-- Previous SQL in this migration referenced tables created in later migrations and
+-- broke shadow database replay. Schema changes now come from later migrations.

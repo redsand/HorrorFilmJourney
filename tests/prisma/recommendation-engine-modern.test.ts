@@ -36,7 +36,7 @@ beforeEach(async () => {
 });
 
 describe('RecommendationEngine modern mode', () => {
-  it('matches v1 outputs while enforcing ratings and poster in cards', async () => {
+  it('rotates away from the previous batch while enforcing ratings and poster in cards', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Mode User' } });
     const movies = await Promise.all(
       [601, 602, 603, 604, 605, 606].map((tmdbId, i) =>
@@ -51,7 +51,10 @@ describe('RecommendationEngine modern mode', () => {
     process.env.REC_ENGINE_MODE = 'modern';
     const modern = await generateRecommendationBatch(user.id, prisma);
 
-    expect(modern.cards.map((c) => c.movie.tmdbId)).toEqual(v1.cards.map((c) => c.movie.tmdbId));
+    const v1Ids = new Set(v1.cards.map((c) => c.movie.tmdbId));
+    expect(modern.cards.every((card) => !v1Ids.has(card.movie.tmdbId))).toBe(true);
+    expect(modern.cards.length).toBeGreaterThan(0);
+    expect(modern.cards.length).toBeLessThanOrEqual(5);
     expect(modern.cards.every((card) => card.movie.posterUrl.length > 0)).toBe(true);
     expect(modern.cards.every((card) => typeof card.ratings.imdb.value === 'number')).toBe(true);
     expect(modern.cards.every((card) => card.ratings.additional.length >= 1)).toBe(true);

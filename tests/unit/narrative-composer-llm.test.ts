@@ -79,7 +79,7 @@ describe('composeCardNarrative LLM integration', () => {
       llmProvider: provider,
     });
 
-    expect(result.whyImportant).toContain('Narrative Fixture expands your horror map');
+    expect(result.whyImportant).toContain('Narrative Fixture broadens your journey');
     expect(() => recommendationCardNarrativeSchema.parse(result)).not.toThrow();
   });
 
@@ -94,7 +94,7 @@ describe('composeCardNarrative LLM integration', () => {
       llmProvider: provider,
     });
 
-    expect(result.whyImportant).toContain('Narrative Fixture expands your horror map');
+    expect(result.whyImportant).toContain('Narrative Fixture broadens your journey');
     expect(() => recommendationCardNarrativeSchema.parse(result)).not.toThrow();
   });
 
@@ -123,7 +123,7 @@ describe('composeCardNarrative LLM integration', () => {
       llmProvider: provider,
     });
 
-    expect(result.whyImportant).toContain('Narrative Fixture expands your horror map');
+    expect(result.whyImportant).toContain('Narrative Fixture broadens your journey');
     expect(() => recommendationCardNarrativeSchema.parse(result)).not.toThrow();
   });
 });

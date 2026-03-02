@@ -1,9 +1,8 @@
 import { InteractionStatus } from '@prisma/client';
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
-import { getCurrentUserId } from '@/lib/request-context';
+import { requireAuth } from '@/lib/auth/guards';
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
@@ -14,14 +13,9 @@ function isRating(value: unknown): value is number {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { userId, error } = await getCurrentUserId(request, prisma);
-  if (error || !userId) {
-    return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const body = await request.json().catch(() => null);
@@ -74,7 +68,7 @@ export async function POST(request: Request): Promise<Response> {
 
   const interaction = await prisma.userMovieInteraction.create({
     data: {
-      userId,
+      userId: auth.userId,
       movieId: movie.id,
       status: status as InteractionStatus,
       rating: rating as number | undefined,
@@ -109,17 +103,17 @@ export async function POST(request: Request): Promise<Response> {
     if (recommendationItem?.batchId) {
       const alreadySeenCount = await prisma.userMovieInteraction.count({
         where: {
-          userId,
+          userId: auth.userId,
           status: InteractionStatus.ALREADY_SEEN,
           recommendationItem: {
             batchId: recommendationItem.batchId,
-            batch: { userId },
+            batch: { userId: auth.userId },
           },
         },
       });
 
       if (alreadySeenCount >= 3) {
-        nextBatch = await generateRecommendationBatch(userId, prisma);
+        nextBatch = await generateRecommendationBatch(auth.userId, prisma);
       }
     }
   }

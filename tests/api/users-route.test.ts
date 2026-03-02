@@ -1,28 +1,40 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET, POST } from '@/app/api/users/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
 const { createMock, findManyMock } = vi.hoisted(() => ({
   createMock: vi.fn(),
   findManyMock: vi.fn(),
 }));
+const { findCredentialMock } = vi.hoisted(() => ({
+  findCredentialMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
+    $transaction: async (callback: (tx: unknown) => Promise<unknown>) =>
+      callback({
+        user: { create: createMock },
+        userCredential: { create: vi.fn() },
+      }),
     user: {
       create: createMock,
       findMany: findManyMock,
+    },
+    userCredential: {
+      findUnique: findCredentialMock,
     },
   },
 }));
 
 describe('/api/users route', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     createMock.mockReset();
     findManyMock.mockReset();
+    findCredentialMock.mockReset();
   });
 
-  it('returns 401 for POST when admin token is missing', async () => {
+  it('returns 401 for POST when admin session is missing', async () => {
     const request = new Request('http://localhost/api/users', {
       method: 'POST',
       body: JSON.stringify({ displayName: 'Ripley' }),
@@ -31,6 +43,19 @@ describe('/api/users route', () => {
 
     const response = await POST(request);
     expect(response.status).toBe(401);
+  });
+
+  it('returns 403 for GET when logged-in user is not admin', async () => {
+    const request = new Request('http://localhost/api/users', {
+      headers: { cookie: makeSessionCookie('user_1', false) },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      data: null,
+      error: { code: 'FORBIDDEN', message: 'Admin access required' },
+    });
   });
 
   it('creates user and returns 200 envelope', async () => {
@@ -45,7 +70,7 @@ describe('/api/users route', () => {
       body: JSON.stringify({ displayName: 'Ripley' }),
       headers: {
         'content-type': 'application/json',
-        'x-admin-token': 'test-admin-token',
+        cookie: makeSessionCookie('admin_1', true),
       },
     });
 
@@ -68,11 +93,12 @@ describe('/api/users route', () => {
         id: 'user_1',
         displayName: 'Ripley',
         createdAt: new Date('2025-01-01T00:00:00.000Z'),
+        credentials: [{ email: 'ripley@example.com', isAdmin: false }],
       },
     ]);
 
     const request = new Request('http://localhost/api/users', {
-      headers: { 'x-admin-token': 'test-admin-token' },
+      headers: { cookie: makeSessionCookie('admin_1', true) },
     });
 
     const response = await GET(request);
@@ -84,6 +110,8 @@ describe('/api/users route', () => {
           id: 'user_1',
           displayName: 'Ripley',
           createdAt: '2025-01-01T00:00:00.000Z',
+          email: 'ripley@example.com',
+          role: 'USER',
         },
       ],
       error: null,

@@ -1,10 +1,70 @@
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUserId } from '@/lib/request-context';
+import { requireAuth } from '@/lib/auth/guards';
+import { getLlmProviderFromEnv } from '@/ai';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 type CreditCast = { name: string; role?: string };
+type RatingRow = { source: string; value: number; scale: string; rawValue: string | null };
+type CompanionLlmOutput = {
+  lightSummary: string;
+  fullSummary: string;
+  trivia: string[];
+};
+type TmdbCreditPerson = { name?: string; job?: string; character?: string };
+type TmdbMoviePayload = {
+  id: number;
+  title?: string;
+  release_date?: string;
+  poster_path?: string | null;
+  overview?: string;
+  tagline?: string;
+  runtime?: number | null;
+  genres?: Array<{ id: number; name?: string }>;
+  production_countries?: Array<{ iso_3166_1?: string; name?: string }>;
+  spoken_languages?: Array<{ iso_639_1?: string; english_name?: string; name?: string }>;
+  vote_average?: number;
+  vote_count?: number;
+  popularity?: number;
+  credits?: {
+    cast?: TmdbCreditPerson[];
+    crew?: TmdbCreditPerson[];
+  };
+};
+type TmdbSearchPayload = {
+  results?: Array<{ id?: number; title?: string; release_date?: string; poster_path?: string | null }>;
+};
+type TmdbCompanionFacts = {
+  title: string;
+  year?: number;
+  posterUrl?: string;
+  overview?: string;
+  tagline?: string;
+  runtimeMinutes?: number;
+  genres: string[];
+  countries: string[];
+  languages: string[];
+  voteAverage?: number;
+  voteCount?: number;
+  popularity?: number;
+  director?: string;
+  cast: CreditCast[];
+};
+const COMPANION_LLM_JSON_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['lightSummary', 'fullSummary', 'trivia'],
+  properties: {
+    lightSummary: { type: 'string' },
+    fullSummary: { type: 'string' },
+    trivia: {
+      type: 'array',
+      minItems: 5,
+      maxItems: 5,
+      items: { type: 'string' },
+    },
+  },
+} as const;
 
 function normalizeSpoilerPolicy(value: string | null): SpoilerPolicy | null {
   if (!value) {
@@ -48,26 +108,410 @@ function parseCast(value: unknown): CreditCast[] {
     .filter((entry): entry is CreditCast => Boolean(entry) && entry.name.length > 0);
 }
 
-function buildSections(title: string, year: number | null, spoilerPolicy: SpoilerPolicy, hasCredits: boolean) {
-  const yearText = year ? ` (${year})` : '';
+function formatRatingLine(rating: RatingRow): string {
+  if (rating.rawValue && rating.rawValue.trim().length > 0) {
+    return `${rating.source.replaceAll('_', ' ')}: ${rating.rawValue}`;
+  }
+  return `${rating.source.replaceAll('_', ' ')}: ${rating.value}/${rating.scale}`;
+}
 
-  const productionNotes = [`${title}${yearText}: notable craft choices and production context without plot specifics.`];
-  const historicalNotes = [`Positioned within horror history through style, era, and influence.`];
-  const receptionNotes = ['Reception trends can vary across critics and audiences by release window.'];
-  const trivia = ['Useful companion prompt: track sound design, framing, and tension rhythm.'];
+function formatRuntime(runtimeMinutes?: number): string {
+  if (!runtimeMinutes || runtimeMinutes <= 0) {
+    return 'Runtime unavailable';
+  }
+  const h = Math.floor(runtimeMinutes / 60);
+  const m = runtimeMinutes % 60;
+  if (h === 0) {
+    return `${m}m`;
+  }
+  return `${h}h ${m}m`;
+}
+
+function parseYear(value?: string): number | undefined {
+  if (!value || value.length < 4) {
+    return undefined;
+  }
+  const year = Number.parseInt(value.slice(0, 4), 10);
+  return Number.isInteger(year) ? year : undefined;
+}
+
+function firstLine(value: string, max = 180): string {
+  const trimmed = value.replace(/\s+/g, ' ').trim();
+  if (trimmed.length <= max) {
+    return trimmed;
+  }
+  return `${trimmed.slice(0, max - 1).trimEnd()}...`;
+}
+
+function overviewSentences(value?: string, maxSentences = 2): string[] {
+  if (!value) {
+    return [];
+  }
+  return value
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .slice(0, maxSentences)
+    .map((line) => firstLine(line, 170));
+}
+
+function sanitizeTriviaLines(lines: unknown): string[] {
+  if (!Array.isArray(lines)) {
+    return [];
+  }
+  return lines
+    .filter((line): line is string => typeof line === 'string' && line.trim().length > 0)
+    .map((line) => firstLine(line, 140))
+    .slice(0, 5);
+}
+
+function normalizeCompanionLlmOutput(value: unknown): CompanionLlmOutput | null {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  if (typeof record.lightSummary !== 'string' || typeof record.fullSummary !== 'string') {
+    return null;
+  }
+  const trivia = sanitizeTriviaLines(record.trivia);
+  if (trivia.length < 1) {
+    return null;
+  }
+  return {
+    lightSummary: firstLine(record.lightSummary, 240),
+    fullSummary: firstLine(record.fullSummary, 260),
+    trivia,
+  };
+}
+
+function isCompanionLlmEnabled(): boolean {
+  if (process.env.USE_LLM === 'false') {
+    return false;
+  }
+  return typeof process.env.LLM_PROVIDER === 'string' && process.env.LLM_PROVIDER.length > 0;
+}
+
+async function generateCompanionLlmOutput(input: {
+  title: string;
+  year: number | null;
+  spoilerPolicy: SpoilerPolicy;
+  facts: TmdbCompanionFacts | null;
+  evidence: Array<{ sourceName: string; snippet: string }>;
+}): Promise<CompanionLlmOutput | null> {
+  if (!isCompanionLlmEnabled()) {
+    return null;
+  }
+
+  try {
+    const provider = getLlmProviderFromEnv();
+    const response = await provider.generateJson<unknown>({
+      schemaName: 'CompanionSpoilerAndTrivia',
+      jsonSchema: COMPANION_LLM_JSON_SCHEMA,
+      system: [
+        'Generate movie companion notes.',
+        'Return strict JSON only.',
+        'lightSummary must summarize beginning and middle only (no ending).',
+        'fullSummary must include full plot arc including ending.',
+        'trivia must include exactly 5 concise facts.',
+        'Avoid invented details. If uncertain, explicitly say unknown.',
+      ].join(' '),
+      user: JSON.stringify({
+        movie: {
+          title: input.title,
+          year: input.year,
+          genres: input.facts?.genres ?? [],
+          overview: input.facts?.overview ?? 'unknown',
+          tagline: input.facts?.tagline ?? 'unknown',
+          runtimeMinutes: input.facts?.runtimeMinutes ?? null,
+        },
+        evidence: input.evidence.slice(0, 5).map((item) => ({
+          sourceName: item.sourceName,
+          snippet: firstLine(item.snippet, 180),
+        })),
+        policy: input.spoilerPolicy,
+      }),
+      temperature: 0.2,
+      maxTokens: 500,
+    });
+    return normalizeCompanionLlmOutput(response);
+  } catch {
+    return null;
+  }
+}
+
+function hasTmdbApi(): boolean {
+  return typeof process.env.TMDB_API_KEY === 'string' && process.env.TMDB_API_KEY.length > 0;
+}
+
+async function fetchTmdbJson<T>(url: URL): Promise<{
+  ok: boolean;
+  status: number | null;
+  data: T | null;
+  error?: string;
+}> {
+  try {
+    const response = await fetch(url.toString(), { method: 'GET' });
+    if (!response.ok) {
+      return { ok: false, status: response.status, data: null, error: `HTTP_${response.status}` };
+    }
+    return { ok: true, status: response.status, data: await response.json() as T };
+  } catch {
+    return { ok: false, status: null, data: null, error: 'NETWORK_ERROR' };
+  }
+}
+
+function toCompanionFacts(payload: TmdbMoviePayload): TmdbCompanionFacts | null {
+  const title = payload.title?.trim();
+  if (!title) {
+    return null;
+  }
+
+  const director = payload.credits?.crew
+    ?.find((person) => typeof person.job === 'string' && person.job.toLowerCase() === 'director')
+    ?.name
+    ?.trim();
+
+  const cast: CreditCast[] = (payload.credits?.cast ?? [])
+    .map((person) => {
+      if (!person.name || person.name.trim().length === 0) {
+        return null;
+      }
+      const role = typeof person.character === 'string' && person.character.trim().length > 0
+        ? person.character.trim()
+        : undefined;
+      return { name: person.name.trim(), ...(role ? { role } : {}) };
+    })
+    .filter((person): person is CreditCast => Boolean(person))
+    .slice(0, 8);
+
+  return {
+    title,
+    year: parseYear(payload.release_date),
+    posterUrl: typeof payload.poster_path === 'string' && payload.poster_path.trim().length > 0
+      ? `https://image.tmdb.org/t/p/w500${payload.poster_path}`
+      : undefined,
+    overview: typeof payload.overview === 'string' && payload.overview.trim().length > 0
+      ? payload.overview.trim()
+      : undefined,
+    tagline: typeof payload.tagline === 'string' && payload.tagline.trim().length > 0
+      ? payload.tagline.trim()
+      : undefined,
+    runtimeMinutes: typeof payload.runtime === 'number' && Number.isFinite(payload.runtime) ? payload.runtime : undefined,
+    genres: (payload.genres ?? [])
+      .map((genre) => genre.name?.trim())
+      .filter((name): name is string => typeof name === 'string' && name.length > 0)
+      .slice(0, 4),
+    countries: (payload.production_countries ?? [])
+      .map((country) => country.name?.trim())
+      .filter((name): name is string => typeof name === 'string' && name.length > 0)
+      .slice(0, 3),
+    languages: (payload.spoken_languages ?? [])
+      .map((language) => (language.english_name ?? language.name ?? '').trim())
+      .filter((name): name is string => typeof name === 'string' && name.length > 0)
+      .slice(0, 3),
+    voteAverage: typeof payload.vote_average === 'number' && Number.isFinite(payload.vote_average)
+      ? Number(payload.vote_average.toFixed(1))
+      : undefined,
+    voteCount: typeof payload.vote_count === 'number' && Number.isFinite(payload.vote_count)
+      ? Math.round(payload.vote_count)
+      : undefined,
+    popularity: typeof payload.popularity === 'number' && Number.isFinite(payload.popularity)
+      ? Number(payload.popularity.toFixed(1))
+      : undefined,
+    director,
+    cast,
+  };
+}
+
+async function loadTmdbCompanionFacts(input: { tmdbId: number; title: string; year: number | null }): Promise<{
+  facts: TmdbCompanionFacts | null;
+  reason:
+    | 'OK_DIRECT'
+    | 'OK_SEARCH_FALLBACK'
+    | 'KEY_MISSING'
+    | 'DIRECT_NOT_FOUND'
+    | 'DIRECT_PARSE_FAILED'
+    | 'SEARCH_NOT_FOUND'
+    | 'SEARCH_RESOLVE_FAILED';
+  details?: Record<string, unknown>;
+}> {
+  if (!hasTmdbApi()) {
+    return { facts: null, reason: 'KEY_MISSING' };
+  }
+
+  const apiKey = process.env.TMDB_API_KEY as string;
+  const detailsUrl = new URL(`https://api.themoviedb.org/3/movie/${input.tmdbId}`);
+  detailsUrl.searchParams.set('api_key', apiKey);
+  detailsUrl.searchParams.set('append_to_response', 'credits');
+  detailsUrl.searchParams.set('language', 'en-US');
+
+  const direct = await fetchTmdbJson<TmdbMoviePayload>(detailsUrl);
+  const directFacts = direct.data ? toCompanionFacts(direct.data) : null;
+  if (directFacts) {
+    return { facts: directFacts, reason: 'OK_DIRECT', details: { directStatus: direct.status } };
+  }
+  if (!direct.ok) {
+    if (direct.status === 404) {
+      return { facts: null, reason: 'DIRECT_NOT_FOUND', details: { directStatus: direct.status, directError: direct.error } };
+    }
+    return { facts: null, reason: 'SEARCH_RESOLVE_FAILED', details: { directStatus: direct.status, directError: direct.error } };
+  }
+
+  const searchUrl = new URL('https://api.themoviedb.org/3/search/movie');
+  searchUrl.searchParams.set('api_key', apiKey);
+  searchUrl.searchParams.set('language', 'en-US');
+  searchUrl.searchParams.set('include_adult', 'false');
+  searchUrl.searchParams.set('query', input.title);
+  if (typeof input.year === 'number') {
+    searchUrl.searchParams.set('year', String(input.year));
+  }
+
+  const search = await fetchTmdbJson<TmdbSearchPayload>(searchUrl);
+  const candidateId = (search.data?.results ?? [])
+    .find((entry) => Number.isInteger(entry.id))
+    ?.id;
+  if (!candidateId || !Number.isInteger(candidateId)) {
+    return {
+      facts: null,
+      reason: direct.ok ? 'DIRECT_PARSE_FAILED' : 'SEARCH_NOT_FOUND',
+      details: {
+        directStatus: direct.status,
+        searchStatus: search.status,
+        searchError: search.error,
+      },
+    };
+  }
+
+  const resolvedDetailsUrl = new URL(`https://api.themoviedb.org/3/movie/${candidateId}`);
+  resolvedDetailsUrl.searchParams.set('api_key', apiKey);
+  resolvedDetailsUrl.searchParams.set('append_to_response', 'credits');
+  resolvedDetailsUrl.searchParams.set('language', 'en-US');
+
+  const resolved = await fetchTmdbJson<TmdbMoviePayload>(resolvedDetailsUrl);
+  const resolvedFacts = resolved.data ? toCompanionFacts(resolved.data) : null;
+  if (resolvedFacts) {
+    return {
+      facts: resolvedFacts,
+      reason: 'OK_SEARCH_FALLBACK',
+      details: {
+        directStatus: direct.status,
+        searchStatus: search.status,
+        resolvedStatus: resolved.status,
+        candidateId,
+      },
+    };
+  }
+  return {
+    facts: null,
+    reason: 'SEARCH_RESOLVE_FAILED',
+    details: {
+      directStatus: direct.status,
+      searchStatus: search.status,
+      resolvedStatus: resolved.status,
+      resolvedError: resolved.error,
+      candidateId,
+    },
+  };
+}
+
+function buildSections(
+  input: {
+    title: string;
+    year: number | null;
+    facts: TmdbCompanionFacts | null;
+  },
+  spoilerPolicy: SpoilerPolicy,
+  hasCredits: boolean,
+  ratings: RatingRow[],
+  evidenceCount: number,
+  llmOutput: CompanionLlmOutput | null,
+) {
+  const title = input.facts?.title ?? input.title;
+  const year = input.facts?.year ?? input.year;
+  const yearText = year ? ` (${year})` : '';
+  const genresText = input.facts?.genres.length ? input.facts.genres.join(', ') : 'horror';
+  const regionsText = input.facts?.countries.length ? input.facts.countries.join(', ') : 'Unknown production region';
+  const languageText = input.facts?.languages.length ? input.facts.languages.join(', ') : 'Unknown language profile';
+  const tmdbScoreText = typeof input.facts?.voteAverage === 'number'
+    ? `TMDB score ${input.facts.voteAverage}/10${typeof input.facts.voteCount === 'number' ? ` from ${input.facts.voteCount.toLocaleString()} votes` : ''}.`
+    : 'TMDB score currently unavailable.';
+  const overviewText = input.facts?.overview
+    ? firstLine(input.facts.overview, 220)
+    : `${title}${yearText}: notable craft choices and production context without plot specifics.`;
+
+  const spoilerSafeSummary = input.facts?.overview
+    ? `Spoiler-safe summary: ${firstLine(input.facts.overview, 210)}`
+    : `Spoiler-safe summary: ${title}${yearText} builds tone and setup without plot reveals.`;
+  const overviewBits = overviewSentences(input.facts?.overview, 2);
+  const lightSummary = llmOutput?.lightSummary
+    ?? (overviewBits.length > 0
+      ? `${overviewBits.join(' ')} (Act I-II emphasis; ending omitted.)`
+      : `${title}${yearText}: setup and rising conflict through the midpoint (ending intentionally omitted).`);
+  const fullSummary = llmOutput?.fullSummary
+    ?? (overviewBits.length > 0
+      ? `${overviewBits.join(' ')} Ending details are not in local metadata; full resolution is unknown.`
+      : `${title}${yearText}: full-plot summary including ending is unknown from local metadata.`);
+
+  const productionNotes = [
+    spoilerPolicy === 'NO_SPOILERS'
+      ? spoilerSafeSummary
+      : spoilerPolicy === 'LIGHT'
+        ? `Act I-II summary: ${lightSummary}`
+        : `Full plot summary (includes ending): ${fullSummary}`,
+    `Runtime ${formatRuntime(input.facts?.runtimeMinutes)}. Languages: ${languageText}.`,
+    input.facts?.tagline ? `Tagline: "${firstLine(input.facts.tagline, 120)}"` : 'Focus on camera movement, sound design, and scene transitions to track how tension is built.',
+    overviewText,
+  ];
+  const historicalNotes = [
+    `Released in ${year ?? 'an unknown year'}, this title sits in ${genresText} traditions.`,
+    `Production context: ${regionsText}.`,
+    'Use this as a lens for how horror language evolves across decades and subgenres.',
+  ];
+  const receptionNotes = ratings.length > 0
+    ? [...ratings.slice(0, 3).map(formatRatingLine), tmdbScoreText]
+    : [tmdbScoreText, 'Reception scores are currently unavailable for this title.'];
+  const topCast = input.facts?.cast.slice(0, 3).map((item) => item.name).join(', ');
+  const fallbackTrivia = [
+    topCast
+      ? `Top-billed cast includes ${topCast}.`
+      : 'Companion prompt: notice recurring visual motifs and how often they return.',
+    input.facts?.director
+      ? `Directed by ${input.facts.director}.`
+      : `${title} director metadata is currently unavailable.`,
+    input.facts?.genres.length
+      ? `Primary genre tags: ${input.facts.genres.join(', ')}.`
+      : `${title} genre metadata is currently limited.`,
+    input.facts?.runtimeMinutes ? `Runtime: ${formatRuntime(input.facts.runtimeMinutes)}.` : 'Runtime metadata is currently unavailable.',
+    typeof input.facts?.popularity === 'number' ? `TMDB popularity index: ${input.facts.popularity}.` : 'TMDB popularity index unavailable.',
+    evidenceCount > 0
+      ? `Evidence-backed notes available: ${evidenceCount} source${evidenceCount === 1 ? '' : 's'}.`
+      : 'No evidence packets are currently stored for this title.',
+    year ? `Release window note: ${title} (${year}) reflects genre patterns of its period.` : `Release window note for ${title} is unknown.`,
+    input.facts?.tagline
+      ? `Tagline focus: "${firstLine(input.facts.tagline, 90)}".`
+      : `${title} trivia fallback: production trivia is limited in local metadata.`,
+  ];
+  const trivia = [...(llmOutput?.trivia ?? [])];
+  for (const line of fallbackTrivia) {
+    if (trivia.length >= 5) {
+      break;
+    }
+    trivia.push(line);
+  }
 
   if (spoilerPolicy === 'LIGHT') {
-    productionNotes.push('Light hint: watch how early setup choices subtly pay off in later scenes.');
+    productionNotes.push('Light hint: watch how early setup choices escalate through the midpoint.');
     historicalNotes.push('Light hint: thematic framing may echo period-specific social anxieties.');
   }
 
   if (spoilerPolicy === 'FULL') {
-    productionNotes.push('Full mode: includes discussion of late-film structural payoffs and reveals.');
+    productionNotes.push('Full mode: includes ending and late-film structural payoffs.');
     historicalNotes.push('Full mode: compares ending construction with genre conventions directly.');
-    trivia.push('Full mode: spoiler-rich analysis can reference specific twists and outcomes.');
   }
 
   if (!hasCredits) {
+    productionNotes.push('Credits metadata is currently limited for this title.');
     receptionNotes.push('Credits metadata is currently limited for this title.');
   }
 
@@ -75,19 +519,14 @@ function buildSections(title: string, year: number | null, spoilerPolicy: Spoile
     productionNotes,
     historicalNotes,
     receptionNotes,
-    trivia,
+    trivia: trivia.slice(0, 5),
   };
 }
 
 export async function GET(request: Request): Promise<Response> {
-  const authError = validateAdminToken(request);
-  if (authError) {
-    return fail(authError, 401);
-  }
-
-  const { userId, error } = await getCurrentUserId(request, prisma);
-  if (error || !userId) {
-    return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
+  const auth = await requireAuth(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const url = new URL(request.url);
@@ -113,6 +552,15 @@ export async function GET(request: Request): Promise<Response> {
       posterUrl: true,
       director: true,
       castTop: true,
+      ratings: {
+        select: {
+          source: true,
+          value: true,
+          scale: true,
+          rawValue: true,
+        },
+        orderBy: { source: 'asc' },
+      },
     },
   });
 
@@ -132,25 +580,71 @@ export async function GET(request: Request): Promise<Response> {
   });
 
   const cast = parseCast(movie.castTop);
+  const tmdbFetch = await loadTmdbCompanionFacts({
+    tmdbId: movie.tmdbId,
+    title: movie.title,
+    year: movie.year,
+  });
+  const tmdbFacts = tmdbFetch.facts;
+
+  const resolvedCast = tmdbFacts?.cast.length ? tmdbFacts.cast : cast;
+  const resolvedDirector = tmdbFacts?.director ?? movie.director ?? null;
+  const movieRatings = Array.isArray(movie.ratings) ? movie.ratings : [];
+  const hasTmdbRatingAlready = movieRatings.some((rating) => rating.source === 'TMDB');
+  const responseRatings = (!hasTmdbRatingAlready && typeof tmdbFacts?.voteAverage === 'number')
+    ? [
+      ...movieRatings,
+      {
+        source: 'TMDB',
+        value: tmdbFacts.voteAverage,
+        scale: '10',
+        rawValue: `${tmdbFacts.voteAverage}/10`,
+      },
+    ]
+    : movieRatings;
+
   const sections = buildSections(
-    movie.title,
-    movie.year,
+    {
+      title: movie.title,
+      year: movie.year,
+      facts: tmdbFacts,
+    },
     spoilerPolicy,
-    Boolean(movie.director) || cast.length > 0,
+    Boolean(resolvedDirector) || resolvedCast.length > 0,
+    responseRatings,
+    evidence.length,
+    await generateCompanionLlmOutput({
+      title: tmdbFacts?.title ?? movie.title,
+      year: tmdbFacts?.year ?? movie.year,
+      spoilerPolicy,
+      facts: tmdbFacts,
+      evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
+    }),
   );
+  console.info('[companion] resolved', {
+    tmdbId: movie.tmdbId,
+    spoilerPolicy,
+    tmdbKeyConfigured: hasTmdbApi(),
+    usedTmdbFacts: Boolean(tmdbFacts),
+    tmdbReason: tmdbFetch.reason,
+    tmdbDetails: tmdbFetch.details ?? null,
+    usedRatingsCount: responseRatings.length,
+    evidenceCount: evidence.length,
+  });
 
   return ok({
     movie: {
       tmdbId: movie.tmdbId,
-      title: movie.title,
-      ...(movie.year ? { year: movie.year } : {}),
-      posterUrl: movie.posterUrl,
+      title: tmdbFacts?.title ?? movie.title,
+      ...(tmdbFacts?.year || movie.year ? { year: tmdbFacts?.year ?? movie.year } : {}),
+      posterUrl: tmdbFacts?.posterUrl ?? movie.posterUrl,
     },
     credits: {
-      ...(movie.director ? { director: movie.director } : {}),
-      cast,
+      ...(resolvedDirector ? { director: resolvedDirector } : {}),
+      cast: resolvedCast,
     },
     sections,
+    ratings: responseRatings,
     spoilerPolicy,
     evidence,
   });

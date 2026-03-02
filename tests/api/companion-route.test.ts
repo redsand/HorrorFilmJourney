@@ -1,10 +1,19 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/companion/route';
+import { makeSessionCookie } from '../helpers/session-cookie';
 
-const { userFindUniqueMock, movieFindUniqueMock, evidenceFindManyMock } = vi.hoisted(() => ({
+const {
+  userFindUniqueMock,
+  movieFindUniqueMock,
+  evidenceFindManyMock,
+  getLlmProviderFromEnvMock,
+  generateJsonMock,
+} = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
+  getLlmProviderFromEnvMock: vi.fn(),
+  generateJsonMock: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
@@ -15,12 +24,24 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
+vi.mock('@/ai', () => ({
+  getLlmProviderFromEnv: (...args: unknown[]) => getLlmProviderFromEnvMock(...args),
+}));
+
 describe('GET /api/companion', () => {
   beforeEach(() => {
-    process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
+    getLlmProviderFromEnvMock.mockReset();
+    generateJsonMock.mockReset();
+    delete process.env.LLM_PROVIDER;
+    delete process.env.USE_LLM;
+  });
+
+  afterEach(() => {
+    delete process.env.LLM_PROVIDER;
+    delete process.env.USE_LLM;
   });
 
   it('returns 400 when tmdbId is missing', async () => {
@@ -28,8 +49,7 @@ describe('GET /api/companion', () => {
 
     const request = new Request('http://localhost/api/companion', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 
@@ -63,8 +83,7 @@ describe('GET /api/companion', () => {
 
     const request = new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
       headers: {
-        'x-admin-token': 'test-admin-token',
-        'x-user-id': 'user_1',
+        cookie: makeSessionCookie('user_1'),
       },
     });
 
@@ -87,6 +106,10 @@ describe('GET /api/companion', () => {
     expect(Array.isArray(body.data.sections.historicalNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.receptionNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.trivia)).toBe(true);
+    expect(body.data.sections.trivia).toHaveLength(5);
+    expect(
+      body.data.sections.productionNotes.some((line: string) => line.toLowerCase().includes('spoiler-safe')),
+    ).toBe(true);
     expect(body.data.spoilerPolicy).toBe('NO_SPOILERS');
     expect(Array.isArray(body.data.evidence)).toBe(true);
   });
@@ -107,8 +130,15 @@ describe('GET /api/companion', () => {
     const noSpoilersResponse = await GET(
       new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
         headers: {
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
+        },
+      }),
+    );
+
+    const lightResponse = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=LIGHT', {
+        headers: {
+          cookie: makeSessionCookie('user_1'),
         },
       }),
     );
@@ -116,20 +146,70 @@ describe('GET /api/companion', () => {
     const fullResponse = await GET(
       new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=FULL', {
         headers: {
-          'x-admin-token': 'test-admin-token',
-          'x-user-id': 'user_1',
+          cookie: makeSessionCookie('user_1'),
         },
       }),
     );
 
     const noSpoilers = await noSpoilersResponse.json();
+    const light = await lightResponse.json();
     const full = await fullResponse.json();
 
     expect(noSpoilers.data.sections.productionNotes).not.toEqual(full.data.sections.productionNotes);
-    expect(full.data.sections.productionNotes.some((line: string) => line.includes('Full mode'))).toBe(true);
+    expect(light.data.sections.productionNotes.some((line: string) => line.includes('Act I-II summary'))).toBe(true);
+    expect(full.data.sections.productionNotes.some((line: string) => line.includes('includes ending'))).toBe(true);
+    expect(full.data.sections.trivia).toHaveLength(5);
     expect(
       noSpoilers.data.sections.receptionNotes.some((line: string) =>
         line.toLowerCase().includes('credits metadata is currently limited')),
     ).toBe(true);
+  });
+
+  it('uses llm output for light/full summaries and trivia when configured', async () => {
+    process.env.LLM_PROVIDER = 'ollama';
+    getLlmProviderFromEnvMock.mockReturnValue({
+      name: () => 'ollama',
+      generateJson: generateJsonMock,
+    });
+    generateJsonMock.mockResolvedValue({
+      lightSummary: 'The setup and escalation build through the midpoint confrontation.',
+      fullSummary: 'The protagonists fail at first, recover, and the ending reveals the true threat.',
+      trivia: ['T1', 'T2', 'T3', 'T4', 'T5'],
+    });
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValue({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: 'Director A',
+      castTop: [{ name: 'Actor A', role: 'Lead' }],
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValue([]);
+
+    const lightResponse = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=LIGHT', {
+        headers: {
+          cookie: makeSessionCookie('user_1'),
+        },
+      }),
+    );
+    const fullResponse = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=FULL', {
+        headers: {
+          cookie: makeSessionCookie('user_1'),
+        },
+      }),
+    );
+
+    const light = await lightResponse.json();
+    const full = await fullResponse.json();
+
+    expect(generateJsonMock).toHaveBeenCalled();
+    expect(light.data.sections.productionNotes.some((line: string) => line.includes('Act I-II summary: The setup and escalation'))).toBe(true);
+    expect(full.data.sections.productionNotes.some((line: string) => line.includes('includes ending'))).toBe(true);
+    expect(full.data.sections.trivia).toEqual(['T1', 'T2', 'T3', 'T4', 'T5']);
   });
 });
