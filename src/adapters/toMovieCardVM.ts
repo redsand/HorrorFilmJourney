@@ -3,6 +3,8 @@ import type { generateRecommendationBatch } from '@/lib/recommendation/recommend
 
 export type RecommendationBatchPayload = Awaited<ReturnType<typeof generateRecommendationBatch>>;
 
+const RECEPTION_FALLBACK_SUMMARY = 'Reception data currently unavailable.';
+
 function toWatchFor(watchFor: unknown): [string, string, string] {
   const entries = Array.isArray(watchFor)
     ? watchFor.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
@@ -37,6 +39,9 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
           }
         : undefined;
 
+    const narrativeReception = card.narrative.reception ?? {};
+    const hasAggregates = Boolean(criticsScore || audienceScore);
+
     return {
       movie: {
         tmdbId: card.movie.tmdbId,
@@ -48,11 +53,7 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
       reception: {
         ...(criticsScore ? { critics: criticsScore } : {}),
         ...(audienceScore ? { audience: audienceScore } : {}),
-        summary:
-          card.narrative.reception?.summary ??
-          (criticsScore || audienceScore
-            ? 'Reception derived from aggregate scores.'
-            : 'Reception data unavailable for this title.'),
+        summary: narrativeReception.summary ?? (hasAggregates ? 'Reception derived from aggregate scores.' : RECEPTION_FALLBACK_SUMMARY),
       },
       credits: {
         castHighlights: card.narrative.castHighlights,

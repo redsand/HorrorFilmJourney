@@ -3,6 +3,10 @@ import {
   recommendationCardNarrativeSchema,
   type RecommendationCardNarrative,
 } from '@/lib/contracts/narrative-contracts';
+import {
+  DeterministicStubStreamingProvider,
+} from '@/lib/streaming/streaming-provider';
+import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
 
 export type CandidateMovie = {
   id: string;
@@ -224,6 +228,15 @@ export async function generateRecommendationBatchV1(
     .filter((movie): movie is CandidateMovie => movie !== null);
 
   const selectedMovies = pickDiverseMovies(candidates, targetCount);
+  const streamingLookup = new StreamingLookupService(prisma, new DeterministicStubStreamingProvider());
+  const streamingByMovieId = new Map(
+    await Promise.all(
+      selectedMovies.map(async (movie) => {
+        const streaming = await streamingLookup.getForMovie(movie);
+        return [movie.id, streaming.offers] as const;
+      }),
+    ),
+  );
 
   const batch = await prisma.recommendationBatch.create({
     data: {
@@ -245,7 +258,7 @@ export async function generateRecommendationBatchV1(
             watchFor: narrative.watchFor,
             reception: narrative.reception,
             castHighlights: narrative.castHighlights,
-            streaming: narrative.streaming,
+            streaming: streamingByMovieId.get(movie.id) ?? [],
             spoilerPolicy: narrative.spoilerPolicy,
           };
         }),
@@ -301,7 +314,7 @@ export async function generateRecommendationBatchV1(
         historicalContext: item.historicalContext,
         reception: item.reception ?? {},
         castHighlights: Array.isArray(item.castHighlights) ? item.castHighlights : [],
-        streaming: Array.isArray(item.streaming) ? item.streaming : [],
+        streaming: streamingByMovieId.get(item.movie.id) ?? [],
         spoilerPolicy: item.spoilerPolicy,
         journeyNode: batch.journeyNode ?? 'ENGINE_V1_CORE',
         nextStepHint: item.nextStepHint,

@@ -56,6 +56,8 @@ This document is the single source of truth for product requirements.
 **Acceptance criteria:**
 - Narrative schema includes reception object with critics/audience fields.
 - Recommendation narratives validate against schema.
+- MovieCardVM always includes a `reception` object.
+- If critics and audience aggregates are unavailable, fallback is `reception: { summary: "Reception data currently unavailable." }`.
 - Contract documents critic/audience semantics for client rendering.
 
 ## R8 — Cast/director highlights

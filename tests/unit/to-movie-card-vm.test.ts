@@ -74,6 +74,26 @@ describe('toMovieCardVM adapter', () => {
   });
 
 
+
+  it('uses consistent reception fallback summary when critics/audience are missing', () => {
+    const result = toMovieCardVM(buildBatch({ reception: {} }));
+    expect(result[0]?.reception).toEqual({ summary: 'Reception data currently unavailable.' });
+  });
+
+  it('preserves critics/audience reception when provided', () => {
+    const result = toMovieCardVM(
+      buildBatch({
+        reception: {
+          critics: 91,
+          audience: 84,
+        },
+      }),
+    );
+
+    expect(result[0]?.reception.critics?.value).toBe(91);
+    expect(result[0]?.reception.audience?.value).toBe(84);
+  });
+
   it('maps evidence packets when present', () => {
     const batch = buildBatch();
     (batch.cards[0] as typeof batch.cards[0] & { evidence?: Array<{ sourceName: string; snippet: string; retrievedAt: string }> }).evidence = [

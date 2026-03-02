@@ -1,0 +1,62 @@
+{
+  "data": {
+    "batchId": "batch_sample",
+    "cards": [
+      {
+        "movie": {
+          "tmdbId": 802,
+          "title": "Acceptance Movie 802",
+          "year": 1991,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/802.jpg"
+        },
+        "ratings": {
+          "imdb": {
+            "value": 7.2,
+            "scale": "10",
+            "rawValue": "7.2/10"
+          },
+          "additional": [
+            {
+              "source": "ROTTEN_TOMATOES",
+              "value": 71,
+              "scale": "100",
+              "rawValue": "71%"
+            }
+          ]
+        },
+        "reception": {
+          "summary": "Reception data currently unavailable."
+        },
+        "credits": {
+          "castHighlights": []
+        },
+        "streaming": {
+          "region": "US",
+          "offers": []
+        },
+        "codex": {
+          "whyImportant": "Acceptance Movie 802 expands your horror map with a distinct tone and craft approach.",
+          "whatItTeaches": "How to spot structure, suspense pacing, and genre technique quickly.",
+          "watchFor": [
+            "How Acceptance Movie 802 builds tension scene-by-scene",
+            "A key style choice that shapes mood",
+            "One performance beat that pays off late"
+          ],
+          "historicalContext": "Released in 1991, it reflects genre trends of that era while still feeling useful for modern viewing.",
+          "spoilerPolicy": "NO_SPOILERS",
+          "journeyNode": "ENGINE_V1_CORE",
+          "nextStepHint": "After this, continue to the next ranked pick in your bundle."
+        },
+        "evidence": [
+          {
+            "sourceName": "SeedSource",
+            "url": "https://example.com/movies/802",
+            "snippet": "Seed evidence snippet 2",
+            "retrievedAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "error": null
+}
