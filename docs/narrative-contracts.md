@@ -16,6 +16,17 @@ Schema fields:
 - `spoilerPolicy: "NO_SPOILERS" | "LIGHT" | "FULL"`
 - `journeyNode: string`
 - `nextStepHint: string`
+- `ratings` (**required**)
+  - `imdb: { value: number, scale: string, rawValue?: string }`
+  - `additional: Array<{ source: string, value: number, scale: string, rawValue?: string }>`
+    - min 1
+    - max 3
+
+### Ratings validation rules
+
+- IMDb is required.
+- At least one additional rating source is required.
+- Total sources shown is 2–4 (`imdb` + `additional`).
 
 ## QuickPoll
 

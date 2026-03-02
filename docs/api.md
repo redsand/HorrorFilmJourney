@@ -23,11 +23,22 @@ Upsert a movie by TMDB id.
 {
   "tmdbId": 603,
   "title": "The Matrix",
+  "posterUrl": "https://image.tmdb.org/t/p/w500/...jpg",
   "year": 1999,
-  "posterUrl": "https://...",
-  "genres": ["sci-fi", "action"]
+  "genres": ["sci-fi", "action"],
+  "ratings": [
+    { "source": "IMDB", "rawValue": "8.7/10" },
+    { "source": "ROTTEN_TOMATOES", "rawValue": "83%" },
+    { "source": "METACRITIC", "rawValue": "73/100" }
+  ]
 }
 ```
+
+### Rules
+
+- `posterUrl` is required and must be non-empty.
+- `ratings` is optional, but if provided each item must contain `{ source, rawValue }`.
+- Supported normalization sources: `IMDB`, `ROTTEN_TOMATOES`, `METACRITIC`, `TMDB`.
 
 ### Success
 
@@ -39,7 +50,10 @@ Upsert a movie by TMDB id.
     "title": "The Matrix",
     "year": 1999,
     "posterUrl": "https://...",
-    "genres": ["sci-fi", "action"]
+    "genres": ["sci-fi", "action"],
+    "ratings": [
+      { "source": "IMDB", "value": 8.7, "scale": "10", "rawValue": "8.7/10" }
+    ]
   },
   "error": null
 }
@@ -47,84 +61,51 @@ Upsert a movie by TMDB id.
 
 ---
 
-## POST /api/interactions
+## POST /api/recommendations/next
 
-Create a user-scoped movie interaction.
+Generates the next recommendation batch for the current user.
 
-### Body
-
-```json
-{
-  "tmdbId": 603,
-  "status": "WATCHED",
-  "rating": 5,
-  "intensity": 4,
-  "emotions": ["dread", "excitement"],
-  "workedBest": ["pacing", "practical effects"],
-  "agedWell": "Still effective",
-  "recommend": true,
-  "note": "Great rewatch",
-  "recommendationItemId": "optional-item-id"
-}
-```
-
-### Rules
-
-- `WATCHED` and `ALREADY_SEEN` require `rating` (`1..5`).
-- `SKIPPED` and `WANT_TO_WATCH` do not require `rating`.
-
----
-
-## GET /api/history?status=&limit=&cursor=
-
-Returns current user's interactions, newest first, including movie summary.
-
-### Example
-
-`GET /api/history?status=WATCHED&limit=20`
-
-### Success
+### Success (shape)
 
 ```json
 {
-  "data": [
-    {
-      "id": "...",
-      "status": "WATCHED",
-      "rating": 5,
-      "createdAt": "2025-01-01T00:00:00.000Z",
-      "movie": {
-        "tmdbId": 603,
-        "title": "The Matrix",
-        "year": 1999,
-        "posterUrl": "https://..."
+  "data": {
+    "batchId": "...",
+    "cards": [
+      {
+        "id": "...",
+        "rank": 1,
+        "movie": {
+          "tmdbId": 603,
+          "title": "The Matrix",
+          "year": 1999,
+          "posterUrl": "https://..."
+        },
+        "ratings": {
+          "imdb": { "value": 8.7, "scale": "10", "rawValue": "8.7/10" },
+          "additional": [
+            { "source": "ROTTEN_TOMATOES", "value": 83, "scale": "100", "rawValue": "83%" }
+          ]
+        },
+        "narrative": {
+          "whyImportant": "...",
+          "whatItTeaches": "...",
+          "watchFor": ["...", "...", "..."],
+          "historicalContext": "...",
+          "ratings": {
+            "imdb": { "value": 8.7, "scale": "10" },
+            "additional": [{ "source": "ROTTEN_TOMATOES", "value": 83, "scale": "100" }]
+          }
+        }
       }
-    }
-  ],
+    ]
+  },
   "error": null
 }
 ```
 
+Guarantees:
 
----
-
-## GET /api/experience
-
-Returns backend-driven per-user experience state (`ONBOARDING_NEEDED`, `SHOW_RECOMMENDATION_BUNDLE`, `SHOW_QUICK_POLL`, `SHOW_HISTORY`) with payload for the next screen.
-
-Requires:
-
-- `x-admin-token`
-- `x-user-id`
-
-
----
-
-## POST /api/recommendations/next
-
-Generates the next recommendation batch for the current user and returns `batchId` + up to 5 cards.
-
-Requires:
-
-- `x-admin-token`
-- `x-user-id`
+- `movie.posterUrl` is non-null.
+- `ratings.imdb` is present.
+- at least two total rating systems are shown (`imdb` + one additional).

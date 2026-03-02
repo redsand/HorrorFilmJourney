@@ -1,47 +1,42 @@
-# Recommendation Engine v1
+# Recommendation Engine
 
-RecommendationEngine v1 is a deterministic, per-user pipeline with explicit seams for future upgrades.
+Recommendation generation is deterministic and user-scoped, with interface seams for modernization.
 
-## Pipeline (current)
+## Eligibility gate (hard requirements)
+
+Before a movie is considered for recommendation, it must have:
+
+1. `posterUrl` present and non-empty
+2. at least 3 rating entries
+3. one rating source from `IMDB`
+
+If these constraints fail, the movie is excluded from candidates.
+
+## Pipeline (v1 + modern adapters)
 
 1. **Candidate generation**
-   - Source: `Movie` table
-2. **Filtering**
-   - Exclude movies the user has `WATCHED` or `ALREADY_SEEN`
-   - Exclude `SKIPPED` items from the last 30 days (configurable seam)
-3. **Diversity pass**
-   - Greedy scoring favors unseen decades and new genres when available
-4. **Batch creation**
-   - Creates one `RecommendationBatch` + up to 5 `RecommendationItem` records
-5. **Narrative fill**
-   - Uses deterministic safe templates validated by narrative schema
+   - Pull candidate IDs for user while excluding watched/already-seen and recent skipped titles.
+   - Apply eligibility gate above.
+2. **Reranking / diversity**
+   - Deterministic heuristic balancing decade and genre diversity.
+3. **Exploration policy**
+   - v1 policy is no-op (no exploration).
+4. **Narrative composition**
+   - Deterministic template narrative validated by contract.
+   - Ratings block is required in narrative.
+5. **Batch persistence**
+   - Stores `RecommendationBatch` + `RecommendationItem` records.
+   - In modern mode, writes `RecommendationDiagnostics`.
 
-## Seams for v2+
+## Recommendation payload guarantees
 
-- Candidate source can move from full table scan to retrieval/search index.
-- Filter policy can add profile preferences, hard bans, and time-decay.
-- Diversity strategy can be replaced with weighted optimization.
-- Narrative template can switch to richer generated content while preserving schema.
+Each recommendation card includes:
 
-## API
+- `movie.posterUrl` (never null)
+- `ratings.imdb`
+- at least one `ratings.additional` entry
 
-### POST /api/recommendations/next
+## Feature flag
 
-Headers:
-
-- `x-admin-token`
-- `x-user-id`
-
-Response envelope:
-
-```json
-{
-  "data": {
-    "batchId": "...",
-    "cards": [
-      { "id": "...", "rank": 1, "movie": {}, "narrative": {} }
-    ]
-  },
-  "error": null
-}
-```
+- `REC_ENGINE_MODE=v1` -> legacy path
+- `REC_ENGINE_MODE=modern` -> composed interfaces path (currently backed by v1 adapters)

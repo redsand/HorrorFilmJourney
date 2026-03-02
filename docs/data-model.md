@@ -1,8 +1,8 @@
 # Multi-user data model (Prisma + SQLite)
 
-This app now uses a multi-user schema with Prisma as source of truth.
+This app uses Prisma as source of truth and now enforces richer movie metadata for recommendation eligibility.
 
-## Models
+## Core models
 
 - **User**
   - `id` (cuid)
@@ -19,10 +19,20 @@ This app now uses a multi-user schema with Prisma as source of truth.
   - `tmdbId` unique integer
   - `title`
   - `year` optional
-  - `posterUrl` optional
+  - `posterUrl` **required**
+  - `posterLastValidatedAt` optional timestamp
   - `genres` JSON optional
   - `director` optional
   - `castTop` JSON optional
+
+- **MovieRating**
+  - `movieId`
+  - `source` (e.g. `IMDB`, `ROTTEN_TOMATOES`, `METACRITIC`, `TMDB`)
+  - `value` (normalized numeric score)
+  - `scale` (e.g. `10`, `100`, `5`)
+  - `rawValue` (optional original display value, e.g. `92%`, `7.8/10`)
+  - `updatedAt`
+  - unique `(movieId, source)`
 
 - **UserMovieInteraction**
   - `userId`, `movieId`
@@ -51,21 +61,12 @@ This app now uses a multi-user schema with Prisma as source of truth.
     - `spoilerPolicy`
   - unique `(batchId, movieId)`
 
-## Auth boundary (current internal mode)
+## Recommendation eligibility constraints
 
-All routes should enforce:
+A movie is eligible for recommendation only if it has:
 
-1. `x-admin-token` must match `ADMIN_TOKEN`
-2. `x-user-id` must be present and map to an existing `User`
+1. non-empty `posterUrl`
+2. at least **3** rating entries in `MovieRating`
+3. one rating source with `source = "IMDB"`
 
-If user resolution fails, routes return:
-
-```json
-{
-  "data": null,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "..."
-  }
-}
-```
+Movies missing these requirements are excluded from candidate sets.
