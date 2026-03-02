@@ -109,6 +109,7 @@ Guarantees:
 - `movie.posterUrl` is non-null.
 - `ratings.imdb` is present.
 - at least two total rating systems are shown (`imdb` + one additional).
+- `evidence` key is always present on each recommendation card (`[]` when no evidence exists).
 
 
 ## GET /api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS|LIGHT|FULL
@@ -155,3 +156,30 @@ Required headers:
 - `NO_SPOILERS`: general non-spoiler notes only.
 - `LIGHT`: mild thematic/craft hints are allowed.
 - `FULL`: spoiler-rich notes are allowed.
+
+
+## POST /api/evidence/upsert
+
+Admin-only evidence packet upsert for web support/citation grounding.
+
+### Body
+
+```json
+{
+  "tmdbId": 123,
+  "sourceName": "Wikipedia",
+  "url": "https://example.com",
+  "snippet": "Short evidence excerpt",
+  "retrievedAt": "2026-01-01T00:00:00.000Z"
+}
+```
+
+### Rules
+
+- Dedupes evidence by `(movieId, sourceName, url, snippet-hash)`.
+- Repeated upserts for same dedupe key update `retrievedAt` instead of creating duplicates.
+- `url` is optional.
+
+### Success
+
+Returns stored evidence packet in standard envelope.

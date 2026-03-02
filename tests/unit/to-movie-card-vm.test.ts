@@ -24,6 +24,7 @@ function buildBatch(overrides: Partial<RecommendationBatchPayload['cards'][numbe
           imdb: { value: 7.2, scale: '10' },
           additional: [{ source: 'ROTTEN_TOMATOES', value: 82, scale: '100' }],
         },
+        evidence: [],
         narrative: {
           whyImportant: 'important',
           whatItTeaches: 'teaches',
@@ -70,5 +71,17 @@ describe('toMovieCardVM adapter', () => {
     const result = toMovieCardVM(buildBatch({ watchFor: ['only one'] }));
     expect(result[0]?.codex.watchFor).toHaveLength(3);
     expect(result[0]?.codex.watchFor[0]).toBe('only one');
+  });
+
+
+  it('maps evidence packets when present', () => {
+    const batch = buildBatch();
+    (batch.cards[0] as typeof batch.cards[0] & { evidence?: Array<{ sourceName: string; snippet: string; retrievedAt: string }> }).evidence = [
+      { sourceName: 'Wikipedia', snippet: 'Evidence snippet', retrievedAt: '2026-01-01T00:00:00.000Z' },
+    ];
+
+    const result = toMovieCardVM(batch);
+    expect(result[0]?.evidence).toHaveLength(1);
+    expect(result[0]?.evidence[0]?.sourceName).toBe('Wikipedia');
   });
 });

@@ -1,5 +1,6 @@
 import { InteractionStatus, PrismaClient } from '@prisma/client';
 import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-contracts';
+import type { EvidencePacketVM, EvidenceRetriever } from '@/lib/evidence/evidence-retriever';
 import {
   buildNarrative,
   generateRecommendationBatchV1,
@@ -77,16 +78,12 @@ export interface ExplorationPolicy {
   chooseExploration(rankedIds: RankedMovieId[], userProfile: unknown, context: ExplorationContext): Promise<ExplorationResult>;
 }
 
-export interface EvidenceRetriever {
-  getEvidenceForMovie(movieId: string, region?: string): Promise<Array<{ sourceName: string; url: string; snippet: string }>>;
-}
-
 export interface NarrativeComposer {
   compose(
     movie: CandidateMovie,
     userProfile: unknown,
     journeyNode: string,
-    evidencePackets: Array<{ sourceName: string; url: string; snippet: string }>,
+    evidencePackets: EvidencePacketVM[],
   ): RecommendationCardNarrative;
 }
 
@@ -159,9 +156,14 @@ export class NoExplorationPolicyV1 implements ExplorationPolicy {
 export class CachedEvidenceRetrieverV1 implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getEvidenceForMovie(movieId: string): Promise<Array<{ sourceName: string; url: string; snippet: string }>> {
+  async getEvidence(movieId: string): Promise<Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>> {
     const evidence = await this.prisma.evidencePacket.findMany({ where: { movieId }, orderBy: { retrievedAt: 'desc' } });
-    return evidence.map((item) => ({ sourceName: item.sourceName, url: item.url, snippet: item.snippet }));
+    return evidence.map((item) => ({
+      sourceName: item.sourceName,
+      ...(item.url ? { url: item.url } : {}),
+      snippet: item.snippet,
+      retrievedAt: item.retrievedAt.toISOString(),
+    }));
   }
 }
 
@@ -243,9 +245,9 @@ export async function generateRecommendationBatchModern(
   const itemData = await Promise.all(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
-      const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id);
+      const evidence = await deps.evidenceRetriever.getEvidence(movie.id);
       const narrative = deps.narrativeComposer.compose(movie, null, `ENGINE_V1_CORE#RANK_${rank}`, evidence);
-      return { movie, rank, narrative };
+      return { movie, rank, narrative, evidence };
     }),
   );
 
@@ -321,6 +323,7 @@ export async function generateRecommendationBatchModern(
         ratings: toRatings(item.movie.ratings)!,
       },
       ratings: toRatings(item.movie.ratings)!,
+      evidence: itemData.find((entry) => entry.movie.id === item.movie.id)?.evidence ?? [],
     })),
   };
 }
