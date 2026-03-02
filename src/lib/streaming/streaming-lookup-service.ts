@@ -18,7 +18,7 @@ function normalizeOffers(value: unknown): StreamingOffer[] {
     .map((parsed) => parsed.data);
 }
 
-export class StreamingLookupService {
+export class CachedStreamingLookupService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly provider: StreamingProvider,
@@ -39,7 +39,12 @@ export class StreamingLookupService {
       return { region, offers: normalizeOffers(cached.offers) };
     }
 
-    const offers = normalizeOffers(await this.provider.lookup(movie, region));
+    let offers: StreamingOffer[];
+    try {
+      offers = normalizeOffers(await this.provider.lookup(movie.tmdbId, region));
+    } catch {
+      offers = [];
+    }
     await this.prisma.movieStreamingCache.upsert({
       where: {
         movieId_region: {
@@ -62,3 +67,6 @@ export class StreamingLookupService {
     return { region, offers };
   }
 }
+
+// Backward-compatible alias while callers migrate to CachedStreamingLookupService.
+export class StreamingLookupService extends CachedStreamingLookupService {}

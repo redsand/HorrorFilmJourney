@@ -13,7 +13,7 @@
 
 Streaming data providers stay behind `StreamingProvider`:
 
-- `lookup(movie, region) => Promise<StreamingOffer[]>`
+- `lookup(tmdbId, region) => Promise<StreamingOffer[]>`
 
 Current implementation uses `DeterministicStubStreamingProvider` for test/dev stability and deterministic outputs.
 
@@ -25,3 +25,8 @@ Cache is stored in `MovieStreamingCache` with unique key `(movieId, region)`.
 - `fetchedAt` is compared with current time to enforce 7-day TTL.
 - Fresh cache entries are returned without provider calls.
 - Stale or missing cache entries trigger provider lookup and cache upsert.
+
+## Failure behavior
+
+- Provider failures must not break recommendation responses.
+- On provider error, lookup returns `offers: []` and stores that result in cache with current `fetchedAt`.

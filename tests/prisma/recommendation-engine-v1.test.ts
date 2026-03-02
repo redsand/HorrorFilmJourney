@@ -1,11 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { InteractionStatus, PrismaClient } from '@prisma/client';
 import { generateRecommendationBatchV1 } from '@/lib/recommendation/recommendation-engine-v1';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-recommendation-engine.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('recommendation_engine_v1_test');
 
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
 
@@ -19,8 +17,7 @@ async function addRatings(movieId: string, includeImdb = true, extraSources = 2)
 }
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) rmSync(testDbPath);
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {
@@ -56,17 +53,19 @@ describe('RecommendationEngine v1', () => {
     expect(result.cards.find((card) => card.movie.tmdbId === 2)).toBeUndefined();
   });
 
-  it('enforces poster + imdb + minimum 2 ratings eligibility', async () => {
+  it('enforces poster + imdb + minimum 3 ratings eligibility', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Eligibility' } });
 
     const missingPoster = await prisma.movie.create({ data: { tmdbId: 301, title: 'Missing Poster', posterUrl: '', genres: ['horror'] } });
     const missingImdb = await prisma.movie.create({ data: { tmdbId: 302, title: 'Missing IMDB', posterUrl: 'https://img/302.jpg', genres: ['horror'] } });
     const oneSource = await prisma.movie.create({ data: { tmdbId: 303, title: 'One Source', posterUrl: 'https://img/303.jpg', genres: ['horror'] } });
+    const twoSources = await prisma.movie.create({ data: { tmdbId: 305, title: 'Two Sources', posterUrl: 'https://img/305.jpg', genres: ['horror'] } });
     const eligible = await prisma.movie.create({ data: { tmdbId: 304, title: 'Eligible', posterUrl: 'https://img/304.jpg', genres: ['horror'] } });
 
     await addRatings(missingPoster.id);
     await addRatings(missingImdb.id, false, 3);
     await addRatings(oneSource.id, true, 0);
+    await addRatings(twoSources.id, true, 1);
     await addRatings(eligible.id, true, 3);
 
     const result = await generateRecommendationBatchV1(user.id, prisma);
@@ -76,6 +75,7 @@ describe('RecommendationEngine v1', () => {
     expect(ids).not.toContain(301);
     expect(ids).not.toContain(302);
     expect(ids).not.toContain(303);
+    expect(ids).not.toContain(305);
     expect(result.cards[0]?.movie.posterUrl).toBeTruthy();
     expect(result.cards[0]?.ratings.imdb).toBeDefined();
     expect(result.cards[0]?.ratings.additional.length).toBeGreaterThanOrEqual(1);

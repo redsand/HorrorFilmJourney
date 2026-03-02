@@ -6,6 +6,11 @@ const docsToCheck = [
   { path: 'docs/user-journey.md', heading: '# User Journey' },
   { path: 'docs/testing.md', heading: '# Testing Strategy' },
   { path: 'docs/design-spec.md', heading: '# Design Spec (Source of Truth)' },
+  { path: 'docs/release/test-plan.md', heading: '# RC Test Plan' },
+  { path: 'docs/release/rc-checklist.md', heading: '# RC Go/No-Go Checklist' },
+  { path: 'docs/release/user-testing-runbook.md', heading: '# User Testing Runbook' },
+  { path: 'docs/release/first-user-checklist.md', heading: '# Ready for First Real User Checklist' },
+  { path: 'docs/release/e2e-truths.md', heading: '# E2E Truths' },
 ];
 
 const designRequirementHeadings = [
@@ -38,5 +43,10 @@ describe('docs smoke tests', () => {
     designRequirementHeadings.forEach((heading) => {
       expect(content).toContain(heading);
     });
+  });
+
+  it('keeps posterUrl in internal upsert curl example', () => {
+    const content = readFileSync('docs/internal-testing.md', 'utf-8');
+    expect(content).toContain('posterUrl');
   });
 });

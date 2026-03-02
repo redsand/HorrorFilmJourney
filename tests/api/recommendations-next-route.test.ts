@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/recommendations/next/route';
 
-const userFindUniqueMock = vi.fn();
-const generateRecommendationBatchMock = vi.fn();
+const { userFindUniqueMock, generateRecommendationBatchMock } = vi.hoisted(() => ({
+  userFindUniqueMock: vi.fn(),
+  generateRecommendationBatchMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {

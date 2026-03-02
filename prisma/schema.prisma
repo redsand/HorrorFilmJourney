@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +28,7 @@ model User {
 model UserProfile {
   id             String   @id @default(cuid())
   userId         String   @unique
+  onboardingCompleted Boolean @default(false)
   tolerance      Int      @default(3)
   pacePreference String?
   horrorDNA      Json?
@@ -106,12 +107,17 @@ model RecommendationItem {
   castHighlights    Json?
   streaming         Json?
   spoilerPolicy     String
+  narrativeVersion  String?
+  narrativeModel    String?
+  narrativeHash     String?
+  narrativeGeneratedAt DateTime?
 
   batch             RecommendationBatch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
   movie             Movie                   @relation(fields: [movieId], references: [id], onDelete: Cascade)
   interactions      UserMovieInteraction[]
 
   @@unique([batchId, movieId])
+  @@index([movieId, narrativeHash])
 }
 
 model MovieEmbedding {

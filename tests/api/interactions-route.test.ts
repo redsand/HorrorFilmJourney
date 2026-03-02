@@ -1,12 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/interactions/route';
 
-const userFindUniqueMock = vi.fn();
-const movieFindUniqueMock = vi.fn();
-const interactionCreateMock = vi.fn();
-const recommendationItemFindUniqueMock = vi.fn();
-const interactionCountMock = vi.fn();
-const generateRecommendationBatchMock = vi.fn();
+const {
+  userFindUniqueMock,
+  movieFindUniqueMock,
+  interactionCreateMock,
+  recommendationItemFindUniqueMock,
+  interactionCountMock,
+  generateRecommendationBatchMock,
+} = vi.hoisted(() => ({
+  userFindUniqueMock: vi.fn(),
+  movieFindUniqueMock: vi.fn(),
+  interactionCreateMock: vi.fn(),
+  recommendationItemFindUniqueMock: vi.fn(),
+  interactionCountMock: vi.fn(),
+  generateRecommendationBatchMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {

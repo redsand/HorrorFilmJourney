@@ -1,6 +1,6 @@
 {
   "data": {
-    "batchId": "batch_sample",
+    "batchId": "cmm9i4ovl001tkzhmasw6dbr9",
     "cards": [
       {
         "movie": {
@@ -11,7 +11,7 @@
         },
         "ratings": {
           "imdb": {
-            "value": 7.2,
+            "value": 7.199999999999999,
             "scale": "10",
             "rawValue": "7.2/10"
           },
@@ -21,6 +21,12 @@
               "value": 71,
               "scale": "100",
               "rawValue": "71%"
+            },
+            {
+              "source": "METACRITIC",
+              "value": 66,
+              "scale": "100",
+              "rawValue": "66/100"
             }
           ]
         },
@@ -32,7 +38,13 @@
         },
         "streaming": {
           "region": "US",
-          "offers": []
+          "offers": [
+            {
+              "provider": "Prime Video",
+              "type": "rent",
+              "price": "$3.99"
+            }
+          ]
         },
         "codex": {
           "whyImportant": "Acceptance Movie 802 expands your horror map with a distinct tone and craft approach.",
@@ -52,6 +64,268 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/802",
             "snippet": "Seed evidence snippet 2",
+            "retrievedAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "movie": {
+          "tmdbId": 803,
+          "title": "Acceptance Movie 803",
+          "year": 1992,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/803.jpg"
+        },
+        "ratings": {
+          "imdb": {
+            "value": 7.3,
+            "scale": "10",
+            "rawValue": "7.3/10"
+          },
+          "additional": [
+            {
+              "source": "ROTTEN_TOMATOES",
+              "value": 72,
+              "scale": "100",
+              "rawValue": "72%"
+            },
+            {
+              "source": "METACRITIC",
+              "value": 67,
+              "scale": "100",
+              "rawValue": "67/100"
+            }
+          ]
+        },
+        "reception": {
+          "summary": "Reception data currently unavailable."
+        },
+        "credits": {
+          "castHighlights": []
+        },
+        "streaming": {
+          "region": "US",
+          "offers": [
+            {
+              "provider": "Apple TV",
+              "type": "buy",
+              "price": "$12.99"
+            },
+            {
+              "provider": "Tubi",
+              "type": "free"
+            }
+          ]
+        },
+        "codex": {
+          "whyImportant": "Acceptance Movie 803 expands your horror map with a distinct tone and craft approach.",
+          "whatItTeaches": "How to spot structure, suspense pacing, and genre technique quickly.",
+          "watchFor": [
+            "How Acceptance Movie 803 builds tension scene-by-scene",
+            "A key style choice that shapes mood",
+            "One performance beat that pays off late"
+          ],
+          "historicalContext": "Released in 1992, it reflects genre trends of that era while still feeling useful for modern viewing.",
+          "spoilerPolicy": "NO_SPOILERS",
+          "journeyNode": "ENGINE_V1_CORE",
+          "nextStepHint": "After this, continue to the next ranked pick in your bundle."
+        },
+        "evidence": [
+          {
+            "sourceName": "SeedSource",
+            "url": "https://example.com/movies/803",
+            "snippet": "Seed evidence snippet 3",
+            "retrievedAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "movie": {
+          "tmdbId": 804,
+          "title": "Acceptance Movie 804",
+          "year": 1993,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/804.jpg"
+        },
+        "ratings": {
+          "imdb": {
+            "value": 7.399999999999999,
+            "scale": "10",
+            "rawValue": "7.4/10"
+          },
+          "additional": [
+            {
+              "source": "ROTTEN_TOMATOES",
+              "value": 73,
+              "scale": "100",
+              "rawValue": "73%"
+            },
+            {
+              "source": "METACRITIC",
+              "value": 68,
+              "scale": "100",
+              "rawValue": "68/100"
+            }
+          ]
+        },
+        "reception": {
+          "summary": "Reception data currently unavailable."
+        },
+        "credits": {
+          "castHighlights": []
+        },
+        "streaming": {
+          "region": "US",
+          "offers": []
+        },
+        "codex": {
+          "whyImportant": "Acceptance Movie 804 expands your horror map with a distinct tone and craft approach.",
+          "whatItTeaches": "How to spot structure, suspense pacing, and genre technique quickly.",
+          "watchFor": [
+            "How Acceptance Movie 804 builds tension scene-by-scene",
+            "A key style choice that shapes mood",
+            "One performance beat that pays off late"
+          ],
+          "historicalContext": "Released in 1993, it reflects genre trends of that era while still feeling useful for modern viewing.",
+          "spoilerPolicy": "NO_SPOILERS",
+          "journeyNode": "ENGINE_V1_CORE",
+          "nextStepHint": "After this, continue to the next ranked pick in your bundle."
+        },
+        "evidence": [
+          {
+            "sourceName": "SeedSource",
+            "url": "https://example.com/movies/804",
+            "snippet": "Seed evidence snippet 4",
+            "retrievedAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "movie": {
+          "tmdbId": 805,
+          "title": "Acceptance Movie 805",
+          "year": 1994,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/805.jpg"
+        },
+        "ratings": {
+          "imdb": {
+            "value": 7.5,
+            "scale": "10",
+            "rawValue": "7.5/10"
+          },
+          "additional": [
+            {
+              "source": "ROTTEN_TOMATOES",
+              "value": 74,
+              "scale": "100",
+              "rawValue": "74%"
+            },
+            {
+              "source": "METACRITIC",
+              "value": 69,
+              "scale": "100",
+              "rawValue": "69/100"
+            }
+          ]
+        },
+        "reception": {
+          "summary": "Reception data currently unavailable."
+        },
+        "credits": {
+          "castHighlights": []
+        },
+        "streaming": {
+          "region": "US",
+          "offers": [
+            {
+              "provider": "Shudder",
+              "type": "subscription",
+              "url": "https://example.com/us/movie/805"
+            }
+          ]
+        },
+        "codex": {
+          "whyImportant": "Acceptance Movie 805 expands your horror map with a distinct tone and craft approach.",
+          "whatItTeaches": "How to spot structure, suspense pacing, and genre technique quickly.",
+          "watchFor": [
+            "How Acceptance Movie 805 builds tension scene-by-scene",
+            "A key style choice that shapes mood",
+            "One performance beat that pays off late"
+          ],
+          "historicalContext": "Released in 1994, it reflects genre trends of that era while still feeling useful for modern viewing.",
+          "spoilerPolicy": "NO_SPOILERS",
+          "journeyNode": "ENGINE_V1_CORE",
+          "nextStepHint": "After this, continue to the next ranked pick in your bundle."
+        },
+        "evidence": [
+          {
+            "sourceName": "SeedSource",
+            "url": "https://example.com/movies/805",
+            "snippet": "Seed evidence snippet 5",
+            "retrievedAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "movie": {
+          "tmdbId": 806,
+          "title": "Acceptance Movie 806",
+          "year": 1995,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/806.jpg"
+        },
+        "ratings": {
+          "imdb": {
+            "value": 7.6,
+            "scale": "10",
+            "rawValue": "7.6/10"
+          },
+          "additional": [
+            {
+              "source": "ROTTEN_TOMATOES",
+              "value": 75,
+              "scale": "100",
+              "rawValue": "75%"
+            },
+            {
+              "source": "METACRITIC",
+              "value": 70,
+              "scale": "100",
+              "rawValue": "70/100"
+            }
+          ]
+        },
+        "reception": {
+          "summary": "Reception data currently unavailable."
+        },
+        "credits": {
+          "castHighlights": []
+        },
+        "streaming": {
+          "region": "US",
+          "offers": [
+            {
+              "provider": "Prime Video",
+              "type": "rent",
+              "price": "$3.99"
+            }
+          ]
+        },
+        "codex": {
+          "whyImportant": "Acceptance Movie 806 expands your horror map with a distinct tone and craft approach.",
+          "whatItTeaches": "How to spot structure, suspense pacing, and genre technique quickly.",
+          "watchFor": [
+            "How Acceptance Movie 806 builds tension scene-by-scene",
+            "A key style choice that shapes mood",
+            "One performance beat that pays off late"
+          ],
+          "historicalContext": "Released in 1995, it reflects genre trends of that era while still feeling useful for modern viewing.",
+          "spoilerPolicy": "NO_SPOILERS",
+          "journeyNode": "ENGINE_V1_CORE",
+          "nextStepHint": "After this, submit a quick poll to refine your next bundle."
+        },
+        "evidence": [
+          {
+            "sourceName": "SeedSource",
+            "url": "https://example.com/movies/806",
+            "snippet": "Seed evidence snippet 6",
             "retrievedAt": "2026-01-01T00:00:00.000Z"
           }
         ]

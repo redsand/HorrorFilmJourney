@@ -7,10 +7,14 @@
     "dev": "next dev",
     "build": "next build",
     "test": "vitest run",
+    "test:e2e": "vitest run tests/e2e",
     "test:watch": "vitest",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "seed:catalog": "node --experimental-strip-types scripts/seed.ts",
+    "reset:test-db": "node --experimental-strip-types scripts/reset-test-db.ts",
+    "validate:rc": "node --experimental-strip-types scripts/validate-rc.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

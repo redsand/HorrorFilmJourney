@@ -7,7 +7,8 @@ import {
 } from './utils/recommendations-seed';
 import { zMovieCardVM } from '@/contracts/movieCardVM';
 
-const acceptancePrisma = createAcceptancePrisma();
+const acceptanceSchemaName = 'recommendations_contract_acceptance_test';
+const acceptancePrisma = createAcceptancePrisma(acceptanceSchemaName);
 
 vi.mock('@/lib/prisma', () => ({
   prisma: acceptancePrisma,
@@ -17,7 +18,7 @@ const { POST } = await import('@/app/api/recommendations/next/route');
 const { GET: GET_DIAGNOSTICS } = await import('@/app/api/recommendations/[batchId]/diagnostics/route');
 
 beforeAll(() => {
-  setupAcceptanceDatabase();
+  setupAcceptanceDatabase(acceptanceSchemaName);
 });
 
 beforeEach(async () => {

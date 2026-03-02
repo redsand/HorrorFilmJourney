@@ -1,9 +1,15 @@
 import { InteractionStatus, PrismaClient } from '@prisma/client';
+import { getLlmProviderFromEnv } from '@/ai';
+import { LlmSchemaError, type LlmProvider } from '@/ai/llmProvider';
 import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-contracts';
+import { recommendationCardNarrativeSchema } from '@/lib/contracts/narrative-contracts';
 import type { EvidencePacketVM, EvidenceRetriever } from '@/lib/evidence/evidence-retriever';
+import { packageEvidencePackets } from '@/lib/evidence/evidence-packager';
 import {
   buildNarrative,
   generateRecommendationBatchV1,
+  isRecommendationEligibleMovie,
+  MIN_RATING_SOURCES_FOR_ELIGIBILITY,
   normalizeGenres,
   pickDiverseMovies,
   type CandidateMovie,
@@ -12,6 +18,12 @@ import {
 } from '@/lib/recommendation/recommendation-engine-v1';
 import { DeterministicStubStreamingProvider } from '@/lib/streaming/streaming-provider';
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
+import {
+  computeEvidenceHashes,
+  computeNarrativeHash,
+  getCachedNarrativeIfFresh,
+  NARRATIVE_VERSION,
+} from '@/lib/recommendation/narrative-cache';
 
 type RatingBundle = CandidateMovie['ratings'];
 
@@ -19,7 +31,7 @@ function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): RatingBundle | null {
   const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < 2) {
+  if (!imdb || ratings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
     return null;
   }
 
@@ -33,7 +45,7 @@ function toRatings(
       ...(rating.rawValue ? { rawValue: rating.rawValue } : {}),
     }));
 
-  if (additional.length < 1) {
+  if (additional.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1) {
     return null;
   }
 
@@ -86,7 +98,238 @@ export interface NarrativeComposer {
     userProfile: unknown,
     journeyNode: string,
     evidencePackets: EvidencePacketVM[],
-  ): RecommendationCardNarrative;
+  ): Promise<RecommendationCardNarrative>;
+}
+
+const RECOMMENDATION_CARD_NARRATIVE_JSON_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'whyImportant',
+    'whatItTeaches',
+    'watchFor',
+    'historicalContext',
+    'reception',
+    'castHighlights',
+    'streaming',
+    'spoilerPolicy',
+    'journeyNode',
+    'nextStepHint',
+    'ratings',
+  ],
+  properties: {
+    whyImportant: { type: 'string' },
+    whatItTeaches: { type: 'string' },
+    watchFor: { type: 'array', minItems: 3, maxItems: 3, items: { type: 'string' } },
+    historicalContext: { type: 'string' },
+    reception: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        critics: { type: 'number' },
+        audience: { type: 'number' },
+        summary: { type: 'string' },
+      },
+    },
+    castHighlights: {
+      type: 'array',
+      maxItems: 6,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name'],
+        properties: {
+          name: { type: 'string' },
+          role: { type: 'string' },
+        },
+      },
+    },
+    streaming: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['provider', 'type'],
+        properties: {
+          provider: { type: 'string' },
+          type: { type: 'string', enum: ['subscription', 'rent', 'buy', 'free'] },
+          url: { type: 'string' },
+          price: { type: 'string' },
+        },
+      },
+    },
+    spoilerPolicy: { type: 'string', enum: ['NO_SPOILERS', 'LIGHT', 'FULL'] },
+    journeyNode: { type: 'string' },
+    nextStepHint: { type: 'string' },
+    ratings: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['imdb', 'additional'],
+      properties: {
+        imdb: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['value', 'scale'],
+          properties: {
+            value: { type: 'number' },
+            scale: { type: 'string' },
+            rawValue: { type: 'string' },
+          },
+        },
+        additional: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 3,
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['source', 'value', 'scale'],
+            properties: {
+              source: { type: 'string' },
+              value: { type: 'number' },
+              scale: { type: 'string' },
+              rawValue: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+} as const;
+
+function safeUserSignals(userProfile: unknown): { tolerance?: number; pacePreference?: string; recentInteractionSummary?: string } {
+  if (!userProfile || typeof userProfile !== 'object') {
+    return {};
+  }
+
+  const profile = userProfile as Record<string, unknown>;
+  return {
+    ...(typeof profile.tolerance === 'number' ? { tolerance: profile.tolerance } : {}),
+    ...(typeof profile.pacePreference === 'string' ? { pacePreference: profile.pacePreference } : {}),
+    ...(typeof profile.recentInteractionSummary === 'string'
+      ? { recentInteractionSummary: profile.recentInteractionSummary }
+      : {}),
+  };
+}
+
+function summarizeProfileSignals(userProfile: unknown): string | undefined {
+  const signals = safeUserSignals(userProfile);
+  const entries = Object.entries(signals);
+  if (entries.length === 0) {
+    return undefined;
+  }
+
+  return entries.map(([key, value]) => `${key}:${String(value)}`).join('|');
+}
+
+function rankFromJourneyNode(journeyNode: string): number {
+  const rankMatch = journeyNode.match(/RANK_(\d+)$/);
+  return rankMatch ? Number(rankMatch[1]) : 1;
+}
+
+function extractEvidenceRefs(value: string): string[] {
+  return [...value.matchAll(/\[E(\d+)\]/g)].map((match) => `E${match[1]}`);
+}
+
+function findInvalidEvidenceRefs(narrative: RecommendationCardNarrative, evidenceCount: number): string[] {
+  const referenced = new Set<string>();
+  const textFields = [
+    narrative.whyImportant,
+    narrative.whatItTeaches,
+    narrative.historicalContext,
+    narrative.nextStepHint,
+    ...(typeof narrative.reception.summary === 'string' ? [narrative.reception.summary] : []),
+    ...narrative.watchFor,
+  ];
+
+  textFields.forEach((text) => {
+    extractEvidenceRefs(text).forEach((ref) => referenced.add(ref));
+  });
+
+  return [...referenced].filter((ref) => {
+    const n = Number(ref.slice(1));
+    return !Number.isInteger(n) || n < 1 || n > evidenceCount;
+  });
+}
+
+export async function composeCardNarrative(input: {
+  movie: CandidateMovie;
+  userProfile: unknown;
+  journeyNode: string;
+  evidencePackets: EvidencePacketVM[];
+  llmProvider?: LlmProvider;
+}): Promise<RecommendationCardNarrative> {
+  const rank = rankFromJourneyNode(input.journeyNode);
+  const fallback = buildNarrative(input.movie, rank);
+
+  if (!input.llmProvider) {
+    return fallback;
+  }
+
+  const safeSignals = safeUserSignals(input.userProfile);
+  const packagedEvidence = packageEvidencePackets(input.evidencePackets);
+  const evidenceSummary = packagedEvidence
+    .map((item) => ({
+      sourceName: item.sourceName,
+      snippet: item.snippet,
+      ...(item.url ? { url: item.url } : {}),
+    }));
+
+  try {
+    const generated = await input.llmProvider.generateJson<unknown>({
+      schemaName: 'RecommendationCardNarrative',
+      jsonSchema: RECOMMENDATION_CARD_NARRATIVE_JSON_SCHEMA,
+      system:
+        'Compose concise, accurate recommendation narratives. Return strict JSON only. No markdown. No prose outside JSON.'
+        + ' Use NO_SPOILERS by default.'
+        + ' Do not claim facts not supported by evidence; if uncertain, write "unknown".'
+        + ' For factual claims, add citation hints like [E1], [E2] where E# maps to evidence order.',
+      user: JSON.stringify({
+        movie: {
+          tmdbId: input.movie.tmdbId,
+          title: input.movie.title,
+          year: input.movie.year,
+          genres: input.movie.genres,
+          ratings: input.movie.ratings,
+        },
+        journeyNode: input.journeyNode,
+        preferenceSignals: safeSignals,
+        evidence: evidenceSummary.map((e, index) => ({ id: `E${index + 1}`, ...e })),
+      }),
+      temperature: 0.2,
+      maxTokens: 900,
+    });
+
+    const parsed = recommendationCardNarrativeSchema.safeParse(generated);
+    if (!parsed.success) {
+      throw new LlmSchemaError(parsed.error.issues[0]?.message ?? 'Narrative does not match RecommendationCardNarrative schema');
+    }
+
+    const invalidRefs = findInvalidEvidenceRefs(parsed.data, packagedEvidence.length);
+    if (invalidRefs.length > 0) {
+      throw new LlmSchemaError(`Narrative contains invalid evidence refs: ${invalidRefs.join(', ')}`);
+    }
+
+    return parsed.data;
+  } catch {
+    return fallback;
+  }
+}
+
+function resolveNarrativeModel(llmProvider?: LlmProvider): string {
+  if (!llmProvider) {
+    return 'deterministic-template-v1';
+  }
+
+  if (llmProvider.name() === 'gemini') {
+    return process.env.GEMINI_MODEL ?? 'gemini-1.5-flash';
+  }
+
+  if (llmProvider.name() === 'ollama') {
+    return process.env.OLLAMA_MODEL ?? 'ollama';
+  }
+
+  return llmProvider.name();
 }
 
 export class SqlCandidateGeneratorV1 implements CandidateGenerator {
@@ -113,8 +356,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     });
     return allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
-      .filter((movie) => movie.posterUrl.trim().length > 0)
-      .filter((movie) => movie.ratings.length >= 2 && movie.ratings.some((rating) => rating.source === 'IMDB'))
+      .filter((movie) => isRecommendationEligibleMovie({ posterUrl: movie.posterUrl, ratings: movie.ratings }))
       .map((movie) => movie.id);
   }
 }
@@ -158,22 +400,39 @@ export class NoExplorationPolicyV1 implements ExplorationPolicy {
 export class CachedEvidenceRetrieverV1 implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getEvidence(movieId: string): Promise<Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>> {
+  async getEvidenceForMovie(movieId: string): Promise<Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>> {
     const evidence = await this.prisma.evidencePacket.findMany({ where: { movieId }, orderBy: { retrievedAt: 'desc' } });
-    return evidence.map((item) => ({
+    return packageEvidencePackets(
+      evidence.map((item) => ({
       sourceName: item.sourceName,
       ...(item.url ? { url: item.url } : {}),
       snippet: item.snippet,
       retrievedAt: item.retrievedAt.toISOString(),
-    }));
+      })),
+    );
   }
 }
 
 export class TemplateNarrativeComposerV1 implements NarrativeComposer {
-  compose(movie: CandidateMovie, _userProfile: unknown, journeyNode: string): RecommendationCardNarrative {
-    const rankMatch = journeyNode.match(/RANK_(\d+)$/);
-    const rank = rankMatch ? Number(rankMatch[1]) : 1;
-    return buildNarrative(movie, rank);
+  constructor(private readonly llmProvider?: LlmProvider) {}
+
+  async compose(
+    movie: CandidateMovie,
+    userProfile: unknown,
+    journeyNode: string,
+    evidencePackets: EvidencePacketVM[],
+  ): Promise<RecommendationCardNarrative> {
+    return composeCardNarrative({
+      movie,
+      userProfile,
+      journeyNode,
+      evidencePackets,
+      llmProvider: this.llmProvider,
+    });
+  }
+
+  modelName(): string {
+    return resolveNarrativeModel(this.llmProvider);
   }
 }
 
@@ -256,9 +515,76 @@ export async function generateRecommendationBatchModern(
   const itemData = await Promise.all(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
-      const evidence = await deps.evidenceRetriever.getEvidence(movie.id);
-      const narrative = deps.narrativeComposer.compose(movie, null, `ENGINE_V1_CORE#RANK_${rank}`, evidence);
-      return { movie, rank, narrative, evidence };
+      const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, 'US');
+      const journeyNode = `ENGINE_V1_CORE#RANK_${rank}`;
+      const ratings = movie.ratings;
+      const inputHash = computeNarrativeHash({
+        movieFacts: {
+          tmdbId: movie.tmdbId,
+          title: movie.title,
+          year: movie.year,
+          genres: movie.genres,
+          ratings: movie.ratings,
+        },
+        journeyNode,
+        evidenceHashes: computeEvidenceHashes(evidence),
+        profileSummary: summarizeProfileSignals(null),
+        narrativeVersion: NARRATIVE_VERSION,
+      });
+
+      const cachedItem = await prisma.recommendationItem.findFirst({
+        where: { movieId: movie.id, batch: { userId } },
+        orderBy: { batch: { createdAt: 'desc' } },
+        select: {
+          narrativeHash: true,
+          narrativeVersion: true,
+          whyImportant: true,
+          whatItTeaches: true,
+          watchFor: true,
+          historicalContext: true,
+          reception: true,
+          castHighlights: true,
+          streaming: true,
+          spoilerPolicy: true,
+          nextStepHint: true,
+          narrativeModel: true,
+          narrativeGeneratedAt: true,
+        },
+      });
+
+      const cachedNarrative = getCachedNarrativeIfFresh(cachedItem, inputHash, {
+        journeyNode: 'ENGINE_V1_CORE',
+        ratings,
+        narrativeVersion: NARRATIVE_VERSION,
+      });
+
+      if (cachedNarrative) {
+        return {
+          movie,
+          rank,
+          evidence,
+          narrative: cachedNarrative,
+          narrativeHash: inputHash,
+          narrativeVersion: cachedItem?.narrativeVersion ?? NARRATIVE_VERSION,
+          narrativeModel: cachedItem?.narrativeModel ?? 'deterministic-template-v1',
+          narrativeGeneratedAt: cachedItem?.narrativeGeneratedAt ?? new Date(),
+        };
+      }
+
+      const narrative = await deps.narrativeComposer.compose(movie, null, journeyNode, evidence);
+      return {
+        movie,
+        rank,
+        narrative,
+        evidence,
+        narrativeHash: inputHash,
+        narrativeVersion: NARRATIVE_VERSION,
+        narrativeModel:
+          deps.narrativeComposer instanceof TemplateNarrativeComposerV1
+            ? deps.narrativeComposer.modelName()
+            : 'narrative-composer',
+        narrativeGeneratedAt: new Date(),
+      };
     }),
   );
 
@@ -280,6 +606,10 @@ export async function generateRecommendationBatchModern(
           castHighlights: item.narrative.castHighlights,
           streaming: streamingByMovieId.get(item.movie.id) ?? [],
           spoilerPolicy: item.narrative.spoilerPolicy,
+          narrativeVersion: item.narrativeVersion,
+          narrativeModel: item.narrativeModel,
+          narrativeHash: item.narrativeHash,
+          narrativeGeneratedAt: item.narrativeGeneratedAt,
         })),
       },
     },
@@ -344,6 +674,15 @@ export async function generateRecommendationBatch(
   prisma: PrismaClient,
   options: RecommendationEngineOptions = {},
 ): Promise<RecommendationBatchResult> {
+  let llmProvider: LlmProvider | undefined;
+  if (process.env.LLM_PROVIDER) {
+    try {
+      llmProvider = getLlmProviderFromEnv();
+    } catch {
+      llmProvider = undefined;
+    }
+  }
+
   const mode = process.env.REC_ENGINE_MODE === 'modern' ? 'modern' : 'v1';
   if (mode === 'v1') {
     return generateRecommendationBatchV1(userId, prisma, options);
@@ -357,7 +696,7 @@ export async function generateRecommendationBatch(
       reranker: new HeuristicRerankerV1(prisma),
       explorationPolicy: new NoExplorationPolicyV1(),
       evidenceRetriever: new CachedEvidenceRetrieverV1(prisma),
-      narrativeComposer: new TemplateNarrativeComposerV1(),
+      narrativeComposer: new TemplateNarrativeComposerV1(llmProvider),
     },
     options,
   );

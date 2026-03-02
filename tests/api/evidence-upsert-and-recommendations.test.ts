@@ -1,10 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { execSync } from 'node:child_process';
-import { existsSync, rmSync } from 'node:fs';
 import { PrismaClient } from '@prisma/client';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-evidence-api.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('evidence_upsert_and_recommendations_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
 
 vi.mock('@/lib/prisma', () => ({
@@ -33,6 +31,7 @@ async function seedMovies(): Promise<{ userId: string; targetTmdbId: number }> {
       data: [
         { movieId: movie.id, source: 'IMDB', value: 7.1, scale: '10', rawValue: '7.1/10' },
         { movieId: movie.id, source: 'ROTTEN_TOMATOES', value: 80, scale: '100', rawValue: '80%' },
+        { movieId: movie.id, source: 'METACRITIC', value: 75, scale: '100', rawValue: '75/100' },
       ],
     });
   }
@@ -41,8 +40,7 @@ async function seedMovies(): Promise<{ userId: string; targetTmdbId: number }> {
 }
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) rmSync(testDbPath);
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {

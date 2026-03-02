@@ -1,13 +1,11 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
 import { StreamingLookupService, STREAMING_CACHE_TTL_MS } from '@/lib/streaming/streaming-lookup-service';
 import type { StreamingProvider } from '@/lib/streaming/streaming-provider';
 import type { CandidateMovie } from '@/lib/recommendation/recommendation-engine-v1';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-streaming-lookup.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('streaming_lookup_service_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
 
 const movieFixture: CandidateMovie = {
@@ -24,8 +22,7 @@ const movieFixture: CandidateMovie = {
 };
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) rmSync(testDbPath);
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {
@@ -96,5 +93,24 @@ describe('StreamingLookupService TTL caching', () => {
     expect(cached).not.toBeNull();
     expect(cached?.offers).toEqual([{ provider: 'Fresh Provider', type: 'rent', price: '$4.99' }]);
     expect(cached && cached.fetchedAt.getTime() > Date.now() - 60_000).toBe(true);
+  });
+
+  it('returns empty offers when provider fails', async () => {
+    const provider: StreamingProvider = {
+      lookup: vi.fn().mockRejectedValue(new Error('provider unavailable')),
+    };
+
+    const service = new StreamingLookupService(prisma, provider);
+    const result = await service.getForMovie(movieFixture, 'US');
+
+    expect(provider.lookup).toHaveBeenCalledTimes(1);
+    expect(result.region).toBe('US');
+    expect(result.offers).toEqual([]);
+
+    const cached = await prisma.movieStreamingCache.findUnique({
+      where: { movieId_region: { movieId: movieFixture.id, region: 'US' } },
+    });
+    expect(cached).not.toBeNull();
+    expect(cached?.offers).toEqual([]);
   });
 });

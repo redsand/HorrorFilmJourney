@@ -35,8 +35,9 @@ curl -s http://localhost:3000/api/experience \
 ```bash
 curl -s -X POST http://localhost:3000/api/movies/upsert \
   -H "x-admin-token: $ADMIN_TOKEN" \
+  -H "x-user-id: $USER_ID" \
   -H "content-type: application/json" \
-  -d '{"tmdbId":603,"title":"The Matrix","year":1999}'
+  -d '{"tmdbId":603,"title":"The Matrix","year":1999,"posterUrl":"https://image.tmdb.org/t/p/w500/example.jpg"}'
 ```
 
 ### Create interaction

@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/recommendations/[batchId]/diagnostics/route';
 
-const findUniqueMock = vi.fn();
+const { findUniqueMock } = vi.hoisted(() => ({
+  findUniqueMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {

@@ -55,7 +55,7 @@ export async function getExperience(
     include: { profile: true },
   });
 
-  if (!user || !user.profile) {
+  if (!user || !user.profile || !user.profile.onboardingCompleted) {
     return {
       state: 'ONBOARDING_NEEDED',
       onboardingQuestions: ONBOARDING_QUESTIONS,

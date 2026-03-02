@@ -1,14 +1,12 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
 import { UserRepo } from '@/repos/user-repo';
 import { MovieRepo } from '@/repos/movie-repo';
 import { InteractionRepo } from '@/repos/interaction-repo';
 import { BatchRepo } from '@/repos/batch-repo';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('data_model_test');
 
 const prisma = new PrismaClient({
   datasources: {
@@ -22,13 +20,7 @@ const interactionRepo = new InteractionRepo(prisma);
 const batchRepo = new BatchRepo(prisma);
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) {
-    rmSync(testDbPath);
-  }
-
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, {
-    stdio: 'inherit',
-  });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {

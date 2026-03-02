@@ -99,6 +99,9 @@ This document is the single source of truth for product requirements.
 - Evidence packet model stores source/url/snippet/retrieval metadata.
 - Recommendation architecture includes evidence retriever seam.
 - Narrative composition path can accept evidence packets for citations.
+- Evidence snippets are sanitized and capped before prompt use.
+- Prompt policy is evidence-first: unsupported facts should be marked `unknown`.
+- Citation hints use bracket references (`[E1]`, `[E2]`) mapped by evidence order in the `evidence` list.
 
 ## R13 — Multi-user support
 **Requirement:** All recommendation and interaction behavior is user-scoped.

@@ -1,4 +1,4 @@
-# Multi-user data model (Prisma + SQLite)
+# Multi-user data model (Prisma + PostgreSQL)
 
 This app uses Prisma as source of truth and now enforces richer movie metadata for recommendation eligibility.
 

@@ -7,7 +7,8 @@ import {
   setupAcceptanceDatabase,
 } from './utils/recommendations-seed';
 
-const acceptancePrisma = createAcceptancePrisma();
+const acceptanceSchemaName = 'recommendations_shape_snapshot_test';
+const acceptancePrisma = createAcceptancePrisma(acceptanceSchemaName);
 
 vi.mock('@/lib/prisma', () => ({
   prisma: acceptancePrisma,
@@ -17,7 +18,7 @@ const { POST } = await import('@/app/api/recommendations/next/route');
 
 describe('recommendations next response shape snapshot', () => {
   beforeAll(() => {
-    setupAcceptanceDatabase();
+    setupAcceptanceDatabase(acceptanceSchemaName);
   });
 
   beforeEach(async () => {

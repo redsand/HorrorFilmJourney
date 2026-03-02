@@ -1,6 +1,6 @@
 # HorrorFilmJourney
 
-Next.js App Router + TypeScript scaffold with Prisma (SQLite), admin-token route gating, and request-scoped user resolution.
+Next.js App Router + TypeScript scaffold with Prisma (PostgreSQL), admin-token route gating, and request-scoped user resolution.
 
 ## Setup
 
@@ -15,6 +15,8 @@ Next.js App Router + TypeScript scaffold with Prisma (SQLite), admin-token route
    ```bash
    cp .env.example .env
    ```
+
+   Ensure PostgreSQL is running locally with credentials `postgres/postgres`, and create database `horror_film_journey` if it does not already exist.
 
 3. Generate Prisma client and apply migration:
 
@@ -45,7 +47,6 @@ Health check endpoint:
 - `GET /api/health`
 - Required headers:
   - `x-admin-token: <ADMIN_TOKEN>`
-  - `x-user-id: <existing user id>`
 - Success response: `{ "data": { "ok": true }, "error": null }`
 
 

@@ -1,17 +1,16 @@
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { InteractionStatus, PrismaClient } from '@prisma/client';
+import { buildTestDatabaseUrl, prismaDbPush } from '../../helpers/test-db';
 
-export const acceptanceDbPath = 'prisma/test-recommendations-acceptance.db';
-export const acceptanceDbUrl = `file:${acceptanceDbPath}`;
-
-export function createAcceptancePrisma(): PrismaClient {
-  return new PrismaClient({ datasources: { db: { url: acceptanceDbUrl } } });
+function getAcceptanceDbUrl(schemaName: string): string {
+  return buildTestDatabaseUrl(schemaName);
 }
 
-export function setupAcceptanceDatabase(): void {
-  if (existsSync(acceptanceDbPath)) rmSync(acceptanceDbPath);
-  execSync(`DATABASE_URL=${acceptanceDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
+export function createAcceptancePrisma(schemaName: string): PrismaClient {
+  return new PrismaClient({ datasources: { db: { url: getAcceptanceDbUrl(schemaName) } } });
+}
+
+export function setupAcceptanceDatabase(schemaName: string): void {
+  prismaDbPush(getAcceptanceDbUrl(schemaName));
 }
 
 export async function resetAcceptanceDatabase(prisma: PrismaClient): Promise<void> {
@@ -55,6 +54,7 @@ export async function seedRecommendationAcceptance(prisma: PrismaClient): Promis
         data: [
           { movieId: movie.id, source: 'IMDB', value: 7.1 + index * 0.1, scale: '10', rawValue: `${(7.1 + index * 0.1).toFixed(1)}/10` },
           { movieId: movie.id, source: 'ROTTEN_TOMATOES', value: 70 + index, scale: '100', rawValue: `${70 + index}%` },
+          { movieId: movie.id, source: 'METACRITIC', value: 65 + index, scale: '100', rawValue: `${65 + index}/100` },
         ],
       }),
     ),

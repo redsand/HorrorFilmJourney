@@ -6,5 +6,5 @@ export type EvidencePacketVM = {
 };
 
 export interface EvidenceRetriever {
-  getEvidence(movieId: string): Promise<EvidencePacketVM[]>;
+  getEvidenceForMovie(movieId: string, region?: string): Promise<EvidencePacketVM[]>;
 }

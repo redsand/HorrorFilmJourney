@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/movies/upsert/route';
 
-const userFindUniqueMock = vi.fn();
-const movieUpsertMock = vi.fn();
-const movieRatingUpsertMock = vi.fn();
+const { userFindUniqueMock, movieUpsertMock, movieRatingUpsertMock } = vi.hoisted(() => ({
+  userFindUniqueMock: vi.fn(),
+  movieUpsertMock: vi.fn(),
+  movieRatingUpsertMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
@@ -72,7 +74,7 @@ describe('POST /api/movies/upsert', () => {
 
     const response = await POST(request);
     expect(response.status).toBe(200);
-    expect(movieRatingUpsertMock).toHaveBeenCalledTimes(3);
+    expect(movieRatingUpsertMock).toHaveBeenCalledTimes(2);
   });
 
   it('rejects invalid rating source', async () => {

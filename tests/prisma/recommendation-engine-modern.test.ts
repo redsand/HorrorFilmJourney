@@ -1,11 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
 import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-modern-engine.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('recommendation_engine_modern_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
 
 async function addRatings(movieId: string): Promise<void> {
@@ -19,8 +17,7 @@ async function addRatings(movieId: string): Promise<void> {
 }
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) rmSync(testDbPath);
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {

@@ -42,6 +42,7 @@ export type RecommendationEngineOptions = {
 
 const DEFAULT_TARGET_COUNT = 5;
 const DEFAULT_SKIP_DAYS = 30;
+export const MIN_RATING_SOURCES_FOR_ELIGIBILITY = 3;
 
 export function normalizeGenres(value: Prisma.JsonValue | null): string[] {
   if (!Array.isArray(value)) {
@@ -89,7 +90,7 @@ function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): CandidateMovie['ratings'] | null {
   const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < 2) {
+  if (!imdb || ratings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
     return null;
   }
 
@@ -103,7 +104,7 @@ function toRatings(
       ...(rating.rawValue ? { rawValue: rating.rawValue } : {}),
     }));
 
-  if (additional.length < 1) {
+  if (additional.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1) {
     return null;
   }
 
@@ -115,6 +116,21 @@ function toRatings(
     },
     additional,
   };
+}
+
+export function isRecommendationEligibleMovie(input: {
+  posterUrl: string;
+  ratings: Array<{ source: string }>;
+}): boolean {
+  if (input.posterUrl.trim().length === 0) {
+    return false;
+  }
+
+  if (input.ratings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
+    return false;
+  }
+
+  return input.ratings.some((rating) => rating.source === 'IMDB');
 }
 
 export function pickDiverseMovies(candidates: CandidateMovie[], targetCount: number): CandidateMovie[] {
@@ -208,7 +224,8 @@ export async function generateRecommendationBatchV1(
   });
 
   const candidates = allMovies
-    .filter((movie) => !excludedMovieIds.has(movie.id) && movie.posterUrl.trim().length > 0)
+    .filter((movie) => !excludedMovieIds.has(movie.id))
+    .filter((movie) => isRecommendationEligibleMovie({ posterUrl: movie.posterUrl, ratings: movie.ratings }))
     .map((movie) => {
       const ratings = toRatings(movie.ratings);
       if (!ratings) {

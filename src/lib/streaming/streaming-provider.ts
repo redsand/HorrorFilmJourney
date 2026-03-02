@@ -1,5 +1,3 @@
-import type { CandidateMovie } from '@/lib/recommendation/recommendation-engine-v1';
-
 export type StreamingOffer = {
   provider: string;
   type: 'subscription' | 'rent' | 'buy' | 'free';
@@ -8,12 +6,12 @@ export type StreamingOffer = {
 };
 
 export interface StreamingProvider {
-  lookup(movie: CandidateMovie, region: string): Promise<StreamingOffer[]>;
+  lookup(tmdbId: number, region: string): Promise<StreamingOffer[]>;
 }
 
 export class DeterministicStubStreamingProvider implements StreamingProvider {
-  async lookup(movie: CandidateMovie, region: string): Promise<StreamingOffer[]> {
-    const bucket = movie.tmdbId % 4;
+  async lookup(tmdbId: number, region: string): Promise<StreamingOffer[]> {
+    const bucket = tmdbId % 4;
 
     if (bucket === 0) {
       return [];
@@ -24,7 +22,7 @@ export class DeterministicStubStreamingProvider implements StreamingProvider {
         {
           provider: 'Shudder',
           type: 'subscription',
-          url: `https://example.com/${region.toLowerCase()}/movie/${movie.tmdbId}`,
+          url: `https://example.com/${region.toLowerCase()}/movie/${tmdbId}`,
         },
       ];
     }

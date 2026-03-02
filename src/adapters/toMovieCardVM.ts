@@ -39,7 +39,6 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
           }
         : undefined;
 
-    const narrativeReception = card.narrative.reception ?? {};
     const hasAggregates = Boolean(criticsScore || audienceScore);
 
     return {
@@ -53,7 +52,7 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
       reception: {
         ...(criticsScore ? { critics: criticsScore } : {}),
         ...(audienceScore ? { audience: audienceScore } : {}),
-        summary: narrativeReception.summary ?? (hasAggregates ? 'Reception derived from aggregate scores.' : RECEPTION_FALLBACK_SUMMARY),
+        summary: hasAggregates ? 'Reception derived from aggregate scores.' : RECEPTION_FALLBACK_SUMMARY,
       },
       credits: {
         castHighlights: card.narrative.castHighlights,

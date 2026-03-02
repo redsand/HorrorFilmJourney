@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUserId } from '@/lib/request-context';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
+type CreditCast = { name: string; role?: string };
 
 function normalizeSpoilerPolicy(value: string | null): SpoilerPolicy | null {
   if (!value) {
@@ -17,7 +18,37 @@ function normalizeSpoilerPolicy(value: string | null): SpoilerPolicy | null {
   return null;
 }
 
-function buildSections(title: string, year: number | null, spoilerPolicy: SpoilerPolicy) {
+function parseCast(value: unknown): CreditCast[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((entry) => {
+      if (typeof entry === 'string' && entry.trim().length > 0) {
+        return { name: entry.trim() };
+      }
+
+      if (
+        typeof entry === 'object'
+        && entry !== null
+        && typeof (entry as { name?: unknown }).name === 'string'
+      ) {
+        const castEntry = entry as { name: string; role?: unknown };
+        return {
+          name: castEntry.name.trim(),
+          ...(typeof castEntry.role === 'string' && castEntry.role.trim().length > 0
+            ? { role: castEntry.role.trim() }
+            : {}),
+        };
+      }
+
+      return null;
+    })
+    .filter((entry): entry is CreditCast => Boolean(entry) && entry.name.length > 0);
+}
+
+function buildSections(title: string, year: number | null, spoilerPolicy: SpoilerPolicy, hasCredits: boolean) {
   const yearText = year ? ` (${year})` : '';
 
   const productionNotes = [`${title}${yearText}: notable craft choices and production context without plot specifics.`];
@@ -34,6 +65,10 @@ function buildSections(title: string, year: number | null, spoilerPolicy: Spoile
     productionNotes.push('Full mode: includes discussion of late-film structural payoffs and reveals.');
     historicalNotes.push('Full mode: compares ending construction with genre conventions directly.');
     trivia.push('Full mode: spoiler-rich analysis can reference specific twists and outcomes.');
+  }
+
+  if (!hasCredits) {
+    receptionNotes.push('Credits metadata is currently limited for this title.');
   }
 
   return {
@@ -76,6 +111,8 @@ export async function GET(request: Request): Promise<Response> {
       title: true,
       year: true,
       posterUrl: true,
+      director: true,
+      castTop: true,
     },
   });
 
@@ -94,7 +131,13 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
 
-  const sections = buildSections(movie.title, movie.year, spoilerPolicy);
+  const cast = parseCast(movie.castTop);
+  const sections = buildSections(
+    movie.title,
+    movie.year,
+    spoilerPolicy,
+    Boolean(movie.director) || cast.length > 0,
+  );
 
   return ok({
     movie: {
@@ -104,7 +147,8 @@ export async function GET(request: Request): Promise<Response> {
       posterUrl: movie.posterUrl,
     },
     credits: {
-      cast: [],
+      ...(movie.director ? { director: movie.director } : {}),
+      cast,
     },
     sections,
     spoilerPolicy,

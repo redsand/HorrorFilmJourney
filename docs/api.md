@@ -111,6 +111,44 @@ Guarantees:
 - at least two total rating systems are shown (`imdb` + one additional).
 - `evidence` key is always present on each recommendation card (`[]` when no evidence exists).
 
+---
+
+## POST /api/onboarding
+
+Upserts onboarding profile answers for the current user.
+
+### Required headers
+
+- `x-admin-token: <ADMIN_TOKEN>`
+- `x-user-id: <existing user id>`
+
+### Body
+
+```json
+{
+  "tolerance": 4,
+  "pacePreference": "balanced",
+  "horrorDNA": {
+    "subgenres": ["psychological", "supernatural"]
+  }
+}
+```
+
+### Rules
+
+- `tolerance` is required and must be an integer `1..5`.
+- `pacePreference` is required and must be one of: `slowburn`, `balanced`, `shock`.
+- Existing profile is updated if present; otherwise created.
+
+### Success
+
+```json
+{
+  "data": { "success": true },
+  "error": null
+}
+```
+
 
 ## GET /api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS|LIGHT|FULL
 
@@ -156,6 +194,12 @@ Required headers:
 - `NO_SPOILERS`: general non-spoiler notes only.
 - `LIGHT`: mild thematic/craft hints are allowed.
 - `FULL`: spoiler-rich notes are allowed.
+
+### Credits fallback behavior
+
+- If `Movie.director` is known, `credits.director` is included.
+- If `Movie.castTop` has entries, `credits.cast` is populated from it.
+- If credits data is missing, `credits.cast` is an empty array and sections include a note that credits metadata is limited.
 
 
 ## POST /api/evidence/upsert

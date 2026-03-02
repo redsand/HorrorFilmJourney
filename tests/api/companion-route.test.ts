@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/companion/route';
 
-const userFindUniqueMock = vi.fn();
-const movieFindUniqueMock = vi.fn();
-const evidenceFindManyMock = vi.fn();
+const { userFindUniqueMock, movieFindUniqueMock, evidenceFindManyMock } = vi.hoisted(() => ({
+  userFindUniqueMock: vi.fn(),
+  movieFindUniqueMock: vi.fn(),
+  evidenceFindManyMock: vi.fn(),
+}));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
@@ -47,6 +49,8 @@ describe('GET /api/companion', () => {
       title: 'Companion Test',
       year: 1999,
       posterUrl: 'https://img/123.jpg',
+      director: 'John Carpenter',
+      castTop: [{ name: 'Kurt Russell', role: 'R.J. MacReady' }],
     });
     evidenceFindManyMock.mockResolvedValueOnce([
       {
@@ -75,7 +79,10 @@ describe('GET /api/companion', () => {
       year: 1999,
       posterUrl: 'https://img/123.jpg',
     });
-    expect(body.data.credits).toEqual({ cast: [] });
+    expect(body.data.credits).toEqual({
+      director: 'John Carpenter',
+      cast: [{ name: 'Kurt Russell', role: 'R.J. MacReady' }],
+    });
     expect(Array.isArray(body.data.sections.productionNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.historicalNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.receptionNotes)).toBe(true);
@@ -92,6 +99,8 @@ describe('GET /api/companion', () => {
       title: 'Companion Test',
       year: 1999,
       posterUrl: 'https://img/123.jpg',
+      director: null,
+      castTop: null,
     });
     evidenceFindManyMock.mockResolvedValue([]);
 
@@ -118,5 +127,9 @@ describe('GET /api/companion', () => {
 
     expect(noSpoilers.data.sections.productionNotes).not.toEqual(full.data.sections.productionNotes);
     expect(full.data.sections.productionNotes.some((line: string) => line.includes('Full mode'))).toBe(true);
+    expect(
+      noSpoilers.data.sections.receptionNotes.some((line: string) =>
+        line.toLowerCase().includes('credits metadata is currently limited')),
+    ).toBe(true);
   });
 });

@@ -1,11 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
 import { getExperience } from '@/lib/experience-state';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-experience.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('experience_state_test');
 
 const prisma = new PrismaClient({
   datasources: {
@@ -14,13 +12,7 @@ const prisma = new PrismaClient({
 });
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) {
-    rmSync(testDbPath);
-  }
-
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, {
-    stdio: 'inherit',
-  });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {
@@ -47,11 +39,25 @@ describe('experience state decisions', () => {
     expect(result.onboardingQuestions?.length).toBeGreaterThan(0);
   });
 
-  it('returns SHOW_RECOMMENDATION_BUNDLE when user has profile but no batch', async () => {
+  it('returns ONBOARDING_NEEDED when profile exists but onboarding is not completed', async () => {
     const user = await prisma.user.create({
       data: {
         displayName: 'Profile User',
-        profile: { create: { tolerance: 3 } },
+        profile: { create: { tolerance: 3, pacePreference: 'balanced', onboardingCompleted: false } },
+      },
+      include: { profile: true },
+    });
+
+    const result = await getExperience(user.id, prisma);
+
+    expect(result.state).toBe('ONBOARDING_NEEDED');
+  });
+
+  it('returns SHOW_RECOMMENDATION_BUNDLE when onboarding is completed and user has no batch', async () => {
+    const user = await prisma.user.create({
+      data: {
+        displayName: 'Completed User',
+        profile: { create: { tolerance: 3, pacePreference: 'balanced', onboardingCompleted: true } },
       },
       include: { profile: true },
     });
@@ -65,7 +71,7 @@ describe('experience state decisions', () => {
     const user = await prisma.user.create({
       data: {
         displayName: 'Batch User',
-        profile: { create: { tolerance: 4 } },
+        profile: { create: { tolerance: 4, pacePreference: 'balanced', onboardingCompleted: true } },
       },
     });
 

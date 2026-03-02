@@ -1,21 +1,13 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, rmSync } from 'node:fs';
-import { execSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
+import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
-const testDbPath = 'prisma/test-modern-models.db';
-const testDbUrl = `file:${testDbPath}`;
+const testDbUrl = buildTestDatabaseUrl('modern_recsys_models_test');
 
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) {
-    rmSync(testDbPath);
-  }
-
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, {
-    stdio: 'inherit',
-  });
+  prismaDbPush(testDbUrl);
 });
 
 beforeEach(async () => {
