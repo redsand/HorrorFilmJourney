@@ -68,6 +68,7 @@ export async function seedRecommendationAcceptance(prisma: PrismaClient): Promis
           sourceName: 'SeedSource',
           url: `https://example.com/movies/${movie.tmdbId}`,
           snippet: `Seed evidence snippet ${index + 1}`,
+          retrievedAt: new Date('2026-01-01T00:00:00.000Z'),
         },
       }),
     ),
