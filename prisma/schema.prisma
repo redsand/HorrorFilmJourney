@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum InteractionStatus {
+  WATCHED
+  ALREADY_SEEN
+  SKIPPED
+  WANT_TO_WATCH
+}
+
+model User {
+  id             String                 @id @default(cuid())
+  displayName    String
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  profile        UserProfile?
+  interactions   UserMovieInteraction[]
+  batches        RecommendationBatch[]
+}
+
+model UserProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  tolerance      Int      @default(3)
+  pacePreference String?
+  horrorDNA      Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Movie {
+  id               String                 @id @default(cuid())
+  tmdbId           Int                    @unique
+  title            String
+  year             Int?
+  posterUrl        String?
+  genres           Json?
+  director         String?
+  castTop          Json?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  interactions     UserMovieInteraction[]
+  recommendationItems RecommendationItem[]
+}
+
+model UserMovieInteraction {
+  id                   String            @id @default(cuid())
+  userId               String
+  movieId              String
+  status               InteractionStatus
+  rating               Int?
+  intensity            Int?
+  emotions             Json?
+  workedBest           Json?
+  agedWell             String?
+  recommend            Boolean?
+  note                 String?
+  recommendationItemId String?
+  createdAt            DateTime          @default(now())
+
+  user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie                Movie             @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  recommendationItem   RecommendationItem? @relation(fields: [recommendationItemId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+model RecommendationBatch {
+  id          String               @id @default(cuid())
+  userId      String
+  journeyNode String?
+  rationale   String?
+  createdAt   DateTime             @default(now())
+
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       RecommendationItem[]
+
+  @@index([userId, createdAt])
+}
+
+model RecommendationItem {
+  id                String                  @id @default(cuid())
+  batchId           String
+  movieId           String
+  rank              Int
+  whyImportant      String
+  whatItTeaches     String
+  historicalContext String
+  nextStepHint      String
+  watchFor          Json
+  reception         Json?
+  castHighlights    Json?
+  streaming         Json?
+  spoilerPolicy     String
+
+  batch             RecommendationBatch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  movie             Movie                   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  interactions      UserMovieInteraction[]
+
+  @@unique([batchId, movieId])
+}
