@@ -56,7 +56,7 @@ describe('RecommendationEngine v1', () => {
     expect(result.cards.find((card) => card.movie.tmdbId === 2)).toBeUndefined();
   });
 
-  it('enforces poster + imdb + minimum 3 ratings eligibility', async () => {
+  it('enforces poster + imdb + minimum 2 ratings eligibility', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Eligibility' } });
 
     const missingPoster = await prisma.movie.create({ data: { tmdbId: 301, title: 'Missing Poster', posterUrl: '', genres: ['horror'] } });

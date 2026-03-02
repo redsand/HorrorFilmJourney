@@ -84,7 +84,7 @@ function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): CandidateMovie['ratings'] | null {
   const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < 3) {
+  if (!imdb || ratings.length < 2) {
     return null;
   }
 

@@ -109,3 +109,49 @@ Guarantees:
 - `movie.posterUrl` is non-null.
 - `ratings.imdb` is present.
 - at least two total rating systems are shown (`imdb` + one additional).
+
+
+## GET /api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS|LIGHT|FULL
+
+Companion Mode endpoint for in-movie mobile usage.
+
+Required headers:
+
+- `x-admin-token: <ADMIN_TOKEN>`
+- `x-user-id: <existing user id>`
+
+### Query params
+
+- `tmdbId` (required integer)
+- `spoilerPolicy` (optional; defaults to `NO_SPOILERS`)
+
+### Success (shape)
+
+```json
+{
+  "data": {
+    "movie": { "tmdbId": 123, "title": "...", "year": 1999, "posterUrl": "https://..." },
+    "credits": {
+      "director": "...",
+      "cast": [{ "name": "...", "role": "..." }]
+    },
+    "sections": {
+      "productionNotes": ["..."],
+      "historicalNotes": ["..."],
+      "receptionNotes": ["..."],
+      "trivia": ["..."]
+    },
+    "spoilerPolicy": "NO_SPOILERS",
+    "evidence": [
+      { "sourceName": "...", "url": "https://...", "snippet": "...", "retrievedAt": "2026-01-01T00:00:00.000Z" }
+    ]
+  },
+  "error": null
+}
+```
+
+### Spoiler behavior
+
+- `NO_SPOILERS`: general non-spoiler notes only.
+- `LIGHT`: mild thematic/craft hints are allowed.
+- `FULL`: spoiler-rich notes are allowed.

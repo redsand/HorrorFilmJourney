@@ -3,6 +3,7 @@ import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
 import { getCurrentUserId } from '@/lib/request-context';
+import { toMovieCardVM } from '@/adapters/toMovieCardVM';
 
 export async function POST(request: Request): Promise<Response> {
   const authError = validateAdminToken(request);
@@ -16,5 +17,13 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const result = await generateRecommendationBatch(userId, prisma);
-  return ok(result, { status: 200 });
+  const cards = toMovieCardVM(result);
+
+  return ok(
+    {
+      batchId: result.batchId,
+      cards,
+    },
+    { status: 200 },
+  );
 }

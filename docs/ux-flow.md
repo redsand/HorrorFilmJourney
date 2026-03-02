@@ -52,3 +52,19 @@ Returns a stable envelope with the current state and payload required by the fro
 ```
 
 - `nextBatch` is omitted when the threshold has not been reached.
+
+
+## Companion Mode (during-movie mobile flow)
+
+### API
+
+- `GET /api/companion?tmdbId=<id>&spoilerPolicy=NO_SPOILERS|LIGHT|FULL`
+
+### UX intent
+
+- Provide quick, glanceable context while a user is actively watching.
+- Keep output sectioned for short-scroll consumption (`productionNotes`, `historicalNotes`, `receptionNotes`, `trivia`).
+- Let users choose spoiler strictness per session:
+  - `NO_SPOILERS`: safe companion notes.
+  - `LIGHT`: mild craft/thematic hints.
+  - `FULL`: spoiler-rich analysis.

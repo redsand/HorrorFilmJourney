@@ -16,7 +16,7 @@ function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): RatingBundle | null {
   const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < 3) {
+  if (!imdb || ratings.length < 2) {
     return null;
   }
 
@@ -115,7 +115,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     return allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
       .filter((movie) => movie.posterUrl.trim().length > 0)
-      .filter((movie) => movie.ratings.length >= 3 && movie.ratings.some((rating) => rating.source === 'IMDB'))
+      .filter((movie) => movie.ratings.length >= 2 && movie.ratings.some((rating) => rating.source === 'IMDB'))
       .map((movie) => movie.id);
   }
 }
