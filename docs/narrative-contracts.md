@@ -11,6 +11,7 @@ Schema fields:
 - `watchFor: [string, string, string]` (exactly 3)
 - `historicalContext: string`
 - `reception: { critics?: number, audience?: number, summary?: string }`
+  - If critics/audience are missing, use fallback summary: `"Reception data currently unavailable."`.
 - `castHighlights: Array<{ name: string, role?: string }>` (max 6)
 - `streaming: Array<{ provider: string, type: "subscription"|"rent"|"buy"|"free", url?: string, price?: string }>`
 - `spoilerPolicy: "NO_SPOILERS" | "LIGHT" | "FULL"`
@@ -43,6 +44,8 @@ The canonical UI-facing recommendation card contract is `MovieCardVM` in `src/co
   - `imdb: { value:number, scale:"10"|"100", rawValue?:string }` (**required**)
   - `additional: Array<{ source:string, value:number, scale:"10"|"100", rawValue?:string }>` (**required**, min 1, max 3)
 - `reception: { critics?, audience?, summary? }`
+  - `reception` must always be present on `MovieCardVM`.
+  - When both critics and audience aggregates are missing, use `reception: { summary: "Reception data currently unavailable." }`.
   - `critics?: { source:string, value:number, scale:"100", rawValue?:string }`
   - `audience?: { source:string, value:number, scale:"100", rawValue?:string }`
   - `summary?: string`

@@ -61,5 +61,14 @@ describe('RecommendationEngine modern mode', () => {
 
     const diagnostics = await prisma.recommendationDiagnostics.findUnique({ where: { batchId: modern.batchId } });
     expect(diagnostics).not.toBeNull();
+    expect(diagnostics?.batchId).toBe(modern.batchId);
+    expect(diagnostics?.candidateCount).toBeGreaterThanOrEqual(modern.cards.length);
+    expect(diagnostics?.excludedSeenCount).toBe(0);
+    expect(diagnostics?.excludedSkippedRecentCount).toBe(0);
+    expect(typeof diagnostics?.explorationUsed).toBe('boolean');
+    expect(diagnostics?.diversityStats).toMatchObject({
+      candidatePool: 6,
+      selectedCount: modern.cards.length,
+    });
   });
 });

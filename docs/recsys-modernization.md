@@ -15,6 +15,23 @@ This phase introduces a forward-compatible `ModernRecSys` layer without changing
   - `EvidencePacket` cache table for RAG evidence snippets.
   - `RecommendationDiagnostics` for candidate filtering and exploration metrics.
 
+### Modern diagnostics (current behavior)
+
+When `REC_ENGINE_MODE=modern`, each generated recommendation batch writes one `RecommendationDiagnostics` row keyed by `batchId` with:
+
+- `candidateCount`
+- `excludedSeenCount`
+- `excludedSkippedRecentCount`
+- `explorationUsed`
+- `diversityStats` (JSON)
+
+Diagnostics are exposed through admin-only endpoint:
+
+- `GET /api/recommendations/[batchId]/diagnostics`
+
+Near-term use: operational visibility (candidate pool health, filter pressure, exploration usage).
+Later phases can use the same data for offline policy replay, ranking audits, and experiment attribution.
+
 ## Phase 2: Postgres + pgvector transition
 
 - Move from SQLite to Postgres.
