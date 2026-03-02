@@ -31,3 +31,24 @@ Returns a stable envelope with the current state and payload required by the fro
 - Keep each step to one decision per screen.
 - Show quick poll prompts only when needed.
 - Prioritize immediate next action from state payload.
+
+## Interaction rule: rapid already-seen recovery
+
+- When a user marks `ALREADY_SEEN` on recommendation items in the current batch, the backend tracks a count for that batch.
+- On the **3rd** `ALREADY_SEEN` mark (or later) for that same batch, the API immediately generates and returns a replacement recommendation batch.
+- `POST /api/interactions` response shape:
+
+```json
+{
+  "data": {
+    "interaction": { "id": "...", "status": "ALREADY_SEEN" },
+    "nextBatch": {
+      "batchId": "...",
+      "cards": []
+    }
+  },
+  "error": null
+}
+```
+
+- `nextBatch` is omitted when the threshold has not been reached.

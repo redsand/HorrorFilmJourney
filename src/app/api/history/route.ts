@@ -49,5 +49,20 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
 
-  return ok(interactions, { status: 200 });
+  const items = interactions.map((interaction) => ({
+    interactionId: interaction.id,
+    status: interaction.status,
+    rating: interaction.rating,
+    createdAt: interaction.createdAt,
+    tags: {
+      emotions: Array.isArray(interaction.emotions) ? interaction.emotions : [],
+      intensity: interaction.intensity,
+      agedWell: interaction.agedWell,
+    },
+    movie: interaction.movie,
+  }));
+
+  const nextCursor = interactions.length === limit ? interactions.at(-1)?.id : undefined;
+
+  return ok({ items, pageInfo: { ...(nextCursor ? { nextCursor } : {}) } }, { status: 200 });
 }

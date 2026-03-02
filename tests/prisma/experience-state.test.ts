@@ -24,10 +24,15 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
+  await prisma.recommendationDiagnostics.deleteMany();
   await prisma.userMovieInteraction.deleteMany();
   await prisma.recommendationItem.deleteMany();
   await prisma.recommendationBatch.deleteMany();
+  await prisma.evidencePacket.deleteMany();
+  await prisma.movieEmbedding.deleteMany();
+  await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
 });
@@ -65,7 +70,7 @@ describe('experience state decisions', () => {
     });
 
     const movie = await prisma.movie.create({
-      data: { tmdbId: 12345, title: 'The Thing', year: 1982 },
+      data: { tmdbId: 12345, title: 'The Thing', year: 1982, posterUrl: 'https://img/thing.jpg' },
     });
 
     await prisma.recommendationBatch.create({

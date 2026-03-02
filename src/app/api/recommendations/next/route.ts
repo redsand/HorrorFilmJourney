@@ -1,7 +1,7 @@
 import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
-import { generateRecommendationBatchV1 } from '@/lib/recommendation/recommendation-engine-v1';
+import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
 import { getCurrentUserId } from '@/lib/request-context';
 
 export async function POST(request: Request): Promise<Response> {
@@ -15,6 +15,6 @@ export async function POST(request: Request): Promise<Response> {
     return fail(error ?? { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' }, 400);
   }
 
-  const result = await generateRecommendationBatchV1(userId, prisma);
+  const result = await generateRecommendationBatch(userId, prisma);
   return ok(result, { status: 200 });
 }

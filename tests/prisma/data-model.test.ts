@@ -32,10 +32,15 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
+  await prisma.recommendationDiagnostics.deleteMany();
   await prisma.userMovieInteraction.deleteMany();
   await prisma.recommendationItem.deleteMany();
   await prisma.recommendationBatch.deleteMany();
+  await prisma.evidencePacket.deleteMany();
+  await prisma.movieEmbedding.deleteMany();
+  await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
 });
@@ -60,12 +65,14 @@ describe('Prisma multi-user model repositories', () => {
       tmdbId: 550,
       title: 'Se7en',
       year: 1995,
+      posterUrl: 'https://img/550.jpg',
     });
 
     const second = await movieRepo.upsertByTmdbId({
       tmdbId: 550,
       title: 'Se7en (Updated)',
       year: 1995,
+      posterUrl: 'https://img/550b.jpg',
     });
 
     expect(first.id).toBe(second.id);
@@ -79,6 +86,7 @@ describe('Prisma multi-user model repositories', () => {
     const movie = await movieRepo.upsertByTmdbId({
       tmdbId: 603,
       title: 'The Matrix',
+      posterUrl: 'https://img/603.jpg',
     });
 
     const interaction = await interactionRepo.create({
@@ -99,7 +107,7 @@ describe('Prisma multi-user model repositories', () => {
 
     const movies = await Promise.all(
       [1, 2, 3, 4, 5].map((n) =>
-        movieRepo.upsertByTmdbId({ tmdbId: 9000 + n, title: `Movie ${n}` }),
+        movieRepo.upsertByTmdbId({ tmdbId: 9000 + n, title: `Movie ${n}`, posterUrl: `https://img/${n}.jpg` }),
       ),
     );
 
@@ -125,8 +133,8 @@ describe('Prisma multi-user model repositories', () => {
 
   it('queries user history ordered by createdAt desc', async () => {
     const user = await userRepo.createWithProfile({ displayName: 'Ash' });
-    const movieA = await movieRepo.upsertByTmdbId({ tmdbId: 101, title: 'A' });
-    const movieB = await movieRepo.upsertByTmdbId({ tmdbId: 102, title: 'B' });
+    const movieA = await movieRepo.upsertByTmdbId({ tmdbId: 101, title: 'A', posterUrl: 'https://img/101.jpg' });
+    const movieB = await movieRepo.upsertByTmdbId({ tmdbId: 102, title: 'B', posterUrl: 'https://img/102.jpg' });
 
     await interactionRepo.create({ userId: user.id, movieId: movieA.id, status: 'WATCHED' });
     await interactionRepo.create({ userId: user.id, movieId: movieB.id, status: 'SKIPPED' });

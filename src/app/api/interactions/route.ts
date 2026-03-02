@@ -2,6 +2,7 @@ import { InteractionStatus } from '@prisma/client';
 import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
+import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
 import { getCurrentUserId } from '@/lib/request-context';
 
 function isStringArray(value: unknown): value is string[] {
@@ -97,5 +98,31 @@ export async function POST(request: Request): Promise<Response> {
     },
   });
 
-  return ok(interaction, { status: 200 });
+  let nextBatch: Awaited<ReturnType<typeof generateRecommendationBatch>> | undefined;
+
+  if (status === InteractionStatus.ALREADY_SEEN && typeof recommendationItemId === 'string') {
+    const recommendationItem = await prisma.recommendationItem.findUnique({
+      where: { id: recommendationItemId },
+      select: { batchId: true },
+    });
+
+    if (recommendationItem?.batchId) {
+      const alreadySeenCount = await prisma.userMovieInteraction.count({
+        where: {
+          userId,
+          status: InteractionStatus.ALREADY_SEEN,
+          recommendationItem: {
+            batchId: recommendationItem.batchId,
+            batch: { userId },
+          },
+        },
+      });
+
+      if (alreadySeenCount >= 3) {
+        nextBatch = await generateRecommendationBatch(userId, prisma);
+      }
+    }
+  }
+
+  return ok({ interaction, ...(nextBatch ? { nextBatch } : {}) }, { status: 200 });
 }

@@ -31,6 +31,28 @@ export const recommendationCardNarrativeSchema = z.object({
   spoilerPolicy: spoilerPolicySchema,
   journeyNode: z.string(),
   nextStepHint: z.string(),
+  ratings: z
+    .object({
+      imdb: z.object({
+        value: z.number(),
+        scale: z.string(),
+        rawValue: z.string().optional(),
+      }),
+      additional: z
+        .array(
+          z.object({
+            source: z.string(),
+            value: z.number(),
+            scale: z.string(),
+            rawValue: z.string().optional(),
+          }),
+        )
+        .min(1)
+        .max(3),
+    })
+    .refine((value) => value.additional.length + 1 <= 4, {
+      message: 'total rating sources shown must be between 2 and 4',
+    }),
 });
 
 export const interactionStatusSchema = z.enum([

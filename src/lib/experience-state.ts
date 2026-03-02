@@ -20,7 +20,7 @@ export type ExperiencePayload = {
         tmdbId: number;
         title: string;
         year: number | null;
-        posterUrl: string | null;
+        posterUrl: string;
       };
       narrative: {
         whyImportant: string;

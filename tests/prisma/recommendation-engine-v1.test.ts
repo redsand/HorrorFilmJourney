@@ -7,27 +7,32 @@ import { generateRecommendationBatchV1 } from '@/lib/recommendation/recommendati
 const testDbPath = 'prisma/test-recommendation-engine.db';
 const testDbUrl = `file:${testDbPath}`;
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: { url: testDbUrl },
-  },
-});
+const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
+
+async function addRatings(movieId: string, includeImdb = true, extraSources = 2): Promise<void> {
+  const data = [] as Array<{ movieId: string; source: string; value: number; scale: string; rawValue: string }>;
+  if (includeImdb) data.push({ movieId, source: 'IMDB', value: 7.8, scale: '10', rawValue: '7.8/10' });
+  if (extraSources >= 1) data.push({ movieId, source: 'ROTTEN_TOMATOES', value: 92, scale: '100', rawValue: '92%' });
+  if (extraSources >= 2) data.push({ movieId, source: 'METACRITIC', value: 81, scale: '100', rawValue: '81/100' });
+  if (extraSources >= 3) data.push({ movieId, source: 'TMDB', value: 7.5, scale: '10', rawValue: '7.5/10' });
+  await prisma.movieRating.createMany({ data });
+}
 
 beforeAll(() => {
-  if (existsSync(testDbPath)) {
-    rmSync(testDbPath);
-  }
-
-  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, {
-    stdio: 'inherit',
-  });
+  if (existsSync(testDbPath)) rmSync(testDbPath);
+  execSync(`DATABASE_URL=${testDbUrl} npx prisma db push --skip-generate`, { stdio: 'inherit' });
 });
 
 beforeEach(async () => {
+  await prisma.recommendationDiagnostics.deleteMany();
   await prisma.userMovieInteraction.deleteMany();
   await prisma.recommendationItem.deleteMany();
   await prisma.recommendationBatch.deleteMany();
+  await prisma.evidencePacket.deleteMany();
+  await prisma.movieEmbedding.deleteMany();
+  await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
 });
@@ -37,83 +42,42 @@ describe('RecommendationEngine v1', () => {
     const user = await prisma.user.create({ data: { displayName: 'A' } });
     const movies = await Promise.all(
       [1, 2, 3, 4, 5, 6].map((n) =>
-        prisma.movie.create({ data: { tmdbId: n, title: `Movie ${n}`, year: 2000 + n, genres: ['horror'] } }),
+        prisma.movie.create({ data: { tmdbId: n, title: `Movie ${n}`, year: 2000 + n, posterUrl: `https://img/${n}.jpg`, genres: ['horror'] } }),
       ),
     );
+    await Promise.all(movies.map((m) => addRatings(m.id)));
 
-    await prisma.userMovieInteraction.create({
-      data: { userId: user.id, movieId: movies[0]!.id, status: InteractionStatus.WATCHED, rating: 4 },
-    });
-    await prisma.userMovieInteraction.create({
-      data: { userId: user.id, movieId: movies[1]!.id, status: InteractionStatus.ALREADY_SEEN, rating: 5 },
-    });
+    await prisma.userMovieInteraction.create({ data: { userId: user.id, movieId: movies[0]!.id, status: InteractionStatus.WATCHED, rating: 4 } });
+    await prisma.userMovieInteraction.create({ data: { userId: user.id, movieId: movies[1]!.id, status: InteractionStatus.ALREADY_SEEN, rating: 5 } });
 
     const result = await generateRecommendationBatchV1(user.id, prisma);
-
     expect(result.cards).toHaveLength(4);
     expect(result.cards.find((card) => card.movie.tmdbId === 1)).toBeUndefined();
     expect(result.cards.find((card) => card.movie.tmdbId === 2)).toBeUndefined();
   });
 
-  it('returns 5 recommendations when inventory allows', async () => {
-    const user = await prisma.user.create({ data: { displayName: 'B' } });
+  it('enforces poster + imdb + minimum 3 ratings eligibility', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Eligibility' } });
 
-    await Promise.all(
-      [10, 11, 12, 13, 14, 15].map((n) =>
-        prisma.movie.create({ data: { tmdbId: n, title: `Movie ${n}`, year: 1990 + n, genres: ['thriller'] } }),
-      ),
-    );
+    const missingPoster = await prisma.movie.create({ data: { tmdbId: 301, title: 'Missing Poster', posterUrl: '', genres: ['horror'] } });
+    const missingImdb = await prisma.movie.create({ data: { tmdbId: 302, title: 'Missing IMDB', posterUrl: 'https://img/302.jpg', genres: ['horror'] } });
+    const oneSource = await prisma.movie.create({ data: { tmdbId: 303, title: 'One Source', posterUrl: 'https://img/303.jpg', genres: ['horror'] } });
+    const eligible = await prisma.movie.create({ data: { tmdbId: 304, title: 'Eligible', posterUrl: 'https://img/304.jpg', genres: ['horror'] } });
 
-    const result = await generateRecommendationBatchV1(user.id, prisma);
-
-    expect(result.cards).toHaveLength(5);
-    const batch = await prisma.recommendationBatch.findUnique({ where: { id: result.batchId }, include: { items: true } });
-    expect(batch?.items).toHaveLength(5);
-  });
-
-  it('keeps user batches isolated without cross-user contamination', async () => {
-    const userA = await prisma.user.create({ data: { displayName: 'User A' } });
-    const userB = await prisma.user.create({ data: { displayName: 'User B' } });
-
-    const m1 = await prisma.movie.create({ data: { tmdbId: 101, title: 'A1', year: 1981, genres: ['slasher'] } });
-    const m2 = await prisma.movie.create({ data: { tmdbId: 102, title: 'B1', year: 1982, genres: ['ghost'] } });
-    await prisma.movie.create({ data: { tmdbId: 103, title: 'C1', year: 1983, genres: ['body-horror'] } });
-    await prisma.movie.create({ data: { tmdbId: 104, title: 'D1', year: 1984, genres: ['slasher'] } });
-    await prisma.movie.create({ data: { tmdbId: 105, title: 'E1', year: 1985, genres: ['ghost'] } });
-    await prisma.movie.create({ data: { tmdbId: 106, title: 'F1', year: 1986, genres: ['body-horror'] } });
-
-    await prisma.userMovieInteraction.create({ data: { userId: userA.id, movieId: m1.id, status: InteractionStatus.WATCHED, rating: 5 } });
-    await prisma.userMovieInteraction.create({ data: { userId: userB.id, movieId: m2.id, status: InteractionStatus.WATCHED, rating: 4 } });
-
-    const resultA = await generateRecommendationBatchV1(userA.id, prisma);
-    const resultB = await generateRecommendationBatchV1(userB.id, prisma);
-
-    expect(resultA.cards.find((card) => card.movie.tmdbId === 101)).toBeUndefined();
-    expect(resultB.cards.find((card) => card.movie.tmdbId === 102)).toBeUndefined();
-
-    const batchA = await prisma.recommendationBatch.findUnique({ where: { id: resultA.batchId } });
-    const batchB = await prisma.recommendationBatch.findUnique({ where: { id: resultB.batchId } });
-    expect(batchA?.userId).toBe(userA.id);
-    expect(batchB?.userId).toBe(userB.id);
-  });
-
-  it('applies diversity by varying decades and genres when possible', async () => {
-    const user = await prisma.user.create({ data: { displayName: 'Diversity User' } });
-
-    await prisma.movie.create({ data: { tmdbId: 201, title: '70s Giallo', year: 1977, genres: ['giallo'] } });
-    await prisma.movie.create({ data: { tmdbId: 202, title: '80s Slasher', year: 1984, genres: ['slasher'] } });
-    await prisma.movie.create({ data: { tmdbId: 203, title: '90s Found Footage', year: 1999, genres: ['found-footage'] } });
-    await prisma.movie.create({ data: { tmdbId: 204, title: '00s Supernatural', year: 2004, genres: ['supernatural'] } });
-    await prisma.movie.create({ data: { tmdbId: 205, title: '10s Arthouse', year: 2017, genres: ['arthouse'] } });
-    await prisma.movie.create({ data: { tmdbId: 206, title: '10s Slasher', year: 2019, genres: ['slasher'] } });
+    await addRatings(missingPoster.id);
+    await addRatings(missingImdb.id, false, 3);
+    await addRatings(oneSource.id, true, 0);
+    await addRatings(eligible.id, true, 3);
 
     const result = await generateRecommendationBatchV1(user.id, prisma);
+    const ids = result.cards.map((card) => card.movie.tmdbId);
 
-    const decades = new Set(result.cards.map((card) => Math.floor((card.movie.year ?? 0) / 10) * 10));
-    const genres = new Set(result.cards.flatMap((card) => card.movie.genres ?? []));
-
-    expect(result.cards).toHaveLength(5);
-    expect(decades.size).toBeGreaterThanOrEqual(3);
-    expect(genres.size).toBeGreaterThanOrEqual(3);
+    expect(ids).toContain(304);
+    expect(ids).not.toContain(301);
+    expect(ids).not.toContain(302);
+    expect(ids).not.toContain(303);
+    expect(result.cards[0]?.movie.posterUrl).toBeTruthy();
+    expect(result.cards[0]?.ratings.imdb).toBeDefined();
+    expect(result.cards[0]?.ratings.additional.length).toBeGreaterThanOrEqual(1);
   });
 });

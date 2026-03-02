@@ -4,7 +4,7 @@ export type UpsertMovieInput = {
   tmdbId: number;
   title: string;
   year?: number;
-  posterUrl?: string;
+  posterUrl: string;
   genres?: Prisma.JsonValue;
   director?: string;
   castTop?: Prisma.JsonValue;

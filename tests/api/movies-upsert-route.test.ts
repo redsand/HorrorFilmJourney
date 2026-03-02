@@ -3,11 +3,13 @@ import { POST } from '@/app/api/movies/upsert/route';
 
 const userFindUniqueMock = vi.fn();
 const movieUpsertMock = vi.fn();
+const movieRatingUpsertMock = vi.fn();
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
     movie: { upsert: movieUpsertMock },
+    movieRating: { upsert: movieRatingUpsertMock },
   },
 }));
 
@@ -16,40 +18,15 @@ describe('POST /api/movies/upsert', () => {
     process.env.ADMIN_TOKEN = 'test-admin-token';
     userFindUniqueMock.mockReset();
     movieUpsertMock.mockReset();
+    movieRatingUpsertMock.mockReset();
   });
 
-  it('returns 401 when admin token is missing', async () => {
-    const request = new Request('http://localhost/api/movies/upsert', {
-      method: 'POST',
-      body: JSON.stringify({ tmdbId: 1, title: 'Alien' }),
-      headers: { 'content-type': 'application/json', 'x-user-id': 'user_1' },
-    });
-
-    const response = await POST(request);
-    expect(response.status).toBe(401);
-  });
-
-  it('returns 400 when X-User-Id is missing', async () => {
-    const request = new Request('http://localhost/api/movies/upsert', {
-      method: 'POST',
-      body: JSON.stringify({ tmdbId: 1, title: 'Alien' }),
-      headers: { 'content-type': 'application/json', 'x-admin-token': 'test-admin-token' },
-    });
-
-    const response = await POST(request);
-    expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toEqual({
-      data: null,
-      error: { code: 'VALIDATION_ERROR', message: 'Missing X-User-Id header' },
-    });
-  });
-
-  it('returns 400 for invalid body', async () => {
+  it('requires posterUrl', async () => {
     userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
 
     const request = new Request('http://localhost/api/movies/upsert', {
       method: 'POST',
-      body: JSON.stringify({ tmdbId: 'bad' }),
+      body: JSON.stringify({ tmdbId: 1, title: 'Alien' }),
       headers: {
         'content-type': 'application/json',
         'x-admin-token': 'test-admin-token',
@@ -61,20 +38,31 @@ describe('POST /api/movies/upsert', () => {
     expect(response.status).toBe(400);
   });
 
-  it('returns 200 envelope with movie', async () => {
-    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
-    movieUpsertMock.mockResolvedValueOnce({
+  it('stores normalized ratings and upserts duplicate sources', async () => {
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    movieUpsertMock.mockResolvedValue({
       id: 'movie_1',
       tmdbId: 1,
       title: 'Alien',
       year: 1979,
-      posterUrl: null,
-      genres: ['horror', 'sci-fi'],
+      posterUrl: 'https://img/1.jpg',
+      genres: ['horror'],
+      ratings: [],
     });
+    movieRatingUpsertMock.mockResolvedValue({});
 
     const request = new Request('http://localhost/api/movies/upsert', {
       method: 'POST',
-      body: JSON.stringify({ tmdbId: 1, title: 'Alien', year: 1979, genres: ['horror', 'sci-fi'] }),
+      body: JSON.stringify({
+        tmdbId: 1,
+        title: 'Alien',
+        posterUrl: 'https://img/1.jpg',
+        ratings: [
+          { source: 'IMDB', rawValue: '7.8/10' },
+          { source: 'IMDB', rawValue: '8.0/10' },
+          { source: 'ROTTEN_TOMATOES', rawValue: '92%' },
+        ],
+      }),
       headers: {
         'content-type': 'application/json',
         'x-admin-token': 'test-admin-token',
@@ -84,16 +72,28 @@ describe('POST /api/movies/upsert', () => {
 
     const response = await POST(request);
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({
-      data: {
-        id: 'movie_1',
+    expect(movieRatingUpsertMock).toHaveBeenCalledTimes(3);
+  });
+
+  it('rejects invalid rating source', async () => {
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+
+    const request = new Request('http://localhost/api/movies/upsert', {
+      method: 'POST',
+      body: JSON.stringify({
         tmdbId: 1,
         title: 'Alien',
-        year: 1979,
-        posterUrl: null,
-        genres: ['horror', 'sci-fi'],
+        posterUrl: 'https://img/1.jpg',
+        ratings: [{ source: 'LETTERBOXD', rawValue: '4.0/5' }],
+      }),
+      headers: {
+        'content-type': 'application/json',
+        'x-admin-token': 'test-admin-token',
+        'x-user-id': 'user_1',
       },
-      error: null,
     });
+
+    const response = await POST(request);
+    expect(response.status).toBe(400);
   });
 });

@@ -4,19 +4,24 @@ import {
   type RecommendationCardNarrative,
 } from '@/lib/contracts/narrative-contracts';
 
-type CandidateMovie = {
+export type CandidateMovie = {
   id: string;
   tmdbId: number;
   title: string;
   year: number | null;
-  posterUrl: string | null;
+  posterUrl: string;
   genres: string[];
+  ratings: {
+    imdb: { value: number; scale: string; rawValue?: string };
+    additional: Array<{ source: string; value: number; scale: string; rawValue?: string }>;
+  };
 };
 
 type RecommendationCard = {
   id: string;
   rank: number;
   movie: CandidateMovie;
+  ratings: CandidateMovie['ratings'];
   narrative: RecommendationCardNarrative;
 };
 
@@ -33,7 +38,7 @@ export type RecommendationEngineOptions = {
 const DEFAULT_TARGET_COUNT = 5;
 const DEFAULT_SKIP_DAYS = 30;
 
-function normalizeGenres(value: Prisma.JsonValue | null): string[] {
+export function normalizeGenres(value: Prisma.JsonValue | null): string[] {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -49,7 +54,7 @@ function decadeOf(year: number | null): number | null {
   return Math.floor(year / 10) * 10;
 }
 
-function buildNarrative(movie: CandidateMovie, rank: number): RecommendationCardNarrative {
+export function buildNarrative(movie: CandidateMovie, rank: number): RecommendationCardNarrative {
   const watchFor = [
     `How ${movie.title} builds tension scene-by-scene`,
     'A key style choice that shapes mood',
@@ -71,10 +76,43 @@ function buildNarrative(movie: CandidateMovie, rank: number): RecommendationCard
     spoilerPolicy: 'NO_SPOILERS',
     journeyNode: 'ENGINE_V1_CORE',
     nextStepHint: rank < 5 ? 'After this, continue to the next ranked pick in your bundle.' : 'After this, submit a quick poll to refine your next bundle.',
+    ratings: movie.ratings,
   });
 }
 
-function pickDiverseMovies(candidates: CandidateMovie[], targetCount: number): CandidateMovie[] {
+function toRatings(
+  ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
+): CandidateMovie['ratings'] | null {
+  const imdb = ratings.find((rating) => rating.source === 'IMDB');
+  if (!imdb || ratings.length < 3) {
+    return null;
+  }
+
+  const additional = ratings
+    .filter((rating) => rating.source !== 'IMDB')
+    .slice(0, 3)
+    .map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+      scale: rating.scale,
+      ...(rating.rawValue ? { rawValue: rating.rawValue } : {}),
+    }));
+
+  if (additional.length < 1) {
+    return null;
+  }
+
+  return {
+    imdb: {
+      value: imdb.value,
+      scale: imdb.scale,
+      ...(imdb.rawValue ? { rawValue: imdb.rawValue } : {}),
+    },
+    additional,
+  };
+}
+
+export function pickDiverseMovies(candidates: CandidateMovie[], targetCount: number): CandidateMovie[] {
   const remaining = [...candidates].sort((a, b) => a.tmdbId - b.tmdbId);
   const chosen: CandidateMovie[] = [];
 
@@ -158,19 +196,31 @@ export async function generateRecommendationBatchV1(
       year: true,
       posterUrl: true,
       genres: true,
+      ratings: {
+        select: { source: true, value: true, scale: true, rawValue: true },
+      },
     },
   });
 
   const candidates = allMovies
-    .filter((movie) => !excludedMovieIds.has(movie.id))
-    .map((movie) => ({
-      id: movie.id,
-      tmdbId: movie.tmdbId,
-      title: movie.title,
-      year: movie.year,
-      posterUrl: movie.posterUrl,
-      genres: normalizeGenres(movie.genres),
-    }));
+    .filter((movie) => !excludedMovieIds.has(movie.id) && movie.posterUrl.trim().length > 0)
+    .map((movie) => {
+      const ratings = toRatings(movie.ratings);
+      if (!ratings) {
+        return null;
+      }
+
+      return {
+        id: movie.id,
+        tmdbId: movie.tmdbId,
+        title: movie.title,
+        year: movie.year,
+        posterUrl: movie.posterUrl,
+        genres: normalizeGenres(movie.genres),
+        ratings,
+      };
+    })
+    .filter((movie): movie is CandidateMovie => movie !== null);
 
   const selectedMovies = pickDiverseMovies(candidates, targetCount);
 
@@ -212,6 +262,9 @@ export async function generateRecommendationBatchV1(
               year: true,
               posterUrl: true,
               genres: true,
+              ratings: {
+                select: { source: true, value: true, scale: true, rawValue: true },
+              },
             },
           },
         },
@@ -233,6 +286,7 @@ export async function generateRecommendationBatchV1(
         spoilerPolicy: item.spoilerPolicy,
         journeyNode: batch.journeyNode ?? 'ENGINE_V1_CORE',
         nextStepHint: item.nextStepHint,
+        ratings: toRatings(item.movie.ratings)!,
       });
 
       return {
@@ -245,7 +299,9 @@ export async function generateRecommendationBatchV1(
           year: item.movie.year,
           posterUrl: item.movie.posterUrl,
           genres: normalizeGenres(item.movie.genres),
+          ratings: narrative.ratings,
         },
+        ratings: narrative.ratings,
         narrative,
       };
     }),
