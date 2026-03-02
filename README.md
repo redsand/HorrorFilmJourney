@@ -56,3 +56,4 @@ Health check endpoint:
 - API examples and required headers: `docs/api.md`
 - Narrative and quick-poll contracts: `docs/narrative-contracts.md`
 - UX flow and experience state machine: `docs/ux-flow.md`
+- Recommendation engine v1 pipeline and seams: `docs/recommendation-engine.md`

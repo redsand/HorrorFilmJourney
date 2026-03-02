@@ -116,3 +116,15 @@ Requires:
 
 - `x-admin-token`
 - `x-user-id`
+
+
+---
+
+## POST /api/recommendations/next
+
+Generates the next recommendation batch for the current user and returns `batchId` + up to 5 cards.
+
+Requires:
+
+- `x-admin-token`
+- `x-user-id`
