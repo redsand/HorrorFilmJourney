@@ -15,6 +15,8 @@
     "prisma:migrate": "prisma migrate dev",
     "bootstrap:admin": "node --experimental-strip-types scripts/bootstrap-admin.ts",
     "seed:catalog": "node --experimental-strip-types scripts/seed-catalog.ts",
+    "catalog:backup": "node --experimental-strip-types scripts/catalog-backup.ts",
+    "catalog:restore": "node --experimental-strip-types scripts/catalog-restore.ts",
     "sync:tmdb:catalog": "node --experimental-strip-types scripts/sync-tmdb-catalog.ts",
     "sync:tmdb:update": "node --experimental-strip-types scripts/sync-tmdb-catalog-update.ts",
     "eval:recs:offline": "node --experimental-strip-types scripts/eval-recommendations.ts",

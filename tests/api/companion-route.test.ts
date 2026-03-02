@@ -6,12 +6,16 @@ const {
   userFindUniqueMock,
   movieFindUniqueMock,
   evidenceFindManyMock,
+  companionCacheFindUniqueMock,
+  companionCacheUpsertMock,
   getLlmProviderFromEnvMock,
   generateJsonMock,
 } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
+  companionCacheFindUniqueMock: vi.fn(),
+  companionCacheUpsertMock: vi.fn(),
   getLlmProviderFromEnvMock: vi.fn(),
   generateJsonMock: vi.fn(),
 }));
@@ -21,6 +25,7 @@ vi.mock('@/lib/prisma', () => ({
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
+    companionCache: { findUnique: companionCacheFindUniqueMock, upsert: companionCacheUpsertMock },
   },
 }));
 
@@ -33,8 +38,12 @@ describe('GET /api/companion', () => {
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
+    companionCacheFindUniqueMock.mockReset();
+    companionCacheUpsertMock.mockReset();
     getLlmProviderFromEnvMock.mockReset();
     generateJsonMock.mockReset();
+    companionCacheFindUniqueMock.mockResolvedValue(null);
+    companionCacheUpsertMock.mockResolvedValue(null);
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
   });
@@ -163,6 +172,54 @@ describe('GET /api/companion', () => {
       noSpoilers.data.sections.receptionNotes.some((line: string) =>
         line.toLowerCase().includes('credits metadata is currently limited')),
     ).toBe(true);
+  });
+
+  it('returns cached fully populated companion payload when fresh', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: null,
+      castTop: null,
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([]);
+    companionCacheFindUniqueMock.mockResolvedValueOnce({
+      payload: {
+        movie: { tmdbId: 123, title: 'Cached Title', year: 1999, posterUrl: 'https://img/123.jpg' },
+        credits: { director: 'Director A', cast: [{ name: 'Actor A' }] },
+        sections: {
+          productionNotes: ['p1'],
+          historicalNotes: ['h1'],
+          receptionNotes: ['r1'],
+          trivia: ['t1', 't2', 't3', 't4', 't5'],
+        },
+        ratings: [],
+        spoilerPolicy: 'FULL',
+        evidence: [],
+      },
+      isFullyPopulated: true,
+      expiresAt: new Date(Date.now() + 60_000),
+      llmProvider: 'ollama',
+      llmModel: 'glm-5:cloud',
+    });
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=FULL', {
+        headers: {
+          cookie: makeSessionCookie('user_1'),
+        },
+      }),
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.data.movie.title).toBe('Cached Title');
+    expect(companionCacheUpsertMock).not.toHaveBeenCalled();
+    expect(getLlmProviderFromEnvMock).not.toHaveBeenCalled();
   });
 
   it('uses llm output for light/full summaries and trivia when configured', async () => {

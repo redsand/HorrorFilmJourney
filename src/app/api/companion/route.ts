@@ -11,6 +11,27 @@ type CompanionLlmOutput = {
   fullSummary: string;
   trivia: string[];
 };
+type CompanionResponsePayload = {
+  movie: {
+    tmdbId: number;
+    title: string;
+    year?: number;
+    posterUrl: string;
+  };
+  credits: {
+    director?: string;
+    cast: CreditCast[];
+  };
+  sections: {
+    productionNotes: string[];
+    historicalNotes: string[];
+    receptionNotes: string[];
+    trivia: string[];
+  };
+  ratings: RatingRow[];
+  spoilerPolicy: SpoilerPolicy;
+  evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: Date }>;
+};
 type TmdbCreditPerson = { name?: string; job?: string; character?: string };
 type TmdbMoviePayload = {
   id: number;
@@ -166,6 +187,69 @@ function sanitizeTriviaLines(lines: unknown): string[] {
     .slice(0, 5);
 }
 
+function resolveLlmProviderName(): string {
+  if (process.env.USE_LLM === 'false') {
+    return 'disabled';
+  }
+  const provider = process.env.LLM_PROVIDER;
+  if (provider === 'gemini' || provider === 'ollama') {
+    return provider;
+  }
+  return 'disabled';
+}
+
+function resolveLlmModelName(): string {
+  if (process.env.LLM_PROVIDER === 'gemini') {
+    return process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
+  }
+  if (process.env.LLM_PROVIDER === 'ollama') {
+    return process.env.OLLAMA_MODEL ?? 'ollama';
+  }
+  return 'disabled';
+}
+
+function companionCacheTtlMs(): number {
+  const parsed = Number.parseInt(process.env.COMPANION_CACHE_TTL_MS ?? '', 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 7 * 24 * 60 * 60 * 1000;
+  }
+  return parsed;
+}
+
+function isCompanionFullyPopulated(input: {
+  usedTmdbFacts: boolean;
+  llmOutput: CompanionLlmOutput | null;
+  resolvedDirector: string | null;
+  resolvedCastCount: number;
+  ratingsCount: number;
+  sections: {
+    productionNotes: string[];
+    historicalNotes: string[];
+    receptionNotes: string[];
+    trivia: string[];
+  };
+}): boolean {
+  return input.usedTmdbFacts
+    && input.llmOutput !== null
+    && input.sections.trivia.length === 5
+    && input.sections.productionNotes.length > 0
+    && input.sections.historicalNotes.length > 0
+    && input.sections.receptionNotes.length > 0
+    && input.ratingsCount >= 2
+    && (Boolean(input.resolvedDirector) || input.resolvedCastCount > 0);
+}
+
+function normalizeCachedCompanionPayload(value: unknown): CompanionResponsePayload | null {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  if (!record.movie || !record.sections || !record.spoilerPolicy || !record.credits || !record.ratings || !record.evidence) {
+    return null;
+  }
+  return record as unknown as CompanionResponsePayload;
+}
+
 function normalizeCompanionLlmOutput(value: unknown): CompanionLlmOutput | null {
   if (!value || typeof value !== 'object') {
     return null;
@@ -192,52 +276,93 @@ function isCompanionLlmEnabled(): boolean {
   return typeof process.env.LLM_PROVIDER === 'string' && process.env.LLM_PROVIDER.length > 0;
 }
 
+function companionLlmMaxRetries(): number {
+  const parsed = Number.parseInt(process.env.COMPANION_LLM_MAX_RETRIES ?? '', 10);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    return 2;
+  }
+  return Math.min(parsed, 5);
+}
+
+function companionLlmRetryDelayMs(): number {
+  const parsed = Number.parseInt(process.env.COMPANION_LLM_RETRY_DELAY_MS ?? '', 10);
+  if (!Number.isInteger(parsed) || parsed < 50) {
+    return 350;
+  }
+  return Math.min(parsed, 5000);
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function generateCompanionLlmOutput(input: {
   title: string;
   year: number | null;
   spoilerPolicy: SpoilerPolicy;
   facts: TmdbCompanionFacts | null;
   evidence: Array<{ sourceName: string; snippet: string }>;
-}): Promise<CompanionLlmOutput | null> {
+}): Promise<{ output: CompanionLlmOutput | null; reason: string }> {
   if (!isCompanionLlmEnabled()) {
-    return null;
+    return { output: null, reason: 'DISABLED_BY_ENV' };
   }
 
-  try {
-    const provider = getLlmProviderFromEnv();
-    const response = await provider.generateJson<unknown>({
-      schemaName: 'CompanionSpoilerAndTrivia',
-      jsonSchema: COMPANION_LLM_JSON_SCHEMA,
-      system: [
-        'Generate movie companion notes.',
-        'Return strict JSON only.',
-        'lightSummary must summarize beginning and middle only (no ending).',
-        'fullSummary must include full plot arc including ending.',
-        'trivia must include exactly 5 concise facts.',
-        'Avoid invented details. If uncertain, explicitly say unknown.',
-      ].join(' '),
-      user: JSON.stringify({
-        movie: {
-          title: input.title,
-          year: input.year,
-          genres: input.facts?.genres ?? [],
-          overview: input.facts?.overview ?? 'unknown',
-          tagline: input.facts?.tagline ?? 'unknown',
-          runtimeMinutes: input.facts?.runtimeMinutes ?? null,
-        },
-        evidence: input.evidence.slice(0, 5).map((item) => ({
-          sourceName: item.sourceName,
-          snippet: firstLine(item.snippet, 180),
-        })),
-        policy: input.spoilerPolicy,
-      }),
-      temperature: 0.2,
-      maxTokens: 500,
-    });
-    return normalizeCompanionLlmOutput(response);
-  } catch {
-    return null;
+  const maxRetries = companionLlmMaxRetries();
+  const baseDelay = companionLlmRetryDelayMs();
+  const provider = getLlmProviderFromEnv();
+
+  let lastErrorMessage = 'unknown';
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    try {
+      const response = await provider.generateJson<unknown>({
+        schemaName: 'CompanionSpoilerAndTrivia',
+        jsonSchema: COMPANION_LLM_JSON_SCHEMA,
+        system: [
+          'Generate movie companion notes.',
+          'Return strict JSON only.',
+          'lightSummary must summarize beginning and middle only (no ending).',
+          'fullSummary must include full plot arc including ending.',
+          'trivia must include exactly 5 concise facts.',
+          'Avoid invented details. If uncertain, explicitly say unknown.',
+        ].join(' '),
+        user: JSON.stringify({
+          movie: {
+            title: input.title,
+            year: input.year,
+            genres: input.facts?.genres ?? [],
+            overview: input.facts?.overview ?? 'unknown',
+            tagline: input.facts?.tagline ?? 'unknown',
+            runtimeMinutes: input.facts?.runtimeMinutes ?? null,
+          },
+          evidence: input.evidence.slice(0, 5).map((item) => ({
+            sourceName: item.sourceName,
+            snippet: firstLine(item.snippet, 180),
+          })),
+          policy: input.spoilerPolicy,
+        }),
+        temperature: 0.2,
+        maxTokens: 500,
+      });
+      const normalized = normalizeCompanionLlmOutput(response);
+      if (!normalized) {
+        return { output: null, reason: 'SCHEMA_INVALID' };
+      }
+      if (attempt > 0) {
+        console.info('[companion] llm retry success', { attempt, maxRetries });
+      }
+      return { output: normalized, reason: attempt > 0 ? `OK_AFTER_RETRY_${attempt}` : 'OK' };
+    } catch (error) {
+      lastErrorMessage = error instanceof Error ? error.message : 'unknown';
+      if (attempt >= maxRetries) {
+        break;
+      }
+      const delay = baseDelay * (attempt + 1);
+      console.warn('[companion] llm retrying', { attempt: attempt + 1, maxRetries, delayMs: delay, error: lastErrorMessage });
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(delay);
+    }
   }
+  return { output: null, reason: `PROVIDER_ERROR:${lastErrorMessage}` };
 }
 
 function hasTmdbApi(): boolean {
@@ -585,6 +710,38 @@ export async function GET(request: Request): Promise<Response> {
     title: movie.title,
     year: movie.year,
   });
+
+  const now = new Date();
+  const cached = await prisma.companionCache.findUnique({
+    where: {
+      movieId_spoilerPolicy: {
+        movieId: movie.id,
+        spoilerPolicy,
+      },
+    },
+  });
+  if (
+    cached
+    && cached.isFullyPopulated
+    && cached.expiresAt > now
+  ) {
+    const cachedPayload = normalizeCachedCompanionPayload(cached.payload);
+    if (cachedPayload) {
+      console.info('[companion] cache hit', {
+        tmdbId: movie.tmdbId,
+        spoilerPolicy,
+        cacheExpiresAt: cached.expiresAt.toISOString(),
+        llmProvider: cached.llmProvider ?? 'unknown',
+        llmModel: cached.llmModel ?? 'unknown',
+      });
+      return ok(cachedPayload);
+    }
+  }
+  console.info('[companion] cache miss', {
+    tmdbId: movie.tmdbId,
+    spoilerPolicy,
+    reason: !cached ? 'NOT_FOUND' : cached.expiresAt <= now ? 'EXPIRED' : 'NOT_FULLY_POPULATED',
+  });
   const tmdbFacts = tmdbFetch.facts;
 
   const resolvedCast = tmdbFacts?.cast.length ? tmdbFacts.cast : cast;
@@ -603,6 +760,15 @@ export async function GET(request: Request): Promise<Response> {
     ]
     : movieRatings;
 
+  const llmResult = await generateCompanionLlmOutput({
+    title: tmdbFacts?.title ?? movie.title,
+    year: tmdbFacts?.year ?? movie.year,
+    spoilerPolicy,
+    facts: tmdbFacts,
+    evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
+  });
+  const llmOutput = llmResult.output;
+
   const sections = buildSections(
     {
       title: movie.title,
@@ -613,26 +779,9 @@ export async function GET(request: Request): Promise<Response> {
     Boolean(resolvedDirector) || resolvedCast.length > 0,
     responseRatings,
     evidence.length,
-    await generateCompanionLlmOutput({
-      title: tmdbFacts?.title ?? movie.title,
-      year: tmdbFacts?.year ?? movie.year,
-      spoilerPolicy,
-      facts: tmdbFacts,
-      evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
-    }),
+    llmOutput,
   );
-  console.info('[companion] resolved', {
-    tmdbId: movie.tmdbId,
-    spoilerPolicy,
-    tmdbKeyConfigured: hasTmdbApi(),
-    usedTmdbFacts: Boolean(tmdbFacts),
-    tmdbReason: tmdbFetch.reason,
-    tmdbDetails: tmdbFetch.details ?? null,
-    usedRatingsCount: responseRatings.length,
-    evidenceCount: evidence.length,
-  });
-
-  return ok({
+  const payload: CompanionResponsePayload = {
     movie: {
       tmdbId: movie.tmdbId,
       title: tmdbFacts?.title ?? movie.title,
@@ -647,5 +796,63 @@ export async function GET(request: Request): Promise<Response> {
     ratings: responseRatings,
     spoilerPolicy,
     evidence,
+  };
+  const fullyPopulated = isCompanionFullyPopulated({
+    usedTmdbFacts: Boolean(tmdbFacts),
+    llmOutput,
+    resolvedDirector,
+    resolvedCastCount: resolvedCast.length,
+    ratingsCount: responseRatings.length,
+    sections,
   });
+  if (fullyPopulated) {
+    const expiresAt = new Date(Date.now() + companionCacheTtlMs());
+    await prisma.companionCache.upsert({
+      where: {
+        movieId_spoilerPolicy: {
+          movieId: movie.id,
+          spoilerPolicy,
+        },
+      },
+      create: {
+        movieId: movie.id,
+        spoilerPolicy,
+        payload,
+        isFullyPopulated: true,
+        llmProvider: resolveLlmProviderName(),
+        llmModel: resolveLlmModelName(),
+        generatedAt: now,
+        expiresAt,
+      },
+      update: {
+        payload,
+        isFullyPopulated: true,
+        llmProvider: resolveLlmProviderName(),
+        llmModel: resolveLlmModelName(),
+        generatedAt: now,
+        expiresAt,
+      },
+    });
+    console.info('[companion] cache write', {
+      tmdbId: movie.tmdbId,
+      spoilerPolicy,
+      llmProvider: resolveLlmProviderName(),
+      llmModel: resolveLlmModelName(),
+      expiresAt: expiresAt.toISOString(),
+    });
+  }
+  console.info('[companion] resolved', {
+    tmdbId: movie.tmdbId,
+    spoilerPolicy,
+    tmdbKeyConfigured: hasTmdbApi(),
+    usedTmdbFacts: Boolean(tmdbFacts),
+    tmdbReason: tmdbFetch.reason,
+    tmdbDetails: tmdbFetch.details ?? null,
+    llmUsed: Boolean(llmOutput),
+    llmReason: llmResult.reason,
+    fullyPopulated,
+    usedRatingsCount: responseRatings.length,
+    evidenceCount: evidence.length,
+  });
+  return ok(payload);
 }

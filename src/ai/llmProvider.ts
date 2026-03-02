@@ -77,6 +77,106 @@ function llmTimeoutMs(): number {
   return DEFAULT_LLM_TIMEOUT_MS;
 }
 
+function isTimeoutLikeError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  const name = error.name.toLowerCase();
+  const message = error.message.toLowerCase();
+  return name.includes('abort') || name.includes('timeout') || message.includes('timed out') || message.includes('timeout');
+}
+
+async function fetchJsonWithTimeoutRetry(url: string, init: RequestInit, baseTimeoutMs: number, label: string): Promise<unknown> {
+  try {
+    const first = await fetch(url, { ...init, signal: AbortSignal.timeout(baseTimeoutMs) });
+    if (!first.ok) {
+      throw new Error(`${label} failed with status ${first.status}`);
+    }
+    return await first.json() as unknown;
+  } catch (error) {
+    if (!isTimeoutLikeError(error)) {
+      throw error;
+    }
+    const retryTimeoutMs = baseTimeoutMs * 2;
+    console.warn('[llm] timeout retry', { label, baseTimeoutMs, retryTimeoutMs });
+    const second = await fetch(url, { ...init, signal: AbortSignal.timeout(retryTimeoutMs) });
+    if (!second.ok) {
+      throw new Error(`${label} failed with status ${second.status}`);
+    }
+    return await second.json() as unknown;
+  }
+}
+
+function extractToolCallArguments(payload: unknown): string | null {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+  const record = payload as Record<string, unknown>;
+  const toolCalls = Array.isArray(record.tool_calls) ? record.tool_calls : [];
+  const firstCall = toolCalls[0];
+  if (!firstCall || typeof firstCall !== 'object') {
+    return null;
+  }
+  const functionObj = (firstCall as Record<string, unknown>).function;
+  if (!functionObj || typeof functionObj !== 'object') {
+    return null;
+  }
+  const args = (functionObj as Record<string, unknown>).arguments;
+  return typeof args === 'string' && args.trim().length > 0 ? args : null;
+}
+
+function extractTextFromOllamaBody(body: unknown): string | null {
+  if (!body || typeof body !== 'object') {
+    return null;
+  }
+  const record = body as Record<string, unknown>;
+  const directResponse = record.response;
+  if (typeof directResponse === 'string' && directResponse.trim().length > 0) {
+    return directResponse;
+  }
+  const outputText = record.output_text;
+  if (typeof outputText === 'string' && outputText.trim().length > 0) {
+    return outputText;
+  }
+
+  const message = record.message;
+  if (message && typeof message === 'object') {
+    const messageRecord = message as Record<string, unknown>;
+    const content = messageRecord.content;
+    if (typeof content === 'string' && content.trim().length > 0) {
+      return content;
+    }
+    const toolArgs = extractToolCallArguments(messageRecord);
+    if (toolArgs) {
+      return toolArgs;
+    }
+  }
+
+  const choices = Array.isArray(record.choices) ? record.choices : [];
+  const firstChoice = choices[0];
+  if (firstChoice && typeof firstChoice === 'object') {
+    const choiceRecord = firstChoice as Record<string, unknown>;
+    const text = choiceRecord.text;
+    if (typeof text === 'string' && text.trim().length > 0) {
+      return text;
+    }
+    const choiceMessage = choiceRecord.message;
+    if (choiceMessage && typeof choiceMessage === 'object') {
+      const choiceMessageRecord = choiceMessage as Record<string, unknown>;
+      const content = choiceMessageRecord.content;
+      if (typeof content === 'string' && content.trim().length > 0) {
+        return content;
+      }
+      const toolArgs = extractToolCallArguments(choiceMessageRecord);
+      if (toolArgs) {
+        return toolArgs;
+      }
+    }
+  }
+
+  return null;
+}
+
 export class GeminiProvider implements LlmProvider {
   constructor(
     private readonly apiKey: string,
@@ -144,9 +244,9 @@ export class OllamaProvider implements LlmProvider {
     const baseUrl = this.host.replace(/\/$/, '');
     const generateUrl = `${baseUrl}/api/generate`;
     const startedAt = Date.now();
-    const response = await fetch(generateUrl, {
+    const timeoutMs = llmTimeoutMs();
+    const generateRequestInit: RequestInit = {
       method: 'POST',
-      signal: AbortSignal.timeout(llmTimeoutMs()),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -159,15 +259,11 @@ export class OllamaProvider implements LlmProvider {
           num_predict: args.maxTokens ?? 1024,
         },
       }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Ollama request failed with status ${response.status}`);
-    }
-
-    const body = (await response.json()) as { response?: string };
-    if (typeof body.response === 'string' && body.response.trim().length > 0) {
-      const parsed = extractJsonObject(body.response);
+    };
+    const body = await fetchJsonWithTimeoutRetry(generateUrl, generateRequestInit, timeoutMs, 'Ollama request');
+    const generateText = extractTextFromOllamaBody(body);
+    if (generateText) {
+      const parsed = extractJsonObject(generateText);
       validateBySchemaShape(parsed, args.jsonSchema);
       console.info('[llm.ollama] generate completed', { durationMs: Date.now() - startedAt });
       return parsed as T;
@@ -176,9 +272,8 @@ export class OllamaProvider implements LlmProvider {
     // Fallback path: some Ollama/cloud model responses can return empty `response` in /api/generate.
     // Retry using /api/chat with explicit JSON schema format.
     const chatUrl = `${baseUrl}/api/chat`;
-    const chatResponse = await fetch(chatUrl, {
+    const chatRequestInit: RequestInit = {
       method: 'POST',
-      signal: AbortSignal.timeout(llmTimeoutMs()),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -195,15 +290,10 @@ export class OllamaProvider implements LlmProvider {
           num_predict: args.maxTokens ?? 1024,
         },
       }),
-    });
-
-    if (!chatResponse.ok) {
-      throw new Error(`Ollama chat fallback failed with status ${chatResponse.status}`);
-    }
-
-    const chatBody = (await chatResponse.json()) as { message?: { content?: string } };
-    const content = chatBody.message?.content;
-    if (typeof content !== 'string' || content.trim().length === 0) {
+    };
+    const chatBody = await fetchJsonWithTimeoutRetry(chatUrl, chatRequestInit, timeoutMs, 'Ollama chat fallback');
+    const content = extractTextFromOllamaBody(chatBody);
+    if (!content) {
       throw new LlmSchemaError('Ollama response did not include response text');
     }
 

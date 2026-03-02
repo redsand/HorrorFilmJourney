@@ -70,6 +70,7 @@ model Movie {
   evidencePackets  EvidencePacket[]
   ratings          MovieRating[]
   streamingCache   MovieStreamingCache[]
+  companionCache   CompanionCache[]
 }
 
 model UserMovieInteraction {
@@ -212,4 +213,23 @@ model MovieStreamingCache {
 
   @@unique([movieId, region])
   @@index([region, fetchedAt])
+}
+
+model CompanionCache {
+  id              String   @id @default(cuid())
+  movieId          String
+  spoilerPolicy    String
+  payload          Json
+  isFullyPopulated Boolean  @default(false)
+  llmProvider      String?
+  llmModel         String?
+  generatedAt      DateTime @default(now())
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, spoilerPolicy])
+  @@index([expiresAt])
 }

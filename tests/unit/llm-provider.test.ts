@@ -133,6 +133,30 @@ describe('provider request building and schema errors', () => {
     expect(secondUrl).toBe('http://localhost:11434/api/chat');
   });
 
+  it('retries once with doubled timeout when Ollama request times out', async () => {
+    const timeoutError = new Error('The operation timed out');
+    timeoutError.name = 'TimeoutError';
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(timeoutError)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ response: '{"answer":"ok-after-timeout-retry"}' }),
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new OllamaProvider('glm-5:cloud', 'http://localhost:11434');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+    });
+
+    expect(result).toEqual({ answer: 'ok-after-timeout-retry' });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it('throws LLM_SCHEMA_ERROR when provider returns invalid JSON', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

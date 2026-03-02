@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { readFile } from 'node:fs/promises';
 
 type TmdbMovieDetails = {
   id?: number;
@@ -40,6 +41,40 @@ function parseGenreFilter(): number[] {
     .map((item) => Number.parseInt(item.trim(), 10))
     .filter((id) => Number.isInteger(id) && id > 0);
   return ids.length > 0 ? ids : DEFAULT_GENRES;
+}
+
+function parseReleaseDate(value?: string): Date | null {
+  if (!value || value.trim().length === 0) {
+    return null;
+  }
+  const normalized = `${value.trim()}T00:00:00.000Z`;
+  const parsed = new Date(normalized);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+async function resolveReleaseDateCutoff(): Promise<string | null> {
+  const explicit = process.env.TMDB_UPDATE_RELEASE_DATE_GTE?.trim();
+  if (explicit) {
+    if (!parseReleaseDate(explicit)) {
+      throw new Error('TMDB_UPDATE_RELEASE_DATE_GTE must be YYYY-MM-DD');
+    }
+    return explicit;
+  }
+
+  const backupPath = process.env.TMDB_UPDATE_FROM_BACKUP?.trim();
+  if (!backupPath) {
+    return null;
+  }
+  const raw = await readFile(backupPath, 'utf8');
+  const parsed = JSON.parse(raw) as { summary?: { latestReleaseDate?: string | null } };
+  const fromBackup = parsed?.summary?.latestReleaseDate ?? null;
+  if (!fromBackup) {
+    return null;
+  }
+  if (!parseReleaseDate(fromBackup)) {
+    throw new Error('TMDB_UPDATE_FROM_BACKUP summary.latestReleaseDate is invalid');
+  }
+  return fromBackup;
 }
 
 function toYear(releaseDate?: string): number | undefined {
@@ -152,6 +187,8 @@ async function main(): Promise<void> {
   const allowGenreIds = parseGenreFilter();
   const maxScanIds = parseIntEnv('TMDB_UPDATE_MAX_SCAN_IDS', DEFAULT_MAX_SCAN_IDS);
   const concurrency = parseIntEnv('TMDB_UPDATE_CONCURRENCY', DEFAULT_CONCURRENCY);
+  const releaseDateCutoff = await resolveReleaseDateCutoff();
+  const cutoffDate = parseReleaseDate(releaseDateCutoff ?? undefined);
 
   try {
     const aggregate = await prisma.movie.aggregate({ _max: { tmdbId: true } });
@@ -171,7 +208,7 @@ async function main(): Promise<void> {
     }
 
     console.log(
-      `TMDB incremental update started: scanRange=${startId}-${endId} count=${scanIds.length} concurrency=${concurrency} genres=${allowGenreIds.join('|')}`,
+      `TMDB incremental update started: scanRange=${startId}-${endId} count=${scanIds.length} concurrency=${concurrency} genres=${allowGenreIds.join('|')} releaseDateGte=${releaseDateCutoff ?? 'none'}`,
     );
 
     let fetched = 0;
@@ -186,6 +223,12 @@ async function main(): Promise<void> {
         fetched += 1;
         if (!movie?.id || !movie.title || !matchesGenreFilter(movie, allowGenreIds)) {
           return;
+        }
+        if (cutoffDate) {
+          const movieReleaseDate = parseReleaseDate(movie.release_date);
+          if (!movieReleaseDate || movieReleaseDate < cutoffDate) {
+            return;
+          }
         }
         matched += 1;
 
@@ -266,4 +309,3 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
-
