@@ -23,6 +23,7 @@ type RecommendationCard = {
   movie: CandidateMovie;
   ratings: CandidateMovie['ratings'];
   narrative: RecommendationCardNarrative;
+  evidence: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>;
 };
 
 export type RecommendationBatchResult = {
@@ -84,7 +85,7 @@ function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): CandidateMovie['ratings'] | null {
   const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < 3) {
+  if (!imdb || ratings.length < 2) {
     return null;
   }
 
@@ -272,6 +273,24 @@ export async function generateRecommendationBatchV1(
     },
   });
 
+
+
+  const evidenceByMovieId = new Map<string, Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>>();
+  const evidenceRows = await prisma.evidencePacket.findMany({
+    where: { movieId: { in: batch.items.map((item) => item.movie.id) } },
+    orderBy: { retrievedAt: 'desc' },
+    select: { movieId: true, sourceName: true, url: true, snippet: true, retrievedAt: true },
+  });
+  for (const row of evidenceRows) {
+    const list = evidenceByMovieId.get(row.movieId) ?? [];
+    list.push({
+      sourceName: row.sourceName,
+      ...(row.url ? { url: row.url } : {}),
+      snippet: row.snippet,
+      retrievedAt: row.retrievedAt.toISOString(),
+    });
+    evidenceByMovieId.set(row.movieId, list);
+  }
   return {
     batchId: batch.id,
     cards: batch.items.map((item) => {
@@ -303,6 +322,7 @@ export async function generateRecommendationBatchV1(
         },
         ratings: narrative.ratings,
         narrative,
+        evidence: evidenceByMovieId.get(item.movie.id) ?? [],
       };
     }),
   };
