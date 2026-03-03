@@ -26,6 +26,7 @@ export function RecommendationBundle({
   const router = useRouter();
   const [visibleCards, setVisibleCards] = useState(cards);
   const [visibleBatchId, setVisibleBatchId] = useState(batchId);
+  const [refreshingTmdbIds, setRefreshingTmdbIds] = useState<Set<number>>(new Set());
   const [contextMap, setContextMap] = useState(
     () => new Map(interactionContext.map((item) => [item.tmdbId, item.recommendationItemId] as const)),
   );
@@ -42,54 +43,63 @@ export function RecommendationBundle({
   );
 
   async function replaceSingleCard(interactedTmdbId: number): Promise<void> {
-    const response = await fetch('/api/recommendations/next', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    if (!response.ok) {
-      router.refresh();
-      return;
-    }
-
-    const payload = (await response.json().catch(() => null)) as { data?: RecommendationApiPayload } | null;
-    const nextBatch = payload?.data;
-    if (!nextBatch || !Array.isArray(nextBatch.cards)) {
-      router.refresh();
-      return;
-    }
-
-    const replacement = nextBatch.cards.find((candidate) => {
-      if (candidate.movie.tmdbId === interactedTmdbId) {
-        return false;
+    setRefreshingTmdbIds((current) => new Set([...current, interactedTmdbId]));
+    try {
+      const response = await fetch('/api/recommendations/next', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        router.refresh();
+        return;
       }
-      return !visibleTmdbIds.has(candidate.movie.tmdbId);
-    });
 
-    if (!replacement) {
-      router.refresh();
-      return;
+      const payload = (await response.json().catch(() => null)) as { data?: RecommendationApiPayload } | null;
+      const nextBatch = payload?.data;
+      if (!nextBatch || !Array.isArray(nextBatch.cards)) {
+        router.refresh();
+        return;
+      }
+
+      const replacement = nextBatch.cards.find((candidate) => {
+        if (candidate.movie.tmdbId === interactedTmdbId) {
+          return false;
+        }
+        return !visibleTmdbIds.has(candidate.movie.tmdbId);
+      });
+
+      if (!replacement) {
+        router.refresh();
+        return;
+      }
+
+      setVisibleCards((current) => {
+        const index = current.findIndex((card) => card.movie.tmdbId === interactedTmdbId);
+        if (index < 0) {
+          return current;
+        }
+        const updated = [...current];
+        updated[index] = replacement;
+        return updated;
+      });
+
+      setVisibleBatchId(nextBatch.batchId);
+      setContextMap((current) => {
+        const next = new Map(current);
+        next.delete(interactedTmdbId);
+        const mapped = nextBatch.interactionContext?.find((item) => item.tmdbId === replacement.movie.tmdbId);
+        if (mapped) {
+          next.set(mapped.tmdbId, mapped.recommendationItemId);
+        }
+        return next;
+      });
+    } finally {
+      setRefreshingTmdbIds((current) => {
+        const next = new Set(current);
+        next.delete(interactedTmdbId);
+        return next;
+      });
     }
-
-    setVisibleCards((current) => {
-      const index = current.findIndex((card) => card.movie.tmdbId === interactedTmdbId);
-      if (index < 0) {
-        return current;
-      }
-      const updated = [...current];
-      updated[index] = replacement;
-      return updated;
-    });
-
-    setVisibleBatchId(nextBatch.batchId);
-    setContextMap((current) => {
-      const next = new Map(current);
-      next.delete(interactedTmdbId);
-      const mapped = nextBatch.interactionContext?.find((item) => item.tmdbId === replacement.movie.tmdbId);
-      if (mapped) {
-        next.set(mapped.tmdbId, mapped.recommendationItemId);
-      }
-      return next;
-    });
   }
 
   if (visibleCards.length === 0) {
@@ -111,6 +121,7 @@ export function RecommendationBundle({
       {visibleCards.map((card) => (
         <MovieCard
           card={card}
+          isRefreshing={refreshingTmdbIds.has(card.movie.tmdbId)}
           key={card.movie.tmdbId}
           onRegenerated={() => router.refresh()}
           onInteractionSaved={replaceSingleCard}

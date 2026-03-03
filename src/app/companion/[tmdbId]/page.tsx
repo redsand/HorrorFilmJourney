@@ -161,8 +161,13 @@ export default async function CompanionPage({
             </div>
             <div className="space-y-4 p-4 leading-relaxed">
               <div>
-                <h2 className="text-2xl font-semibold">{payload.movie.title}</h2>
-                <p className="text-sm text-[var(--text-muted)]">{payload.movie.year ?? 'Unknown year'}</p>
+                <div className="flex items-baseline justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">{payload.movie.title}</h2>
+                  <p className="text-sm text-[var(--text-muted)]">{payload.movie.year ?? 'Unknown year'}</p>
+                </div>
+                {payload.metadata.tagline ? (
+                  <p className="mt-1 text-sm italic text-[var(--text-muted)]">&ldquo;{payload.metadata.tagline}&rdquo;</p>
+                ) : null}
               </div>
 
               <div>
@@ -209,13 +214,6 @@ export default async function CompanionPage({
                   ) : null}
                 </div>
               </div>
-
-              {payload.metadata.tagline ? (
-                <div className="space-y-2">
-                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Tagline</p>
-                  <p className="text-sm italic text-[var(--text-muted)]">&ldquo;{payload.metadata.tagline}&rdquo;</p>
-                </div>
-              ) : null}
 
               <div className="grid grid-cols-3 gap-2">
                 {spoilerTabs.map((tab) => (

@@ -20,7 +20,25 @@ type QuickPollProps = {
   onSubmit: (payload: QuickPollSubmit) => Promise<void>;
 };
 
-const emotionOptions = ['tense', 'dread', 'fun', 'disturbing', 'surreal', 'creepy', 'cathartic'];
+const emotionOptions = [
+  'tense',
+  'dread',
+  'creepy',
+  'disturbing',
+  'surreal',
+  'cathartic',
+  'fun',
+  'bored',
+  'slow',
+  'dull',
+  'disappointed',
+  'frustrated',
+  'anxious',
+  'sad',
+  'angry',
+  'uneasy',
+  'confused',
+];
 const workedBestOptions = ['pacing', 'atmosphere', 'performances', 'score', 'direction', 'editing'];
 const agedWellOptions = ['yes', 'mostly', 'mixed', 'no'];
 

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { Button, Card, Chip, PosterImage, RatingBadges } from '@/components/ui';
 import { QuickPoll } from '@/components/journey/QuickPoll';
@@ -11,6 +11,7 @@ type MovieCardProps = {
   recommendationItemId?: string;
   onInteractionSaved?: (tmdbId: number) => void;
   onRegenerated?: () => void;
+  isRefreshing?: boolean;
 };
 
 type PollStatus = 'WATCHED' | 'ALREADY_SEEN';
@@ -42,9 +43,11 @@ export function MovieCard({
   recommendationItemId,
   onInteractionSaved,
   onRegenerated,
+  isRefreshing = false,
 }: MovieCardProps) {
   const [pollStatus, setPollStatus] = useState<PollStatus | null>(null);
   const [skipPending, setSkipPending] = useState(false);
+  const [subgenres, setSubgenres] = useState<string[]>([]);
 
   const ratingsForDisplay = useMemo(
     () => [
@@ -57,10 +60,79 @@ export function MovieCard({
     () => [...new Set(card.streaming.offers.map((offer) => offer.provider))].slice(0, 4),
     [card.streaming.offers],
   );
+  const [tagline, setTagline] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const response = await fetch(`/api/movies/tagline?tmdbId=${card.movie.tmdbId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          if (active) {
+            setTagline(null);
+          }
+          return;
+        }
+        const payload = await response.json() as { data?: { tagline?: string | null } };
+        if (active) {
+          const value = payload?.data?.tagline;
+          setTagline(typeof value === 'string' && value.trim().length > 0 ? value.trim() : null);
+        }
+      } catch {
+        if (active) {
+          setTagline(null);
+        }
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [card.movie.tmdbId]);
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const response = await fetch(`/api/movies/subgenres?tmdbId=${card.movie.tmdbId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          if (active) {
+            setSubgenres([]);
+          }
+          return;
+        }
+        const payload = await response.json() as { data?: { subgenres?: string[] } };
+        if (active) {
+          setSubgenres(Array.isArray(payload?.data?.subgenres) ? payload.data.subgenres : []);
+        }
+      } catch {
+        if (active) {
+          setSubgenres([]);
+        }
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [card.movie.tmdbId]);
 
   return (
     <>
-      <Card className="overflow-hidden p-0">
+      <Card className="relative overflow-hidden p-0">
+        {isRefreshing ? (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-[rgba(8,8,10,0.68)]">
+            <div className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[rgba(18,18,22,0.92)] px-3 py-2 text-sm text-[var(--text)]">
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-[rgba(255,255,255,0.3)] border-t-[var(--accent)]" />
+              Refreshing this slot...
+            </div>
+          </div>
+        ) : null}
         <div className="relative aspect-[2/3] w-full bg-[#111116]">
           <PosterImage
             alt={`${card.movie.title} poster`}
@@ -73,28 +145,16 @@ export function MovieCard({
 
         <div className="space-y-3 p-4">
           <div>
-            <h3 className="text-xl font-semibold">{card.movie.title}</h3>
-            <p className="text-sm text-[var(--text-muted)]">{card.movie.year ?? 'Unknown year'}</p>
+            <div className="flex items-baseline justify-between gap-3">
+              <h3 className="text-xl font-semibold">{card.movie.title}</h3>
+              <p className="text-sm text-[var(--text-muted)]">{card.movie.year ?? 'Unknown year'}</p>
+            </div>
+            {tagline ? (
+              <p className="mt-1 text-sm italic text-[var(--text-muted)]">&ldquo;{tagline}&rdquo;</p>
+            ) : null}
           </div>
 
           <RatingBadges ratings={ratingsForDisplay} />
-
-          {(card.reception.critics || card.reception.audience || card.reception.summary) && (
-            <div className="space-y-1">
-              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Reception</p>
-              <div className="flex flex-wrap gap-2">
-                {card.reception.critics && (
-                  <Chip>Critics {card.reception.critics.rawValue ?? `${card.reception.critics.value}/100`}</Chip>
-                )}
-                {card.reception.audience && (
-                  <Chip>Audience {card.reception.audience.rawValue ?? `${card.reception.audience.value}/100`}</Chip>
-                )}
-              </div>
-              {card.reception.summary && (
-                <p className="text-sm text-[var(--text-muted)]">{card.reception.summary}</p>
-              )}
-            </div>
-          )}
 
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Streaming</p>
@@ -107,18 +167,29 @@ export function MovieCard({
             </div>
           </div>
 
-          <div className="space-y-2">
+          {subgenres.length > 0 ? (
+            <div className="space-y-1">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Subgenre(s)</p>
+              <div className="flex flex-wrap gap-2">
+                {subgenres.map((genre) => (
+                  <Chip key={genre}>{genre}</Chip>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="space-y-3">
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Why it matters</p>
-              <p className="text-sm">{card.codex.whyImportant}</p>
+              <p className="text-sm leading-relaxed">{card.codex.whyImportant}</p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">What it teaches</p>
-              <p className="text-sm">{card.codex.whatItTeaches}</p>
+              <p className="text-sm leading-relaxed">{card.codex.whatItTeaches}</p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Watch for</p>
-              <ul className="list-disc space-y-1 pl-5 text-sm">
+              <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
                 {card.codex.watchFor.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -127,7 +198,7 @@ export function MovieCard({
           </div>
 
           <div className="grid grid-cols-1 gap-2 pt-2">
-            <Button className="min-h-11 text-base" onClick={() => setPollStatus('WATCHED')} type="button">
+            <Button className="min-h-11 text-base" disabled={isRefreshing} onClick={() => setPollStatus('WATCHED')} type="button">
               <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7-11-7Z" fill="currentColor" />
               </svg>
@@ -135,6 +206,7 @@ export function MovieCard({
             </Button>
             <Button
               className="min-h-11 text-base"
+              disabled={isRefreshing}
               onClick={() => setPollStatus('ALREADY_SEEN')}
               type="button"
               variant="secondary"
@@ -147,7 +219,7 @@ export function MovieCard({
             </Button>
             <button
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[var(--border)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--text-muted)]"
-              disabled={skipPending}
+              disabled={skipPending || isRefreshing}
               onClick={async () => {
                 setSkipPending(true);
                 try {

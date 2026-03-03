@@ -682,9 +682,11 @@ function buildSections(
       : spoilerPolicy === 'LIGHT'
         ? `Act I-II summary: ${lightSummary}`
         : `Full plot summary (includes ending): ${fullSummary}`,
-    `Runtime ${formatRuntime(input.facts?.runtimeMinutes)}. Languages: ${languageText}.`,
-    input.facts?.tagline ? `Tagline: "${firstLine(input.facts.tagline, 120)}"` : 'Focus on camera movement, sound design, and scene transitions to track how tension is built.',
-    overviewText,
+    `Craft lens: track camera distance, edit rhythm, and sound dynamics as tension tools in ${title}${yearText}.`,
+    `Pacing lens: compare setup vs escalation beats and note where the film intentionally withholds release.`,
+    input.facts?.tagline
+      ? `Tone signal: ${firstLine(input.facts.tagline, 120)}`
+      : `Tone signal: use color, silence, and framing to infer intended emotional temperature.`,
   ];
   const historicalNotes = [
     `Released in ${year ?? 'an unknown year'}, this title sits in ${genresText} traditions.`,

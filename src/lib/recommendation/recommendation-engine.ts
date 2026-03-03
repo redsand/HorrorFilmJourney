@@ -250,11 +250,12 @@ function summarizeProfileSignals(userProfile: unknown): string | undefined {
   return entries.map(([key, value]) => `${key}:${String(value)}`).join('|');
 }
 
-function normalizeInteractionSignal(input: {
+export function normalizeInteractionSignal(input: {
   status: InteractionStatus;
   rating: number | null;
   recommend: boolean | null;
   recencyWeight: number;
+  emotions?: string[];
 }): number {
   const statusBase =
     input.status === InteractionStatus.WATCHED ? 0.8
@@ -264,7 +265,41 @@ function normalizeInteractionSignal(input: {
 
   const ratingSignal = typeof input.rating === 'number' ? (input.rating - 3) * 0.25 : 0;
   const recommendSignal = input.recommend === null ? 0 : input.recommend ? 0.3 : -0.3;
-  return (statusBase + ratingSignal + recommendSignal) * input.recencyWeight;
+  const negativeEmotionSet = new Set([
+    'bored',
+    'boring',
+    'slow',
+    'dull',
+    'disappointed',
+    'frustrated',
+    'angry',
+    'confused',
+    'annoyed',
+    'tedious',
+    'flat',
+    'unengaging',
+  ]);
+  const positiveEmotionSet = new Set([
+    'fun',
+    'cathartic',
+    'tense',
+    'dread',
+    'creepy',
+    'disturbing',
+    'surreal',
+    'uneasy',
+    'anxious',
+  ]);
+  const normalizedEmotions = Array.isArray(input.emotions)
+    ? input.emotions
+      .filter((value): value is string => typeof value === 'string')
+      .map((value) => value.trim().toLowerCase())
+      .filter((value) => value.length > 0)
+    : [];
+  const negativeHits = normalizedEmotions.filter((emotion) => negativeEmotionSet.has(emotion)).length;
+  const positiveHits = normalizedEmotions.filter((emotion) => positiveEmotionSet.has(emotion)).length;
+  const emotionSignal = (positiveHits * 0.12) - (negativeHits * 0.28);
+  return (statusBase + ratingSignal + recommendSignal + emotionSignal) * input.recencyWeight;
 }
 
 function movieDecade(year: number | null): number | null {
@@ -545,6 +580,7 @@ export class HeuristicRerankerV1 implements Reranker {
           status: true,
           rating: true,
           recommend: true,
+          emotions: true,
           movie: { select: { genres: true, year: true } },
         },
       }),
@@ -560,6 +596,9 @@ export class HeuristicRerankerV1 implements Reranker {
         status: interaction.status,
         rating: interaction.rating,
         recommend: interaction.recommend,
+        emotions: Array.isArray(interaction.emotions)
+          ? interaction.emotions.filter((value): value is string => typeof value === 'string')
+          : [],
         recencyWeight,
       });
 
