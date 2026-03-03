@@ -34,8 +34,8 @@ apt-get update
 apt-get install -y curl ca-certificates gnupg lsb-release build-essential nginx certbot python3-certbot-nginx
 
 if ! command -v node >/dev/null 2>&1; then
-  echo "==> Installing Node.js 20.x"
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+  echo "==> Installing Node.js 22.x"
+  curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
   apt-get install -y nodejs
 fi
 

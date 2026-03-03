@@ -32,7 +32,7 @@ else
   npm install --no-audit --no-fund
 fi
 
-npm run prisma:generate
+npx prisma generate
 npx prisma migrate deploy
 npm run build
 

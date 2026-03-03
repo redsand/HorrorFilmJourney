@@ -71,6 +71,12 @@ if ($SetupCatalogCron.IsPresent) {
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"chmod +x $cronSetupRemote && APP_NAME='cinemacodex' APP_USER='cinemacodex' APP_ROOT='$RemoteAppRoot' bash $cronSetupRemote`""
 }
 
+Write-Host "Ensuring remote Node.js 22+"
+$ensureNodeLocal = "scripts/deploy/ensure-node22.sh"
+$ensureNodeRemote = "/tmp/ensure-node22.sh"
+Exec-OrThrow "scp -i `"$resolvedKey`" `"$ensureNodeLocal`" ${User}@${HostName}:$ensureNodeRemote"
+Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"chmod +x $ensureNodeRemote && bash $ensureNodeRemote`""
+
 Write-Host "Uploading remote deploy script"
 $deployScriptLocal = "scripts/deploy/deploy-release.sh"
 $deployScriptRemote = "$RemoteAppRoot/bin/deploy-release.sh"
