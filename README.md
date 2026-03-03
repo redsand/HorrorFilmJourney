@@ -3,6 +3,7 @@
 Mobile-first horror recommendation app with:
 
 - personalized 5-film bundles
+- Seasons + Packs foundation (Season 1: Horror)
 - evidence-grounded narratives (RAG-style, citation hints)
 - companion mode with spoiler policies
 - quick feedback loop that adapts future picks
@@ -79,6 +80,32 @@ Production auth is cookie-session based.
 
 See: [docs/auth.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/auth.md)
 
+## Seasons + Packs (Current Status)
+
+The codebase now includes a pack-aware foundation:
+
+- `Season` and `GenrePack` data models
+- `UserProfile.selectedPackId`
+- `RecommendationBatch.packId`
+- `JourneyProgress.packId` (write path attached)
+- `GET /api/packs` endpoint
+- onboarding/profile support for `selectedPackSlug`
+- recommendation candidate filtering by pack primary genre
+
+Current launch scope:
+
+- Season 1 only
+- single enabled pack: `horror`
+
+Feature flag:
+
+- `SEASONS_PACKS_ENABLED=false` by default
+- when enabled, runtime resolves user effective pack and persists pack references
+
+See:
+- [docs/audit/seasons-packs-discovery.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/audit/seasons-packs-discovery.md)
+- [docs/plan/seasons-packs-implementation.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/plan/seasons-packs-implementation.md)
+
 ## Quick Start
 
 1. Install:
@@ -99,6 +126,7 @@ cp .env.example .env
 - `DATABASE_URL_TEST` (recommended for tests)
 - `INITIAL_ADMIN_EMAIL`
 - `INITIAL_ADMIN_PASSWORD`
+- `SEASONS_PACKS_ENABLED` (`false` for legacy behavior, `true` for pack-aware mode)
 
 4. Setup dev data:
 
@@ -113,6 +141,41 @@ npm run dev
 ```
 
 Open `http://localhost:3000`.
+
+## Deploying Packs
+
+Use this rollout sequence for environments:
+
+1. Apply migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
+2. Generate Prisma client:
+
+```bash
+npm run prisma:generate
+```
+
+3. Enable packs in env:
+
+```env
+SEASONS_PACKS_ENABLED=true
+```
+
+4. Deploy app and verify:
+- `GET /api/packs` returns active season + packs
+- onboarding accepts and persists `selectedPackSlug`
+- new recommendation batches include `packId`
+
+5. Backward compatibility behavior:
+- users without `selectedPackId` default to Horror pack
+- if packs are disabled, app continues using the same Season 1 Horror response seam
+
+Notes:
+- admin CRUD for seasons/packs is not in this phase yet (planned later).
+- current multi-pack contamination controls are partial; recommendation filtering is pack-scoped, with additional read-scope hardening planned.
 
 ## Useful Scripts
 
