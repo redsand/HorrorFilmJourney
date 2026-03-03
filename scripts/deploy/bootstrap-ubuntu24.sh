@@ -87,7 +87,12 @@ tar -xzf "\${ARCHIVE_PATH}" -C "\${RELEASE_DIR}"
 cd "\${RELEASE_DIR}"
 ln -sfn "\${APP_ROOT}/shared/.env" .env
 
-npm ci
+if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+  npm ci
+else
+  echo "No lockfile found in release archive; falling back to npm install"
+  npm install --no-audit --no-fund
+fi
 npm run prisma:generate
 npx prisma migrate deploy
 npm run build

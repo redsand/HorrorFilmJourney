@@ -71,6 +71,12 @@ if ($SetupCatalogCron.IsPresent) {
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"chmod +x $cronSetupRemote && APP_NAME='cinemacodex' APP_USER='cinemacodex' APP_ROOT='$RemoteAppRoot' bash $cronSetupRemote`""
 }
 
+Write-Host "Uploading remote deploy script"
+$deployScriptLocal = "scripts/deploy/deploy-release.sh"
+$deployScriptRemote = "$RemoteAppRoot/bin/deploy-release.sh"
+Exec-OrThrow "scp -i `"$resolvedKey`" `"$deployScriptLocal`" ${User}@${HostName}:$deployScriptRemote"
+Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"chmod +x $deployScriptRemote`""
+
 Write-Host "Uploading release archive to $HostName"
 Exec-OrThrow "scp -i `"$resolvedKey`" `"$archivePath`" ${User}@${HostName}:$remoteArchive"
 
