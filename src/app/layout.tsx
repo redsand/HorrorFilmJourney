@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import React from 'react';
 import type { ReactNode } from 'react';
 import { FloatingFeedbackButton } from '@/components/feedback/FloatingFeedbackButton';
+import { CabinetFrame } from '@/components/layout/CabinetFrame';
+import { HorrorMistOverlay } from '@/components/layout/HorrorMistOverlay';
+import { getActiveThemeForRequest } from '@/lib/theme/getActiveThemeForRequest';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -9,13 +13,16 @@ export const metadata: Metadata = {
   description: 'Mobile-first horror companion experience',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const { theme } = await getActiveThemeForRequest();
+  const bodyStyle = theme.cssVars as React.CSSProperties;
+
   return (
-    <html lang="en">
-      <body className="min-h-dvh bg-[var(--bg)] text-[var(--text)] antialiased">
-        <div className="mx-auto flex min-h-dvh w-full max-w-[420px] flex-col px-4 pb-24 pt-[max(16px,env(safe-area-inset-top))]">
-          {children}
-        </div>
+    <html data-theme={theme.themeName} lang="en">
+      <body className="min-h-dvh bg-[var(--cc-bg)] text-[var(--cc-text)] antialiased" style={bodyStyle}>
+        <ThemeProvider cssVars={theme.cssVars} theme={theme.themeName} />
+        <CabinetFrame cabinetImagePath={theme.cabinetImagePath}>{children}</CabinetFrame>
+        <HorrorMistOverlay themeName={theme.themeName} />
         <FloatingFeedbackButton />
       </body>
     </html>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card } from '@/components/ui';
+import { getCaptchaToken } from '@/lib/security/captcha-client';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,11 +24,12 @@ export default function LoginPage() {
             setLoading(true);
             setError(null);
             try {
+              const captchaToken = await getCaptchaToken('login');
               const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'content-type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, captchaToken }),
               });
               if (!response.ok) {
                 const body = await response.json().catch(() => null);

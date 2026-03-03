@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { validateCsrf } from '@/lib/security/csrf';
 
 type SessionPayload = {
   userId: string;
@@ -83,26 +84,66 @@ async function readSession(request: NextRequest): Promise<SessionPayload | null>
   }
 }
 
+function applySecurityHeaders(response: NextResponse): NextResponse {
+  const scriptSrc = process.env.NODE_ENV === 'development'
+    ? "'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/"
+    : "'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/";
+  const connectSrc = process.env.NODE_ENV === 'development'
+    ? "'self' ws: wss: https://www.google.com/recaptcha/"
+    : "'self' https://www.google.com/recaptcha/";
+
+  const csp = [
+    "default-src 'self'",
+    `script-src ${scriptSrc}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https://image.tmdb.org https://images.justwatch.com https://www.google.com https://www.gstatic.com",
+    "font-src 'self' data:",
+    `connect-src ${connectSrc}`,
+    "frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+  ].join('; ');
+
+  response.headers.set('Content-Security-Policy', csp);
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-Request-Id', crypto.randomUUID());
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname.startsWith('/api/')) {
+    const csrf = validateCsrf(request);
+    if (!csrf.ok) {
+      return applySecurityHeaders(
+        NextResponse.json({ data: null, error: csrf.error }, { status: csrf.status }),
+      );
+    }
+  }
+
   if (pathname === '/login' || pathname === '/signup') {
-    return NextResponse.next();
+    return applySecurityHeaders(NextResponse.next());
   }
 
   if (pathname.startsWith('/admin/')) {
     const session = await readSession(request);
     if (!session) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return applySecurityHeaders(NextResponse.redirect(new URL('/login', request.url)));
     }
     if (!session.isAdmin) {
-      return NextResponse.json({ data: null, error: { code: 'FORBIDDEN', message: 'Admin access required' } }, { status: 403 });
+      return applySecurityHeaders(
+        NextResponse.json({ data: null, error: { code: 'FORBIDDEN', message: 'Admin access required' } }, { status: 403 }),
+      );
     }
   }
 
-  return NextResponse.next();
+  return applySecurityHeaders(NextResponse.next());
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/login', '/signup'],
+  matcher: ['/api/:path*', '/admin/:path*', '/login', '/signup', '/((?!_next/static|_next/image|favicon.ico).*)'],
 };

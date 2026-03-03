@@ -6,7 +6,11 @@ import { RecommendationBundle, RefreshRecommendationsButton } from '@/components
 import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
 
 type ExperienceResponse = {
-  state: 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
+  state: 'PACK_SELECTION_NEEDED' | 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
+  packSelection?: {
+    activeSeason: { slug: string; name: string };
+    packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+  };
   bundle?: {
     id: string;
     journeyNode?: string | null;
@@ -61,6 +65,24 @@ type ProgressionResponse = {
 type PacksResponse = {
   activeSeason: { slug: string; name: string };
   packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+};
+
+type WatchlistResponse = {
+  items: Array<{
+    interactionId: string;
+    createdAt: string;
+    movie: {
+      tmdbId: number;
+      title: string;
+      year: number | null;
+      posterUrl: string;
+    };
+  }>;
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  packSlug: string;
 };
 
 function toWatchForTuple(watchFor: unknown): [string, string, string] {
@@ -209,15 +231,31 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   revalidatePath('/');
 }
 
-export default async function HomePage() {
+async function submitPackSelection(formData: FormData): Promise<void> {
+  'use server';
+  const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
+  await apiJson('/api/profile/select-pack', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ packSlug: selectedPackSlug }),
+  });
+  revalidatePath('/');
+}
+
+export default async function HomePage({ searchParams }: { searchParams?: { watchlistPage?: string } }) {
   const experienceResponse = await apiJson<ExperienceResponse>('/api/experience', { method: 'GET' });
   const experience = experienceResponse.status === 200 ? experienceResponse.data : null;
   const unauthenticated = experienceResponse.status === 401;
+  const watchlistPageRaw = Number.parseInt(searchParams?.watchlistPage ?? '1', 10);
+  const watchlistPage = Number.isInteger(watchlistPageRaw) && watchlistPageRaw > 0 ? watchlistPageRaw : 1;
   const progression = !unauthenticated
     ? (await apiJson<ProgressionResponse>('/api/profile/progression', { method: 'GET' })).data
     : null;
   const packs = !unauthenticated
     ? (await apiJson<PacksResponse>('/api/packs', { method: 'GET' })).data
+    : null;
+  const watchlist = !unauthenticated
+    ? (await apiJson<WatchlistResponse>(`/api/watchlist?page=${watchlistPage}&pageSize=6`, { method: 'GET' })).data
     : null;
 
   let recommendations: RecommendationResponse | null = null;
@@ -241,7 +279,7 @@ export default async function HomePage() {
     return (
       <main className="flex flex-1 flex-col gap-4 pb-8 pt-4">
         <header className="rounded-2xl border border-[var(--border)] bg-[rgba(12,12,16,0.85)] p-5 shadow-[0_12px_34px_rgba(0,0,0,0.45)]">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Horror Codex</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">CinemaCodex.com</p>
           <h1 className="mt-2 text-3xl font-semibold leading-tight">
             Find your next great horror film, not random picks.
           </h1>
@@ -290,30 +328,42 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
-      <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Horror Codex</h1>
-            {progression ? (
-              <div className="mt-2 w-[220px]">
-                <p className="mb-1 text-[11px] text-[var(--text-muted)]">
-                  Mastery {progression.completedCount}/{progression.nextMilestone}
-                </p>
-                <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
-                  <div
-                    className="h-full rounded-full bg-[linear-gradient(90deg,rgba(127,29,29,0.95),rgba(220,38,38,0.95))]"
-                    style={{
-                      width: `${Math.max(5, Math.min(100, Math.round((progression.completedCount / Math.max(1, progression.nextMilestone)) * 100)))}%`,
-                    }}
-                  />
-                </div>
+    <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
+
+      {experience?.state === 'PACK_SELECTION_NEEDED' && (
+        <Card>
+          <h2 className="text-lg font-semibold">Select Your Pack</h2>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            Choose your active pack to start Season 1.
+          </p>
+          <form action={submitPackSelection} className="mt-4 space-y-4">
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                {experience.packSelection?.activeSeason.name ?? 'Season 1'}
+              </p>
+              <div className="grid grid-cols-1 gap-2">
+                {(experience.packSelection?.packs ?? []).filter((pack) => pack.isEnabled).map((pack, index) => (
+                  <label key={pack.slug} className="cursor-pointer">
+                    <input
+                      className="peer sr-only"
+                      defaultChecked={index === 0}
+                      name="selectedPackSlug"
+                      type="radio"
+                      value={pack.slug}
+                    />
+                    <span className="block rounded-lg border border-[var(--border)] px-3 py-2 text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
+                      {pack.name}
+                    </span>
+                  </label>
+                ))}
               </div>
-            ) : null}
-          </div>
-          <LogoutIconButton />
-        </div>
-      </header>
+            </div>
+            <Button className="w-full py-3 text-base" type="submit">
+              Start Horror Season
+            </Button>
+          </form>
+        </Card>
+      )}
 
       {experience?.state === 'ONBOARDING_NEEDED' && (
         <Card>
@@ -421,6 +471,62 @@ export default async function HomePage() {
           <RefreshRecommendationsButton
             label={experience.bundle ? 'Refresh Recommendations' : 'Generate Recommendations'}
           />
+          <Card>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Watchlist</h2>
+              <p className="text-xs text-[var(--text-muted)]">
+                {watchlist?.total ?? 0} saved
+              </p>
+            </div>
+            {watchlist?.items?.length ? (
+              <div className="mt-3 space-y-2">
+                {watchlist.items.map((item) => (
+                  <Link
+                    className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2"
+                    href={`/companion/${item.movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+                    key={item.interactionId}
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-[var(--text)]">{item.movie.title}</p>
+                      <p className="text-xs text-[var(--text-muted)]">
+                        {item.movie.year ?? 'Unknown year'} • Added {new Date(item.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className="text-xs text-[var(--text-muted)]">Open</span>
+                  </Link>
+                ))}
+                <div className="mt-2 flex items-center justify-between">
+                  <Link
+                    className={`rounded-lg border px-2 py-1 text-xs ${
+                      (watchlist.page ?? 1) <= 1
+                        ? 'pointer-events-none border-[var(--border)] text-[var(--text-muted)] opacity-50'
+                        : 'border-[var(--border)] text-[var(--text)]'
+                    }`}
+                    href={`/journey?watchlistPage=${Math.max(1, (watchlist.page ?? 1) - 1)}`}
+                  >
+                    Prev
+                  </Link>
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Page {watchlist.page} / {watchlist.totalPages}
+                  </p>
+                  <Link
+                    className={`rounded-lg border px-2 py-1 text-xs ${
+                      (watchlist.page ?? 1) >= (watchlist.totalPages ?? 1)
+                        ? 'pointer-events-none border-[var(--border)] text-[var(--text-muted)] opacity-50'
+                        : 'border-[var(--border)] text-[var(--text)]'
+                    }`}
+                    href={`/journey?watchlistPage=${Math.min((watchlist.totalPages ?? 1), (watchlist.page ?? 1) + 1)}`}
+                  >
+                    Next
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-[var(--text-muted)]">
+                Your watchlist is empty. Use Search to add titles from your selected season.
+              </p>
+            )}
+          </Card>
         </>
       )}
 
@@ -440,13 +546,39 @@ export default async function HomePage() {
         </Card>
       )}
 
-      {experience?.state !== 'ONBOARDING_NEEDED' && (
+      {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' && (
+        <Card className="mt-2">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              {progression ? (
+                <div className="w-[220px]">
+                  <p className="mb-1 text-[11px] text-[var(--text-muted)]">
+                    Mastery {progression.completedCount}/{progression.nextMilestone}
+                  </p>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,rgba(127,29,29,0.95),rgba(220,38,38,0.95))]"
+                      style={{
+                        width: `${Math.max(5, Math.min(100, Math.round((progression.completedCount / Math.max(1, progression.nextMilestone)) * 100)))}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : <p className="text-xs text-[var(--text-muted)]">Mastery progress will appear after your first logged watch.</p>}
+            </div>
+            <LogoutIconButton />
+          </div>
+        </Card>
+      )}
+
+      {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' && (
         <BottomNav
           activeId="journey"
           items={[
             { id: 'journey', label: 'Journey', href: '/journey' },
             { id: 'history', label: 'History', href: '/history' },
             { id: 'profile', label: 'Profile', href: '/profile' },
+            { id: 'search', label: 'Search', href: '/search' },
           ]}
         />
       )}

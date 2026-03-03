@@ -48,6 +48,68 @@ Returns the currently available season/packs selection payload.
 
 ---
 
+## POST /api/profile/select-pack
+
+Set the authenticated user's active pack for the active season.
+
+### Auth
+
+- Requires valid session cookie.
+
+### Body
+
+```json
+{
+  "packSlug": "horror"
+}
+```
+
+Alternative:
+
+```json
+{
+  "packId": "pack_cuid"
+}
+```
+
+### Rules
+
+- Pack must be `isEnabled=true`.
+- Pack must belong to active season.
+- Returns `400` if pack is unavailable/disabled.
+
+### Success
+
+```json
+{
+  "data": {
+    "success": true,
+    "pack": {
+      "id": "pack_cuid",
+      "slug": "horror",
+      "seasonSlug": "season-1"
+    }
+  },
+  "error": null
+}
+```
+
+---
+
+## GET /api/experience
+
+Returns current UX state for authenticated user.
+
+### States
+
+- `PACK_SELECTION_NEEDED` when packs are enabled and `selectedPackId` is missing.
+- `ONBOARDING_NEEDED` when onboarding is not completed.
+- `SHOW_RECOMMENDATION_BUNDLE`
+- `SHOW_QUICK_POLL`
+- `SHOW_HISTORY`
+
+---
+
 ## POST /api/movies/upsert
 
 Upsert a movie by TMDB id.
@@ -304,6 +366,134 @@ Create feedback for the currently authenticated user.
   "error": null
 }
 ```
+
+---
+
+## GET /api/admin/packs
+
+Admin-only list of seasons and packs.
+
+### Auth
+
+- Requires admin session cookie.
+
+### Success
+
+```json
+{
+  "data": {
+    "activeSeason": {
+      "id": "season_id",
+      "slug": "season-1",
+      "name": "Season 1",
+      "isActive": true,
+      "packs": []
+    },
+    "seasons": []
+  },
+  "error": null
+}
+```
+
+---
+
+## PATCH /api/admin/packs
+
+Admin-only: set active season.
+
+### Body
+
+```json
+{
+  "seasonSlug": "season-1"
+}
+```
+
+---
+
+## PATCH /api/admin/packs/:id
+
+Admin-only: enable/disable pack.
+
+### Body
+
+```json
+{
+  "isEnabled": false
+}
+```
+
+### Rules
+
+- Cannot disable the last enabled pack in active season.
+
+---
+
+## GET /api/admin/curriculum
+
+Admin-only curriculum visibility for active season packs and node coverage quality.
+
+### Auth
+
+- Requires admin session cookie.
+
+### Success
+
+```json
+{
+  "data": {
+    "activeSeason": {
+      "id": "season_id",
+      "slug": "season-1",
+      "name": "Season 1"
+    },
+    "packs": [
+      {
+        "id": "pack_id",
+        "slug": "horror",
+        "name": "Horror",
+        "isEnabled": true,
+        "nodes": [
+          {
+            "id": "node_id",
+            "slug": "foundations-early-horror",
+            "name": "Foundations: Silent & Early Horror",
+            "orderIndex": 1,
+            "totalTitles": 10,
+            "eligibleTitles": 10,
+            "missingPosterCount": 0,
+            "missingRatingsCount": 0,
+            "missingReceptionCount": 0,
+            "missingCreditsCount": 0,
+            "titles": [
+              {
+                "id": "movie_id",
+                "rank": 1,
+                "tmdbId": 7001,
+                "title": "Nosferatu",
+                "posterUrl": "https://...",
+                "isEligible": true,
+                "missing": {
+                  "poster": false,
+                  "ratings": false,
+                  "reception": false,
+                  "credits": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "error": null
+}
+```
+
+### Notes
+
+- Endpoint is read-only visibility for launch tuning.
+- Eligibility warnings are derived from poster/ratings/reception/credits availability.
 
 ---
 

@@ -24,6 +24,7 @@ describe('recommendation eligibility rule', () => {
       }),
     ).toBe(false);
 
+    // In test mode, /api/posters fallback is allowed for deterministic seeded catalogs.
     expect(
       isRecommendationEligibleMovie({
         posterUrl: '/api/posters/123',
@@ -33,7 +34,24 @@ describe('recommendation eligibility rule', () => {
           { source: 'METACRITIC' },
         ],
       }),
-    ).toBe(false);
+    ).toBe(true);
+
+    const originalNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+    try {
+      expect(
+        isRecommendationEligibleMovie({
+          posterUrl: '/api/posters/123',
+          ratings: [
+            { source: 'IMDB' },
+            { source: 'ROTTEN_TOMATOES' },
+            { source: 'METACRITIC' },
+          ],
+        }),
+      ).toBe(false);
+    } finally {
+      process.env.NODE_ENV = originalNodeEnv;
+    }
 
     expect(
       isRecommendationEligibleMovie({

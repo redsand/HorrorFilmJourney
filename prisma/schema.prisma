@@ -49,6 +49,8 @@ model User {
   embeddingSnapshots UserEmbeddingSnapshot[]
   journeyProgress JourneyProgress[]
   feedback      Feedback[]
+  auditEvents   AuditEvent[]
+  errorLogs     AppErrorLog[]
 }
 
 model UserCredential {
@@ -149,6 +151,7 @@ model Movie {
   ratings          MovieRating[]
   streamingCache   MovieStreamingCache[]
   companionCache   CompanionCache[]
+  nodeAssignments  NodeMovie[]
 }
 
 model UserMovieInteraction {
@@ -336,6 +339,37 @@ model Feedback {
   @@index([status, priority, createdAt])
 }
 
+model AuditEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  targetId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}
+
+model AppErrorLog {
+  id         String   @id @default(cuid())
+  route      String
+  code       String?
+  message    String
+  stack      String?
+  requestId  String?
+  userId     String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([route, createdAt])
+}
+
 model Season {
   id        String   @id @default(cuid())
   slug      String   @unique
@@ -362,4 +396,40 @@ model GenrePack {
   users    UserProfile[]
   batches  RecommendationBatch[]
   progress JourneyProgress[]
+  nodes    JourneyNode[]
+}
+
+model JourneyNode {
+  id                  String   @id @default(cuid())
+  packId              String
+  slug                String
+  name                String
+  learningObjective   String
+  whatToNotice        Json
+  eraSubgenreFocus    String
+  spoilerPolicyDefault String
+  orderIndex          Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  pack   GenrePack  @relation(fields: [packId], references: [id], onDelete: Cascade)
+  movies NodeMovie[]
+
+  @@unique([packId, slug])
+  @@index([packId, orderIndex])
+}
+
+model NodeMovie {
+  id        String   @id @default(cuid())
+  nodeId    String
+  movieId   String
+  rank      Int
+  createdAt DateTime @default(now())
+
+  node  JourneyNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  movie Movie       @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([nodeId, movieId])
+  @@index([nodeId, rank])
+  @@index([movieId])
 }

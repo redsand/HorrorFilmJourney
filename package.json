@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "next start -p 3000",
     "test": "vitest run",
     "test:e2e": "vitest run tests/e2e",
     "test:ollama:local": "vitest run tests/local/ollama-local.test.ts",
@@ -20,6 +21,7 @@
     "catalog:restore": "node --experimental-strip-types scripts/catalog-restore.ts",
     "sync:tmdb:catalog": "node --experimental-strip-types scripts/sync-tmdb-catalog.ts",
     "sync:tmdb:update": "node --experimental-strip-types scripts/sync-tmdb-catalog-update.ts",
+    "smoke:prod": "node --experimental-strip-types scripts/smoke-prod.ts",
     "eval:recs:offline": "node --experimental-strip-types scripts/eval-recommendations.ts",
     "setup:dev": "npx prisma migrate deploy && npm run bootstrap:admin && npm run seed:catalog",
     "setup:test": "node --experimental-strip-types scripts/setup-test.ts",

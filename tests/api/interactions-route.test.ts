@@ -8,6 +8,7 @@ const {
   interactionCreateMock,
   recommendationItemFindUniqueMock,
   interactionCountMock,
+  interactionDeleteManyMock,
   generateRecommendationBatchMock,
   computeTasteProfileMock,
   trackWatchedMock,
@@ -17,6 +18,7 @@ const {
   interactionCreateMock: vi.fn(),
   recommendationItemFindUniqueMock: vi.fn(),
   interactionCountMock: vi.fn(),
+  interactionDeleteManyMock: vi.fn(),
   generateRecommendationBatchMock: vi.fn(),
   computeTasteProfileMock: vi.fn(),
   trackWatchedMock: vi.fn(),
@@ -27,7 +29,7 @@ vi.mock('@/lib/prisma', () => ({
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
     recommendationItem: { findUnique: recommendationItemFindUniqueMock },
-    userMovieInteraction: { create: interactionCreateMock, count: interactionCountMock },
+    userMovieInteraction: { create: interactionCreateMock, count: interactionCountMock, deleteMany: interactionDeleteManyMock },
   },
 }));
 
@@ -58,6 +60,7 @@ describe('POST /api/interactions', () => {
     interactionCreateMock.mockReset();
     recommendationItemFindUniqueMock.mockReset();
     interactionCountMock.mockReset();
+    interactionDeleteManyMock.mockReset();
     generateRecommendationBatchMock.mockReset();
     computeTasteProfileMock.mockReset();
     trackWatchedMock.mockReset();
@@ -127,6 +130,14 @@ describe('POST /api/interactions', () => {
     });
     expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1');
     expect(trackWatchedMock).toHaveBeenCalledTimes(1);
+    expect(interactionDeleteManyMock).toHaveBeenCalledWith({
+      where: {
+        userId: 'user_1',
+        movieId: 'movie_1',
+        status: 'WANT_TO_WATCH',
+        id: { not: 'interaction_1' },
+      },
+    });
   });
 
   it('returns nextBatch on third ALREADY_SEEN interaction for current batch', async () => {
@@ -168,6 +179,7 @@ describe('POST /api/interactions', () => {
     expect(generateRecommendationBatchMock).toHaveBeenCalledTimes(1);
     expect(computeTasteProfileMock).toHaveBeenCalledTimes(3);
     expect(trackWatchedMock).not.toHaveBeenCalled();
+    expect(interactionDeleteManyMock).toHaveBeenCalledTimes(3);
   });
 
   it('does not recompute taste profile for SKIPPED interactions', async () => {
@@ -195,5 +207,32 @@ describe('POST /api/interactions', () => {
     expect(response.status).toBe(200);
     expect(computeTasteProfileMock).not.toHaveBeenCalled();
     expect(trackWatchedMock).not.toHaveBeenCalled();
+    expect(interactionDeleteManyMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not remove watchlist rows when status is WANT_TO_WATCH', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValueOnce({ id: 'movie_1', tmdbId: 1, title: 'Alien' });
+    interactionCreateMock.mockResolvedValueOnce({
+      id: 'interaction_watchlist',
+      userId: 'user_1',
+      movieId: 'movie_1',
+      status: 'WANT_TO_WATCH',
+      rating: null,
+      createdAt: new Date('2025-01-01T00:00:00.000Z'),
+      movie: { tmdbId: 1, title: 'Alien', year: 1979, posterUrl: null },
+    });
+
+    const response = await POST(new Request('http://localhost/api/interactions', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        cookie: makeSessionCookie('user_1'),
+      },
+      body: JSON.stringify({ tmdbId: 1, status: 'WANT_TO_WATCH' }),
+    }));
+
+    expect(response.status).toBe(200);
+    expect(interactionDeleteManyMock).not.toHaveBeenCalled();
   });
 });

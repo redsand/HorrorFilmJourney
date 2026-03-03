@@ -1,12 +1,13 @@
 import { prisma } from '@/lib/prisma';
-import { validateAdminToken } from '@/lib/admin-auth';
 import { fail, ok } from '@/lib/api-envelope';
 import { hashPassword } from '@/lib/auth/password';
+import { requireAdmin } from '@/lib/auth/guards';
+import { logAuditEvent } from '@/lib/audit/audit';
 
 export async function POST(request: Request): Promise<Response> {
-  const auth = await validateAdminToken(request);
-  if (auth.error) {
-    return fail(auth.error, auth.status ?? 401);
+  const auth = await requireAdmin(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const body = await request.json().catch(() => null);
@@ -60,13 +61,20 @@ export async function POST(request: Request): Promise<Response> {
     return created;
   });
 
+  await logAuditEvent(prisma, {
+    adminUserId: auth.userId,
+    action: 'ADMIN_USER_CREATE',
+    targetId: user.id,
+    metadata: { hasCredential: Boolean(email && password), isAdmin },
+  });
+
   return ok(user, { status: 200 });
 }
 
 export async function GET(request: Request): Promise<Response> {
-  const auth = await validateAdminToken(request);
-  if (auth.error) {
-    return fail(auth.error, auth.status ?? 401);
+  const auth = await requireAdmin(request, prisma);
+  if (!auth.ok) {
+    return fail(auth.error, auth.status);
   }
 
   const q = new URL(request.url).searchParams.get('q')?.trim();

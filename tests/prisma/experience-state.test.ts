@@ -16,14 +16,18 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
+  process.env.SEASONS_PACKS_ENABLED = 'false';
   await prisma.recommendationDiagnostics.deleteMany();
   await prisma.userMovieInteraction.deleteMany();
   await prisma.recommendationItem.deleteMany();
   await prisma.recommendationBatch.deleteMany();
+  await prisma.journeyProgress.deleteMany();
   await prisma.evidencePacket.deleteMany();
   await prisma.movieEmbedding.deleteMany();
   await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.genrePack.deleteMany();
+  await prisma.season.deleteMany();
   await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
@@ -65,6 +69,32 @@ describe('experience state decisions', () => {
     const result = await getExperience(user.id, prisma);
 
     expect(result.state).toBe('SHOW_RECOMMENDATION_BUNDLE');
+  });
+
+  it('returns PACK_SELECTION_NEEDED when seasons/packs is enabled and selectedPackId is missing', async () => {
+    process.env.SEASONS_PACKS_ENABLED = 'true';
+    const season = await prisma.season.create({
+      data: { slug: 'season-1', name: 'Season 1', isActive: true },
+    });
+    await prisma.genrePack.create({
+      data: {
+        slug: 'horror',
+        name: 'Horror',
+        seasonId: season.id,
+        isEnabled: true,
+        primaryGenre: 'horror',
+      },
+    });
+    const user = await prisma.user.create({
+      data: {
+        displayName: 'Needs Pack',
+        profile: { create: { tolerance: 3, pacePreference: 'balanced', onboardingCompleted: false } },
+      },
+    });
+
+    const result = await getExperience(user.id, prisma);
+    expect(result.state).toBe('PACK_SELECTION_NEEDED');
+    expect(result.packSelection?.packs[0]?.slug).toBe('horror');
   });
 
   it('returns SHOW_RECOMMENDATION_BUNDLE with cards when user has profile and batch', async () => {

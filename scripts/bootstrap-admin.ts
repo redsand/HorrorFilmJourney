@@ -14,9 +14,9 @@ function getRequired(name: string): string {
 }
 
 async function main(): Promise<void> {
-  const email = getRequired('INITIAL_ADMIN_EMAIL').toLowerCase();
-  const password = getRequired('INITIAL_ADMIN_PASSWORD');
-  const displayName = process.env.INITIAL_ADMIN_DISPLAY_NAME?.trim() || 'Initial Admin';
+  const email = getRequired('ADMIN_EMAIL').toLowerCase();
+  const password = getRequired('ADMIN_PASSWORD');
+  const displayName = process.env.ADMIN_DISPLAY_NAME?.trim() || 'Admin';
 
   const databaseUrl = resolveDatabaseUrl();
   const prisma = databaseUrl

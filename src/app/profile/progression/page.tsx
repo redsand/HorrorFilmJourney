@@ -41,16 +41,7 @@ export default function ProgressionPage() {
   const completionRatio = data ? Math.max(0, Math.min(1, data.completedCount / Math.max(1, data.nextMilestone))) : 0;
 
   return (
-    <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
-      <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Horror Codex</h1>
-            <p className="text-xs text-[var(--text-muted)]">Journey Progression</p>
-          </div>
-          <LogoutIconButton />
-        </div>
-      </header>
+    <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
 
       {loading ? (
         <Card><p className="text-sm text-[var(--text-muted)]">Loading progression...</p></Card>
@@ -63,7 +54,7 @@ export default function ProgressionPage() {
         <>
           <Card className="space-y-3">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Current Node</p>
-            <p className="text-sm font-medium text-[var(--text)]">{data.currentNode}</p>
+            <p className="text-sm font-medium leading-relaxed text-[var(--text)]">{data.currentNode}</p>
             <p className="text-xs text-[var(--text-muted)]">Mastery score</p>
             <p className="text-2xl font-semibold text-[var(--text)]">{data.masteryScore.toFixed(2)}</p>
             <div className="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
@@ -72,7 +63,7 @@ export default function ProgressionPage() {
                 style={{ width: `${Math.max(6, Math.round(completionRatio * 100))}%` }}
               />
             </div>
-            <p className="text-xs text-[var(--text-muted)]">
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">
               Completed {data.completedCount} items. Next milestone at {data.nextMilestone}.
             </p>
           </Card>
@@ -88,12 +79,20 @@ export default function ProgressionPage() {
         </>
       ) : null}
 
+      <Card className="mt-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Journey Progression</p>
+          <LogoutIconButton />
+        </div>
+      </Card>
+
       <BottomNav
         activeId="profile"
         items={[
           { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
+          { id: 'search', label: 'Search', href: '/search' },
         ]}
       />
     </main>

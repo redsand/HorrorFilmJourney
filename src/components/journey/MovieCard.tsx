@@ -181,15 +181,15 @@ export function MovieCard({
           <div className="space-y-3">
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Why it matters</p>
-              <p className="text-sm leading-relaxed">{card.codex.whyImportant}</p>
+              <p className="mt-1 text-sm leading-relaxed">{card.codex.whyImportant}</p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">What it teaches</p>
-              <p className="text-sm leading-relaxed">{card.codex.whatItTeaches}</p>
+              <p className="mt-1 text-sm leading-relaxed">{card.codex.whatItTeaches}</p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Watch for</p>
-              <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+              <ul className="mt-1 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
                 {card.codex.watchFor.map((item) => (
                   <li key={item}>{item}</li>
                 ))}

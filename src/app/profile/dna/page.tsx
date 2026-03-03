@@ -80,16 +80,7 @@ export default function ProfileDnaPage() {
   }, [data]);
 
   return (
-    <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
-      <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Horror Codex</h1>
-            <p className="text-xs text-[var(--text-muted)]">Cinematic DNA</p>
-          </div>
-          <LogoutIconButton />
-        </div>
-      </header>
+    <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
 
       {loading ? (
         <Card>
@@ -114,23 +105,23 @@ export default function ProfileDnaPage() {
 
           <Card className="space-y-2">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Summary</p>
-            <p className="text-sm leading-6 text-[var(--text)]">{data.summaryNarrative}</p>
-            <p className="text-xs text-[var(--text-muted)]">
+            <p className="text-sm leading-relaxed text-[var(--text)]">{data.summaryNarrative}</p>
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">
               Last updated {data.lastComputedAt ? new Date(data.lastComputedAt).toLocaleString() : 'just now'}
             </p>
           </Card>
 
           <Card className="space-y-3">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Taste Evolution</p>
-            <p className="text-sm leading-6 text-[var(--text)]">
+            <p className="text-sm leading-relaxed text-[var(--text)]">
               {history?.evolutionNarrative ?? 'No evolution data yet.'}
             </p>
             {history?.snapshots?.length ? (
               <ol className="space-y-2">
                 {history.snapshots.slice().reverse().map((snapshot) => (
                   <li className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2" key={snapshot.takenAt}>
-                    <p className="text-xs text-[var(--text-muted)]">{new Date(snapshot.takenAt).toLocaleDateString()}</p>
-                    <p className="text-sm text-[var(--text)]">
+                    <p className="text-xs leading-relaxed text-[var(--text-muted)]">{new Date(snapshot.takenAt).toLocaleDateString()}</p>
+                    <p className="text-sm leading-relaxed text-[var(--text)]">
                       Intensity {Math.round(snapshot.intensityPreference * 100)}% · Pace {Math.round(snapshot.pacingPreference * 100)}% · Psych {Math.round(snapshot.psychologicalVsSupernatural * 100)}%
                     </p>
                   </li>
@@ -143,12 +134,20 @@ export default function ProfileDnaPage() {
         </>
       ) : null}
 
+      <Card className="mt-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Cinematic DNA</p>
+          <LogoutIconButton />
+        </div>
+      </Card>
+
       <BottomNav
         activeId="profile"
         items={[
           { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
+          { id: 'search', label: 'Search', href: '/search' },
         ]}
       />
     </main>

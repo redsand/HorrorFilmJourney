@@ -1,6 +1,9 @@
 import { InteractionStatus, PrismaClient } from '@prisma/client';
+import { seasonsPacksEnabled } from '@/lib/feature-flags';
+import { listAvailablePacks } from '@/lib/packs/pack-resolver';
 
 export type ExperienceState =
+  | 'PACK_SELECTION_NEEDED'
   | 'ONBOARDING_NEEDED'
   | 'SHOW_RECOMMENDATION_BUNDLE'
   | 'SHOW_QUICK_POLL'
@@ -9,6 +12,10 @@ export type ExperienceState =
 export type ExperiencePayload = {
   state: ExperienceState;
   onboardingQuestions?: string[];
+  packSelection?: {
+    activeSeason: { slug: string; name: string };
+    packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+  };
   bundle?: {
     id: string;
     createdAt: string;
@@ -122,6 +129,12 @@ export async function getExperience(
   });
 
   if (!user || !user.profile || !user.profile.onboardingCompleted) {
+    if (seasonsPacksEnabled() && !user?.profile?.selectedPackId) {
+      return {
+        state: 'PACK_SELECTION_NEEDED',
+        packSelection: await listAvailablePacks(prisma),
+      };
+    }
     return {
       state: 'ONBOARDING_NEEDED',
       onboardingQuestions: ONBOARDING_QUESTIONS,

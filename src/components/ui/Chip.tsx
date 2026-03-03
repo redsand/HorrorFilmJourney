@@ -7,8 +7,8 @@ type ChipProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 const toneClasses: Record<ChipTone, string> = {
-  default: 'border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text-muted)]',
-  accent: 'border-[rgba(193,18,31,0.55)] bg-[rgba(155,17,30,0.22)] text-[#ffd9dd]',
+  default: 'border-[var(--cc-border)] bg-[var(--cc-surface)] text-[var(--cc-text-muted)]',
+  accent: 'border-[var(--cc-accent-2)] bg-[var(--cc-glow)] text-[var(--cc-text)]',
 };
 
 export function Chip({ tone = 'default', className = '', ...props }: ChipProps) {

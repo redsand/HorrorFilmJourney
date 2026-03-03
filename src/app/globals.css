@@ -1,13 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #050506;
-  --bg-elevated: #0b0b0d;
-  --text: #f5f2f0;
-  --text-muted: #b7b2ae;
-  --accent: #9b111e;
-  --accent-strong: #c1121f;
-  --border: rgba(255, 255, 255, 0.12);
+  --cc-bg: #060607;
+  --cc-surface: #101014;
+  --cc-surface-2: #17171c;
+  --cc-text: #f7f3ef;
+  --cc-text-muted: #b9b3ad;
+  --cc-border: rgba(255, 255, 255, 0.14);
+  --cc-accent: #9b111e;
+  --cc-accent-2: #cf1c2a;
+  --cc-danger: #e54957;
+  --cc-glow: rgba(233, 84, 102, 0.24);
+  --cc-shadow: rgba(0, 0, 0, 0.5);
+  --cc-focus: #f07922;
+  --cc-link: #ff5a45;
+  --cc-success: #3fa576;
+  --cc-warning: #e0a43b;
+  --cc-mist: #5b8f78;
+  --cc-cabinet-screen-top: 138px;
+  --cc-cabinet-screen-padding-x: 16px;
+
+  /* Backward compatibility aliases during token rollout */
+  --bg: var(--cc-bg);
+  --bg-elevated: var(--cc-surface);
+  --text: var(--cc-text);
+  --text-muted: var(--cc-text-muted);
+  --accent: var(--cc-accent);
+  --accent-strong: var(--cc-accent-2);
+  --border: var(--cc-border);
+}
+
+[data-theme="horror"] {
+  --cc-bg: #060607;
+  --cc-surface: #101014;
+  --cc-surface-2: #17171c;
+  --cc-text: #f7f3ef;
+  --cc-text-muted: #b9b3ad;
+  --cc-border: rgba(255, 255, 255, 0.14);
+  --cc-accent: #9b111e;
+  --cc-accent-2: #cf1c2a;
+  --cc-danger: #e54957;
+  --cc-glow: rgba(233, 84, 102, 0.24);
+  --cc-shadow: rgba(0, 0, 0, 0.5);
+  --cc-focus: #f07922;
+  --cc-link: #ff5a45;
+  --cc-success: #3fa576;
+  --cc-warning: #e0a43b;
+  --cc-mist: #5b8f78;
+  --cc-cabinet-screen-top: 138px;
+  --cc-cabinet-screen-padding-x: 16px;
+
+  --bg: var(--cc-bg);
+  --bg-elevated: var(--cc-surface);
+  --text: var(--cc-text);
+  --text-muted: var(--cc-text-muted);
+  --accent: var(--cc-accent);
+  --accent-strong: var(--cc-accent-2);
+  --border: var(--cc-border);
 }
 
 html,
@@ -17,7 +66,271 @@ body {
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #101014 0%, var(--bg) 38%);
-  color: var(--text);
+  background: radial-gradient(circle at top, var(--cc-surface) 0%, var(--cc-bg) 38%);
+  color: var(--cc-text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--cc-link);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cc-focus);
+  outline-offset: 2px;
+}
+
+.cabinet-frame {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.cabinet-frame__overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 65%,
+    rgba(0, 0, 0, 0.8) 75%,
+    rgba(0, 0, 0, 0.4) 85%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 65%,
+    rgba(0, 0, 0, 0.8) 75%,
+    rgba(0, 0, 0, 0.4) 85%,
+    transparent 100%
+  );
+}
+
+.cabinet-frame__image {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  height: 100dvh;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  object-position: top center;
+  opacity: 0.96;
+}
+
+.cabinet-frame__fade {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    transparent 60%,
+    var(--cc-bg) 100%
+  );
+}
+
+.cabinet-frame__content {
+  position: relative;
+  z-index: 4;
+  margin: 0 auto;
+  display: flex;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 460px;
+  flex-direction: column;
+  /* Approximate cabinet "screen window" alignment; tune via CSS variables only. */
+  padding-left: var(--cc-cabinet-screen-padding-x);
+  padding-right: var(--cc-cabinet-screen-padding-x);
+  padding-top: calc(var(--cc-cabinet-screen-top) + env(safe-area-inset-top));
+  padding-bottom: 6rem;
+}
+
+.horror-mist-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.75) 62%,
+    rgba(0, 0, 0, 0.45) 78%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.75) 62%,
+    rgba(0, 0, 0, 0.45) 78%,
+    transparent 100%
+  );
+}
+
+.horror-mist-overlay__layer,
+.horror-mist-overlay__bloom {
+  position: absolute;
+  filter: blur(20px);
+  will-change: transform, opacity;
+}
+
+.horror-mist-overlay__layer {
+  opacity: 0.2;
+  background-repeat: no-repeat;
+  background-size: contain;
+  mix-blend-mode: screen;
+}
+
+.horror-mist-overlay__layer--left {
+  left: -14%;
+  bottom: 6%;
+  width: 56vw;
+  height: 44vh;
+  background-image: radial-gradient(ellipse at 35% 55%, rgba(110, 175, 142, 0.34) 0%, rgba(91, 143, 120, 0.16) 36%, rgba(91, 143, 120, 0) 70%);
+  animation: horrorMistDriftLeft 32s ease-in-out infinite;
+}
+
+.horror-mist-overlay__layer--right {
+  right: -14%;
+  bottom: 10%;
+  width: 58vw;
+  height: 42vh;
+  background-image: radial-gradient(ellipse at 65% 50%, rgba(110, 175, 142, 0.32) 0%, rgba(91, 143, 120, 0.15) 34%, rgba(91, 143, 120, 0) 70%);
+  animation: horrorMistDriftRight 36s ease-in-out infinite;
+}
+
+.horror-mist-overlay__layer--center {
+  left: 24%;
+  bottom: 14%;
+  width: 52vw;
+  height: 30vh;
+  opacity: 0.12;
+  background-image: radial-gradient(ellipse at 50% 60%, rgba(110, 175, 142, 0.22) 0%, rgba(91, 143, 120, 0.1) 32%, rgba(91, 143, 120, 0) 68%);
+  animation: horrorMistBreath 28s ease-in-out infinite;
+}
+
+.horror-mist-overlay__layer--edge-left {
+  left: -8%;
+  top: 26%;
+  width: 34vw;
+  height: 34vh;
+  opacity: 0.14;
+  background-image: radial-gradient(ellipse at 40% 50%, rgba(118, 194, 150, 0.26) 0%, rgba(91, 143, 120, 0.1) 38%, rgba(91, 143, 120, 0) 72%);
+  animation: horrorMistDriftLeft 34s ease-in-out infinite;
+}
+
+.horror-mist-overlay__layer--edge-right {
+  right: -8%;
+  top: 30%;
+  width: 34vw;
+  height: 34vh;
+  opacity: 0.14;
+  background-image: radial-gradient(ellipse at 60% 50%, rgba(118, 194, 150, 0.24) 0%, rgba(91, 143, 120, 0.1) 36%, rgba(91, 143, 120, 0) 70%);
+  animation: horrorMistDriftRight 38s ease-in-out infinite;
+}
+
+.horror-mist-overlay__bloom {
+  opacity: 0.14;
+  mix-blend-mode: screen;
+}
+
+.horror-mist-overlay__bloom--left {
+  top: -12%;
+  left: -10%;
+  width: 44vw;
+  height: 36vh;
+  background: radial-gradient(circle at 30% 30%, rgba(207, 28, 42, 0.32) 0%, rgba(155, 17, 30, 0.08) 42%, rgba(155, 17, 30, 0) 72%);
+  animation: horrorBloomPulse 30s ease-in-out infinite;
+}
+
+.horror-mist-overlay__bloom--right {
+  top: -10%;
+  right: -10%;
+  width: 44vw;
+  height: 36vh;
+  background: radial-gradient(circle at 70% 30%, rgba(207, 28, 42, 0.3) 0%, rgba(155, 17, 30, 0.07) 42%, rgba(155, 17, 30, 0) 72%);
+  animation: horrorBloomPulse 34s ease-in-out infinite reverse;
+}
+
+@keyframes horrorMistDriftLeft {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.12; }
+  40% { transform: translate3d(3%, -2%, 0) scale(1.04); opacity: 0.18; }
+  70% { transform: translate3d(1%, -1%, 0) scale(1.02); opacity: 0.14; }
+}
+
+@keyframes horrorMistDriftRight {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.11; }
+  45% { transform: translate3d(-4%, -1%, 0) scale(1.03); opacity: 0.17; }
+  72% { transform: translate3d(-2%, -2%, 0) scale(1.01); opacity: 0.13; }
+}
+
+@keyframes horrorMistBreath {
+  0%, 100% { transform: scale(1); opacity: 0.08; }
+  50% { transform: scale(1.05); opacity: 0.12; }
+}
+
+@keyframes horrorBloomPulse {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.14; }
+}
+
+@supports (mask-image: linear-gradient(black, transparent)) or (-webkit-mask-image: linear-gradient(black, transparent)) {
+  .cabinet-frame__fade {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .cabinet-frame__image {
+    opacity: 0.86;
+  }
+
+  .cabinet-frame__content {
+    max-width: 420px;
+    --cc-cabinet-screen-top: 120px;
+    --cc-cabinet-screen-padding-x: 14px;
+  }
+
+  .horror-mist-overlay__layer,
+  .horror-mist-overlay__bloom {
+    filter: blur(14px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .horror-mist-overlay__layer,
+  .horror-mist-overlay__bloom {
+    filter: blur(24px);
+  }
+
+  .horror-mist-overlay__layer--left,
+  .horror-mist-overlay__layer--right {
+    opacity: 0.24;
+  }
+
+  .horror-mist-overlay__layer--edge-left,
+  .horror-mist-overlay__layer--edge-right {
+    opacity: 0.18;
+  }
+
+  .horror-mist-overlay__layer--center {
+    opacity: 0.16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .horror-mist-overlay__layer,
+  .horror-mist-overlay__bloom {
+    animation: none !important;
+  }
 }

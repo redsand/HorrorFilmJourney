@@ -74,6 +74,8 @@ export type CandidateConstraints = {
   targetCount: number;
   excludeRecentSkippedDays: number;
   packPrimaryGenre: string;
+  packId?: string | null;
+  journeyNodeSlug?: string;
 };
 
 export type RecommendationContext = {
@@ -760,6 +762,14 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     });
 
     const excludedMovieIds = new Set(seenInteractions.map((item) => item.movieId));
+    const recentRecommendationItems = await this.prisma.recommendationItem.findMany({
+      where: { batch: { userId } },
+      orderBy: [{ batch: { createdAt: 'desc' } }, { rank: 'asc' }],
+      select: { movieId: true },
+      take: 30,
+    });
+    const recentUnique = [...new Set(recentRecommendationItems.map((item) => item.movieId))].slice(0, 10);
+    recentUnique.forEach((movieId) => excludedMovieIds.add(movieId));
     const latestBatch = await this.prisma.recommendationBatch.findFirst({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -781,6 +791,36 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         posterLastValidatedAt: movie.posterLastValidatedAt,
         ratings: movie.ratings,
       }));
+    let curatedIds: string[] = [];
+    if (constraints.packId && constraints.journeyNodeSlug) {
+      const curatedAssignments = await this.prisma.nodeMovie.findMany({
+        where: {
+          node: {
+            packId: constraints.packId,
+            slug: constraints.journeyNodeSlug,
+          },
+        },
+        orderBy: { rank: 'asc' },
+        select: { movieId: true },
+      });
+      const curatedSet = new Set(curatedAssignments.map((item) => item.movieId));
+      const eligibleSet = new Set(eligible.map((movie) => movie.id));
+      curatedIds = curatedAssignments
+        .map((item) => item.movieId)
+        .filter((movieId) => eligibleSet.has(movieId));
+      const fallbackIds = eligible
+        .filter((movie) => !curatedSet.has(movie.id))
+        .map((movie) => movie.id);
+      console.info('[recommendations.engine] curriculum candidates', {
+        journeyNodeSlug: constraints.journeyNodeSlug,
+        curatedCount: curatedIds.length,
+        fallbackCount: fallbackIds.length,
+      });
+      if (curatedIds.length >= constraints.targetCount) {
+        return curatedIds;
+      }
+      return [...curatedIds, ...fallbackIds];
+    }
     console.info('[recommendations.engine] candidate poster quality', {
       totalMovies: allMovies.length,
       eligibleMovies: eligible.length,
@@ -1067,6 +1107,21 @@ export async function generateRecommendationBatchModern(
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const excludeRecentSkippedDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
   const packPrimaryGenre = options.packPrimaryGenre ?? 'horror';
+  const resolvedJourneyNode = options.journeyNode ?? (
+    options.packId
+      ? (await prisma.journeyProgress.findFirst({
+        where: { userId, ...(options.packId ? { packId: options.packId } : {}) },
+        orderBy: { lastUpdatedAt: 'desc' },
+        select: { journeyNode: true },
+      }))?.journeyNode ?? (
+        await prisma.journeyNode.findFirst({
+          where: { ...(options.packId ? { packId: options.packId } : {}) },
+          orderBy: { orderIndex: 'asc' },
+          select: { slug: true },
+        })
+      )?.slug ?? 'ENGINE_V1_CORE'
+      : 'ENGINE_V1_CORE'
+  );
 
   const countersStartedAt = nowMs();
   const [excludedSeenCount, excludedSkippedRecentCount, allMovieCount] = await Promise.all([
@@ -1092,6 +1147,8 @@ export async function generateRecommendationBatchModern(
     targetCount,
     excludeRecentSkippedDays,
     packPrimaryGenre,
+    packId: options.packId,
+    journeyNodeSlug: resolvedJourneyNode,
   });
   console.info('[recommendations.engine] modern candidates generated', {
     durationMs: elapsedMs(candidateStartedAt),
@@ -1174,7 +1231,7 @@ export async function generateRecommendationBatchModern(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
       const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, 'US');
-      const journeyNode = `ENGINE_V1_CORE#RANK_${rank}`;
+      const journeyNode = `${resolvedJourneyNode}#RANK_${rank}`;
       const ratings = movie.ratings;
       const inputHash = computeNarrativeHash({
         movieFacts: {
@@ -1211,7 +1268,7 @@ export async function generateRecommendationBatchModern(
       });
 
       const cachedNarrative = getCachedNarrativeIfFresh(cachedItem, inputHash, {
-        journeyNode: 'ENGINE_V1_CORE',
+        journeyNode: resolvedJourneyNode,
         ratings,
         narrativeVersion: NARRATIVE_VERSION,
       });
@@ -1255,7 +1312,7 @@ export async function generateRecommendationBatchModern(
     data: {
       userId,
       ...(options.packId ? { packId: options.packId } : {}),
-      journeyNode: 'ENGINE_V1_CORE',
+      journeyNode: resolvedJourneyNode,
       rationale: 'modern pipeline: interface-composed v1 adapters',
       items: {
         create: itemData.map((item) => ({

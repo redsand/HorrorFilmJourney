@@ -81,6 +81,23 @@ describe('RecommendationEngine v1', () => {
     expect(result.cards[0]?.ratings.additional.length).toBeGreaterThanOrEqual(1);
   });
 
+  it('allows /api/posters fallback URLs in test mode', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Fallback Poster Test' } });
+    const movie = await prisma.movie.create({
+      data: {
+        tmdbId: 3801,
+        title: 'Fallback Poster',
+        posterUrl: '/api/posters/3801',
+        genres: ['horror'],
+      },
+    });
+    await addRatings(movie.id, true, 3);
+
+    const result = await generateRecommendationBatchV1(user.id, prisma);
+    expect(result.cards).toHaveLength(1);
+    expect(result.cards[0]?.movie.posterUrl).toBe('/api/posters/3801');
+  });
+
   it('refresh generation rotates away from the immediately previous batch', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Rotate' } });
 

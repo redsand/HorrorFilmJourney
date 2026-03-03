@@ -14,6 +14,24 @@
 - Issued by auth routes with `HttpOnly`, `SameSite=Lax`.
 - Contains signed session payload (`userId`, `isAdmin`, expiration).
 
+## Captcha protection (Google reCAPTCHA v3)
+
+Login and signup can enforce captcha verification to reduce automated abuse.
+
+- `CAPTCHA_ENABLED=true` enables enforcement on:
+  - `POST /api/auth/login`
+  - `POST /api/auth/signup`
+- Required env vars when enabled:
+  - `RECAPTCHA_SECRET_KEY` (server-side secret)
+  - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` (client site key)
+- Optional:
+  - `RECAPTCHA_MIN_SCORE` (default `0.5`)
+
+When enabled:
+- missing token returns `400 CAPTCHA_REQUIRED`
+- invalid/low-score token returns `400 CAPTCHA_INVALID`
+- server misconfiguration returns `500 CAPTCHA_MISCONFIGURED`
+
 ## Role model
 
 - User routes require any authenticated session.

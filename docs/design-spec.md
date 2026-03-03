@@ -118,3 +118,22 @@ This document is the single source of truth for product requirements.
 - New behavior is covered by tests before/with implementation.
 - Docs smoke checks enforce required design docs presence.
 - Architecture exposes seams for embeddings, retrieval, reranking, bandits, and diagnostics.
+
+## R15 — Seasons + packs launch gating
+**Requirement:** When packs are enabled, users must select an active pack before onboarding/recommendations.
+
+**Acceptance criteria:**
+- `/api/experience` returns `PACK_SELECTION_NEEDED` until `UserProfile.selectedPackId` is set.
+- `/api/packs` returns active season and available packs.
+- `/api/profile/select-pack` only accepts enabled packs in active season.
+- Recommendation batches persist `packId`.
+- History supports pack-aware scoping (`packScope=current|all`).
+
+## R16 — Season 1 curriculum-first recommendations
+**Requirement:** Season 1 Horror should feel guided; the engine must prefer curated node titles before falling back to generic pack candidates.
+
+**Acceptance criteria:**
+- Journey nodes and node-title mappings are seeded for Season 1 Horror.
+- Engine resolves current node from pack-scoped progression and uses node list first.
+- If node inventory is insufficient, engine tops up from eligible pack-level horror candidates.
+- Engine excludes recent recommendation repeats (`last 10`) to improve short-term variety.

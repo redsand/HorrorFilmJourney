@@ -40,6 +40,7 @@ export type RecommendationEngineOptions = {
   targetCount?: number;
   packPrimaryGenre?: string;
   packId?: string | null;
+  journeyNode?: string;
 };
 
 const DEFAULT_TARGET_COUNT = 5;
@@ -135,14 +136,15 @@ export function isRecommendationEligibleMovie(input: {
   posterLastValidatedAt?: Date | null;
   ratings: Array<{ source: string }>;
 }): boolean {
+  const isTestEnv = process.env.NODE_ENV === 'test';
   const posterUrl = input.posterUrl.trim();
   if (posterUrl.length === 0) {
     return false;
   }
-  if (posterUrl.startsWith('/api/posters/')) {
+  if (!isTestEnv && posterUrl.startsWith('/api/posters/')) {
     return false;
   }
-  if (process.env.NODE_ENV !== 'test' && !input.posterLastValidatedAt) {
+  if (!isTestEnv && !input.posterLastValidatedAt) {
     return false;
   }
 

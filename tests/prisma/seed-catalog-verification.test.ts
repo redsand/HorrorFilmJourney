@@ -19,6 +19,9 @@ beforeEach(async () => {
   await prisma.userProfile.deleteMany();
   await prisma.userCredential.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.journeyProgress.deleteMany();
+  await prisma.genrePack.deleteMany();
+  await prisma.season.deleteMany();
   await prisma.movieRating.deleteMany();
   await prisma.evidencePacket.deleteMany();
   await prisma.movie.deleteMany();
@@ -41,5 +44,12 @@ describe('seed catalog verification', () => {
         return hasImdb && additional >= 1;
       }),
     ).toBe(true);
+
+    const activeSeason = await prisma.season.findFirst({
+      where: { isActive: true },
+      include: { packs: true },
+    });
+    expect(activeSeason?.slug).toBe('season-1');
+    expect(activeSeason?.packs.some((pack) => pack.slug === 'horror' && pack.isEnabled)).toBe(true);
   });
 });

@@ -115,7 +115,7 @@ export function RecommendationBundle({
 
   return (
     <section aria-label="Recommendation bundle" className="space-y-3">
-      <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">
+      <p className="inline-flex rounded-md border border-[var(--cc-border)] bg-[rgba(0,0,0,0.74)] px-2.5 py-1 text-xs uppercase tracking-[0.16em] text-[var(--text)] backdrop-blur">
         Bundle {visibleBatchId.slice(0, 8)}
       </p>
       {visibleCards.map((card) => (

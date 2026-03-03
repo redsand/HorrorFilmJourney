@@ -91,6 +91,8 @@ The codebase now includes a pack-aware foundation:
 - `GET /api/packs` endpoint
 - onboarding/profile support for `selectedPackSlug`
 - recommendation candidate filtering by pack primary genre
+- curriculum-first selection from Season 1 journey nodes
+- admin curriculum coverage visibility at `/admin/curriculum`
 
 Current launch scope:
 
@@ -124,8 +126,8 @@ cp .env.example .env
 
 - `DATABASE_URL`
 - `DATABASE_URL_TEST` (recommended for tests)
-- `INITIAL_ADMIN_EMAIL`
-- `INITIAL_ADMIN_PASSWORD`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
 - `SEASONS_PACKS_ENABLED` (`false` for legacy behavior, `true` for pack-aware mode)
 
 4. Setup dev data:
@@ -174,8 +176,66 @@ SEASONS_PACKS_ENABLED=true
 - if packs are disabled, app continues using the same Season 1 Horror response seam
 
 Notes:
-- admin CRUD for seasons/packs is not in this phase yet (planned later).
-- current multi-pack contamination controls are partial; recommendation filtering is pack-scoped, with additional read-scope hardening planned.
+- launch mode keeps only the Horror pack enabled for Season 1.
+- recommendation behavior is curriculum-first and falls back to eligible pack-level horror candidates.
+
+## First Production Deploy (Ubuntu 24 + Let's Encrypt)
+
+### 1) Bootstrap the server once
+
+From your workstation (PowerShell), run:
+
+```powershell
+.\deploy.ps1 -HostName cinemacodex.com -Bootstrap -SetupPostgres -LetsEncryptEmail you@cinemacodex.com
+```
+
+What bootstrap does:
+- installs Node.js, nginx, certbot
+- creates app paths under `/opt/cinemacodex`
+- installs systemd service `cinemacodex.service`
+- configures nginx reverse proxy
+- provisions Let's Encrypt SSL cert + redirect to HTTPS
+- creates `/opt/cinemacodex/shared/.env` template
+
+Then SSH to server and populate:
+
+`/opt/cinemacodex/shared/.env`
+
+with production values (`DATABASE_URL`, `SESSION_SECRET`, `TMDB_API_KEY`, etc.).
+
+### 2) Deploy a release tarball
+
+```powershell
+.\deploy.ps1 -HostName cinemacodex.com
+```
+
+This command:
+- creates `git archive` tarball from current `HEAD`
+- uploads to remote `/tmp`
+- runs `/opt/cinemacodex/bin/deploy-release.sh`
+- installs dependencies, runs Prisma generate/migrate, builds Next.js
+- restarts the `cinemacodex` systemd service
+
+### Optional first data restore
+
+If you already have a catalog backup JSON:
+
+```powershell
+.\deploy.ps1 -HostName cinemacodex.com -CatalogBackupFile .\backups\catalog-full-2026-03-02.json
+```
+
+### Nightly TMDB sync cron
+
+Bootstrap installs a midnight cron job that runs:
+
+- `npm run sync:tmdb:update`
+- with `TMDB_UPDATE_RELEASE_DATE_GTE=$(date +%Y)-01-01`
+
+To (re)apply cron on an existing server:
+
+```powershell
+.\deploy.ps1 -HostName cinemacodex.com -SetupCatalogCron
+```
 
 ## Useful Scripts
 

@@ -2,17 +2,27 @@ import { describe, expect, it } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import RootLayout from '@/app/layout';
+import { Button } from '@/components/ui';
 
 describe('RootLayout mobile shell', () => {
-  it('renders full-height dark wrapper with max-width mobile column', () => {
+  it('renders full-height dark wrapper with max-width mobile column', async () => {
+    const tree = await RootLayout({
+      children: <div>child</div>,
+    });
     const html = renderToStaticMarkup(
-      <RootLayout>
-        <div>child</div>
-      </RootLayout>,
+      tree,
     );
 
-    expect(html).toContain('min-h-dvh bg-[var(--bg)] text-[var(--text)]');
-    expect(html).toContain('max-w-[420px]');
-    expect(html).toContain('pb-24');
+    expect(html).toContain('data-theme=\"horror\"');
+    expect(html).toContain('min-h-dvh bg-[var(--cc-bg)] text-[var(--cc-text)]');
+    expect(html).toContain('cabinet-frame');
+    expect(html).toContain('cabinet-frame__content');
+    expect(html).toContain('/assets/cabinets/horror-season-1.png');
+  });
+
+  it('renders primary button with accent token classes', () => {
+    const html = renderToStaticMarkup(<Button>Action</Button>);
+    expect(html).toContain('bg-[var(--cc-accent)]');
+    expect(html).toContain('hover:bg-[var(--cc-accent-2)]');
   });
 });

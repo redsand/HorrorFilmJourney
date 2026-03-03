@@ -2,6 +2,7 @@ import { InteractionStatus } from '@prisma/client';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
+import { parseHistoryPackScope, resolveHistoryPackFilter } from '@/lib/history/pack-scope';
 
 function bucketDecade(year: number | null): string | null {
   if (!year) {
@@ -27,9 +28,15 @@ export async function GET(request: Request): Promise<Response> {
   if (!auth.ok) {
     return fail(auth.error, auth.status);
   }
+  const url = new URL(request.url);
+  const packScope = parseHistoryPackScope(url.searchParams.get('packScope'));
+  if (!packScope) {
+    return fail({ code: 'VALIDATION_ERROR', message: 'packScope must be "current" or "all"' }, 400);
+  }
+  const packFilter = await resolveHistoryPackFilter(prisma, auth.userId, packScope);
 
   const interactions = await prisma.userMovieInteraction.findMany({
-    where: { userId: auth.userId },
+    where: { userId: auth.userId, ...packFilter },
     include: {
       movie: {
         select: {

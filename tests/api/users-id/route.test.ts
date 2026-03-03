@@ -27,7 +27,9 @@ describe('/api/users/[id] route', () => {
   });
 
   it('returns user with profile summary', async () => {
-    findUniqueMock.mockResolvedValueOnce({
+    findUniqueMock
+      .mockResolvedValueOnce({ id: 'admin_1' })
+      .mockResolvedValueOnce({
       id: 'user_1',
       displayName: 'Ripley',
       createdAt: new Date('2025-01-01T00:00:00.000Z'),

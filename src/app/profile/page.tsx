@@ -122,16 +122,7 @@ export default function ProfilePage() {
     : 0;
 
   return (
-    <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
-      <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Horror Codex</h1>
-            <p className="text-xs text-[var(--text-muted)]">Profile</p>
-          </div>
-          <LogoutIconButton />
-        </div>
-      </header>
+    <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
 
       {loading ? (
         <Card><p className="text-sm text-[var(--text-muted)]">Loading profile...</p></Card>
@@ -141,9 +132,9 @@ export default function ProfilePage() {
           <Link className="mt-4 inline-flex" href="/login"><Button>Login</Button></Link>
         </Card>
       ) : (
-        <Card className="space-y-3">
+        <Card className="space-y-4">
           <h2 className="text-lg font-semibold">{me.displayName}</h2>
-          <p className="text-sm text-[var(--text-muted)]">{me.email}</p>
+          <p className="text-sm leading-6 text-[var(--text-muted)]">{me.email}</p>
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Role</span>
             <Chip tone={me.role === 'ADMIN' ? 'accent' : 'default'}>{me.role}</Chip>
@@ -188,7 +179,7 @@ export default function ProfilePage() {
                 </div>
               </>
             ) : null}
-            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Recommendation style</p>
+            <p className="pt-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Recommendation style</p>
             <div className="grid grid-cols-2 gap-2">
               {(['diversity', 'popularity'] as const).map((style) => (
                 <button
@@ -224,12 +215,12 @@ export default function ProfilePage() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-[var(--text-muted)]">
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">
               Diversity broadens eras/subgenres. Popularity prioritizes widely favored titles.
             </p>
           </div>
-          <div className="space-y-2 border-t border-[var(--border)] pt-3">
-            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Insights</p>
+          <div className="space-y-2 border-t border-[var(--border)] pt-4">
+            <p className="pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Insights</p>
             {insights.length > 0 ? (
               <ul className="space-y-2 text-sm text-[var(--text)]">
                 {insights.map((insight) => (
@@ -242,11 +233,11 @@ export default function ProfilePage() {
               <p className="text-xs text-[var(--text-muted)]">Keep rating films to unlock thematic insights.</p>
             )}
           </div>
-          <div className="space-y-3 border-t border-[var(--border)] pt-3">
+          <div className="space-y-3 border-t border-[var(--border)] pt-4">
             <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Onboarding preferences</p>
             <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Intensity</p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Intensity</p>
+              <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
                 Lower values favor atmospheric tension. Higher values allow heavier violence and shock.
               </p>
               <div className="grid grid-cols-5 gap-2">
@@ -268,8 +259,8 @@ export default function ProfilePage() {
               </div>
             </div>
             <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Pace</p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Pace</p>
+              <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
                 Slowburn builds dread, balanced mixes tension and release, shock emphasizes immediate impact.
               </p>
               <div className="grid grid-cols-3 gap-2">
@@ -294,7 +285,7 @@ export default function ProfilePage() {
                 ))}
               </div>
             </div>
-            <div>
+            <div className="pt-1">
               <Button
                 className="w-full py-3 text-base"
                 disabled={savingOnboarding}
@@ -358,6 +349,9 @@ export default function ProfilePage() {
             <div className="grid grid-cols-2 gap-2">
               <Link className="inline-flex" href="/admin/users"><Button className="w-full" variant="secondary">Manage Users</Button></Link>
               <Link className="inline-flex" href="/admin/feedback"><Button className="w-full" variant="secondary">Manage Feedback</Button></Link>
+              <Link className="inline-flex" href="/admin/packs"><Button className="w-full" variant="secondary">Manage Packs</Button></Link>
+              <Link className="inline-flex" href="/admin/curriculum"><Button className="w-full" variant="secondary">Manage Curriculum</Button></Link>
+              <Link className="inline-flex" href="/admin/system"><Button className="w-full" variant="secondary">System</Button></Link>
             </div>
           ) : null}
         </Card>
@@ -404,12 +398,22 @@ export default function ProfilePage() {
         </>
       ) : null}
 
+      {!loading && me ? (
+        <Card className="mt-2">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Profile</p>
+            <LogoutIconButton />
+          </div>
+        </Card>
+      ) : null}
+
       <BottomNav
         activeId="profile"
         items={[
           { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
+          { id: 'search', label: 'Search', href: '/search' },
         ]}
       />
     </main>

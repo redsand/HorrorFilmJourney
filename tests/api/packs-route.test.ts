@@ -39,6 +39,8 @@ describe('/api/packs route', () => {
             name: 'Horror',
             isEnabled: true,
             seasonSlug: 'season-1',
+            seasonLabel: 'Season 1',
+            themeKey: 'horror',
           },
         ],
       },
@@ -46,4 +48,3 @@ describe('/api/packs route', () => {
     });
   });
 });
-

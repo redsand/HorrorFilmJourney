@@ -64,16 +64,7 @@ export default async function HistoryPage() {
   const summary = summaryResponse.status === 200 ? summaryResponse.data : null;
 
   return (
-    <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
-      <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Horror Codex</h1>
-            <p className="text-xs text-[var(--text-muted)]">History</p>
-          </div>
-          <LogoutIconButton />
-        </div>
-      </header>
+    <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
 
       {!history || !summary ? (
         <Card>
@@ -83,12 +74,20 @@ export default async function HistoryPage() {
         <HistoryView items={history.items} summary={summary} />
       )}
 
+      <Card className="mt-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">History</p>
+          <LogoutIconButton />
+        </div>
+      </Card>
+
       <BottomNav
         activeId="history"
         items={[
           { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
+          { id: 'search', label: 'Search', href: '/search' },
         ]}
       />
     </main>

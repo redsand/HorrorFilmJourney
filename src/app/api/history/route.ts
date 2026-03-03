@@ -2,6 +2,7 @@ import { InteractionStatus } from '@prisma/client';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
+import { parseHistoryPackScope, resolveHistoryPackFilter } from '@/lib/history/pack-scope';
 
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAuth(request, prisma);
@@ -13,6 +14,7 @@ export async function GET(request: Request): Promise<Response> {
   const status = url.searchParams.get('status');
   const limitParam = url.searchParams.get('limit');
   const cursor = url.searchParams.get('cursor');
+  const packScope = parseHistoryPackScope(url.searchParams.get('packScope'));
 
   const limit = limitParam ? Number.parseInt(limitParam, 10) : 20;
   if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
@@ -22,11 +24,17 @@ export async function GET(request: Request): Promise<Response> {
   if (status && !Object.values(InteractionStatus).includes(status as InteractionStatus)) {
     return fail({ code: 'VALIDATION_ERROR', message: 'status must be a valid interaction status' }, 400);
   }
+  if (!packScope) {
+    return fail({ code: 'VALIDATION_ERROR', message: 'packScope must be "current" or "all"' }, 400);
+  }
+
+  const packFilter = await resolveHistoryPackFilter(prisma, auth.userId, packScope);
 
   const interactions = await prisma.userMovieInteraction.findMany({
     where: {
       userId: auth.userId,
       ...(status ? { status: status as InteractionStatus } : {}),
+      ...packFilter,
     },
     orderBy: { createdAt: 'desc' },
     take: limit,

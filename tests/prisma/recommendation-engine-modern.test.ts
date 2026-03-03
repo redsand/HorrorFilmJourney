@@ -22,14 +22,20 @@ beforeAll(() => {
 
 beforeEach(async () => {
   delete process.env.REC_ENGINE_MODE;
+  process.env.SEASONS_PACKS_ENABLED = 'true';
   await prisma.recommendationDiagnostics.deleteMany();
+  await prisma.nodeMovie.deleteMany();
+  await prisma.journeyNode.deleteMany();
   await prisma.evidencePacket.deleteMany();
   await prisma.movieEmbedding.deleteMany();
   await prisma.userEmbeddingSnapshot.deleteMany();
   await prisma.userMovieInteraction.deleteMany();
   await prisma.recommendationItem.deleteMany();
   await prisma.recommendationBatch.deleteMany();
+  await prisma.journeyProgress.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.genrePack.deleteMany();
+  await prisma.season.deleteMany();
   await prisma.movieRating.deleteMany();
   await prisma.movie.deleteMany();
   await prisma.user.deleteMany();
@@ -70,5 +76,113 @@ describe('RecommendationEngine modern mode', () => {
       candidatePool: 6,
       selectedCount: modern.cards.length,
     });
+  });
+
+  it('uses current journey node curated titles first for Season 1 Horror', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Curriculum User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: pack.id,
+      },
+    });
+
+    const curatedMovies = await Promise.all(
+      [8101, 8102, 8103, 8104, 8105].map((tmdbId, i) =>
+        prisma.movie.create({
+          data: { tmdbId, title: `Curated ${tmdbId}`, year: 1990 + i, posterUrl: `https://img/${tmdbId}.jpg`, genres: ['horror'] },
+        }),
+      ),
+    );
+    const fallbackMovies = await Promise.all(
+      [8201, 8202, 8203, 8204, 8205].map((tmdbId, i) =>
+        prisma.movie.create({
+          data: { tmdbId, title: `Fallback ${tmdbId}`, year: 2000 + i, posterUrl: `https://img/${tmdbId}.jpg`, genres: ['horror'] },
+        }),
+      ),
+    );
+    await Promise.all([...curatedMovies, ...fallbackMovies].map((movie) => addRatings(movie.id)));
+
+    const node = await prisma.journeyNode.create({
+      data: {
+        packId: pack.id,
+        slug: 'psychological-horror',
+        name: 'Psychological Horror',
+        learningObjective: 'obj',
+        whatToNotice: ['a', 'b', 'c'],
+        eraSubgenreFocus: '1990s',
+        spoilerPolicyDefault: 'NO_SPOILERS',
+        orderIndex: 1,
+      },
+    });
+    await prisma.nodeMovie.createMany({
+      data: curatedMovies.map((movie, index) => ({ nodeId: node.id, movieId: movie.id, rank: index + 1 })),
+    });
+    await prisma.journeyProgress.create({
+      data: {
+        userId: user.id,
+        packId: pack.id,
+        journeyNode: node.slug,
+        completedCount: 1,
+        masteryScore: 1,
+      },
+    });
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const batch = await generateRecommendationBatch(user.id, prisma);
+    const ids = batch.cards.map((card) => card.movie.tmdbId);
+
+    expect(ids).toHaveLength(5);
+    expect(ids.every((id) => curatedMovies.some((movie) => movie.tmdbId === id))).toBe(true);
+  });
+
+  it('avoids repeats from the last 10 recommended titles', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'No Repeat User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: pack.id,
+      },
+    });
+
+    const movies = await Promise.all(
+      Array.from({ length: 15 }, (_, i) => {
+        const tmdbId = 9101 + i;
+        return prisma.movie.create({
+          data: {
+            tmdbId,
+            title: `Pool ${tmdbId}`,
+            year: 1980 + i,
+            posterUrl: `https://img/${tmdbId}.jpg`,
+            genres: ['horror'],
+          },
+        });
+      }),
+    );
+    await Promise.all(movies.map((movie) => addRatings(movie.id)));
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const first = await generateRecommendationBatch(user.id, prisma);
+    const second = await generateRecommendationBatch(user.id, prisma);
+    const third = await generateRecommendationBatch(user.id, prisma);
+
+    const recentTen = new Set([...first.cards, ...second.cards].map((card) => card.movie.tmdbId));
+    expect(recentTen.size).toBe(10);
+    expect(third.cards).toHaveLength(5);
+    expect(third.cards.every((card) => !recentTen.has(card.movie.tmdbId))).toBe(true);
   });
 });

@@ -93,6 +93,18 @@ export async function POST(request: Request): Promise<Response> {
       },
     },
   });
+
+  if (status !== InteractionStatus.WANT_TO_WATCH) {
+    await prisma.userMovieInteraction.deleteMany({
+      where: {
+        userId: auth.userId,
+        movieId: movie.id,
+        status: InteractionStatus.WANT_TO_WATCH,
+        id: { not: interaction.id },
+      },
+    });
+  }
+
   if (status === InteractionStatus.WATCHED || status === InteractionStatus.ALREADY_SEEN) {
     try {
       const tasteService = new TasteComputationService(prisma);

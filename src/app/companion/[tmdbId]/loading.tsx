@@ -11,7 +11,7 @@ export default function CompanionLoading() {
   return (
     <main className="flex min-h-screen flex-1 items-center justify-center bg-[var(--bg)] px-4">
       <Card className="w-full max-w-[420px] p-5 shadow-[0_12px_34px_rgba(0,0,0,0.45)]">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Horror Codex</p>
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">CinemaCodex.com</p>
         <h1 className="mt-2 text-xl font-semibold">Loading companion mode...</h1>
         <p className="mt-2 text-sm text-[var(--text-muted)]">
           We are loading cast, ratings, and spoiler-policy sections for this movie.

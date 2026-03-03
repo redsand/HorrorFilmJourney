@@ -13,6 +13,27 @@ function getSessionSecret(): string {
   return process.env.SESSION_SECRET ?? 'dev-session-secret';
 }
 
+function isSecureCookie(): boolean {
+  if (process.env.SESSION_COOKIE_SECURE === 'true') {
+    return true;
+  }
+  if (process.env.SESSION_COOKIE_SECURE === 'false') {
+    return false;
+  }
+  return process.env.NODE_ENV === 'production';
+}
+
+function sameSiteValue(): 'Lax' | 'Strict' | 'None' {
+  const value = (process.env.SESSION_COOKIE_SAMESITE ?? 'Lax').toLowerCase();
+  if (value === 'strict') {
+    return 'Strict';
+  }
+  if (value === 'none') {
+    return 'None';
+  }
+  return 'Lax';
+}
+
 function base64UrlEncode(value: string): string {
   return Buffer.from(value, 'utf8').toString('base64url');
 }
@@ -58,11 +79,15 @@ export function createSessionToken(userId: string, isAdmin: boolean): string {
 }
 
 export function buildSessionCookie(token: string): string {
-  return `${SESSION_COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`;
+  const secure = isSecureCookie() ? '; Secure' : '';
+  const sameSite = sameSiteValue();
+  return `${SESSION_COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=${SESSION_TTL_SECONDS}${secure}`;
 }
 
 export function clearSessionCookie(): string {
-  return `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`;
+  const secure = isSecureCookie() ? '; Secure' : '';
+  const sameSite = sameSiteValue();
+  return `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=0${secure}`;
 }
 
 export function readSessionFromRequest(request: Request): SessionPayload | null {

@@ -8,6 +8,7 @@ import {
   DEFAULT_SEASON_NAME,
   DEFAULT_SEASON_SLUG,
 } from '@/lib/packs/constants';
+import { getThemeConfigForPackSlug } from '@/lib/theme/themes';
 
 export type EffectivePack = {
   packId: string | null;
@@ -115,12 +116,19 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
 
 export async function listAvailablePacks(prisma: PrismaClient): Promise<{
   activeSeason: { slug: string; name: string };
-  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string; seasonLabel: string; themeKey: string }>;
 }> {
   if (!seasonsPacksEnabled()) {
     return {
       activeSeason: { slug: DEFAULT_SEASON_SLUG, name: DEFAULT_SEASON_NAME },
-      packs: [{ slug: DEFAULT_PACK_SLUG, name: DEFAULT_PACK_NAME, isEnabled: true, seasonSlug: DEFAULT_SEASON_SLUG }],
+      packs: [{
+        slug: DEFAULT_PACK_SLUG,
+        name: DEFAULT_PACK_NAME,
+        isEnabled: true,
+        seasonSlug: DEFAULT_SEASON_SLUG,
+        seasonLabel: DEFAULT_SEASON_NAME,
+        themeKey: getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
+      }],
     };
   }
 
@@ -150,8 +158,16 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
         name: pack.name,
         isEnabled: pack.isEnabled,
         seasonSlug: pack.season.slug,
+        seasonLabel: activeSeason?.name ?? DEFAULT_SEASON_NAME,
+        themeKey: getThemeConfigForPackSlug(pack.slug).themeName,
       }))
-      : [{ slug: DEFAULT_PACK_SLUG, name: DEFAULT_PACK_NAME, isEnabled: true, seasonSlug: DEFAULT_SEASON_SLUG }],
+      : [{
+        slug: DEFAULT_PACK_SLUG,
+        name: DEFAULT_PACK_NAME,
+        isEnabled: true,
+        seasonSlug: DEFAULT_SEASON_SLUG,
+        seasonLabel: DEFAULT_SEASON_NAME,
+        themeKey: getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
+      }],
   };
 }
-

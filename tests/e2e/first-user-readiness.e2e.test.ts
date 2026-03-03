@@ -23,6 +23,7 @@ const { POST: POST_INTERACTIONS } = await import('@/app/api/interactions/route')
 const { GET: GET_HISTORY } = await import('@/app/api/history/route');
 const { GET: GET_HISTORY_SUMMARY } = await import('@/app/api/history/summary/route');
 const { GET: GET_COMPANION } = await import('@/app/api/companion/route');
+const { PATCH: PATCH_PROFILE_PREFERENCES } = await import('@/app/api/profile/preferences/route');
 
 beforeAll(() => {
   prismaDbPush(databaseUrl);
@@ -32,6 +33,7 @@ beforeEach(async () => {
   process.env.ADMIN_EMAIL = 'admin@local.test';
   process.env.ADMIN_PASSWORD = 'dev-admin-password';
   process.env.USE_LLM = 'false';
+  process.env.SEASONS_PACKS_ENABLED = 'false';
   delete process.env.LLM_PROVIDER;
 
   await prisma.movieStreamingCache.deleteMany();
@@ -41,6 +43,9 @@ beforeEach(async () => {
   await prisma.recommendationBatch.deleteMany();
   await prisma.userProfile.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.journeyProgress.deleteMany();
+  await prisma.genrePack.deleteMany();
+  await prisma.season.deleteMany();
   await prisma.movieRating.deleteMany();
   await prisma.evidencePacket.deleteMany();
   await prisma.movie.deleteMany();
@@ -344,6 +349,65 @@ describe('first real user readiness e2e', () => {
     expect(summaryABody.data.countsByStatus.WATCHED).toBe(1);
     expect(summaryABody.data.countsByStatus.ALREADY_SEEN).toBe(3);
     expect(summaryABody.data.avgRatingWatchedOrAlreadySeen).toBe(3.5);
+
+    process.env.SEASONS_PACKS_ENABLED = 'true';
+    await prisma.season.upsert({
+      where: { slug: 'season-1' },
+      create: { slug: 'season-1', name: 'Season 1', isActive: true },
+      update: { isActive: true },
+    });
+    await prisma.genrePack.upsert({
+      where: { slug: 'thriller' },
+      create: {
+        slug: 'thriller',
+        name: 'Thriller',
+        seasonId: (await prisma.season.findUniqueOrThrow({ where: { slug: 'season-1' } })).id,
+        isEnabled: true,
+        primaryGenre: 'thriller',
+        description: 'Thriller pack',
+      },
+      update: {
+        isEnabled: true,
+        primaryGenre: 'thriller',
+      },
+    });
+
+    const switchPack = await PATCH_PROFILE_PREFERENCES(
+      new Request('http://localhost/api/profile/preferences', {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          cookie: userACookie,
+        },
+        body: JSON.stringify({ selectedPackSlug: 'thriller' }),
+      }),
+    );
+    expect(switchPack.status).toBe(200);
+
+    const historyCurrentPack = await GET_HISTORY(
+      new Request('http://localhost/api/history', {
+        headers: { cookie: userACookie },
+      }),
+    );
+    const historyCurrentPackBody = await historyCurrentPack.json();
+    expect(historyCurrentPackBody.data.items).toHaveLength(0);
+
+    const historyAllPacks = await GET_HISTORY(
+      new Request('http://localhost/api/history?packScope=all', {
+        headers: { cookie: userACookie },
+      }),
+    );
+    const historyAllPacksBody = await historyAllPacks.json();
+    expect((historyAllPacksBody.data.items as Array<{ interactionId: string }>).length).toBeGreaterThanOrEqual(4);
+
+    const summaryCurrentPack = await GET_HISTORY_SUMMARY(
+      new Request('http://localhost/api/history/summary', {
+        headers: { cookie: userACookie },
+      }),
+    );
+    const summaryCurrentPackBody = await summaryCurrentPack.json();
+    expect(summaryCurrentPackBody.data.countsByStatus.WATCHED).toBe(0);
+    expect(summaryCurrentPackBody.data.countsByStatus.ALREADY_SEEN).toBe(0);
 
     const companionNoSpoilers = await GET_COMPANION(
       new Request(`http://localhost/api/companion?tmdbId=${cardsA[4]!.movie.tmdbId}&spoilerPolicy=NO_SPOILERS`, {

@@ -8,7 +8,7 @@ export function LogoutIconButton() {
   return (
     <button
       aria-label="Logout"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text)] hover:border-[rgba(193,18,31,0.55)] hover:text-[var(--accent)]"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-surface)] text-[var(--cc-text)] hover:border-[var(--cc-accent-2)] hover:text-[var(--cc-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cc-focus)]"
       onClick={async () => {
         await fetch('/api/auth/logout', {
           method: 'POST',
@@ -35,4 +35,3 @@ export function LogoutIconButton() {
     </button>
   );
 }
-

@@ -2,12 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET, POST } from '@/app/api/users/route';
 import { makeSessionCookie } from '../helpers/session-cookie';
 
-const { createMock, findManyMock } = vi.hoisted(() => ({
+const { createMock, findManyMock, userFindUniqueMock } = vi.hoisted(() => ({
   createMock: vi.fn(),
   findManyMock: vi.fn(),
+  userFindUniqueMock: vi.fn(),
 }));
 const { findCredentialMock } = vi.hoisted(() => ({
   findCredentialMock: vi.fn(),
+}));
+const { auditEventCreateMock } = vi.hoisted(() => ({
+  auditEventCreateMock: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
@@ -20,9 +24,13 @@ vi.mock('@/lib/prisma', () => ({
     user: {
       create: createMock,
       findMany: findManyMock,
+      findUnique: userFindUniqueMock,
     },
     userCredential: {
       findUnique: findCredentialMock,
+    },
+    auditEvent: {
+      create: auditEventCreateMock,
     },
   },
 }));
@@ -32,6 +40,10 @@ describe('/api/users route', () => {
     createMock.mockReset();
     findManyMock.mockReset();
     findCredentialMock.mockReset();
+    userFindUniqueMock.mockReset();
+    userFindUniqueMock.mockResolvedValue({ id: 'admin_1' });
+    auditEventCreateMock.mockReset();
+    auditEventCreateMock.mockResolvedValue({});
   });
 
   it('returns 401 for POST when admin session is missing', async () => {

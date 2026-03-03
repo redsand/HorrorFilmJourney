@@ -8,9 +8,10 @@ Run a structured first-pass user test on the narrative recommendation loop and c
 
 1. Configure environment variables:
    - `DATABASE_URL`
-   - `INITIAL_ADMIN_EMAIL`
-   - `INITIAL_ADMIN_PASSWORD`
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD`
    - `SESSION_SECRET`
+   - `SEASONS_PACKS_ENABLED=true` (packs launch mode)
    - `USE_LLM=false` for deterministic testing
 2. Initialize schema, bootstrap admin, and seed starter catalog:
 
@@ -28,11 +29,14 @@ npm run dev
 
 1. Login with admin account:
    - Open `/login`
-   - Use `INITIAL_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD`
+   - Use `ADMIN_EMAIL` + `ADMIN_PASSWORD`
 2. Create a test user:
    - Open `/signup`
    - Create a non-admin tester account and login as that user
 3. Run the journey loop in UI:
+   - Confirm pack selection appears first (`PACK_SELECTION_NEEDED`)
+   - Select `Horror` pack
+   - Confirm Season 1 framing appears in the pack selection copy
    - Confirm onboarding appears (`ONBOARDING_NEEDED` behavior)
    - Submit onboarding (tolerance + pace)
    - Generate recommendation bundle (5 cards)
@@ -60,6 +64,9 @@ npm run dev
   - recommendation generation feels slow or acceptable
 - Trust signals:
   - usefulness of evidence snippets and citation hints
+- Curriculum feel:
+  - whether recommendations feel like a guided sequence instead of random picks
+  - whether node-to-node progression is understandable
 
 ## Quick Recovery Commands
 
@@ -74,6 +81,7 @@ npm run validate:rc
 - [ ] `/signup` creates a user and lands on Journey
 - [ ] Journey page loads without manual auth headers
 - [ ] Onboarding submit works and transitions to recommendations
+- [ ] Pack selection screen appears first when packs are enabled
 - [ ] Card actions (`Watch`, `Already seen`, `Skip`) succeed while authenticated
 - [ ] `/history` loads user-scoped interactions
 - [ ] `/profile` shows display name, email, role badge, and logout
@@ -81,3 +89,10 @@ npm run validate:rc
 - [ ] Non-admin account does not see `/admin/users` entry
 - [ ] `/admin/users` supports search, create, and edit flows
 - [ ] Admin demotion of the last admin is blocked with visible safety message
+- [ ] `/admin/packs` lists seasons/packs and blocks disabling the last enabled pack
+- [ ] `/admin/curriculum` shows node coverage and missing metadata warnings
+
+## Season 1 references
+
+- Curriculum definition: `docs/season/season-1-horror.md`
+- Engine behavior: node-curated titles are preferred before pack-level fallback

@@ -2,21 +2,25 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/history/route';
 import { makeSessionCookie } from '../helpers/session-cookie';
 
-const { userFindUniqueMock, historyFindManyMock } = vi.hoisted(() => ({
+const { userFindUniqueMock, userProfileFindUniqueMock, historyFindManyMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
+  userProfileFindUniqueMock: vi.fn(),
   historyFindManyMock: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
+    userProfile: { findUnique: userProfileFindUniqueMock },
     userMovieInteraction: { findMany: historyFindManyMock },
   },
 }));
 
 describe('GET /api/history', () => {
   beforeEach(() => {
+    process.env.SEASONS_PACKS_ENABLED = 'false';
     userFindUniqueMock.mockReset();
+    userProfileFindUniqueMock.mockReset();
     historyFindManyMock.mockReset();
   });
 
@@ -120,5 +124,41 @@ describe('GET /api/history', () => {
       movie: { tmdbId: 3, title: 'Movie 3', year: 2003, posterUrl: null },
     });
     expect(payload.data.pageInfo.nextCursor).toBe('i2');
+  });
+
+  it('returns 400 for invalid packScope', async () => {
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    const request = new Request('http://localhost/api/history?packScope=invalid', {
+      headers: { cookie: makeSessionCookie('user_1') },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('scopes to selected pack when seasons/packs is enabled', async () => {
+    process.env.SEASONS_PACKS_ENABLED = 'true';
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    userProfileFindUniqueMock.mockResolvedValue({ selectedPackId: 'pack_horror' });
+    historyFindManyMock.mockResolvedValue([]);
+
+    const request = new Request('http://localhost/api/history', {
+      headers: { cookie: makeSessionCookie('user_1') },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(200);
+    expect(historyFindManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          userId: 'user_1',
+          recommendationItem: {
+            batch: {
+              packId: 'pack_horror',
+            },
+          },
+        }),
+      }),
+    );
   });
 });
