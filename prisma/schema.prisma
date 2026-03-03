@@ -187,6 +187,7 @@ model UserMovieInteraction {
   id                   String            @id @default(cuid())
   userId               String
   movieId              String
+  packId               String?
   status               InteractionStatus
   rating               Int?
   intensity            Int?
@@ -200,9 +201,11 @@ model UserMovieInteraction {
 
   user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   movie                Movie             @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  pack                 GenrePack?        @relation(fields: [packId], references: [id], onDelete: SetNull)
   recommendationItem   RecommendationItem? @relation(fields: [recommendationItemId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
+  @@index([userId, packId, createdAt])
 }
 
 model RecommendationBatch {
@@ -428,6 +431,7 @@ model GenrePack {
   batches  RecommendationBatch[]
   progress JourneyProgress[]
   nodes    JourneyNode[]
+  interactions UserMovieInteraction[]
 }
 
 model JourneyNode {

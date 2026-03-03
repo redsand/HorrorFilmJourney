@@ -138,6 +138,7 @@ describe('POST /api/interactions', () => {
       where: {
         userId: 'user_1',
         movieId: 'movie_1',
+        packId: 'pack_horror',
         status: 'WANT_TO_WATCH',
         id: { not: 'interaction_1' },
       },

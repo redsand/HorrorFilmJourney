@@ -5,13 +5,17 @@ import { FloatingFeedbackButton } from '@/components/feedback/FloatingFeedbackBu
 import { CabinetFrame } from '@/components/layout/CabinetFrame';
 import { HorrorMistOverlay } from '@/components/layout/HorrorMistOverlay';
 import { getActiveThemeForRequest } from '@/lib/theme/getActiveThemeForRequest';
+import { getActivePackForRequest } from '@/lib/packs/getActivePackForRequest';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: 'Horror Film Journey',
-  description: 'Mobile-first horror companion experience',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { seasonName, seasonDescription } = await getActivePackForRequest();
+  return {
+    title: `CinemaCodex.com - ${seasonName}: ${seasonDescription}`,
+    description: 'Guided cinematic intelligence platform',
+  };
+}
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const { theme } = await getActiveThemeForRequest();

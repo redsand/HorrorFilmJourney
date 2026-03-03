@@ -48,54 +48,57 @@ export async function GET(request: Request): Promise<Response> {
 
     const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
     const primaryGenre = effectivePack.primaryGenre.trim().toLowerCase();
+    const packScope = effectivePack.packId ? { packId: effectivePack.packId } : {};
 
     const watchlistInteractions = await prisma.userMovieInteraction.findMany({
-    where: {
-      userId: auth.userId,
-      status: InteractionStatus.WANT_TO_WATCH,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    include: {
-      movie: {
-        select: {
-          id: true,
-          tmdbId: true,
-          title: true,
-          year: true,
-          posterUrl: true,
-          genres: true,
-          nodeAssignments: {
-            select: {
-              node: {
-                select: {
-                  packId: true,
+      where: {
+        userId: auth.userId,
+        status: InteractionStatus.WANT_TO_WATCH,
+        ...packScope,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        movie: {
+          select: {
+            id: true,
+            tmdbId: true,
+            title: true,
+            year: true,
+            posterUrl: true,
+            genres: true,
+            nodeAssignments: {
+              select: {
+                node: {
+                  select: {
+                    packId: true,
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  });
+    });
 
     const movieIds = Array.from(new Set(watchlistInteractions.map((item) => item.movieId)));
     const latestByMovie = new Map<string, InteractionStatus>();
     if (movieIds.length > 0) {
       const allRecent = await prisma.userMovieInteraction.findMany({
-      where: {
-        userId: auth.userId,
-        movieId: { in: movieIds },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        movieId: true,
-        status: true,
-      },
-    });
+        where: {
+          userId: auth.userId,
+          movieId: { in: movieIds },
+          ...packScope,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          movieId: true,
+          status: true,
+        },
+      });
 
       for (const row of allRecent) {
         if (!latestByMovie.has(row.movieId)) {

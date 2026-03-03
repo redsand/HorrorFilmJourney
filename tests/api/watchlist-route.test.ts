@@ -103,6 +103,18 @@ describe('GET /api/watchlist', () => {
     expect(body.data.total).toBe(1);
     expect(body.data.page).toBe(1);
     expect(body.data.totalPages).toBe(1);
+    expect(watchlistFindManyMock).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({
+        userId: 'user_1',
+        status: 'WANT_TO_WATCH',
+        packId: 'pack_1',
+      }),
+    }));
+    expect(allRecentFindManyMock).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({
+        userId: 'user_1',
+        packId: 'pack_1',
+      }),
+    }));
   });
 });
-

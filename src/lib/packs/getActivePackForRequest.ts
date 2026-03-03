@@ -1,6 +1,11 @@
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { readSessionFromRequest } from '@/lib/auth/session';
+import {
+  DEFAULT_PACK_SLUG,
+  DEFAULT_SEASON_DESCRIPTION,
+  DEFAULT_SEASON_NAME,
+} from '@/lib/packs/constants';
 
 function getCookieHeader(): string | null {
   try {
@@ -10,10 +15,18 @@ function getCookieHeader(): string | null {
   }
 }
 
-export async function getActivePackForRequest(): Promise<{ packSlug: string }> {
+export async function getActivePackForRequest(): Promise<{
+  packSlug: string;
+  seasonName: string;
+  seasonDescription: string;
+}> {
   const cookie = getCookieHeader();
   if (!cookie) {
-    return { packSlug: 'horror' };
+    return {
+      packSlug: DEFAULT_PACK_SLUG,
+      seasonName: DEFAULT_SEASON_NAME,
+      seasonDescription: DEFAULT_SEASON_DESCRIPTION,
+    };
   }
 
   const request = new Request('http://local.cinemacodex/layout', {
@@ -21,7 +34,11 @@ export async function getActivePackForRequest(): Promise<{ packSlug: string }> {
   });
   const session = readSessionFromRequest(request);
   if (!session) {
-    return { packSlug: 'horror' };
+    return {
+      packSlug: DEFAULT_PACK_SLUG,
+      seasonName: DEFAULT_SEASON_NAME,
+      seasonDescription: DEFAULT_SEASON_DESCRIPTION,
+    };
   }
 
   const profile = await prisma.userProfile.findUnique({
@@ -31,6 +48,12 @@ export async function getActivePackForRequest(): Promise<{ packSlug: string }> {
         select: {
           slug: true,
           isEnabled: true,
+          season: {
+            select: {
+              name: true,
+              description: true,
+            },
+          },
         },
       },
     },
@@ -38,6 +61,17 @@ export async function getActivePackForRequest(): Promise<{ packSlug: string }> {
 
   const packSlug = profile?.selectedPack?.isEnabled
     ? profile.selectedPack.slug
-    : 'horror';
-  return { packSlug };
+    : DEFAULT_PACK_SLUG;
+  const seasonName = profile?.selectedPack?.isEnabled
+    ? profile.selectedPack.season.name
+    : DEFAULT_SEASON_NAME;
+  const seasonDescription = profile?.selectedPack?.isEnabled
+    ? (profile.selectedPack.season.description?.trim() || DEFAULT_SEASON_DESCRIPTION)
+    : DEFAULT_SEASON_DESCRIPTION;
+
+  return {
+    packSlug,
+    seasonName,
+    seasonDescription,
+  };
 }

@@ -95,5 +95,12 @@ describe('GET /api/search/movies', () => {
         inWatchlist: true,
       },
     ]);
+    expect(interactionFindManyMock).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({
+        userId: 'user_1',
+        status: 'WANT_TO_WATCH',
+        packId: 'pack_1',
+      }),
+    }));
   });
 });

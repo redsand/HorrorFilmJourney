@@ -45,6 +45,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
   const primaryGenre = effectivePack.primaryGenre.trim().toLowerCase();
+  const packScope = effectivePack.packId ? { packId: effectivePack.packId } : {};
 
   const movies = await prisma.movie.findMany({
     where: {
@@ -98,6 +99,7 @@ export async function GET(request: Request): Promise<Response> {
         userId: auth.userId,
         movieId: { in: movieIds },
         status: InteractionStatus.WANT_TO_WATCH,
+        ...packScope,
       },
       select: {
         movieId: true,
