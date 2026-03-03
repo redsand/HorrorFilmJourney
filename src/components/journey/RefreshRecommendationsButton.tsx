@@ -44,6 +44,9 @@ export function RefreshRecommendationsButton({ label }: RefreshRecommendationsBu
         }}
         type="button"
       >
+        <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+          <path d="M20 11a8 8 0 1 0 2.3 5.7M20 4v7h-7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        </svg>
         {busy ? 'Refreshing…' : label}
       </Button>
       {busy ? <p className="text-xs text-[var(--text-muted)]">Generating a new recommendation batch…</p> : null}

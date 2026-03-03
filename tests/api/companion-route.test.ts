@@ -6,6 +6,7 @@ const {
   userFindUniqueMock,
   movieFindUniqueMock,
   evidenceFindManyMock,
+  movieStreamingCacheFindUniqueMock,
   companionCacheFindUniqueMock,
   companionCacheUpsertMock,
   getLlmProviderFromEnvMock,
@@ -14,6 +15,7 @@ const {
   userFindUniqueMock: vi.fn(),
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
+  movieStreamingCacheFindUniqueMock: vi.fn(),
   companionCacheFindUniqueMock: vi.fn(),
   companionCacheUpsertMock: vi.fn(),
   getLlmProviderFromEnvMock: vi.fn(),
@@ -25,6 +27,7 @@ vi.mock('@/lib/prisma', () => ({
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
+    movieStreamingCache: { findUnique: movieStreamingCacheFindUniqueMock },
     companionCache: { findUnique: companionCacheFindUniqueMock, upsert: companionCacheUpsertMock },
   },
 }));
@@ -38,19 +41,23 @@ describe('GET /api/companion', () => {
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
+    movieStreamingCacheFindUniqueMock.mockReset();
     companionCacheFindUniqueMock.mockReset();
     companionCacheUpsertMock.mockReset();
     getLlmProviderFromEnvMock.mockReset();
     generateJsonMock.mockReset();
     companionCacheFindUniqueMock.mockResolvedValue(null);
+    movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
     companionCacheUpsertMock.mockResolvedValue(null);
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
+    delete process.env.TMDB_API_KEY;
   });
 
   afterEach(() => {
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
+    delete process.env.TMDB_API_KEY;
   });
 
   it('returns 400 when tmdbId is missing', async () => {
@@ -121,6 +128,7 @@ describe('GET /api/companion', () => {
     ).toBe(true);
     expect(body.data.spoilerPolicy).toBe('NO_SPOILERS');
     expect(Array.isArray(body.data.evidence)).toBe(true);
+    expect(body.data.streaming).toEqual({ region: 'US', offers: [] });
   });
 
   it('changes content by spoilerPolicy', async () => {
@@ -268,5 +276,74 @@ describe('GET /api/companion', () => {
     expect(light.data.sections.productionNotes.some((line: string) => line.includes('Act I-II summary: The setup and escalation'))).toBe(true);
     expect(full.data.sections.productionNotes.some((line: string) => line.includes('includes ending'))).toBe(true);
     expect(full.data.sections.trivia).toEqual(['T1', 'T2', 'T3', 'T4', 'T5']);
+  });
+
+  it('generates once and caches all spoiler policies together when fully populated', async () => {
+    process.env.LLM_PROVIDER = 'gemini';
+    process.env.TMDB_API_KEY = 'tmdb-test-key';
+    getLlmProviderFromEnvMock.mockReturnValue({
+      name: () => 'gemini',
+      generateJson: generateJsonMock,
+    });
+    generateJsonMock.mockResolvedValue({
+      lightSummary: 'Act I and II summary content.',
+      fullSummary: 'Full arc summary including ending.',
+      trivia: ['T1', 'T2', 'T3', 'T4', 'T5'],
+    });
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValue({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: 'Director A',
+      castTop: [{ name: 'Actor A', role: 'Lead' }],
+      ratings: [
+        { source: 'IMDB', value: 7.1, scale: '10', rawValue: '7.1/10' },
+        { source: 'ROTTEN_TOMATOES', value: 83, scale: '100', rawValue: '83%' },
+      ],
+    });
+    evidenceFindManyMock.mockResolvedValue([]);
+
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        id: 123,
+        title: 'Companion Test',
+        release_date: '1999-10-10',
+        poster_path: '/poster.jpg',
+        overview: 'A family arrives and confronts a rising threat with escalating stakes.',
+        tagline: 'Fear returns.',
+        runtime: 102,
+        genres: [{ id: 27, name: 'Horror' }],
+        production_countries: [{ iso_3166_1: 'US', name: 'United States' }],
+        spoken_languages: [{ iso_639_1: 'en', english_name: 'English' }],
+        vote_average: 7.4,
+        vote_count: 2100,
+        popularity: 51.2,
+        credits: {
+          cast: [{ name: 'Actor A', character: 'Lead' }],
+          crew: [{ name: 'Director A', job: 'Director' }],
+        },
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
+        headers: {
+          cookie: makeSessionCookie('user_1'),
+        },
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(generateJsonMock).toHaveBeenCalledTimes(1);
+    expect(companionCacheUpsertMock).toHaveBeenCalledTimes(3);
+    const policiesWritten = companionCacheUpsertMock.mock.calls
+      .map((call) => call[0]?.where?.movieId_spoilerPolicy?.spoilerPolicy)
+      .sort();
+    expect(policiesWritten).toEqual(['FULL', 'LIGHT', 'NO_SPOILERS']);
   });
 });

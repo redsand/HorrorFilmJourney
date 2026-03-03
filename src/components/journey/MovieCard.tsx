@@ -128,6 +128,9 @@ export function MovieCard({
 
           <div className="grid grid-cols-1 gap-2 pt-2">
             <Button className="min-h-11 text-base" onClick={() => setPollStatus('WATCHED')} type="button">
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7-11-7Z" fill="currentColor" />
+              </svg>
               Watch
             </Button>
             <Button
@@ -136,10 +139,14 @@ export function MovieCard({
               type="button"
               variant="secondary"
             >
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M9 12.75 11.5 15 16 9.75" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
               Already seen
             </Button>
             <button
-              className="min-h-11 rounded-xl border border-[var(--border)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--text-muted)]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[var(--border)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--text-muted)]"
               disabled={skipPending}
               onClick={async () => {
                 setSkipPending(true);
@@ -156,12 +163,19 @@ export function MovieCard({
               }}
               type="button"
             >
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M4 6h16M7 6v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6M10 10v6M14 10v6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+              </svg>
               {skipPending ? 'Skipping…' : 'Skip'}
             </button>
             <Link
-              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2 text-sm font-semibold"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2 text-sm font-semibold"
               href={`/companion/${card.movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
             >
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M12 3 4 7v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                <path d="M9.5 12.5 11 14l3.5-3.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+              </svg>
               Companion
             </Link>
           </div>

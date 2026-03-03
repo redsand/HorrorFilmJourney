@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import { BottomNav, Card, Chip, PosterImage, RatingBadges } from '@/components/ui';
+import { BottomNav, Card, Chip, LogoutIconButton, PosterImage, RatingBadges } from '@/components/ui';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 
@@ -10,6 +10,17 @@ type CompanionResponse = {
     title: string;
     year?: number;
     posterUrl: string;
+  };
+  metadata: {
+    genres: string[];
+    runtimeText: string;
+    countries: string[];
+    languages: string[];
+    tagline?: string;
+    overview?: string;
+    popularity?: number;
+    tmdbVoteAverage?: number;
+    tmdbVoteCount?: number;
   };
   credits: {
     director?: string;
@@ -27,7 +38,17 @@ type CompanionResponse = {
     scale: '10' | '100' | string;
     rawValue?: string;
   }>;
+  streaming: {
+    region: string;
+    offers: Array<{
+      provider: string;
+      type: 'subscription' | 'rent' | 'buy' | 'free';
+      url?: string;
+      price?: string;
+    }>;
+  };
   spoilerPolicy: SpoilerPolicy;
+  evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: string }>;
 };
 
 const spoilerPolicyLabel: Record<SpoilerPolicy, string> = {
@@ -41,6 +62,33 @@ const spoilerPolicyWarning: Record<SpoilerPolicy, string> = {
   LIGHT: 'Light spoilers mode: includes beginning and middle details only.',
   FULL: 'Full spoilers mode: includes ending and major reveals.',
 };
+
+const SUMMARY_PREFIXES = [
+  'Spoiler-safe summary:',
+  'Act I-II summary:',
+  'Full plot summary (includes ending):',
+];
+
+function extractSummaryLine(lines: string[]): string | null {
+  return lines.find((line) => SUMMARY_PREFIXES.some((prefix) => line.startsWith(prefix))) ?? null;
+}
+
+function stripSummaryPrefix(line: string): string {
+  for (const prefix of SUMMARY_PREFIXES) {
+    if (line.startsWith(prefix)) {
+      return line.slice(prefix.length).trim();
+    }
+  }
+  return line.trim();
+}
+
+function toSummaryBullets(summaryText: string): string[] {
+  return summaryText
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .slice(0, 5);
+}
 
 function getOrigin(): string {
   const h = headers();
@@ -80,12 +128,19 @@ export default async function CompanionPage({
   }
 
   const spoilerTabs: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
+  const summaryLine = payload ? extractSummaryLine(payload.sections.productionNotes) : null;
+  const summaryBullets = summaryLine ? toSummaryBullets(stripSummaryPrefix(summaryLine)) : [];
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
       <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <h1 className="text-xl font-semibold">Horror Codex</h1>
-        <p className="text-xs text-[var(--text-muted)]">Companion Mode</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold">Horror Codex</h1>
+            <p className="text-xs text-[var(--text-muted)]">Companion Mode</p>
+          </div>
+          <LogoutIconButton />
+        </div>
       </header>
 
       {!payload ? (
@@ -95,28 +150,71 @@ export default async function CompanionPage({
       ) : (
         <>
           <Card className="overflow-hidden p-0">
-            <div className="relative aspect-[16/9] w-full bg-[#111116]">
+            <div className="relative aspect-[2/3] w-full bg-[#111116]">
               <PosterImage
                 alt={`${payload.movie.title} poster`}
-                className="object-cover"
+                className="object-contain"
                 fill
                 sizes="(max-width: 420px) 100vw, 420px"
                 src={payload.movie.posterUrl}
               />
             </div>
-            <div className="space-y-3 p-4">
+            <div className="space-y-4 p-4 leading-relaxed">
               <div>
                 <h2 className="text-2xl font-semibold">{payload.movie.title}</h2>
                 <p className="text-sm text-[var(--text-muted)]">{payload.movie.year ?? 'Unknown year'}</p>
               </div>
-              <div>
-                <Chip tone="accent">{spoilerPolicyLabel[spoilerPolicy]}</Chip>
-              </div>
 
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Ratings</p>
+              <div>
                 <RatingBadges ratings={payload.ratings} />
               </div>
+
+              <div className="space-y-1.5">
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Where to watch</p>
+                <div className="flex flex-wrap gap-2">
+                  {payload.streaming.offers.length > 0 ? (
+                    payload.streaming.offers.slice(0, 8).map((offer) => (
+                      <Chip key={`${offer.provider}-${offer.type}-${offer.price ?? ''}`}>
+                        {offer.provider}
+                        {offer.type ? ` • ${offer.type}` : ''}
+                        {offer.price ? ` • ${offer.price}` : ''}
+                      </Chip>
+                    ))
+                  ) : (
+                    <Chip>No streaming availability cached for {payload.streaming.region}.</Chip>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Movie details</p>
+                <div className="flex flex-wrap gap-2">
+                  {payload.metadata.genres.length > 0
+                    ? payload.metadata.genres.map((genre) => <Chip key={genre}>{genre}</Chip>)
+                    : <Chip>Genres unavailable</Chip>}
+                </div>
+                <div className="grid grid-cols-1 gap-1 text-sm text-[var(--text-muted)]">
+                  <p><span className="text-[var(--text)]">Runtime:</span> {payload.metadata.runtimeText}</p>
+                  <p><span className="text-[var(--text)]">Languages:</span> {payload.metadata.languages.length > 0 ? payload.metadata.languages.join(', ') : 'Unknown'}</p>
+                  <p><span className="text-[var(--text)]">Countries:</span> {payload.metadata.countries.length > 0 ? payload.metadata.countries.join(', ') : 'Unknown'}</p>
+                  {typeof payload.metadata.popularity === 'number' ? (
+                    <p><span className="text-[var(--text)]">Popularity:</span> {payload.metadata.popularity}</p>
+                  ) : null}
+                  {typeof payload.metadata.tmdbVoteAverage === 'number' ? (
+                    <p>
+                      <span className="text-[var(--text)]">TMDB:</span> {payload.metadata.tmdbVoteAverage}/10
+                      {typeof payload.metadata.tmdbVoteCount === 'number' ? ` (${payload.metadata.tmdbVoteCount.toLocaleString()} votes)` : ''}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+
+              {payload.metadata.tagline ? (
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Tagline</p>
+                  <p className="text-sm italic text-[var(--text-muted)]">&ldquo;{payload.metadata.tagline}&rdquo;</p>
+                </div>
+              ) : null}
 
               <div className="grid grid-cols-3 gap-2">
                 {spoilerTabs.map((tab) => (
@@ -140,7 +238,18 @@ export default async function CompanionPage({
                 {spoilerPolicyWarning[spoilerPolicy]}
               </div>
 
-              <div className="space-y-2 text-base">
+              {summaryBullets.length > 0 ? (
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
+                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{spoilerPolicyLabel[spoilerPolicy]} Summary</p>
+                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+                    {summaryBullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              <div className="space-y-2.5 text-base leading-relaxed">
                 <p><span className="text-[var(--text-muted)]">Director:</span> {payload.credits.director ?? 'Unknown'}</p>
                 <div className="flex flex-wrap gap-2">
                   {payload.credits.cast.length > 0
@@ -148,11 +257,30 @@ export default async function CompanionPage({
                     : <Chip>No cast metadata</Chip>}
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Sources</p>
+                {payload.evidence.length > 0 ? (
+                  <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+                    {payload.evidence.slice(0, 5).map((item) => (
+                      <li key={`${item.sourceName}-${item.url}`}>
+                        <span className="font-medium">{item.sourceName}</span>
+                        {item.snippet ? `: ${item.snippet}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-[var(--text-muted)]">No evidence packets available for this title.</p>
+                )}
+              </div>
             </div>
           </Card>
 
           {[
-            { title: 'Production', lines: payload.sections.productionNotes },
+            {
+              title: 'Production',
+              lines: payload.sections.productionNotes.filter((line) => !SUMMARY_PREFIXES.some((prefix) => line.startsWith(prefix))),
+            },
             { title: 'Historical', lines: payload.sections.historicalNotes },
             { title: 'Reception', lines: payload.sections.receptionNotes },
             { title: 'Trivia', lines: payload.sections.trivia },

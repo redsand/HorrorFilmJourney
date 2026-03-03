@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/auth/guards';
 import { getLlmProviderFromEnv } from '@/ai';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
+const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
 type CreditCast = { name: string; role?: string };
 type RatingRow = { source: string; value: number; scale: string; rawValue: string | null };
 type CompanionLlmOutput = {
@@ -18,6 +19,17 @@ type CompanionResponsePayload = {
     year?: number;
     posterUrl: string;
   };
+  metadata: {
+    genres: string[];
+    runtimeText: string;
+    countries: string[];
+    languages: string[];
+    tagline?: string;
+    overview?: string;
+    popularity?: number;
+    tmdbVoteAverage?: number;
+    tmdbVoteCount?: number;
+  };
   credits: {
     director?: string;
     cast: CreditCast[];
@@ -29,6 +41,15 @@ type CompanionResponsePayload = {
     trivia: string[];
   };
   ratings: RatingRow[];
+  streaming: {
+    region: string;
+    offers: Array<{
+      provider: string;
+      type: 'subscription' | 'rent' | 'buy' | 'free';
+      url?: string;
+      price?: string;
+    }>;
+  };
   spoilerPolicy: SpoilerPolicy;
   evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: Date }>;
 };
@@ -129,6 +150,24 @@ function parseCast(value: unknown): CreditCast[] {
     .filter((entry): entry is CreditCast => Boolean(entry) && entry.name.length > 0);
 }
 
+function parseGenreList(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => {
+      if (typeof entry === 'string') {
+        return entry.trim();
+      }
+      if (entry && typeof entry === 'object' && typeof (entry as { name?: unknown }).name === 'string') {
+        return (entry as { name: string }).name.trim();
+      }
+      return '';
+    })
+    .filter((name) => name.length > 0)
+    .slice(0, 8);
+}
+
 function formatRatingLine(rating: RatingRow): string {
   if (rating.rawValue && rating.rawValue.trim().length > 0) {
     return `${rating.source.replaceAll('_', ' ')}: ${rating.rawValue}`;
@@ -183,7 +222,8 @@ function sanitizeTriviaLines(lines: unknown): string[] {
   }
   return lines
     .filter((line): line is string => typeof line === 'string' && line.trim().length > 0)
-    .map((line) => firstLine(line, 140))
+    .map((line) => firstLine(line, 180))
+    .filter((line) => line.length > 0)
     .slice(0, 5);
 }
 
@@ -247,7 +287,56 @@ function normalizeCachedCompanionPayload(value: unknown): CompanionResponsePaylo
   if (!record.movie || !record.sections || !record.spoilerPolicy || !record.credits || !record.ratings || !record.evidence) {
     return null;
   }
+  if (!record.metadata || typeof record.metadata !== 'object') {
+    record.metadata = {
+      genres: [],
+      runtimeText: 'Runtime unavailable',
+      countries: [],
+      languages: [],
+    };
+  }
+  // Backward compatibility for older cache rows before streaming was added.
+  if (!record.streaming || typeof record.streaming !== 'object') {
+    record.streaming = { region: 'US', offers: [] };
+  }
   return record as unknown as CompanionResponsePayload;
+}
+
+function parseStreamingOffers(value: unknown): Array<{
+  provider: string;
+  type: 'subscription' | 'rent' | 'buy' | 'free';
+  url?: string;
+  price?: string;
+}> {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return null;
+      }
+      const record = entry as Record<string, unknown>;
+      const provider = typeof record.provider === 'string' ? record.provider.trim() : '';
+      const type = typeof record.type === 'string' ? record.type : '';
+      if (!provider || (type !== 'subscription' && type !== 'rent' && type !== 'buy' && type !== 'free')) {
+        return null;
+      }
+      const url = typeof record.url === 'string' && record.url.trim().length > 0 ? record.url.trim() : undefined;
+      const price = typeof record.price === 'string' && record.price.trim().length > 0 ? record.price.trim() : undefined;
+      return {
+        provider,
+        type,
+        ...(url ? { url } : {}),
+        ...(price ? { price } : {}),
+      };
+    })
+    .filter((offer): offer is {
+      provider: string;
+      type: 'subscription' | 'rent' | 'buy' | 'free';
+      url?: string;
+      price?: string;
+    } => offer !== null);
 }
 
 function normalizeCompanionLlmOutput(value: unknown): CompanionLlmOutput | null {
@@ -263,8 +352,8 @@ function normalizeCompanionLlmOutput(value: unknown): CompanionLlmOutput | null 
     return null;
   }
   return {
-    lightSummary: firstLine(record.lightSummary, 240),
-    fullSummary: firstLine(record.fullSummary, 260),
+    lightSummary: firstLine(record.lightSummary, 900),
+    fullSummary: firstLine(record.fullSummary, 1800),
     trivia,
   };
 }
@@ -299,7 +388,6 @@ async function sleep(ms: number): Promise<void> {
 async function generateCompanionLlmOutput(input: {
   title: string;
   year: number | null;
-  spoilerPolicy: SpoilerPolicy;
   facts: TmdbCompanionFacts | null;
   evidence: Array<{ sourceName: string; snippet: string }>;
 }): Promise<{ output: CompanionLlmOutput | null; reason: string }> {
@@ -310,9 +398,12 @@ async function generateCompanionLlmOutput(input: {
   const maxRetries = companionLlmMaxRetries();
   const baseDelay = companionLlmRetryDelayMs();
   const provider = getLlmProviderFromEnv();
+  const standardMaxTokens = 16_000;
 
   let lastErrorMessage = 'unknown';
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    const maxTokens = standardMaxTokens;
+    const temperature = attempt === 0 ? 0.2 : 0.1;
     try {
       const response = await provider.generateJson<unknown>({
         schemaName: 'CompanionSpoilerAndTrivia',
@@ -320,6 +411,7 @@ async function generateCompanionLlmOutput(input: {
         system: [
           'Generate movie companion notes.',
           'Return strict JSON only.',
+          'Do not include analysis, reasoning, markdown, or code fences.',
           'lightSummary must summarize beginning and middle only (no ending).',
           'fullSummary must include full plot arc including ending.',
           'trivia must include exactly 5 concise facts.',
@@ -336,12 +428,12 @@ async function generateCompanionLlmOutput(input: {
           },
           evidence: input.evidence.slice(0, 5).map((item) => ({
             sourceName: item.sourceName,
-            snippet: firstLine(item.snippet, 180),
+            snippet: firstLine(item.snippet, 220),
           })),
-          policy: input.spoilerPolicy,
+          spoilerPolicies: ALL_SPOILER_POLICIES,
         }),
-        temperature: 0.2,
-        maxTokens: 500,
+        temperature,
+        maxTokens,
       });
       const normalized = normalizeCompanionLlmOutput(response);
       if (!normalized) {
@@ -357,7 +449,13 @@ async function generateCompanionLlmOutput(input: {
         break;
       }
       const delay = baseDelay * (attempt + 1);
-      console.warn('[companion] llm retrying', { attempt: attempt + 1, maxRetries, delayMs: delay, error: lastErrorMessage });
+      console.warn('[companion] llm retrying', {
+        attempt: attempt + 1,
+        maxRetries,
+        delayMs: delay,
+        error: lastErrorMessage,
+        nextMaxTokens: standardMaxTokens,
+      });
       // eslint-disable-next-line no-await-in-loop
       await sleep(delay);
     }
@@ -675,6 +773,7 @@ export async function GET(request: Request): Promise<Response> {
       title: true,
       year: true,
       posterUrl: true,
+      genres: true,
       director: true,
       castTop: true,
       ratings: {
@@ -710,6 +809,18 @@ export async function GET(request: Request): Promise<Response> {
     title: movie.title,
     year: movie.year,
   });
+  const streamingCache = await prisma.movieStreamingCache.findUnique({
+    where: {
+      movieId_region: {
+        movieId: movie.id,
+        region: 'US',
+      },
+    },
+    select: {
+      offers: true,
+      region: true,
+    },
+  });
 
   const now = new Date();
   const cached = await prisma.companionCache.findUnique({
@@ -743,6 +854,7 @@ export async function GET(request: Request): Promise<Response> {
     reason: !cached ? 'NOT_FOUND' : cached.expiresAt <= now ? 'EXPIRED' : 'NOT_FULLY_POPULATED',
   });
   const tmdbFacts = tmdbFetch.facts;
+  const fallbackGenres = parseGenreList(movie.genres);
 
   const resolvedCast = tmdbFacts?.cast.length ? tmdbFacts.cast : cast;
   const resolvedDirector = tmdbFacts?.director ?? movie.director ?? null;
@@ -763,83 +875,116 @@ export async function GET(request: Request): Promise<Response> {
   const llmResult = await generateCompanionLlmOutput({
     title: tmdbFacts?.title ?? movie.title,
     year: tmdbFacts?.year ?? movie.year,
-    spoilerPolicy,
     facts: tmdbFacts,
     evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
   });
   const llmOutput = llmResult.output;
-
-  const sections = buildSections(
-    {
-      title: movie.title,
-      year: movie.year,
-      facts: tmdbFacts,
-    },
-    spoilerPolicy,
-    Boolean(resolvedDirector) || resolvedCast.length > 0,
-    responseRatings,
-    evidence.length,
-    llmOutput,
-  );
-  const payload: CompanionResponsePayload = {
-    movie: {
-      tmdbId: movie.tmdbId,
-      title: tmdbFacts?.title ?? movie.title,
-      ...(tmdbFacts?.year || movie.year ? { year: tmdbFacts?.year ?? movie.year } : {}),
-      posterUrl: tmdbFacts?.posterUrl ?? movie.posterUrl,
-    },
-    credits: {
-      ...(resolvedDirector ? { director: resolvedDirector } : {}),
-      cast: resolvedCast,
-    },
-    sections,
-    ratings: responseRatings,
-    spoilerPolicy,
-    evidence,
-  };
-  const fullyPopulated = isCompanionFullyPopulated({
-    usedTmdbFacts: Boolean(tmdbFacts),
-    llmOutput,
-    resolvedDirector,
-    resolvedCastCount: resolvedCast.length,
-    ratingsCount: responseRatings.length,
-    sections,
-  });
-  if (fullyPopulated) {
-    const expiresAt = new Date(Date.now() + companionCacheTtlMs());
-    await prisma.companionCache.upsert({
-      where: {
-        movieId_spoilerPolicy: {
-          movieId: movie.id,
-          spoilerPolicy,
-        },
+  const payloadsByPolicy = new Map<SpoilerPolicy, CompanionResponsePayload>();
+  let fullyPopulatedAny = false;
+  for (const policy of ALL_SPOILER_POLICIES) {
+    const sections = buildSections(
+      {
+        title: movie.title,
+        year: movie.year,
+        facts: tmdbFacts,
       },
-      create: {
-        movieId: movie.id,
-        spoilerPolicy,
-        payload,
-        isFullyPopulated: true,
-        llmProvider: resolveLlmProviderName(),
-        llmModel: resolveLlmModelName(),
-        generatedAt: now,
-        expiresAt,
+      policy,
+      Boolean(resolvedDirector) || resolvedCast.length > 0,
+      responseRatings,
+      evidence.length,
+      llmOutput,
+    );
+    const payload: CompanionResponsePayload = {
+      movie: {
+        tmdbId: movie.tmdbId,
+        title: tmdbFacts?.title ?? movie.title,
+        ...(tmdbFacts?.year || movie.year ? { year: tmdbFacts?.year ?? movie.year } : {}),
+        posterUrl: tmdbFacts?.posterUrl ?? movie.posterUrl,
       },
-      update: {
-        payload,
-        isFullyPopulated: true,
-        llmProvider: resolveLlmProviderName(),
-        llmModel: resolveLlmModelName(),
-        generatedAt: now,
-        expiresAt,
+      metadata: {
+        genres: tmdbFacts?.genres.length ? tmdbFacts.genres : fallbackGenres,
+        runtimeText: formatRuntime(tmdbFacts?.runtimeMinutes),
+        countries: tmdbFacts?.countries ?? [],
+        languages: tmdbFacts?.languages ?? [],
+        ...(tmdbFacts?.tagline ? { tagline: firstLine(tmdbFacts.tagline, 200) } : {}),
+        ...(tmdbFacts?.overview ? { overview: firstLine(tmdbFacts.overview, 320) } : {}),
+        ...(typeof tmdbFacts?.popularity === 'number' ? { popularity: tmdbFacts.popularity } : {}),
+        ...(typeof tmdbFacts?.voteAverage === 'number' ? { tmdbVoteAverage: tmdbFacts.voteAverage } : {}),
+        ...(typeof tmdbFacts?.voteCount === 'number' ? { tmdbVoteCount: tmdbFacts.voteCount } : {}),
       },
+      credits: {
+        ...(resolvedDirector ? { director: resolvedDirector } : {}),
+        cast: resolvedCast,
+      },
+      sections,
+      ratings: responseRatings,
+      streaming: {
+        region: streamingCache?.region ?? 'US',
+        offers: parseStreamingOffers(streamingCache?.offers).slice(0, 10),
+      },
+      spoilerPolicy: policy,
+      evidence,
+    };
+    const fullyPopulated = isCompanionFullyPopulated({
+      usedTmdbFacts: Boolean(tmdbFacts),
+      llmOutput,
+      resolvedDirector,
+      resolvedCastCount: resolvedCast.length,
+      ratingsCount: responseRatings.length,
+      sections,
     });
-    console.info('[companion] cache write', {
+    if (fullyPopulated) {
+      fullyPopulatedAny = true;
+    }
+    payloadsByPolicy.set(policy, payload);
+  }
+
+  if (fullyPopulatedAny) {
+    const expiresAt = new Date(Date.now() + companionCacheTtlMs());
+    for (const policy of ALL_SPOILER_POLICIES) {
+      const policyPayload = payloadsByPolicy.get(policy);
+      if (!policyPayload) {
+        continue;
+      }
+      // eslint-disable-next-line no-await-in-loop
+      await prisma.companionCache.upsert({
+        where: {
+          movieId_spoilerPolicy: {
+            movieId: movie.id,
+            spoilerPolicy: policy,
+          },
+        },
+        create: {
+          movieId: movie.id,
+          spoilerPolicy: policy,
+          payload: policyPayload,
+          isFullyPopulated: true,
+          llmProvider: resolveLlmProviderName(),
+          llmModel: resolveLlmModelName(),
+          generatedAt: now,
+          expiresAt,
+        },
+        update: {
+          payload: policyPayload,
+          isFullyPopulated: true,
+          llmProvider: resolveLlmProviderName(),
+          llmModel: resolveLlmModelName(),
+          generatedAt: now,
+          expiresAt,
+        },
+      });
+    }
+    console.info('[companion] cache write all policies', {
       tmdbId: movie.tmdbId,
-      spoilerPolicy,
       llmProvider: resolveLlmProviderName(),
       llmModel: resolveLlmModelName(),
       expiresAt: expiresAt.toISOString(),
+      policies: ALL_SPOILER_POLICIES,
     });
+  }
+  const payload = payloadsByPolicy.get(spoilerPolicy);
+  if (!payload) {
+    return fail({ code: 'INTERNAL_ERROR', message: 'Unable to resolve companion payload' }, 500);
   }
   console.info('[companion] resolved', {
     tmdbId: movie.tmdbId,
@@ -850,7 +995,7 @@ export async function GET(request: Request): Promise<Response> {
     tmdbDetails: tmdbFetch.details ?? null,
     llmUsed: Boolean(llmOutput),
     llmReason: llmResult.reason,
-    fullyPopulated,
+    fullyPopulated: fullyPopulatedAny,
     usedRatingsCount: responseRatings.length,
     evidenceCount: evidence.length,
   });

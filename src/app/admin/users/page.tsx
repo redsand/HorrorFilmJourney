@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Chip } from '@/components/ui';
+import { Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 
 type UserRow = {
   id: string;
@@ -44,8 +44,13 @@ export default function AdminUsersPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
       <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <h1 className="text-xl font-semibold">Horror Codex</h1>
-        <p className="text-xs text-[var(--text-muted)]">Admin · Users</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold">Horror Codex</h1>
+            <p className="text-xs text-[var(--text-muted)]">Admin · Users</p>
+          </div>
+          <LogoutIconButton />
+        </div>
       </header>
 
       <Card className="space-y-3">

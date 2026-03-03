@@ -79,6 +79,54 @@ describe('provider request building and schema errors', () => {
     expect(payload.contents[0].parts[0].text).toContain('TestSchema');
   });
 
+  it('parses Gemini JSON when wrapped in markdown code fences', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [{ content: { parts: [{ text: '```json\n{"answer":"ok-fenced"}\n```' }] } }],
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new GeminiProvider('gem-key', 'gemini-test');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+    });
+
+    expect(result).toEqual({ answer: 'ok-fenced' });
+  });
+
+  it('parses Gemini JSON split across multiple parts', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [{
+          finishReason: 'STOP',
+          content: {
+            parts: [
+              { text: '{"answer":"ok' },
+              { text: '-multi-part"}' },
+            ],
+          },
+        }],
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new GeminiProvider('gem-key', 'gemini-test');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+    });
+
+    expect(result).toEqual({ answer: 'ok-multi-part' });
+  });
+
   it('builds Ollama fetch URL and payload', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
@@ -131,6 +179,35 @@ describe('provider request building and schema errors', () => {
     const [secondUrl] = fetchMock.mock.calls[1] as [string, RequestInit];
     expect(firstUrl).toBe('http://localhost:11434/api/generate');
     expect(secondUrl).toBe('http://localhost:11434/api/chat');
+  });
+
+  it('falls back to /api/chat when /api/generate returns non-JSON thinking text', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          response: '',
+          thinking: 'Analyze request and produce JSON next',
+          done_reason: 'length',
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ message: { content: '{"answer":"ok-from-chat-after-thinking"}' } }),
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new OllamaProvider('glm-5:cloud', 'http://localhost:11434');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+    });
+
+    expect(result).toEqual({ answer: 'ok-from-chat-after-thinking' });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('retries once with doubled timeout when Ollama request times out', async () => {

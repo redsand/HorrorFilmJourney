@@ -41,7 +41,11 @@ describe('profile preferences route', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({
-      data: { recommendationStyle: 'diversity' },
+      data: {
+        recommendationStyle: 'diversity',
+        tolerance: 3,
+        pacePreference: 'balanced',
+      },
       error: null,
     });
   });
@@ -77,5 +81,29 @@ describe('profile preferences route', () => {
       }),
     }));
   });
-});
 
+  it('returns persisted onboarding values with recommendation style', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    profileFindUniqueMock.mockResolvedValueOnce({
+      tolerance: 5,
+      pacePreference: 'shock',
+      horrorDNA: { recommendationStyle: 'popularity' },
+    });
+
+    const response = await GET(
+      new Request('http://localhost/api/profile/preferences', {
+        headers: { cookie: makeSessionCookie('user_1') },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      data: {
+        recommendationStyle: 'popularity',
+        tolerance: 5,
+        pacePreference: 'shock',
+      },
+      error: null,
+    });
+  });
+});

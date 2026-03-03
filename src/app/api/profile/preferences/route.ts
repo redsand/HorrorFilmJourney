@@ -23,11 +23,17 @@ export async function GET(request: Request): Promise<Response> {
 
   const profile = await prisma.userProfile.findUnique({
     where: { userId: auth.userId },
-    select: { horrorDNA: true },
+    select: {
+      horrorDNA: true,
+      tolerance: true,
+      pacePreference: true,
+    },
   });
 
   return ok({
     recommendationStyle: resolveRecommendationStyle(profile?.horrorDNA),
+    tolerance: profile?.tolerance ?? 3,
+    pacePreference: profile?.pacePreference ?? 'balanced',
   });
 }
 
@@ -84,4 +90,3 @@ export async function PATCH(request: Request): Promise<Response> {
 
   return ok({ success: true });
 }
-

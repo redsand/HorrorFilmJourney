@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
-import { BottomNav, Button, Card } from '@/components/ui';
+import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
 
 type ExperienceResponse = {
   state: 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
@@ -155,19 +155,6 @@ function toMovieCardFromExperienceCard(
   };
 }
 
-function formatJourneyNodeLabel(journeyNode: string | null | undefined): string {
-  if (!journeyNode) {
-    return 'initializing';
-  }
-
-  const mode = process.env.REC_ENGINE_MODE === 'modern' ? 'modern' : 'v1';
-  if (mode === 'modern' && journeyNode.startsWith('ENGINE_V1_CORE')) {
-    return journeyNode.replace('ENGINE_V1_CORE', 'ENGINE_MODERN_CORE');
-  }
-
-  return journeyNode;
-}
-
 function getOrigin(): string {
   const h = headers();
   const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'localhost:3000';
@@ -231,11 +218,6 @@ export default async function HomePage() {
     }
   }
 
-  const journeyNode =
-    recommendations?.cards?.[0]?.codex?.journeyNode
-    ?? experience?.bundle?.journeyNode;
-  const journeyNodeLabel = formatJourneyNodeLabel(journeyNode);
-
   if (unauthenticated) {
     return (
       <main className="flex flex-1 flex-col gap-4 pb-8 pt-4">
@@ -291,10 +273,12 @@ export default async function HomePage() {
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
       <header className="fixed left-1/2 top-0 z-40 w-full max-w-[420px] -translate-x-1/2 border-b border-[var(--border)] bg-[rgba(8,8,10,0.92)] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur">
-        <h1 className="text-xl font-semibold">Horror Codex</h1>
-        <p className="text-xs text-[var(--text-muted)]">
-          {`Journey: ${journeyNodeLabel}`}
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold">Horror Codex</h1>
+          </div>
+          <LogoutIconButton />
+        </div>
       </header>
 
       {experience?.state === 'ONBOARDING_NEEDED' && (
@@ -340,7 +324,13 @@ export default async function HomePage() {
                 ))}
               </div>
             </div>
-            <Button className="w-full py-3 text-base" type="submit">Save Preferences</Button>
+            <Button className="w-full py-3 text-base" type="submit">
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M5 4h12l2 2v14H5V4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                <path d="M8 4v6h8V4M9 16h6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+              </svg>
+              Save Preferences
+            </Button>
           </form>
         </Card>
       )}
@@ -379,7 +369,15 @@ export default async function HomePage() {
         <Card>
           <h2 className="text-lg font-semibold">History Ready</h2>
           <p className="mt-2 text-sm text-[var(--text-muted)]">You&apos;ve completed enough actions to review your timeline.</p>
-          <Link className="mt-4 inline-flex" href="/history"><Button>Open History</Button></Link>
+          <Link className="mt-4 inline-flex" href="/history">
+            <Button>
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M12 8v5l3 2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+              </svg>
+              Open History
+            </Button>
+          </Link>
         </Card>
       )}
 
