@@ -6,7 +6,7 @@ export type ThemeConfig = {
   marqueeLabel: string;
   tokens: Record<string, string>;
   cssVars: Record<string, string>;
-  overlay?: 'mist' | 'neon-flicker';
+  overlay?: 'mist' | 'neon';
   enabled: boolean;
 };
 
@@ -140,11 +140,11 @@ const THEMES_BY_PACK_SLUG: Record<string, ThemeConfig> = {
   },
   'cult-classics': {
     themeName: 'cult',
-    cabinetImagePath: '/assets/cabinets/cult-season-2.png',
+    cabinetImagePath: '/assets/cabinets/cult-classics-season-2.png',
     marqueeLabel: 'Season 2: Cult Classics',
     tokens: CULT_CLASSICS_TOKENS,
     cssVars: CULT_CLASSICS_TOKENS,
-    overlay: 'neon-flicker',
+    overlay: 'neon',
     enabled: false,
   },
 };

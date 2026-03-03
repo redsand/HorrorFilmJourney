@@ -45,8 +45,8 @@ Status: configured but disabled.
 - Neon purple accent
 - Magenta glow
 - Subtle cyan highlight
-- Cabinet image placeholder: `/assets/cabinets/cult-season-2.png`
-- Optional future overlay: `neon-flicker`
+- Cabinet image: `/assets/cabinets/cult-classics-season-2.png`
+- Optional future overlay: `neon`
 
 ## Expansion Plan
 

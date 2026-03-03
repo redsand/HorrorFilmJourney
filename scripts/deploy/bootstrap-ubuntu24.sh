@@ -95,6 +95,10 @@ else
 fi
 npm run prisma:generate
 npx prisma migrate deploy
+if [[ "\${SEED_SEASON2_CULT_ON_DEPLOY:-false}" == "true" ]]; then
+  echo "Seeding Season 2 Cult Classics curriculum..."
+  npm run seed:season2:cult
+fi
 npm run build
 
 ln -sfn "\${RELEASE_DIR}" "\${APP_ROOT}/current"

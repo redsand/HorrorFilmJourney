@@ -21,7 +21,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html data-theme={theme.themeName} lang="en">
       <body className="min-h-dvh bg-[var(--cc-bg)] text-[var(--cc-text)] antialiased" style={bodyStyle}>
         <ThemeProvider cssVars={theme.cssVars} theme={theme.themeName} />
-        <CabinetFrame cabinetImagePath={theme.cabinetImagePath}>{children}</CabinetFrame>
+        <CabinetFrame cabinetImagePath={theme.cabinetImagePath} themeName={theme.themeName}>
+          {children}
+        </CabinetFrame>
         <HorrorMistOverlay themeName={theme.themeName} />
         <FloatingFeedbackButton />
       </body>

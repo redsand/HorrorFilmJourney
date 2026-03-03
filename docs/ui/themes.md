@@ -25,7 +25,7 @@ type ThemeConfig = {
   marqueeLabel: string;
   tokens: Record<string, string>;
   cssVars: Record<string, string>;
-  overlay?: "mist";
+  overlay?: "mist" | "neon";
   enabled: boolean;
 }
 ```
@@ -67,12 +67,17 @@ Planned examples:
 - `scifi`
 - `fantasy`
 - `western`
+- `cult-classics` (Season 2 prep, currently disabled)
+
+Current Season 2 cabinet asset path:
+- `/assets/cabinets/cult-classics-season-2.png`
 
 ## Pack-to-theme resolution
 
 - Request helper: `src/lib/theme/getActiveThemeForRequest.ts`
 - It reads session user, resolves selected pack, then maps pack slug to theme.
 - Safe fallback: if pack is missing/unknown/disabled, theme falls back to `horror`.
+- Cabinet fallback: if the configured cabinet image fails to load in-browser, `CabinetFrame` falls back to `/assets/cabinets/horror-season-1.png`.
 
 ## Seasonal overlays (optional)
 
