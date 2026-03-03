@@ -466,7 +466,7 @@ Admin-only: enable/disable pack.
 
 ## GET /api/admin/curriculum
 
-Admin-only curriculum visibility for active season packs and node coverage quality.
+Admin-only curriculum visibility for all seasons, packs, and node coverage quality.
 
 ### Auth
 
@@ -488,6 +488,10 @@ Admin-only curriculum visibility for active season packs and node coverage quali
         "slug": "horror",
         "name": "Horror",
         "isEnabled": true,
+        "totalAssignedTitles": 80,
+        "duplicateTitlesCount": 0,
+        "duplicateRatePct": 0,
+        "duplicateTmdbIds": [],
         "nodes": [
           {
             "id": "node_id",
@@ -500,6 +504,8 @@ Admin-only curriculum visibility for active season packs and node coverage quali
             "missingRatingsCount": 0,
             "missingReceptionCount": 0,
             "missingCreditsCount": 0,
+            "missingStreamingCount": 0,
+            "eligibilityCoverage": 100,
             "titles": [
               {
                 "id": "movie_id",
@@ -508,11 +514,13 @@ Admin-only curriculum visibility for active season packs and node coverage quali
                 "title": "Nosferatu",
                 "posterUrl": "https://...",
                 "isEligible": true,
+                "completenessTier": "ENRICHED",
                 "missing": {
                   "poster": false,
                   "ratings": false,
                   "reception": false,
-                  "credits": false
+                  "credits": false,
+                  "streaming": false
                 }
               }
             ]
@@ -529,6 +537,8 @@ Admin-only curriculum visibility for active season packs and node coverage quali
 
 - Endpoint is read-only visibility for launch tuning.
 - Eligibility warnings are derived from poster/ratings/reception/credits availability.
+- Streaming gaps are reported separately (`missingStreamingCount`) for UX completeness tracking.
+- Disabled packs return with a warning in admin UI and remain hidden from onboarding.
 
 ---
 

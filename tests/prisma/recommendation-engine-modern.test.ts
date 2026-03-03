@@ -185,4 +185,34 @@ describe('RecommendationEngine modern mode', () => {
     expect(third.cards).toHaveLength(5);
     expect(third.cards.every((card) => !recentTen.has(card.movie.tmdbId))).toBe(true);
   });
+
+  it('handles enabled cult-classics pack with no seeded cult catalog by returning an empty batch', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Cult Empty User' } });
+    const season1 = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: false } });
+    const season2 = await prisma.season.create({ data: { slug: 'season-2', name: 'Season 2', isActive: true } });
+    await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season1.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    const cultPack = await prisma.genrePack.create({
+      data: { slug: 'cult-classics', name: 'Cult Classics', seasonId: season2.id, isEnabled: true, primaryGenre: 'cult' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: cultPack.id,
+      },
+    });
+
+    const horrorOnlyMovie = await prisma.movie.create({
+      data: { tmdbId: 9901, title: 'Horror Only', year: 1988, posterUrl: 'https://img/9901.jpg', genres: ['horror'] },
+    });
+    await addRatings(horrorOnlyMovie.id);
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const batch = await generateRecommendationBatch(user.id, prisma);
+    expect(batch.cards).toHaveLength(0);
+  });
 });

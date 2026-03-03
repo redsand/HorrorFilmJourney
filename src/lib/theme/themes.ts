@@ -1,4 +1,4 @@
-export type ThemeKey = 'horror' | 'scifi' | 'fantasy' | 'western';
+export type ThemeKey = 'horror' | 'scifi' | 'fantasy' | 'western' | 'cult';
 
 export type ThemeConfig = {
   themeName: ThemeKey;
@@ -6,7 +6,7 @@ export type ThemeConfig = {
   marqueeLabel: string;
   tokens: Record<string, string>;
   cssVars: Record<string, string>;
-  overlay?: 'mist';
+  overlay?: 'mist' | 'neon-flicker';
   enabled: boolean;
 };
 
@@ -83,6 +83,25 @@ const WESTERN_TOKENS: Record<string, string> = {
   '--cc-warning': '#e3b267',
 };
 
+const CULT_CLASSICS_TOKENS: Record<string, string> = {
+  '--cc-bg': '#050409',
+  '--cc-surface': '#120d1f',
+  '--cc-surface-2': '#1b1230',
+  '--cc-text': '#f7f1ff',
+  '--cc-text-muted': '#baafd2',
+  '--cc-border': 'rgba(201, 154, 255, 0.22)',
+  '--cc-accent': '#8f33ff',
+  '--cc-accent-2': '#b73dff',
+  '--cc-danger': '#ff4f95',
+  '--cc-glow': 'rgba(255, 61, 173, 0.28)',
+  '--cc-shadow': 'rgba(0, 0, 0, 0.62)',
+  '--cc-focus': '#ff7ad6',
+  '--cc-link': '#d07cff',
+  '--cc-success': '#53c79b',
+  '--cc-warning': '#f2b25b',
+  '--cc-highlight': '#54d6ff',
+};
+
 export const HORROR_THEME: ThemeConfig = {
   themeName: 'horror',
   cabinetImagePath: '/assets/cabinets/horror-season-1.png',
@@ -117,6 +136,15 @@ const THEMES_BY_PACK_SLUG: Record<string, ThemeConfig> = {
     marqueeLabel: 'Season X: Western',
     tokens: WESTERN_TOKENS,
     cssVars: WESTERN_TOKENS,
+    enabled: false,
+  },
+  'cult-classics': {
+    themeName: 'cult',
+    cabinetImagePath: '/assets/cabinets/cult-season-2.png',
+    marqueeLabel: 'Season 2: Cult Classics',
+    tokens: CULT_CLASSICS_TOKENS,
+    cssVars: CULT_CLASSICS_TOKENS,
+    overlay: 'neon-flicker',
     enabled: false,
   },
 };

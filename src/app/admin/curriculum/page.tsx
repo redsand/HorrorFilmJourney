@@ -11,11 +11,13 @@ type CurriculumNodeTitle = {
   title: string;
   posterUrl: string;
   isEligible: boolean;
+  completenessTier: 'ENRICHED' | 'BASIC';
   missing: {
     poster: boolean;
     ratings: boolean;
     reception: boolean;
     credits: boolean;
+    streaming: boolean;
   };
 };
 
@@ -30,6 +32,8 @@ type CurriculumNode = {
   missingRatingsCount: number;
   missingReceptionCount: number;
   missingCreditsCount: number;
+  missingStreamingCount: number;
+  eligibilityCoverage: number;
   titles: CurriculumNodeTitle[];
 };
 
@@ -38,11 +42,22 @@ type CurriculumPack = {
   slug: string;
   name: string;
   isEnabled: boolean;
+  totalAssignedTitles: number;
+  duplicateTitlesCount: number;
+  duplicateRatePct: number;
+  duplicateTmdbIds: number[];
   nodes: CurriculumNode[];
 };
 
 type CurriculumResponse = {
   activeSeason: { id: string; slug: string; name: string } | null;
+  seasons?: Array<{
+    id: string;
+    slug: string;
+    name: string;
+    isActive: boolean;
+    packs: CurriculumPack[];
+  }>;
   packs: CurriculumPack[];
 };
 
@@ -105,7 +120,18 @@ export default function AdminCurriculumPage() {
         </Card>
       ) : null}
 
-      {(data?.packs ?? []).map((pack) => (
+      {(data?.seasons ?? []).map((season) => (
+        <Card className="space-y-3" key={season.id}>
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <h2 className="text-lg font-semibold">{season.name}</h2>
+              <p className="text-xs text-[var(--text-muted)]">{season.slug}</p>
+            </div>
+            <Chip tone={season.isActive ? 'accent' : 'default'}>
+              {season.isActive ? 'Active' : 'Inactive'}
+            </Chip>
+          </div>
+          {season.packs.map((pack) => (
         <Card className="space-y-3" key={pack.id}>
           <div className="flex items-center justify-between gap-2">
             <div>
@@ -116,6 +142,20 @@ export default function AdminCurriculumPage() {
               {pack.isEnabled ? 'Enabled' : 'Disabled'}
             </Chip>
           </div>
+          {!pack.isEnabled ? (
+            <div className="rounded-lg border border-[rgba(255,165,0,0.45)] bg-[rgba(255,165,0,0.08)] px-3 py-2 text-xs text-[var(--text-muted)]">
+              Pack disabled — not visible to users.
+            </div>
+          ) : null}
+          <p className="text-xs text-[var(--text-muted)]">
+            Coverage: {pack.totalAssignedTitles} assigned · duplicates {pack.duplicateTitlesCount} ({pack.duplicateRatePct}%)
+          </p>
+          {pack.duplicateTitlesCount > 0 ? (
+            <p className="text-xs text-[var(--accent)]">
+              Duplicate TMDB IDs across nodes: {pack.duplicateTmdbIds.slice(0, 12).join(', ')}
+              {pack.duplicateTmdbIds.length > 12 ? ' …' : ''}
+            </p>
+          ) : null}
           <div className="space-y-3">
             {pack.nodes.map((node) => (
               <details className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3" key={node.id}>
@@ -126,11 +166,11 @@ export default function AdminCurriculumPage() {
                       <p className="text-xs text-[var(--text-muted)]">{node.slug}</p>
                     </div>
                     <Chip tone={node.eligibleTitles >= 8 ? 'accent' : 'default'}>
-                      {node.eligibleTitles}/{node.totalTitles} eligible
+                      {node.eligibleTitles}/{node.totalTitles} eligible ({node.eligibilityCoverage}%)
                     </Chip>
                   </div>
                   <p className="mt-2 text-xs text-[var(--text-muted)]">
-                    Missing: poster {node.missingPosterCount} · ratings {node.missingRatingsCount} · reception {node.missingReceptionCount} · credits {node.missingCreditsCount}
+                    Missing: poster {node.missingPosterCount} · ratings {node.missingRatingsCount} · reception {node.missingReceptionCount} · credits {node.missingCreditsCount} · streaming {node.missingStreamingCount}
                   </p>
                 </summary>
                 <div className="mt-3 space-y-2">
@@ -143,8 +183,11 @@ export default function AdminCurriculumPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{title.rank}. {title.title}</p>
                         <p className="text-xs text-[var(--text-muted)]">TMDB {title.tmdbId}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{title.completenessTier}</p>
                         <p className="text-xs text-[var(--text-muted)]">
-                          {title.isEligible ? 'Eligible' : `Missing:${title.missing.poster ? ' poster' : ''}${title.missing.ratings ? ' ratings' : ''}${title.missing.reception ? ' reception' : ''}${title.missing.credits ? ' credits' : ''}`}
+                          {title.isEligible
+                            ? 'Eligible'
+                            : `Missing:${title.missing.poster ? ' poster' : ''}${title.missing.ratings ? ' ratings' : ''}${title.missing.reception ? ' reception' : ''}${title.missing.credits ? ' credits' : ''}${title.missing.streaming ? ' streaming' : ''}`}
                         </p>
                       </div>
                     </div>
@@ -153,6 +196,8 @@ export default function AdminCurriculumPage() {
               </details>
             ))}
           </div>
+        </Card>
+          ))}
         </Card>
       ))}
     </main>

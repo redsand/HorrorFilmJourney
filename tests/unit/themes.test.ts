@@ -22,4 +22,15 @@ describe('theme config mapping', () => {
     const resolved = getThemeConfigForPackSlug('scifi');
     expect(resolved.themeName).toBe('horror');
   });
+
+  it('defines cult-classics preset with placeholder cabinet and neon palette', () => {
+    const cultPreset = getThemePresetForPackSlug('cult-classics');
+    expect(cultPreset).not.toBeNull();
+    expect(cultPreset?.enabled).toBe(false);
+    expect(cultPreset?.themeName).toBe('cult');
+    expect(cultPreset?.cabinetImagePath).toBe('/assets/cabinets/cult-season-2.png');
+    expect(cultPreset?.cssVars['--cc-accent']).toBe('#8f33ff');
+    expect(cultPreset?.cssVars['--cc-glow']).toContain('255, 61, 173');
+    expect(cultPreset?.cssVars['--cc-highlight']).toBe('#54d6ff');
+  });
 });

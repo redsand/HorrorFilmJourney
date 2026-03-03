@@ -1,47 +1,7 @@
 import { fail, ok } from '@/lib/api-envelope';
 import { requireAdmin } from '@/lib/auth/guards';
+import { evaluateCurriculumEligibility } from '@/lib/curriculum/eligibility';
 import { prisma } from '@/lib/prisma';
-
-type RatingRow = { source: string };
-type CastTopRow = Array<{ name?: string; role?: string }>;
-
-function parseCastTop(value: unknown): CastTopRow {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-  return value.filter((entry): entry is { name?: string; role?: string } => {
-    return typeof entry === 'object' && entry !== null;
-  });
-}
-
-function evaluateEligibility(movie: {
-  posterUrl: string;
-  director: string | null;
-  castTop: unknown;
-  ratings: RatingRow[];
-}): {
-  isEligible: boolean;
-  missingPoster: boolean;
-  missingRatings: boolean;
-  missingReception: boolean;
-  missingCredits: boolean;
-} {
-  const ratingSources = new Set(movie.ratings.map((rating) => rating.source.toUpperCase()));
-  const hasPoster = movie.posterUrl.trim().length > 0;
-  const hasImdb = ratingSources.has('IMDB');
-  const hasAdditional = ratingSources.size >= 2;
-  const hasReception = ratingSources.has('ROTTEN_TOMATOES') || ratingSources.has('METACRITIC');
-  const cast = parseCastTop(movie.castTop);
-  const hasCredits = Boolean(movie.director && movie.director.trim().length > 0) && cast.length > 0;
-
-  return {
-    isEligible: hasPoster && hasImdb && hasAdditional && hasReception && hasCredits,
-    missingPoster: !hasPoster,
-    missingRatings: !(hasImdb && hasAdditional),
-    missingReception: !hasReception,
-    missingCredits: !hasCredits,
-  };
-}
 
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAdmin(request, prisma);
@@ -49,12 +9,13 @@ export async function GET(request: Request): Promise<Response> {
     return fail(auth.error, auth.status);
   }
 
-  const season = await prisma.season.findFirst({
-    where: { isActive: true },
+  const seasons = await prisma.season.findMany({
+    orderBy: [{ isActive: 'desc' }, { slug: 'asc' }],
     select: {
       id: true,
       slug: true,
       name: true,
+      isActive: true,
       packs: {
         orderBy: { slug: 'asc' },
         select: {
@@ -82,6 +43,7 @@ export async function GET(request: Request): Promise<Response> {
                       director: true,
                       castTop: true,
                       ratings: { select: { source: true } },
+                      streamingCache: { select: { id: true }, take: 1 },
                     },
                   },
                 },
@@ -93,26 +55,78 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
 
-  if (!season) {
+  if (seasons.length === 0) {
     return ok({
       activeSeason: null,
+      seasons: [],
       packs: [],
     });
   }
 
-  const packs = season.packs.map((pack) => ({
+  const mapPacks = (inputPacks: Array<{
+    id: string;
+    slug: string;
+    name: string;
+    isEnabled: boolean;
+    nodes: Array<{
+      id: string;
+      slug: string;
+      name: string;
+      orderIndex: number;
+      movies: Array<{
+        rank: number;
+        movie: {
+          id: string;
+          tmdbId: number;
+          title: string;
+          posterUrl: string;
+          director: string | null;
+          castTop: unknown;
+          ratings: Array<{ source: string }>;
+          streamingCache: Array<{ id: string }>;
+        };
+      }>;
+    }>;
+  }>) => inputPacks.map((pack) => {
+    const tmdbFrequency = new Map<number, number>();
+    pack.nodes.forEach((node) => {
+      node.movies.forEach((assignment) => {
+        const current = tmdbFrequency.get(assignment.movie.tmdbId) ?? 0;
+        tmdbFrequency.set(assignment.movie.tmdbId, current + 1);
+      });
+    });
+    const duplicateTmdbIds = [...tmdbFrequency.entries()]
+      .filter(([, count]) => count > 1)
+      .map(([tmdbId]) => tmdbId)
+      .sort((a, b) => a - b);
+    const totalAssignedTitles = pack.nodes.reduce((acc, node) => acc + node.movies.length, 0);
+    const duplicateRatePct = totalAssignedTitles > 0
+      ? Math.round((duplicateTmdbIds.length / totalAssignedTitles) * 10000) / 100
+      : 0;
+    return {
     id: pack.id,
     slug: pack.slug,
     name: pack.name,
     isEnabled: pack.isEnabled,
+    totalAssignedTitles,
+    duplicateTitlesCount: duplicateTmdbIds.length,
+    duplicateRatePct,
+    duplicateTmdbIds,
     nodes: pack.nodes.map((node) => {
       let eligibleTitles = 0;
       let missingPosterCount = 0;
       let missingRatingsCount = 0;
       let missingReceptionCount = 0;
       let missingCreditsCount = 0;
+      let missingStreamingCount = 0;
       const titles = node.movies.map((assignment) => {
-        const evaluation = evaluateEligibility(assignment.movie);
+        const evaluation = evaluateCurriculumEligibility({
+          posterUrl: assignment.movie.posterUrl,
+          director: assignment.movie.director,
+          castTop: assignment.movie.castTop,
+          ratings: assignment.movie.ratings,
+          hasStreamingData: assignment.movie.streamingCache.length > 0,
+        });
         if (evaluation.isEligible) {
           eligibleTitles += 1;
         }
@@ -128,6 +142,9 @@ export async function GET(request: Request): Promise<Response> {
         if (evaluation.missingCredits) {
           missingCreditsCount += 1;
         }
+        if (evaluation.missingStreaming) {
+          missingStreamingCount += 1;
+        }
         return {
           id: assignment.movie.id,
           rank: assignment.rank,
@@ -135,11 +152,13 @@ export async function GET(request: Request): Promise<Response> {
           title: assignment.movie.title,
           posterUrl: assignment.movie.posterUrl,
           isEligible: evaluation.isEligible,
+          completenessTier: evaluation.completenessTier,
           missing: {
             poster: evaluation.missingPoster,
             ratings: evaluation.missingRatings,
             reception: evaluation.missingReception,
             credits: evaluation.missingCredits,
+            streaming: evaluation.missingStreaming,
           },
         };
       });
@@ -155,17 +174,35 @@ export async function GET(request: Request): Promise<Response> {
         missingRatingsCount,
         missingReceptionCount,
         missingCreditsCount,
+        missingStreamingCount,
         titles,
+        eligibilityCoverage: titles.length > 0
+          ? Math.round((eligibleTitles / titles.length) * 100)
+          : 0,
       };
     }),
+  };
+  });
+
+  const activeSeason = seasons.find((season) => season.isActive) ?? null;
+  const seasonPayload = seasons.map((season) => ({
+    id: season.id,
+    slug: season.slug,
+    name: season.name,
+    isActive: season.isActive,
+    packs: mapPacks(season.packs),
   }));
+  const activePacks = activeSeason ? mapPacks(activeSeason.packs) : [];
 
   return ok({
-    activeSeason: {
-      id: season.id,
-      slug: season.slug,
-      name: season.name,
-    },
-    packs,
+    activeSeason: activeSeason
+      ? {
+        id: activeSeason.id,
+        slug: activeSeason.slug,
+        name: activeSeason.name,
+      }
+      : null,
+    seasons: seasonPayload,
+    packs: activePacks,
   });
 }

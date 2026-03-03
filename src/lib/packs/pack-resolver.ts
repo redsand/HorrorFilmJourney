@@ -8,7 +8,7 @@ import {
   DEFAULT_SEASON_NAME,
   DEFAULT_SEASON_SLUG,
 } from '@/lib/packs/constants';
-import { getThemeConfigForPackSlug } from '@/lib/theme/themes';
+import { getThemeConfigForPackSlug, getThemePresetForPackSlug } from '@/lib/theme/themes';
 
 export type EffectivePack = {
   packId: string | null;
@@ -127,7 +127,8 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
         isEnabled: true,
         seasonSlug: DEFAULT_SEASON_SLUG,
         seasonLabel: DEFAULT_SEASON_NAME,
-        themeKey: getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
+        themeKey: getThemePresetForPackSlug(DEFAULT_PACK_SLUG)?.themeName
+          ?? getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
       }],
     };
   }
@@ -150,16 +151,19 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
     },
   });
 
+  const enabledPacks = packs.filter((pack) => pack.isEnabled);
+
   return {
     activeSeason: activeSeason ?? { slug: DEFAULT_SEASON_SLUG, name: DEFAULT_SEASON_NAME },
-    packs: packs.length > 0
-      ? packs.map((pack) => ({
+    packs: enabledPacks.length > 0
+      ? enabledPacks.map((pack) => ({
         slug: pack.slug,
         name: pack.name,
         isEnabled: pack.isEnabled,
         seasonSlug: pack.season.slug,
         seasonLabel: activeSeason?.name ?? DEFAULT_SEASON_NAME,
-        themeKey: getThemeConfigForPackSlug(pack.slug).themeName,
+        themeKey: getThemePresetForPackSlug(pack.slug)?.themeName
+          ?? getThemeConfigForPackSlug(pack.slug).themeName,
       }))
       : [{
         slug: DEFAULT_PACK_SLUG,
@@ -167,7 +171,8 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
         isEnabled: true,
         seasonSlug: DEFAULT_SEASON_SLUG,
         seasonLabel: DEFAULT_SEASON_NAME,
-        themeKey: getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
+        themeKey: getThemePresetForPackSlug(DEFAULT_PACK_SLUG)?.themeName
+          ?? getThemeConfigForPackSlug(DEFAULT_PACK_SLUG).themeName,
       }],
   };
 }

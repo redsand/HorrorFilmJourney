@@ -374,6 +374,7 @@ model Season {
   id        String   @id @default(cuid())
   slug      String   @unique
   name      String
+  description String?
   isActive  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

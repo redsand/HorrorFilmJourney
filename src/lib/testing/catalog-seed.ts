@@ -223,6 +223,80 @@ const SEASON_1_CURRICULUM: Array<{
   },
 ];
 
+const SEASON_2_CULT_SKELETON: Array<{
+  slug: string;
+  name: string;
+  learningObjective: string;
+  whatToNotice: string[];
+  eraSubgenreFocus: string;
+  spoilerPolicyDefault: 'NO_SPOILERS' | 'LIGHT' | 'FULL';
+}> = [
+  {
+    slug: 'birth-of-midnight',
+    name: 'The Birth of Midnight Movies',
+    learningObjective: 'Origins of cult fandom and underground screenings.',
+    whatToNotice: ['Regional filmmaking fingerprints', 'DIY production energy', 'Audience ritual moments'],
+    eraSubgenreFocus: '1960s-1980s · midnight movies, outsider cinema',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'grindhouse-exploitation',
+    name: 'Grindhouse & Exploitation',
+    learningObjective: 'Low-budget rebellion and shock cinema.',
+    whatToNotice: ['Transgressive spectacle', 'Rough-cut aesthetic', 'Taboo-driven marketing'],
+    eraSubgenreFocus: '1960s-1980s · grindhouse, exploitation',
+    spoilerPolicyDefault: 'LIGHT',
+  },
+  {
+    slug: 'so-bad-its-good',
+    name: 'So-Bad-It\'s-Good',
+    learningObjective: 'Accidental masterpieces and ironic worship.',
+    whatToNotice: ['Unintended tonal comedy', 'Earnest performances vs odd craft', 'Audience quote culture'],
+    eraSubgenreFocus: '1960s-2000s · outsider failures, ironic cult',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'cult-sci-fi-fantasy',
+    name: 'Cult Sci-Fi & Fantasy',
+    learningObjective: 'Visionary oddities and misunderstood epics.',
+    whatToNotice: ['Production ambition vs budget', 'Lore density', 'World-building cult hooks'],
+    eraSubgenreFocus: '1970s-2000s · cult sci-fi, fantasy oddities',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'punk-counterculture',
+    name: 'Punk & Counterculture Cinema',
+    learningObjective: 'Anti-establishment film movements.',
+    whatToNotice: ['DIY ethos', 'Political provocation', 'Subculture iconography'],
+    eraSubgenreFocus: '1970s-1990s · punk, counterculture, transgression',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'vhs-video-store-era',
+    name: 'VHS & The Video Store Era',
+    learningObjective: 'Shelf discoveries and rental legends.',
+    whatToNotice: ['Cover-art attraction', 'Word-of-mouth discovery', 'Regional rental circulation'],
+    eraSubgenreFocus: '1980s-2000s · VHS cult, rental-era canon',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'cult-comedy-absurdism',
+    name: 'Cult Comedy & Absurdism',
+    learningObjective: 'Offbeat humor that found devoted fans.',
+    whatToNotice: ['Absurdist escalation', 'Deadpan delivery', 'Community in-jokes'],
+    eraSubgenreFocus: '1970s-present · absurdist cult comedy',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+  {
+    slug: 'modern-cult-phenomena',
+    name: 'Modern Cult Phenomena',
+    learningObjective: 'Films that became cult in the internet age.',
+    whatToNotice: ['Meme-era discovery', 'Community reinterpretation', 'Long-tail online fandom'],
+    eraSubgenreFocus: '2000s-present · internet-age cult cinema',
+    spoilerPolicyDefault: 'NO_SPOILERS',
+  },
+];
+
 async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Promise<void> {
   const movieByTmdbId = new Map(
     (await prisma.movie.findMany({
@@ -276,6 +350,75 @@ async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Prom
         .filter((item): item is { nodeId: string; movieId: string; rank: number } => Boolean(item)),
       skipDuplicates: true,
     });
+  }
+}
+
+async function seedSeason2CultSkeleton(prisma: PrismaClient): Promise<void> {
+  const season = await prisma.season.upsert({
+    where: { slug: 'season-2' },
+    create: {
+      slug: 'season-2',
+      name: 'Season 2',
+      description: 'Midnight cinema, underground legends, and the films that refused to die.',
+      isActive: false,
+    },
+    update: {
+      name: 'Season 2',
+      description: 'Midnight cinema, underground legends, and the films that refused to die.',
+      isActive: false,
+    },
+    select: { id: true },
+  });
+
+  const pack = await prisma.genrePack.upsert({
+    where: { slug: 'cult-classics' },
+    create: {
+      slug: 'cult-classics',
+      name: 'Cult Classics',
+      seasonId: season.id,
+      isEnabled: false,
+      primaryGenre: 'cult',
+      description: 'Midnight movies, grindhouse legends, and the underground canon.',
+    },
+    update: {
+      name: 'Cult Classics',
+      seasonId: season.id,
+      isEnabled: false,
+      primaryGenre: 'cult',
+      description: 'Midnight movies, grindhouse legends, and the underground canon.',
+    },
+    select: { id: true },
+  });
+
+  for (const [index, node] of SEASON_2_CULT_SKELETON.entries()) {
+    const upsertedNode = await prisma.journeyNode.upsert({
+      where: {
+        packId_slug: {
+          packId: pack.id,
+          slug: node.slug,
+        },
+      },
+      create: {
+        packId: pack.id,
+        slug: node.slug,
+        name: node.name,
+        learningObjective: node.learningObjective,
+        whatToNotice: node.whatToNotice,
+        eraSubgenreFocus: node.eraSubgenreFocus,
+        spoilerPolicyDefault: node.spoilerPolicyDefault,
+        orderIndex: index + 1,
+      },
+      update: {
+        name: node.name,
+        learningObjective: node.learningObjective,
+        whatToNotice: node.whatToNotice,
+        eraSubgenreFocus: node.eraSubgenreFocus,
+        spoilerPolicyDefault: node.spoilerPolicyDefault,
+        orderIndex: index + 1,
+      },
+      select: { id: true },
+    });
+    await prisma.nodeMovie.deleteMany({ where: { nodeId: upsertedNode.id } });
   }
 }
 
@@ -401,6 +544,7 @@ export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<Se
   const totalRatings = await prisma.movieRating.count();
   const totalEvidence = await prisma.evidencePacket.count();
   await seedSeason1Curriculum(prisma, pack.id);
+  await seedSeason2CultSkeleton(prisma);
 
   return {
     movieCount,

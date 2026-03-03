@@ -51,5 +51,29 @@ describe('seed catalog verification', () => {
     });
     expect(activeSeason?.slug).toBe('season-1');
     expect(activeSeason?.packs.some((pack) => pack.slug === 'horror' && pack.isEnabled)).toBe(true);
+
+    const season2 = await prisma.season.findUnique({
+      where: { slug: 'season-2' },
+      include: { packs: { include: { nodes: true } } },
+    });
+    expect(season2?.isActive).toBe(false);
+    expect(season2?.description).toBe('Midnight cinema, underground legends, and the films that refused to die.');
+    const cultPack = season2?.packs.find((pack) => pack.slug === 'cult-classics');
+    expect(cultPack).toBeDefined();
+    expect(cultPack?.isEnabled).toBe(false);
+    expect(cultPack?.primaryGenre).toBe('cult');
+    expect(cultPack?.description).toBe('Midnight movies, grindhouse legends, and the underground canon.');
+    expect(cultPack?.nodes.length).toBe(8);
+
+    const cultNodeMovies = await prisma.nodeMovie.count({
+      where: {
+        node: {
+          pack: {
+            slug: 'cult-classics',
+          },
+        },
+      },
+    });
+    expect(cultNodeMovies).toBe(0);
   });
 });

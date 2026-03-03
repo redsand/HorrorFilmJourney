@@ -97,6 +97,41 @@ describe('experience state decisions', () => {
     expect(result.packSelection?.packs[0]?.slug).toBe('horror');
   });
 
+  it('does not include disabled packs in onboarding pack selection', async () => {
+    process.env.SEASONS_PACKS_ENABLED = 'true';
+    const season = await prisma.season.create({
+      data: { slug: 'season-1', name: 'Season 1', isActive: true },
+    });
+    await prisma.genrePack.createMany({
+      data: [
+        {
+          slug: 'horror',
+          name: 'Horror',
+          seasonId: season.id,
+          isEnabled: true,
+          primaryGenre: 'horror',
+        },
+        {
+          slug: 'cult-classics',
+          name: 'Cult Classics',
+          seasonId: season.id,
+          isEnabled: false,
+          primaryGenre: 'cult',
+        },
+      ],
+    });
+    const user = await prisma.user.create({
+      data: {
+        displayName: 'Hidden Disabled Pack',
+        profile: { create: { tolerance: 3, pacePreference: 'balanced', onboardingCompleted: false } },
+      },
+    });
+
+    const result = await getExperience(user.id, prisma);
+    expect(result.state).toBe('PACK_SELECTION_NEEDED');
+    expect(result.packSelection?.packs.map((pack) => pack.slug)).toEqual(['horror']);
+  });
+
   it('returns SHOW_RECOMMENDATION_BUNDLE with cards when user has profile and batch', async () => {
     const user = await prisma.user.create({
       data: {

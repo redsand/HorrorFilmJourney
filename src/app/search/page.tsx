@@ -156,7 +156,13 @@ export default function SearchPage() {
       {items.map((item) => (
         <Card className="p-3" key={item.tmdbId}>
           <div className="flex items-center gap-3">
-            <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#111116]">
+            <a
+              className="relative block h-16 w-12 shrink-0 overflow-hidden rounded-md bg-[#111116] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cc-focus)]"
+              href={`/companion/${item.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+              rel="noopener noreferrer"
+              target="_blank"
+              title={`Open companion for ${item.title} in a new tab`}
+            >
               <PosterImage
                 alt={`${item.title} poster`}
                 className="object-cover"
@@ -164,7 +170,7 @@ export default function SearchPage() {
                 sizes="48px"
                 src={item.posterUrl}
               />
-            </div>
+            </a>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-[var(--text)]">{item.title}</p>
               <p className="text-xs text-[var(--text-muted)]">{item.year ?? 'Unknown year'}</p>
