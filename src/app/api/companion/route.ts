@@ -147,7 +147,7 @@ function parseCast(value: unknown): CreditCast[] {
 
       return null;
     })
-    .filter((entry): entry is CreditCast => Boolean(entry) && entry.name.length > 0);
+    .filter((entry): entry is CreditCast => entry !== null);
 }
 
 function parseGenreList(value: unknown): string[] {
@@ -900,7 +900,9 @@ export async function GET(request: Request): Promise<Response> {
       movie: {
         tmdbId: movie.tmdbId,
         title: tmdbFacts?.title ?? movie.title,
-        ...(tmdbFacts?.year || movie.year ? { year: tmdbFacts?.year ?? movie.year } : {}),
+        ...((typeof tmdbFacts?.year === 'number' || typeof movie.year === 'number')
+          ? { year: (tmdbFacts?.year ?? movie.year ?? undefined) as number | undefined }
+          : {}),
         posterUrl: tmdbFacts?.posterUrl ?? movie.posterUrl,
       },
       metadata: {
