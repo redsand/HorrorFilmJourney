@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 
 export type ErrorReportInput = {
   route: string;
@@ -7,7 +7,7 @@ export type ErrorReportInput = {
   requestId?: string | null;
   userId?: string | null;
   stack?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonValue;
 };
 
 export interface ErrorReporter {
@@ -47,7 +47,7 @@ export async function captureError(
           stack: input.stack,
           requestId: input.requestId ?? undefined,
           userId: input.userId ?? undefined,
-          metadata: input.metadata,
+          metadata: input.metadata ?? undefined,
         },
       });
     }
