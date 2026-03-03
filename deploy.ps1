@@ -33,6 +33,10 @@ $remoteArchive = "/tmp/$archiveName"
 $resolvedKey = (Resolve-Path $KeyPath).Path
 $envFileExists = (Test-Path $EnvFile)
 
+if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile) -and -not $Bootstrap.IsPresent) {
+  throw "Catalog restore is only allowed during initial deployment. Use -CatalogBackupFile only together with -Bootstrap."
+}
+
 Write-Host "Creating release archive: $archivePath"
 Exec-OrThrow "git archive --format=tar.gz --output `"$archivePath`" HEAD"
 

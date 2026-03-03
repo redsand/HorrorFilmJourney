@@ -231,11 +231,16 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   const pacePreference = String(formData.get('pacePreference') ?? 'balanced');
   const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
 
-  await apiJson('/api/onboarding', {
+  const onboardingResponse = await apiJson('/api/onboarding', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, horrorDNA: {} }),
   });
+  if (onboardingResponse.status === 200) {
+    await apiJson('/api/recommendations/next', {
+      method: 'POST',
+    });
+  }
   revalidatePath('/');
 }
 
