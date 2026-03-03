@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-contracts';
 import { recommendationCardNarrativeSchema } from '@/lib/contracts/narrative-contracts';
 
-export const NARRATIVE_VERSION = 'narrative-v1';
+export const NARRATIVE_VERSION = 'narrative-v2';
 
 export type NarrativeHashInput = {
   movieFacts: {

@@ -67,12 +67,19 @@ export function buildNarrative(movie: CandidateMovie, rank: number): Recommendat
   const primaryGenre = movie.genres[0] ?? 'horror';
   const secondaryGenre = movie.genres[1];
   const genreLabel = secondaryGenre ? `${primaryGenre}/${secondaryGenre}` : primaryGenre;
+  const eraLabel = movie.year ? `${Math.floor(movie.year / 10) * 10}s` : 'its era';
   const additionalRating = movie.ratings.additional[0];
   const ratingSignal = additionalRating?.rawValue
     ? `${additionalRating.source.replaceAll('_', ' ')} ${additionalRating.rawValue}`
     : additionalRating
       ? `${additionalRating.source.replaceAll('_', ' ')} ${additionalRating.value}/${additionalRating.scale}`
       : 'multi-source reception';
+  const teachingVariant = rank % 3;
+  const whatItTeaches = teachingVariant === 1
+    ? `How ${movie.title} builds dread through ${genreLabel} pacing, and why that ${eraLabel} rhythm still works.`
+    : teachingVariant === 2
+      ? `How ${movie.title} uses framing, tone, and escalation to define its ${genreLabel} identity for this journey node.`
+      : `How to decode ${movie.title}'s craft signals: tension setup, payoff timing, and audience response cues from ${ratingSignal}.`;
 
   const watchFor = [
     `How ${movie.title} stages ${genreLabel} tension scene-by-scene`,
@@ -82,7 +89,7 @@ export function buildNarrative(movie: CandidateMovie, rank: number): Recommendat
 
   return recommendationCardNarrativeSchema.parse({
     whyImportant: `${movie.title} broadens your journey with a ${genreLabel} angle and a clear stylistic signature.`,
-    whatItTeaches: `How to read pacing, visual language, and tone decisions in ${genreLabel} horror.`,
+    whatItTeaches,
     watchFor,
     historicalContext: movie.year
       ? `Released in ${movie.year}, it shows how ${genreLabel} conventions evolved in that period and why they still influence modern horror.`

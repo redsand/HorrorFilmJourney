@@ -48,6 +48,11 @@ npm run dev
    - cards have poster + ratings + codex sections
    - streaming section exists (offers may be empty)
    - evidence section exists (may be empty)
+5. Verify account security flow:
+   - Open `/profile`
+   - Open `Change Password`
+   - Submit current password + new password
+   - Log out and confirm login works with the new password
 
 ## What to Record During User Testing
 
@@ -85,6 +90,7 @@ npm run validate:rc
 - [ ] Card actions (`Watch`, `Already seen`, `Skip`) succeed while authenticated
 - [ ] `/history` loads user-scoped interactions
 - [ ] `/profile` shows display name, email, role badge, and logout
+- [ ] `/profile/password` updates password and new login succeeds
 - [ ] Admin account sees `/admin/users` entry in profile
 - [ ] Non-admin account does not see `/admin/users` entry
 - [ ] `/admin/users` supports search, create, and edit flows

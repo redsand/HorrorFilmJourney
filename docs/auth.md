@@ -37,6 +37,12 @@ When enabled:
 - User routes require any authenticated session.
 - Admin routes require `isAdmin=true`.
 
+## Password management
+
+- Users can change their own password via `PATCH /api/profile/password`.
+- This requires a valid session and the correct `currentPassword`.
+- Admins can still reset user credentials from admin user management flows.
+
 ## Optional legacy header fallback (development only)
 
 - Set `DEV_LEGACY_HEADERS=true` to enable temporary fallback:

@@ -328,6 +328,14 @@ export default function ProfilePage() {
             ) : null}
           </div>
           <div className="border-t border-[var(--border)] pt-3">
+            <Link className="mb-2 inline-flex w-full" href="/profile/password">
+              <Button className="w-full" variant="secondary">
+                <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <path d="M7 11V8a5 5 0 1110 0v3m-9 0h8a2 2 0 012 2v5H6v-5a2 2 0 012-2Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                </svg>
+                Change Password
+              </Button>
+            </Link>
             <Link className="mb-2 inline-flex w-full" href="/profile/progression">
               <Button className="w-full" variant="secondary">
                 <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">

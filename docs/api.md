@@ -96,6 +96,41 @@ Alternative:
 
 ---
 
+## PATCH /api/profile/password
+
+Change the authenticated user's password.
+
+### Auth
+
+- Requires valid session cookie.
+
+### Body
+
+```json
+{
+  "currentPassword": "current-password",
+  "newPassword": "new-strong-password"
+}
+```
+
+### Rules
+
+- `currentPassword` is required, minimum length `8`.
+- `newPassword` is required, minimum length `8`.
+- `newPassword` must differ from `currentPassword`.
+- Returns `400` if current password does not match existing credential.
+
+### Success
+
+```json
+{
+  "data": { "success": true },
+  "error": null
+}
+```
+
+---
+
 ## GET /api/experience
 
 Returns current UX state for authenticated user.
