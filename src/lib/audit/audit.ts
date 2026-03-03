@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 
 export type AuditAction =
   | 'ADMIN_USER_CREATE'
@@ -16,7 +16,7 @@ export async function logAuditEvent(
     adminUserId: string;
     action: AuditAction;
     targetId?: string | null;
-    metadata?: Record<string, unknown>;
+    metadata?: Prisma.InputJsonValue;
   },
 ): Promise<void> {
   await prisma.auditEvent.create({
@@ -24,7 +24,7 @@ export async function logAuditEvent(
       userId: input.adminUserId,
       action: input.action,
       targetId: input.targetId ?? undefined,
-      metadata: input.metadata,
+      metadata: input.metadata ?? undefined,
     },
   });
 }

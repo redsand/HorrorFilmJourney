@@ -174,7 +174,7 @@ export default function SearchPage() {
               disabled={item.inWatchlist || watchlistPending.has(item.tmdbId)}
               onClick={() => void addToWatchlist(item.tmdbId)}
               type="button"
-              variant={item.inWatchlist ? 'secondary' : 'default'}
+              variant={item.inWatchlist ? 'secondary' : 'primary'}
             >
               {!item.inWatchlist && !watchlistPending.has(item.tmdbId) ? (
                 <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">

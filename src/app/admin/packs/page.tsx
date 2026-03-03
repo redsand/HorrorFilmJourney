@@ -99,7 +99,7 @@ export default function AdminPacksPage() {
                 }
               }}
               type="button"
-              variant={season.isActive ? 'secondary' : 'default'}
+              variant={season.isActive ? 'secondary' : 'primary'}
             >
               {season.isActive ? 'Active' : 'Set Active'}
             </Button>
@@ -129,7 +129,7 @@ export default function AdminPacksPage() {
                       setError(payload?.error?.message ?? 'Unable to update pack');
                     }}
                     type="button"
-                    variant={pack.isEnabled ? 'secondary' : 'default'}
+                    variant={pack.isEnabled ? 'secondary' : 'primary'}
                   >
                     {pack.isEnabled ? 'Disable' : 'Enable'}
                   </Button>
