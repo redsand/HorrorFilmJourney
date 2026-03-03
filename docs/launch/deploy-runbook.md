@@ -65,3 +65,17 @@ Restore smoke procedure:
    - `npm run prisma:generate`
    - `npm run seed:catalog` (idempotency check)
 4. Open app and verify login + recommendation flow.
+
+## 6) Season 2 mastered content upload/import
+
+Use this when promoting a curated Season 2 dataset from local to production.
+
+1. Export canonical file locally:
+   - `npm run export:season2:canonical`
+2. Upload + import through deploy helper:
+   - `.\deploy.ps1 -HostName cinemacodex.com -User root -KeyPath ~/.ssh/djvalet.key -EnvFile .\.env.production -Season2MasteredFile .\docs\season\season-2-cult-classics-mastered.json -ImportSeason2Mastered`
+3. Manual remote fallback:
+   - `scp -i ~/.ssh/djvalet.key .\docs\season\season-2-cult-classics-mastered.json root@cinemacodex.com:/opt/cinemacodex/shared/backups/season-2-cult-classics-mastered.json`
+   - `ssh -i ~/.ssh/djvalet.key root@cinemacodex.com "set -a; . /opt/cinemacodex/shared/.env; set +a; cd /opt/cinemacodex/current; npm run import:season2:cult -- --input /opt/cinemacodex/shared/backups/season-2-cult-classics-mastered.json"`
+4. Optional activation after import:
+   - `ssh -i ~/.ssh/djvalet.key root@cinemacodex.com "set -a; . /opt/cinemacodex/shared/.env; set +a; cd /opt/cinemacodex/current; npm run publish:season2 -- --apply"`

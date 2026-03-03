@@ -13,6 +13,9 @@ param(
   [string]$Domain = "cinemacodex.com",
   [string]$DomainAliases = "www.cinemacodex.com",
   [string]$LetsEncryptEmail = ""
+  ,
+  [string]$Season2MasteredFile = "",
+  [switch]$ImportSeason2Mastered
 )
 
 $ErrorActionPreference = "Stop"
@@ -35,6 +38,10 @@ $envFileExists = (Test-Path $EnvFile)
 
 if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile) -and -not $Bootstrap.IsPresent) {
   throw "Catalog restore is only allowed during initial deployment. Use -CatalogBackupFile only together with -Bootstrap."
+}
+
+if ($ImportSeason2Mastered.IsPresent -and [string]::IsNullOrWhiteSpace($Season2MasteredFile)) {
+  throw "ImportSeason2Mastered requires -Season2MasteredFile."
 }
 
 Write-Host "Creating release archive: $archivePath"
@@ -105,6 +112,20 @@ if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile)) {
   Exec-OrThrow "scp -i `"$resolvedKey`" `"$CatalogBackupFile`" ${User}@${HostName}:$remoteBackupPath"
   Write-Host "Restoring catalog backup on remote"
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run catalog:restore -- --input $remoteBackupPath`""
+}
+
+if ($ImportSeason2Mastered.IsPresent) {
+  if (-not (Test-Path $Season2MasteredFile)) {
+    throw "Season 2 mastered file not found: $Season2MasteredFile"
+  }
+  $season2Name = [System.IO.Path]::GetFileName($Season2MasteredFile)
+  $season2RemoteDir = "$RemoteAppRoot/shared/backups"
+  $season2RemotePath = "$season2RemoteDir/$season2Name"
+  Write-Host "Uploading Season 2 mastered file to remote: $season2Name"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"mkdir -p $season2RemoteDir`""
+  Exec-OrThrow "scp -i `"$resolvedKey`" `"$Season2MasteredFile`" ${User}@${HostName}:$season2RemotePath"
+  Write-Host "Importing Season 2 mastered file on remote"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season2:cult -- --input $season2RemotePath`""
 }
 
 Write-Host "Cleaning local archive"
