@@ -213,7 +213,15 @@ async function apiJson<T>(path: string, init?: RequestInit): Promise<{ data: T |
     headers: requestHeaders,
   });
 
-  const payload = (await response.json()) as { data: T | null; error: { code: string; message: string } | null };
+  let payload: { data: T | null; error: { code: string; message: string } | null };
+  try {
+    payload = (await response.json()) as { data: T | null; error: { code: string; message: string } | null };
+  } catch {
+    payload = {
+      data: null,
+      error: { code: 'INTERNAL_ERROR', message: 'Invalid API response' },
+    };
+  }
   return { ...payload, status: response.status };
 }
 
