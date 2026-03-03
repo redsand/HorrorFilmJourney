@@ -3,10 +3,14 @@ import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
 import { z } from 'zod';
+import { seasonsPacksEnabled } from '@/lib/feature-flags';
+import { DEFAULT_PACK_SLUG } from '@/lib/packs/constants';
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 
 const onboardingSchema = z.object({
   tolerance: z.number().int().min(1).max(5),
   pacePreference: z.enum(['slowburn', 'balanced', 'shock']),
+  selectedPackSlug: z.string().trim().min(1).optional(),
   horrorDNA: z.unknown().optional(),
 });
 
@@ -46,6 +50,22 @@ export async function POST(request: Request): Promise<Response> {
   const normalizedHorrorDna = ensureDefaultRecommendationStyle(
     parsed.data.horrorDNA ?? existingProfile?.horrorDNA ?? {},
   );
+  let selectedPackId: string | undefined;
+  if (seasonsPacksEnabled()) {
+    const requestedSlug = (parsed.data.selectedPackSlug ?? DEFAULT_PACK_SLUG).toLowerCase();
+    const pack = await prisma.genrePack.findUnique({
+      where: { slug: requestedSlug },
+      select: { id: true, isEnabled: true },
+    });
+    if (pack && pack.isEnabled) {
+      selectedPackId = pack.id;
+    } else {
+      const fallback = await resolveEffectivePackForUser(prisma, auth.userId);
+      if (fallback.packId) {
+        selectedPackId = fallback.packId;
+      }
+    }
+  }
 
   await prisma.userProfile.upsert({
     where: { userId: auth.userId },
@@ -55,12 +75,14 @@ export async function POST(request: Request): Promise<Response> {
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
       horrorDNA: normalizedHorrorDna as Prisma.InputJsonValue,
+      ...(selectedPackId ? { selectedPackId } : {}),
     },
     update: {
       onboardingCompleted: true,
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
       horrorDNA: normalizedHorrorDna as Prisma.InputJsonValue,
+      ...(selectedPackId ? { selectedPackId } : {}),
     },
   });
 

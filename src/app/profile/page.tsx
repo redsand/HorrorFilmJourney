@@ -31,6 +31,10 @@ type ProgressionData = {
   nextMilestone: number;
   unlockedThemes: string[];
 };
+type PacksResponse = {
+  activeSeason: { slug: string; name: string };
+  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+};
 
 export default function ProfilePage() {
   const [me, setMe] = useState<Me | null>(null);
@@ -44,6 +48,8 @@ export default function ProfilePage() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [dnaHistory, setDnaHistory] = useState<DnaHistory | null>(null);
   const [progression, setProgression] = useState<ProgressionData | null>(null);
+  const [packs, setPacks] = useState<PacksResponse | null>(null);
+  const [selectedPackSlug, setSelectedPackSlug] = useState<string>('horror');
 
   useEffect(() => {
     void (async () => {
@@ -73,6 +79,10 @@ export default function ProfilePage() {
         if (nextPace === 'slowburn' || nextPace === 'balanced' || nextPace === 'shock') {
           setPacePreference(nextPace);
         }
+        const nextPackSlug = preferencePayload?.data?.selectedPackSlug;
+        if (typeof nextPackSlug === 'string' && nextPackSlug.trim().length > 0) {
+          setSelectedPackSlug(nextPackSlug);
+        }
       }
       const insightResponse = await fetch('/api/profile/insights', {
         method: 'GET',
@@ -93,6 +103,14 @@ export default function ProfilePage() {
       if (progressionResponse.ok) {
         const progressionPayload = await progressionResponse.json();
         setProgression(progressionPayload?.data as ProgressionData);
+      }
+      const packsResponse = await fetch('/api/packs', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (packsResponse.ok) {
+        const packsPayload = await packsResponse.json();
+        setPacks((packsPayload?.data ?? null) as PacksResponse | null);
       }
       setLoading(false);
     })();
@@ -131,6 +149,45 @@ export default function ProfilePage() {
             <Chip tone={me.role === 'ADMIN' ? 'accent' : 'default'}>{me.role}</Chip>
           </div>
           <div className="space-y-2">
+            {packs?.packs?.length ? (
+              <>
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Pack ({packs.activeSeason.name})</p>
+                <div className="grid grid-cols-1 gap-2">
+                  {packs.packs.filter((pack) => pack.isEnabled).map((pack) => (
+                    <button
+                      className={`rounded-lg border px-3 py-2 text-sm ${
+                        selectedPackSlug === pack.slug
+                          ? 'border-[rgba(193,18,31,0.7)] bg-[rgba(155,17,30,0.22)] text-[var(--text)]'
+                          : 'border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text-muted)]'
+                      }`}
+                      key={pack.slug}
+                      onClick={async () => {
+                        if (pack.slug === selectedPackSlug || savingPreference) {
+                          return;
+                        }
+                        setSavingPreference(true);
+                        try {
+                          const response = await fetch('/api/profile/preferences', {
+                            method: 'PATCH',
+                            credentials: 'include',
+                            headers: { 'content-type': 'application/json' },
+                            body: JSON.stringify({ selectedPackSlug: pack.slug }),
+                          });
+                          if (response.ok) {
+                            setSelectedPackSlug(pack.slug);
+                          }
+                        } finally {
+                          setSavingPreference(false);
+                        }
+                      }}
+                      type="button"
+                    >
+                      {pack.name}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : null}
             <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Recommendation style</p>
             <div className="grid grid-cols-2 gap-2">
               {(['diversity', 'popularity'] as const).map((style) => (
@@ -252,6 +309,7 @@ export default function ProfilePage() {
                       body: JSON.stringify({
                         tolerance,
                         pacePreference,
+                        selectedPackSlug,
                       }),
                     });
                     if (response.ok) {
@@ -297,7 +355,10 @@ export default function ProfilePage() {
             </Link>
           </div>
           {me.role === 'ADMIN' ? (
-            <Link className="inline-flex" href="/admin/users"><Button variant="secondary">Manage Users</Button></Link>
+            <div className="grid grid-cols-2 gap-2">
+              <Link className="inline-flex" href="/admin/users"><Button className="w-full" variant="secondary">Manage Users</Button></Link>
+              <Link className="inline-flex" href="/admin/feedback"><Button className="w-full" variant="secondary">Manage Feedback</Button></Link>
+            </div>
           ) : null}
         </Card>
       )}

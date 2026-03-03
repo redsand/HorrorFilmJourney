@@ -18,6 +18,7 @@ import {
 import { DeterministicStubStreamingProvider } from '@/lib/streaming/streaming-provider';
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
 import { syncTmdbHorrorCandidates } from '@/lib/tmdb/live-candidate-sync';
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 import {
   computeEvidenceHashes,
   computeNarrativeHash,
@@ -72,6 +73,7 @@ export type RankedMovieId = string;
 export type CandidateConstraints = {
   targetCount: number;
   excludeRecentSkippedDays: number;
+  packPrimaryGenre: string;
 };
 
 export type RecommendationContext = {
@@ -769,10 +771,11 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
     const allMovies = await this.prisma.movie.findMany({
       orderBy: { tmdbId: 'asc' },
-      select: { id: true, tmdbId: true, posterUrl: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
+      select: { id: true, tmdbId: true, posterUrl: true, genres: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
     });
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
+      .filter((movie) => normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase()))
       .filter((movie) => isRecommendationEligibleMovie({
         posterUrl: movie.posterUrl,
         posterLastValidatedAt: movie.posterLastValidatedAt,
@@ -1063,6 +1066,7 @@ export async function generateRecommendationBatchModern(
   });
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const excludeRecentSkippedDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
+  const packPrimaryGenre = options.packPrimaryGenre ?? 'horror';
 
   const countersStartedAt = nowMs();
   const [excludedSeenCount, excludedSkippedRecentCount, allMovieCount] = await Promise.all([
@@ -1084,7 +1088,11 @@ export async function generateRecommendationBatchModern(
   });
 
   const candidateStartedAt = nowMs();
-  const candidateIds = await deps.candidateGenerator.generateCandidates(userId, { targetCount, excludeRecentSkippedDays });
+  const candidateIds = await deps.candidateGenerator.generateCandidates(userId, {
+    targetCount,
+    excludeRecentSkippedDays,
+    packPrimaryGenre,
+  });
   console.info('[recommendations.engine] modern candidates generated', {
     durationMs: elapsedMs(candidateStartedAt),
     candidateCount: candidateIds.length,
@@ -1246,6 +1254,7 @@ export async function generateRecommendationBatchModern(
   const batch = await prisma.recommendationBatch.create({
     data: {
       userId,
+      ...(options.packId ? { packId: options.packId } : {}),
       journeyNode: 'ENGINE_V1_CORE',
       rationale: 'modern pipeline: interface-composed v1 adapters',
       items: {
@@ -1418,9 +1427,15 @@ export async function generateRecommendationBatch(
   });
 
   const mode = process.env.REC_ENGINE_MODE === 'modern' ? 'modern' : 'v1';
+  const effectivePack = await resolveEffectivePackForUser(prisma, userId);
+  const effectiveOptions: RecommendationEngineOptions = {
+    ...options,
+    packId: effectivePack.packId,
+    packPrimaryGenre: effectivePack.primaryGenre,
+  };
   console.info('[recommendations.engine] mode selected', { mode });
   if (mode === 'v1') {
-    const result = await generateRecommendationBatchV1(userId, prisma, options);
+    const result = await generateRecommendationBatchV1(userId, prisma, effectiveOptions);
     console.info('[recommendations.engine] v1 completed', {
       durationMs: elapsedMs(startedAt),
       batchId: result.batchId,
@@ -1438,7 +1453,7 @@ export async function generateRecommendationBatch(
       evidenceRetriever: new CachedEvidenceRetrieverV1(prisma),
       narrativeComposer: new TemplateNarrativeComposerV1(llmProvider),
     },
-    options,
+    effectiveOptions,
   );
   console.info('[recommendations.engine] modern wrapper completed', {
     durationMs: elapsedMs(startedAt),

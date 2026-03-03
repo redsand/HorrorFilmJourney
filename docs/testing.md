@@ -38,6 +38,14 @@ npm run test:ollama:local
 npm run validate:rc
 ```
 
+## Prisma generation guard
+
+- Always generate Prisma client with:
+  - `npm run prisma:generate`
+- Do not run:
+  - `prisma generate --no-engine`
+- This repo enforces native engine presence via `scripts/assert-prisma-engine.ts` to prevent runtime `prisma://` errors in local Postgres development.
+
 If dependencies are unavailable in a constrained environment, run these in CI or a local dev setup with npm access.
 
 ## Narrative experience acceptance suite

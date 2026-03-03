@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import type { ReactNode } from 'react';
+import { FloatingFeedbackButton } from '@/components/feedback/FloatingFeedbackButton';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex min-h-dvh w-full max-w-[420px] flex-col px-4 pb-24 pt-[max(16px,env(safe-area-inset-top))]">
           {children}
         </div>
+        <FloatingFeedbackButton />
       </body>
     </html>
   );

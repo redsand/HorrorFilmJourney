@@ -17,6 +17,7 @@ export default function LoginPage() {
         <h1 className="text-xl font-semibold">Login</h1>
         <form
           className="mt-4 space-y-3"
+          aria-busy={loading}
           onSubmit={async (event) => {
             event.preventDefault();
             setLoading(true);
@@ -40,10 +41,22 @@ export default function LoginPage() {
             }
           }}
         >
-          <input className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2" onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" value={email} />
-          <input className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2" onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" value={password} />
-          {error ? <p className="text-sm text-[var(--accent)]">{error}</p> : null}
-          <Button className="w-full" type="submit">{loading ? 'Signing in...' : 'Sign in'}</Button>
+          <fieldset className="space-y-3 disabled:opacity-80" disabled={loading}>
+            <input className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2" onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" value={email} />
+            <input className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2" onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" value={password} />
+            {error ? <p className="text-sm text-[var(--accent)]">{error}</p> : null}
+            <Button className="w-full" disabled={loading} type="submit">
+              {loading ? (
+                <>
+                  <svg aria-hidden="true" className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" fill="none" opacity="0.3" r="9" stroke="currentColor" strokeWidth="2" />
+                    <path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                  </svg>
+                  Signing in...
+                </>
+              ) : 'Sign in'}
+            </Button>
+          </fieldset>
         </form>
       </Card>
     </main>

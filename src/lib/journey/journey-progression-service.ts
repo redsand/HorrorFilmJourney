@@ -83,7 +83,7 @@ export class JourneyProgressionService {
     const recommendationItem = signal.recommendationItemId
       ? await this.prisma.recommendationItem.findUnique({
         where: { id: signal.recommendationItemId },
-        select: { rank: true, batch: { select: { journeyNode: true } } },
+        select: { rank: true, batch: { select: { journeyNode: true, packId: true } } },
       })
       : null;
 
@@ -91,11 +91,12 @@ export class JourneyProgressionService {
       ? await this.prisma.recommendationBatch.findFirst({
         where: { userId: signal.userId },
         orderBy: { createdAt: 'desc' },
-        select: { journeyNode: true },
+        select: { journeyNode: true, packId: true },
       })
       : null;
 
     const journeyNode = recommendationItem?.batch.journeyNode ?? latestBatch?.journeyNode ?? DEFAULT_NODE;
+    const packId = recommendationItem?.batch.packId ?? latestBatch?.packId ?? null;
     const delta = masteryDelta(signal, journeyNode, recommendationItem?.rank ?? null);
     const now = new Date();
 
@@ -108,12 +109,14 @@ export class JourneyProgressionService {
       },
       create: {
         userId: signal.userId,
+        ...(packId ? { packId } : {}),
         journeyNode,
         completedCount: 1,
         masteryScore: delta,
         lastUpdatedAt: now,
       },
       update: {
+        ...(packId ? { packId } : {}),
         completedCount: { increment: 1 },
         masteryScore: { increment: delta },
         lastUpdatedAt: now,

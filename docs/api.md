@@ -14,6 +14,40 @@ All responses use the stable envelope:
 
 ---
 
+## GET /api/packs
+
+Returns the currently available season/packs selection payload.
+
+### Auth
+
+- Requires valid session cookie.
+
+### Feature flag
+
+- Controlled by `SEASONS_PACKS_ENABLED` (default `false`).
+- Scaffolding behavior currently returns Season 1 Horror payload in both flag states.
+
+### Success
+
+```json
+{
+  "data": {
+    "activeSeason": { "slug": "season-1", "name": "Season 1" },
+    "packs": [
+      {
+        "slug": "horror",
+        "name": "Horror",
+        "isEnabled": true,
+        "seasonSlug": "season-1"
+      }
+    ]
+  },
+  "error": null
+}
+```
+
+---
+
 ## POST /api/movies/upsert
 
 Upsert a movie by TMDB id.
@@ -124,6 +158,7 @@ Upserts onboarding profile answers for the current user.
 {
   "tolerance": 4,
   "pacePreference": "balanced",
+  "selectedPackSlug": "horror",
   "horrorDNA": {
     "subgenres": ["psychological", "supernatural"]
   }
@@ -134,6 +169,7 @@ Upserts onboarding profile answers for the current user.
 
 - `tolerance` is required and must be an integer `1..5`.
 - `pacePreference` is required and must be one of: `slowburn`, `balanced`, `shock`.
+- `selectedPackSlug` is optional (used when seasons/packs are enabled).
 - Existing profile is updated if present; otherwise created.
 
 ### Success
@@ -228,3 +264,144 @@ Admin-only evidence packet upsert for web support/citation grounding.
 ### Success
 
 Returns stored evidence packet in standard envelope.
+
+---
+
+## POST /api/feedback
+
+Create feedback for the currently authenticated user.
+
+### Auth
+
+- Requires valid session cookie.
+
+### Body
+
+```json
+{
+  "type": "BUG",
+  "category": "UX",
+  "title": "Poster cards are blank",
+  "description": "On Journey, poster image fails to render for all five cards.",
+  "route": "/journey"
+}
+```
+
+### Rules
+
+- `type` is required: `BUG | IDEA | CONFUSION | OTHER`
+- `title` is required, minimum length `5`
+- `description` is required, minimum length `10`
+- `category` is optional
+- `route` is optional; server also accepts `X-Current-Route` header fallback
+- `userAgent` is auto-captured from request headers
+
+### Success
+
+```json
+{
+  "data": { "id": "feedback_cuid" },
+  "error": null
+}
+```
+
+---
+
+## GET /api/admin/feedback
+
+List feedback (admin-only) with filtering and cursor pagination.
+
+### Auth
+
+- Requires admin session cookie.
+
+### Query params
+
+- `status`: `OPEN | IN_REVIEW | FIXED | ARCHIVED`
+- `type`: `BUG | IDEA | CONFUSION | OTHER`
+- `priority`: `LOW | MEDIUM | HIGH | CRITICAL`
+- `search`: case-insensitive match on title/description/category
+- `cursor`: feedback id cursor for pagination
+- `limit`: `1..100` (default `25`)
+
+### Success
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "id": "feedback_cuid",
+        "type": "BUG",
+        "status": "OPEN",
+        "priority": "MEDIUM",
+        "title": "Poster cards are blank",
+        "description": "...",
+        "user": {
+          "id": "user_cuid",
+          "displayName": "Tim",
+          "email": "tim@example.com"
+        }
+      }
+    ],
+    "nextCursor": null
+  },
+  "error": null
+}
+```
+
+---
+
+## PATCH /api/admin/feedback/:id
+
+Update feedback status/priority (admin-only).
+
+### Auth
+
+- Requires admin session cookie.
+
+### Body
+
+```json
+{
+  "status": "IN_REVIEW",
+  "priority": "HIGH"
+}
+```
+
+At least one of `status` or `priority` is required.
+
+### Success
+
+```json
+{
+  "data": {
+    "id": "feedback_cuid",
+    "status": "IN_REVIEW",
+    "priority": "HIGH"
+  },
+  "error": null
+}
+```
+
+---
+
+## DELETE /api/admin/feedback/:id
+
+Delete feedback (admin-only).
+
+### Auth
+
+- Requires admin session cookie.
+
+### Success
+
+```json
+{
+  "data": {
+    "id": "feedback_cuid",
+    "deleted": true
+  },
+  "error": null
+}
+```

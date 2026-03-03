@@ -58,6 +58,10 @@ type ProgressionResponse = {
   nextMilestone: number;
   unlockedThemes: string[];
 };
+type PacksResponse = {
+  activeSeason: { slug: string; name: string };
+  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+};
 
 function toWatchForTuple(watchFor: unknown): [string, string, string] {
   const entries = Array.isArray(watchFor)
@@ -195,11 +199,12 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   'use server';
   const tolerance = Number(formData.get('tolerance'));
   const pacePreference = String(formData.get('pacePreference') ?? 'balanced');
+  const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
 
   await apiJson('/api/onboarding', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ tolerance, pacePreference, horrorDNA: {} }),
+    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, horrorDNA: {} }),
   });
   revalidatePath('/');
 }
@@ -210,6 +215,9 @@ export default async function HomePage() {
   const unauthenticated = experienceResponse.status === 401;
   const progression = !unauthenticated
     ? (await apiJson<ProgressionResponse>('/api/profile/progression', { method: 'GET' })).data
+    : null;
+  const packs = !unauthenticated
+    ? (await apiJson<PacksResponse>('/api/packs', { method: 'GET' })).data
     : null;
 
   let recommendations: RecommendationResponse | null = null;
@@ -329,6 +337,31 @@ export default async function HomePage() {
                   </label>
                 ))}
               </div>
+            </div>
+            <div>
+              {packs?.packs?.length ? (
+                <>
+                  <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                    Pack ({packs.activeSeason.name})
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {packs.packs.filter((pack) => pack.isEnabled).map((pack, index) => (
+                      <label key={pack.slug} className="cursor-pointer">
+                        <input
+                          className="peer sr-only"
+                          defaultChecked={index === 0}
+                          name="selectedPackSlug"
+                          type="radio"
+                          value={pack.slug}
+                        />
+                        <span className="block rounded-lg border border-[var(--border)] px-3 py-2 text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
+                          {pack.name}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </>
+              ) : null}
             </div>
             <div>
               <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Pace</p>

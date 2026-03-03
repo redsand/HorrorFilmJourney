@@ -38,6 +38,8 @@ export type RecommendationBatchResult = {
 export type RecommendationEngineOptions = {
   excludeRecentSkippedDays?: number;
   targetCount?: number;
+  packPrimaryGenre?: string;
+  packId?: string | null;
 };
 
 const DEFAULT_TARGET_COUNT = 5;
@@ -202,6 +204,7 @@ export async function generateRecommendationBatchV1(
 ): Promise<RecommendationBatchResult> {
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const skipDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
+  const packPrimaryGenre = (options.packPrimaryGenre ?? 'horror').toLowerCase();
 
   const skipCutoff = new Date(Date.now() - skipDays * 24 * 60 * 60 * 1000);
 
@@ -263,6 +266,7 @@ export async function generateRecommendationBatchV1(
 
   const candidates = allMovies
     .filter((movie) => !excludedMovieIds.has(movie.id))
+    .filter((movie) => normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(packPrimaryGenre))
     .filter((movie) => isRecommendationEligibleMovie({
       posterUrl: movie.posterUrl,
       posterLastValidatedAt: movie.posterLastValidatedAt,
@@ -306,6 +310,7 @@ export async function generateRecommendationBatchV1(
   const batch = await prisma.recommendationBatch.create({
     data: {
       userId,
+      ...(options.packId ? { packId: options.packId } : {}),
       journeyNode: 'ENGINE_V1_CORE',
       rationale: 'v1 pipeline: candidates -> filters -> diversity -> deterministic narrative',
       items: {

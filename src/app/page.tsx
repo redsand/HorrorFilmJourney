@@ -40,8 +40,9 @@ export default async function LandingPage() {
         <p className="mt-4 text-sm leading-6 text-[var(--text-muted)]">
           Think Masterclass + Rotten Tomatoes + Watchlist AI in one focused mobile experience.
         </p>
-        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-3">
           <Link href="/signup"><Button className="w-full">Start Your Journey</Button></Link>
+          <Link href="/login"><Button className="w-full" variant="secondary">Sign In</Button></Link>
           <Link href="/demo"><Button className="w-full" variant="secondary">See How It Works</Button></Link>
         </div>
       </section>
@@ -72,6 +73,7 @@ export default async function LandingPage() {
           ['Companion Mode', 'Readable in-the-moment notes with NO_SPOILERS/LIGHT/FULL control.'],
           ['Thematic Insights', 'Find patterns in your ratings by decade, subgenre, and intensity.'],
           ['Journey Progression', 'Track mastery milestones across guided cinematic nodes.'],
+          ['Feedback Loop', 'Report confusion or ideas in-app so the experience improves continuously.'],
         ].map(([title, body]) => (
           <Card className="border-[rgba(193,18,31,0.3)]" key={title}>
             <h3 className="text-lg font-semibold">{title}</h3>
@@ -106,8 +108,9 @@ export default async function LandingPage() {
         <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">
           Replace passive browsing with guided cinematic intelligence.
         </p>
-        <div className="mt-4 flex justify-center">
-          <Link href="/signup"><Button>Start Your Journey</Button></Link>
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Link href="/signup"><Button className="w-full">Start Your Journey</Button></Link>
+          <Link href="/login"><Button className="w-full" variant="secondary">Sign In</Button></Link>
         </div>
       </section>
     </main>

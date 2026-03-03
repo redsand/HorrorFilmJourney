@@ -6,10 +6,25 @@ const {
   userFindUniqueMock,
   profileFindUniqueMock,
   profileUpsertMock,
+  genrePackFindUniqueMock,
 } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
   profileFindUniqueMock: vi.fn(),
   profileUpsertMock: vi.fn(),
+  genrePackFindUniqueMock: vi.fn(),
+}));
+
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  listAvailablePacks: vi.fn(async () => ({
+    activeSeason: { slug: 'season-1', name: 'Season 1' },
+    packs: [{ slug: 'horror', name: 'Horror', isEnabled: true, seasonSlug: 'season-1' }],
+  })),
+  resolveEffectivePackForUser: vi.fn(async () => ({
+    packId: 'pack_1',
+    packSlug: 'horror',
+    seasonSlug: 'season-1',
+    primaryGenre: 'horror',
+  })),
 }));
 
 vi.mock('@/lib/prisma', () => ({
@@ -19,6 +34,9 @@ vi.mock('@/lib/prisma', () => ({
       findUnique: profileFindUniqueMock,
       upsert: profileUpsertMock,
     },
+    genrePack: {
+      findUnique: genrePackFindUniqueMock,
+    },
   },
 }));
 
@@ -27,6 +45,8 @@ describe('profile preferences route', () => {
     userFindUniqueMock.mockReset();
     profileFindUniqueMock.mockReset();
     profileUpsertMock.mockReset();
+    genrePackFindUniqueMock.mockReset();
+    delete process.env.SEASONS_PACKS_ENABLED;
   });
 
   it('returns default diversity for missing profile', async () => {
@@ -105,5 +125,34 @@ describe('profile preferences route', () => {
       },
       error: null,
     });
+  });
+
+  it('updates selectedPackSlug when seasons flag is enabled', async () => {
+    process.env.SEASONS_PACKS_ENABLED = 'true';
+    userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
+    profileFindUniqueMock.mockResolvedValue({
+      tolerance: 3,
+      pacePreference: 'balanced',
+      horrorDNA: { recommendationStyle: 'diversity' },
+    });
+    genrePackFindUniqueMock.mockResolvedValue({ id: 'pack_1' });
+    profileUpsertMock.mockResolvedValue({});
+
+    const response = await PATCH(
+      new Request('http://localhost/api/profile/preferences', {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          cookie: makeSessionCookie('user_1'),
+        },
+        body: JSON.stringify({ selectedPackSlug: 'horror' }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(profileUpsertMock).toHaveBeenCalledWith(expect.objectContaining({
+      update: expect.objectContaining({ selectedPackId: 'pack_1' }),
+      create: expect.objectContaining({ selectedPackId: 'pack_1' }),
+    }));
   });
 });

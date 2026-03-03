@@ -291,8 +291,8 @@ export default async function CompanionPage({
             { title: 'Trivia', lines: payload.sections.trivia },
           ].map((section) => (
             <Card className="border-[rgba(255,255,255,0.16)] bg-[rgba(12,12,16,0.92)]" key={section.title}>
-              <h3 className="text-xl font-semibold tracking-tight">{section.title}</h3>
-              <ul className="mt-3 list-disc space-y-3 pl-5 text-lg leading-8">
+              <h3 className="text-base font-semibold tracking-tight">{section.title}</h3>
+              <ul className="mt-3 list-disc space-y-2.5 pl-5 text-base leading-relaxed">
                 {section.lines.map((line) => <li key={line}>{line}</li>)}
               </ul>
             </Card>
