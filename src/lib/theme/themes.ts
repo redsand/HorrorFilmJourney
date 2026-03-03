@@ -145,7 +145,7 @@ const THEMES_BY_PACK_SLUG: Record<string, ThemeConfig> = {
     tokens: CULT_CLASSICS_TOKENS,
     cssVars: CULT_CLASSICS_TOKENS,
     overlay: 'neon',
-    enabled: false,
+    enabled: true,
   },
 };
 

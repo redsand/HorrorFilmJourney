@@ -143,6 +143,21 @@ export default function ProfilePage() {
             {packs?.packs?.length ? (
               <>
                 <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Pack ({packs.activeSeason.name})</p>
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">Season Control</p>
+                  <p className="pt-1 text-sm leading-6 text-[var(--text)]">
+                    Active season: <span className="font-semibold">{packs.activeSeason.name}</span>
+                  </p>
+                  {me.role === 'ADMIN' ? (
+                    <Link className="mt-2 inline-flex w-full" href="/admin/packs">
+                      <Button className="w-full" variant="secondary">Switch Active Season</Button>
+                    </Link>
+                  ) : (
+                    <p className="pt-1 text-xs text-[var(--text-muted)]">
+                      Season switching is managed by admins.
+                    </p>
+                  )}
+                </div>
                 <div className="grid grid-cols-1 gap-2">
                   {packs.packs.filter((pack) => pack.isEnabled).map((pack) => (
                     <button

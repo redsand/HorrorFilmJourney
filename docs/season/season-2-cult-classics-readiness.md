@@ -1,6 +1,6 @@
 # Season 2 Cult Classics Readiness
 
-Generated: 2026-03-03T21:59:52.690Z
+Generated: 2026-03-03T22:08:22.842Z
 
 ## Coverage
 
@@ -40,8 +40,8 @@ Generated: 2026-03-03T21:59:52.690Z
 - TMDB discover total pages reported: 4618
 - TMDB discover pages scanned: 500
 - TMDB discovery attempts: 10000
-- TMDB discovery inserted: 2566
-- Review queue candidates: 57335
+- TMDB discovery inserted: 0
+- Review queue candidates: 64297
 - Duplicate titles across nodes: 0
 - Duplicate rate: 0.00%
 
