@@ -187,12 +187,13 @@ export default async function CompanionPage({
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Movie details</p>
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">SUBGENRE(S)</p>
                 <div className="flex flex-wrap gap-2">
                   {payload.metadata.genres.length > 0
                     ? payload.metadata.genres.map((genre) => <Chip key={genre}>{genre}</Chip>)
                     : <Chip>Genres unavailable</Chip>}
                 </div>
+                <p className="mt-4 text-xs uppercase tracking-wide text-[var(--text-muted)]">Movie details</p>
                 <div className="grid grid-cols-1 gap-1 text-sm text-[var(--text-muted)]">
                   <p><span className="text-[var(--text)]">Runtime:</span> {payload.metadata.runtimeText}</p>
                   <p><span className="text-[var(--text)]">Languages:</span> {payload.metadata.languages.length > 0 ? payload.metadata.languages.join(', ') : 'Unknown'}</p>
