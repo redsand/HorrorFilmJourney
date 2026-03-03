@@ -10,6 +10,7 @@ const {
   movieStreamingCacheFindUniqueMock,
   companionCacheFindUniqueMock,
   companionCacheUpsertMock,
+  companionCacheDeleteManyMock,
   getLlmProviderFromEnvMock,
   generateJsonMock,
 } = vi.hoisted(() => ({
@@ -20,6 +21,7 @@ const {
   movieStreamingCacheFindUniqueMock: vi.fn(),
   companionCacheFindUniqueMock: vi.fn(),
   companionCacheUpsertMock: vi.fn(),
+  companionCacheDeleteManyMock: vi.fn(),
   getLlmProviderFromEnvMock: vi.fn(),
   generateJsonMock: vi.fn(),
 }));
@@ -31,7 +33,11 @@ vi.mock('@/lib/prisma', () => ({
     userTasteProfile: { findUnique: userTasteProfileFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
     movieStreamingCache: { findUnique: movieStreamingCacheFindUniqueMock },
-    companionCache: { findUnique: companionCacheFindUniqueMock, upsert: companionCacheUpsertMock },
+    companionCache: {
+      findUnique: companionCacheFindUniqueMock,
+      upsert: companionCacheUpsertMock,
+      deleteMany: companionCacheDeleteManyMock,
+    },
   },
 }));
 
@@ -48,12 +54,14 @@ describe('GET /api/companion', () => {
     movieStreamingCacheFindUniqueMock.mockReset();
     companionCacheFindUniqueMock.mockReset();
     companionCacheUpsertMock.mockReset();
+    companionCacheDeleteManyMock.mockReset();
     getLlmProviderFromEnvMock.mockReset();
     generateJsonMock.mockReset();
     companionCacheFindUniqueMock.mockResolvedValue(null);
     movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
     userTasteProfileFindUniqueMock.mockResolvedValue(null);
     companionCacheUpsertMock.mockResolvedValue(null);
+    companionCacheDeleteManyMock.mockResolvedValue({ count: 0 });
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
     delete process.env.TMDB_API_KEY;
@@ -138,6 +146,74 @@ describe('GET /api/companion', () => {
     expect(body.data.spoilerPolicy).toBe('NO_SPOILERS');
     expect(Array.isArray(body.data.evidence)).toBe(true);
     expect(body.data.streaming).toEqual({ region: 'US', offers: [] });
+  });
+
+  it('rejects forceRefresh for non-admin users', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS&forceRefresh=true', {
+        headers: {
+          cookie: makeSessionCookie('user_1', false),
+        },
+      }),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      data: null,
+      error: { code: 'FORBIDDEN', message: 'Admin access required for forced refresh' },
+    });
+  });
+
+  it('allows forceRefresh for admin and clears cached companion rows', async () => {
+    userFindUniqueMock.mockResolvedValue({ id: 'admin_1' });
+    movieFindUniqueMock.mockResolvedValue({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: null,
+      castTop: null,
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValue([]);
+    companionCacheFindUniqueMock.mockResolvedValue({
+      payload: {
+        movie: { tmdbId: 123, title: 'Cached Title', year: 1999, posterUrl: 'https://img/123.jpg' },
+        credits: { director: 'Director A', cast: [{ name: 'Actor A' }] },
+        sections: {
+          productionNotes: ['p1'],
+          historicalNotes: ['h1'],
+          receptionNotes: ['r1'],
+          techniqueBreakdown: ['t1'],
+          influenceMap: ['i1'],
+          afterWatchingReflection: ['r1', 'r2', 'r3'],
+          trivia: ['t1', 't2', 't3', 't4', 't5'],
+        },
+        ratings: [],
+        spoilerPolicy: 'NO_SPOILERS',
+        evidence: [],
+      },
+      isFullyPopulated: true,
+      expiresAt: new Date(Date.now() + 60_000),
+      llmProvider: 'gemini',
+      llmModel: 'gemini-2.5-flash',
+    });
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS&forceRefresh=true', {
+        headers: {
+          cookie: makeSessionCookie('admin_1', true),
+        },
+      }),
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(companionCacheDeleteManyMock).toHaveBeenCalledWith({ where: { movieId: 'movie_1' } });
+    expect(body.data.movie.title).toBe('Companion Test');
   });
 
   it('changes content by spoilerPolicy', async () => {

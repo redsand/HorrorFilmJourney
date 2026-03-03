@@ -4,6 +4,9 @@ import { CompanionActions } from '@/components/companion/CompanionActions';
 import { BottomNav, Card, Chip, LogoutIconButton, PosterImage, RatingBadges } from '@/components/ui';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
+type MeResponse = {
+  role: 'ADMIN' | 'USER';
+};
 
 type CompanionResponse = {
   movie: {
@@ -120,14 +123,23 @@ export default async function CompanionPage({
   searchParams,
 }: {
   params: { tmdbId: string };
-  searchParams?: { spoilerPolicy?: SpoilerPolicy };
+  searchParams?: { spoilerPolicy?: SpoilerPolicy; forceRefresh?: string };
 }) {
   const tmdbId = Number.parseInt(params.tmdbId, 10);
   const spoilerPolicy: SpoilerPolicy = searchParams?.spoilerPolicy ?? 'NO_SPOILERS';
+  const forceRefresh = searchParams?.forceRefresh === 'true' || searchParams?.forceRefresh === '1';
 
   let payload: CompanionResponse | null = null;
+  let isAdmin = false;
   if (Number.isInteger(tmdbId)) {
-    const response = await apiJson<CompanionResponse>(`/api/companion?tmdbId=${tmdbId}&spoilerPolicy=${spoilerPolicy}`, { method: 'GET' });
+    const [meResponse, response] = await Promise.all([
+      apiJson<MeResponse>('/api/auth/me', { method: 'GET' }),
+      apiJson<CompanionResponse>(
+        `/api/companion?tmdbId=${tmdbId}&spoilerPolicy=${spoilerPolicy}${forceRefresh ? '&forceRefresh=true' : ''}`,
+        { method: 'GET' },
+      ),
+    ]);
+    isAdmin = meResponse.status === 200 && meResponse.data?.role === 'ADMIN';
     payload = response.status === 200 ? response.data : null;
   }
 
@@ -221,6 +233,22 @@ export default async function CompanionPage({
                   </Link>
                 ))}
               </div>
+
+              {isAdmin ? (
+                <div className="flex justify-end">
+                  <Link
+                    className="inline-flex items-center gap-2 rounded-lg border border-[rgba(193,18,31,0.72)] bg-[rgba(155,17,30,0.2)] px-3 py-2 text-xs text-[var(--text)]"
+                    href={`/companion/${payload.movie.tmdbId}?spoilerPolicy=${spoilerPolicy}&forceRefresh=true`}
+                    title="Admin: force refresh companion cache and regenerate"
+                  >
+                    <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+                      <path d="M4 4v6h6M20 20v-6h-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                      <path d="M20 10a8 8 0 00-13.66-5.66L4 6m16 12-2.34 1.66A8 8 0 014 14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                    </svg>
+                    Force Refresh
+                  </Link>
+                </div>
+              ) : null}
 
               <div
                 className={`rounded-lg border px-3 py-2 text-xs ${

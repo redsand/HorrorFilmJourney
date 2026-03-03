@@ -847,6 +847,7 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const tmdbIdParam = url.searchParams.get('tmdbId');
   const spoilerPolicy = normalizeSpoilerPolicy(url.searchParams.get('spoilerPolicy'));
+  const forceRefresh = url.searchParams.get('forceRefresh') === 'true' || url.searchParams.get('forceRefresh') === '1';
 
   const tmdbId = tmdbIdParam ? Number.parseInt(tmdbIdParam, 10) : NaN;
   if (!Number.isInteger(tmdbId)) {
@@ -855,6 +856,9 @@ export async function GET(request: Request): Promise<Response> {
 
   if (!spoilerPolicy) {
     return fail({ code: 'VALIDATION_ERROR', message: 'spoilerPolicy must be NO_SPOILERS, LIGHT, or FULL' }, 400);
+  }
+  if (forceRefresh && !auth.isAdmin) {
+    return fail({ code: 'FORBIDDEN', message: 'Admin access required for forced refresh' }, 403);
   }
 
   const movie = await prisma.movie.findUnique({
@@ -935,11 +939,7 @@ export async function GET(request: Request): Promise<Response> {
       },
     },
   });
-  if (
-    cached
-    && cached.isFullyPopulated
-    && cached.expiresAt > now
-  ) {
+  if (!forceRefresh && cached && cached.isFullyPopulated && cached.expiresAt > now) {
     const cachedPayload = normalizeCachedCompanionPayload(cached.payload);
     if (cachedPayload) {
       console.info('[companion] cache hit', {
@@ -952,10 +952,28 @@ export async function GET(request: Request): Promise<Response> {
       return ok(cachedPayload);
     }
   }
+  if (forceRefresh) {
+    await prisma.companionCache.deleteMany({
+      where: {
+        movieId: movie.id,
+      },
+    });
+    console.info('[companion] force refresh requested', {
+      tmdbId: movie.tmdbId,
+      spoilerPolicy,
+      byUserId: auth.userId,
+    });
+  }
   console.info('[companion] cache miss', {
     tmdbId: movie.tmdbId,
     spoilerPolicy,
-    reason: !cached ? 'NOT_FOUND' : cached.expiresAt <= now ? 'EXPIRED' : 'NOT_FULLY_POPULATED',
+    reason: forceRefresh
+      ? 'FORCE_REFRESH'
+      : !cached
+        ? 'NOT_FOUND'
+        : cached.expiresAt <= now
+          ? 'EXPIRED'
+          : 'NOT_FULLY_POPULATED',
   });
   const tmdbFacts = tmdbFetch.facts;
   const fallbackGenres = parseGenreList(movie.genres);
