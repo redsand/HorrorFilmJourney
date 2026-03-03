@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "title": "The Big Lebowski",
+      "year": 1998,
+      "reason": "user-required-cult-anchor"
+    },
+    {
+      "title": "Scarface",
+      "year": 1983,
+      "reason": "user-required-cult-anchor"
+    },
+    {
+      "title": "Pulp Fiction",
+      "year": 1994,
+      "reason": "user-required-cult-anchor"
+    }
+  ]
+}

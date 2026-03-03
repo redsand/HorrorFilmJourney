@@ -31,11 +31,18 @@ export async function getActivePackForRequest(): Promise<{ packSlug: string }> {
         select: {
           slug: true,
           isEnabled: true,
+          season: {
+            select: {
+              isActive: true,
+            },
+          },
         },
       },
     },
   });
 
-  const packSlug = profile?.selectedPack?.isEnabled ? profile.selectedPack.slug : 'horror';
+  const packSlug = (profile?.selectedPack?.isEnabled && profile.selectedPack.season.isActive)
+    ? profile.selectedPack.slug
+    : 'horror';
   return { packSlug };
 }

@@ -72,6 +72,22 @@ function parseIntEnv(name: string, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function isAfterSeason2YearCap(year: number | null | undefined): boolean {
+  const maxYear = parseIntEnv('SEASON2_MAX_YEAR', 2010);
+  if (!Number.isInteger(year)) {
+    return false;
+  }
+  return (year as number) > maxYear;
+}
+
+function parseBoolEnv(name: string, fallback: boolean): boolean {
+  const raw = process.env[name];
+  if (!raw) {
+    return fallback;
+  }
+  return raw.toLowerCase() === 'true';
+}
+
 function parseDiscoverPagesEnv(): number | 'all' {
   const raw = process.env.SEASON2_DISCOVER_PAGES?.trim().toLowerCase();
   if (!raw) {
@@ -723,7 +739,8 @@ async function main(): Promise<void> {
   const duplicateCounter = new Map<number, number>();
   const reviewQueue: Array<{ tmdbId: number; title: string; year: number | null; reason: string; nodeSlug: string }> = [];
 
-  const nodeSize = Math.max(1, parseIntEnv('SEASON2_NODE_SIZE', spec.nodeSize ?? spec.minimumEligiblePerNode ?? 30));
+  const defaultNodeSize = Math.max(1, parseIntEnv('SEASON2_NODE_SIZE', spec.nodeSize ?? spec.minimumEligiblePerNode ?? 30));
+  const enableTopup = parseBoolEnv('SEASON2_ENABLE_TOPUP', false);
   const discoverPages = parseDiscoverPagesEnv();
 
   try {
@@ -780,6 +797,7 @@ async function main(): Promise<void> {
 
     const nodeBySlug = new Map(pack.nodes.map((node) => [node.slug, node] as const));
     const globallyAssignedMovieIds = new Set<string>();
+    const enforceGlobalDedup = enableTopup;
     const discover = await fetchCultDiscoverTmdbIds(discoverPages);
     const discoverTmdbIds = discover.ids;
     let discoverCursor = 0;
@@ -803,6 +821,9 @@ async function main(): Promise<void> {
         });
         continue;
       }
+      const nodeSize = enableTopup
+        ? defaultNodeSize
+        : Math.max(1, specNode.titles.length);
 
       const assignments: Array<{ nodeId: string; movieId: string; rank: number }> = [];
       let resolvedCount = 0;
@@ -813,90 +834,104 @@ async function main(): Promise<void> {
       let missingCredits = 0;
       let missingStreaming = 0;
 
-      // Preserve existing node assignments first so imports are additive.
-      const existingAssignments = await prisma.nodeMovie.findMany({
-        where: { nodeId: node.id },
-        orderBy: { rank: 'asc' },
-        select: {
-          movie: {
-            select: {
-              id: true,
-              tmdbId: true,
-              title: true,
-              year: true,
-              posterUrl: true,
-              genres: true,
-              director: true,
-              castTop: true,
-              ratings: { select: { source: true } },
-              streamingCache: { select: { id: true }, take: 1 },
+      if (enableTopup) {
+        // In top-up mode, preserve existing assignments first.
+        const existingAssignments = await prisma.nodeMovie.findMany({
+          where: { nodeId: node.id },
+          orderBy: { rank: 'asc' },
+          select: {
+            movie: {
+              select: {
+                id: true,
+                tmdbId: true,
+                title: true,
+                year: true,
+                posterUrl: true,
+                genres: true,
+                director: true,
+                castTop: true,
+                ratings: { select: { source: true } },
+                streamingCache: { select: { id: true }, take: 1 },
+              },
             },
           },
-        },
-      });
-      for (const assignment of existingAssignments) {
-        if (assignments.length >= nodeSize) {
-          break;
-        }
-        if (globallyAssignedMovieIds.has(assignment.movie.id)) {
-          continue;
-        }
-        const existingKey = toTitleKey({ title: assignment.movie.title, year: assignment.movie.year });
-        if (blocklist.has(existingKey) && !allowlist.has(existingKey)) {
-          reviewQueue.push({
-            tmdbId: assignment.movie.tmdbId,
-            title: assignment.movie.title,
-            year: assignment.movie.year,
-            reason: 'BLOCKLISTED_EXISTING_ASSIGNMENT',
-            nodeSlug: specNode.slug,
-          });
-          continue;
-        }
-        if (isFranchiseBlockbusterTitle(assignment.movie.title) && !allowlist.has(existingKey)) {
-          reviewQueue.push({
-            tmdbId: assignment.movie.tmdbId,
-            title: assignment.movie.title,
-            year: assignment.movie.year,
-            reason: 'FRANCHISE_BLOCKBUSTER_EXISTING_ASSIGNMENT',
-            nodeSlug: specNode.slug,
-          });
-          continue;
-        }
-        const existingGenres = Array.isArray(assignment.movie.genres)
-          ? assignment.movie.genres.map((value) => String(value).toLowerCase())
-          : [];
-        if (existingGenres.includes('animation') && !allowlist.has(existingKey)) {
-          reviewQueue.push({
-            tmdbId: assignment.movie.tmdbId,
-            title: assignment.movie.title,
-            year: assignment.movie.year,
-            reason: 'ANIMATION_EXCLUDED_EXISTING_ASSIGNMENT',
-            nodeSlug: specNode.slug,
-          });
-          continue;
-        }
-        const evaluation = evaluateCurriculumEligibility({
-          posterUrl: assignment.movie.posterUrl,
-          director: assignment.movie.director,
-          castTop: assignment.movie.castTop,
-          ratings: assignment.movie.ratings,
-          hasStreamingData: assignment.movie.streamingCache.length > 0,
         });
-        if (!evaluation.isEligible) {
-          continue;
+        for (const assignment of existingAssignments) {
+          if (assignments.length >= nodeSize) {
+            break;
+          }
+          if (enforceGlobalDedup && globallyAssignedMovieIds.has(assignment.movie.id)) {
+            continue;
+          }
+          const existingKey = toTitleKey({ title: assignment.movie.title, year: assignment.movie.year });
+          if (blocklist.has(existingKey) && !allowlist.has(existingKey)) {
+            reviewQueue.push({
+              tmdbId: assignment.movie.tmdbId,
+              title: assignment.movie.title,
+              year: assignment.movie.year,
+              reason: 'BLOCKLISTED_EXISTING_ASSIGNMENT',
+              nodeSlug: specNode.slug,
+            });
+            continue;
+          }
+          if (isFranchiseBlockbusterTitle(assignment.movie.title) && !allowlist.has(existingKey)) {
+            reviewQueue.push({
+              tmdbId: assignment.movie.tmdbId,
+              title: assignment.movie.title,
+              year: assignment.movie.year,
+              reason: 'FRANCHISE_BLOCKBUSTER_EXISTING_ASSIGNMENT',
+              nodeSlug: specNode.slug,
+            });
+            continue;
+          }
+          const existingGenres = Array.isArray(assignment.movie.genres)
+            ? assignment.movie.genres.map((value) => String(value).toLowerCase())
+            : [];
+          if (existingGenres.includes('animation') && !allowlist.has(existingKey)) {
+            reviewQueue.push({
+              tmdbId: assignment.movie.tmdbId,
+              title: assignment.movie.title,
+              year: assignment.movie.year,
+              reason: 'ANIMATION_EXCLUDED_EXISTING_ASSIGNMENT',
+              nodeSlug: specNode.slug,
+            });
+            continue;
+          }
+          if (isAfterSeason2YearCap(assignment.movie.year)) {
+            reviewQueue.push({
+              tmdbId: assignment.movie.tmdbId,
+              title: assignment.movie.title,
+              year: assignment.movie.year,
+              reason: 'YEAR_CAP_EXCLUDED_EXISTING_ASSIGNMENT',
+              nodeSlug: specNode.slug,
+            });
+            continue;
+          }
+          const evaluation = evaluateCurriculumEligibility({
+            posterUrl: assignment.movie.posterUrl,
+            director: assignment.movie.director,
+            castTop: assignment.movie.castTop,
+            ratings: assignment.movie.ratings,
+            hasStreamingData: assignment.movie.streamingCache.length > 0,
+          });
+          if (!evaluation.isEligible) {
+            continue;
+          }
+          assignments.push({
+            nodeId: node.id,
+            movieId: assignment.movie.id,
+            rank: assignments.length + 1,
+          });
+          if (enforceGlobalDedup) {
+            globallyAssignedMovieIds.add(assignment.movie.id);
+          }
+          eligibleCount += 1;
+          totalEligible += 1;
+          duplicateCounter.set(
+            assignment.movie.tmdbId,
+            (duplicateCounter.get(assignment.movie.tmdbId) ?? 0) + 1,
+          );
         }
-        assignments.push({
-          nodeId: node.id,
-          movieId: assignment.movie.id,
-          rank: assignments.length + 1,
-        });
-        globallyAssignedMovieIds.add(assignment.movie.id);
-        eligibleCount += 1;
-        totalEligible += 1;
-        duplicateCounter.set(
-          assignment.movie.tmdbId,
-          (duplicateCounter.get(assignment.movie.tmdbId) ?? 0) + 1,
-        );
       }
 
       totalRequested += nodeSize;
@@ -1034,6 +1069,16 @@ async function main(): Promise<void> {
             resolved = refreshed;
           }
         }
+        if (isAfterSeason2YearCap(resolved.year)) {
+          reviewQueue.push({
+            tmdbId: resolved.tmdbId,
+            title: resolved.title,
+            year: resolved.year,
+            reason: 'YEAR_CAP_EXCLUDED_CURATED',
+            nodeSlug: specNode.slug,
+          });
+          continue;
+        }
 
         resolvedCount += 1;
         totalResolved += 1;
@@ -1062,44 +1107,25 @@ async function main(): Promise<void> {
         if (evaluation.missingCredits) missingCredits += 1;
         if (evaluation.missingStreaming) missingStreaming += 1;
 
+        if (enforceGlobalDedup && globallyAssignedMovieIds.has(resolved.id)) {
+          continue;
+        }
         if (evaluation.isEligible) {
-          const key = toTitleKey({ title: resolved.title, year: resolved.year });
-          if (blocklist.has(key) && !allowlist.has(key)) {
-            reviewQueue.push({
-              tmdbId: resolved.tmdbId,
-              title: resolved.title,
-              year: resolved.year,
-              reason: 'BLOCKLISTED',
-              nodeSlug: specNode.slug,
-            });
-            continue;
-          }
-          if (isFranchiseBlockbusterTitle(resolved.title) && !allowlist.has(key)) {
-            reviewQueue.push({
-              tmdbId: resolved.tmdbId,
-              title: resolved.title,
-              year: resolved.year,
-              reason: 'FRANCHISE_BLOCKBUSTER_HEURISTIC',
-              nodeSlug: specNode.slug,
-            });
-            continue;
-          }
-          if (globallyAssignedMovieIds.has(resolved.id)) {
-            continue;
-          }
           eligibleCount += 1;
           totalEligible += 1;
-          duplicateCounter.set(resolved.tmdbId, (duplicateCounter.get(resolved.tmdbId) ?? 0) + 1);
-          globallyAssignedMovieIds.add(resolved.id);
-          assignments.push({
-            nodeId: node.id,
-            movieId: resolved.id,
-            rank: index + 1,
-          });
         }
+        duplicateCounter.set(resolved.tmdbId, (duplicateCounter.get(resolved.tmdbId) ?? 0) + 1);
+        if (enforceGlobalDedup) {
+          globallyAssignedMovieIds.add(resolved.id);
+        }
+        assignments.push({
+          nodeId: node.id,
+          movieId: resolved.id,
+          rank: index + 1,
+        });
       }
 
-      if (assignments.length < nodeSize) {
+      if (enableTopup && assignments.length < nodeSize) {
         const existingIds = new Set(assignments.map((assignment) => assignment.movieId));
         const additionalCandidates = await prisma.movie.findMany({
           orderBy: { tmdbId: 'asc' },
@@ -1119,7 +1145,7 @@ async function main(): Promise<void> {
 
         const eligiblePool = additionalCandidates
           .filter((movie) => !existingIds.has(movie.id))
-          .filter((movie) => !globallyAssignedMovieIds.has(movie.id))
+          .filter((movie) => !enforceGlobalDedup || !globallyAssignedMovieIds.has(movie.id))
           .filter((movie) =>
             evaluateCurriculumEligibility({
               posterUrl: movie.posterUrl,
@@ -1168,6 +1194,16 @@ async function main(): Promise<void> {
             });
             continue;
           }
+          if (isAfterSeason2YearCap(movie.year)) {
+            reviewQueue.push({
+              tmdbId: movie.tmdbId,
+              title: movie.title,
+              year: movie.year,
+              reason: 'YEAR_CAP_EXCLUDED_LOCAL_POOL',
+              nodeSlug: specNode.slug,
+            });
+            continue;
+          }
           const localDetails = await fetchTmdbDetailsById(movie.tmdbId);
           if (localDetails && isAnimatedGenre(localDetails.genreIds) && !allowlist.has(key)) {
             reviewQueue.push({
@@ -1205,14 +1241,16 @@ async function main(): Promise<void> {
             movieId: movie.id,
             rank: assignments.length + 1,
           });
-          globallyAssignedMovieIds.add(movie.id);
+          if (enforceGlobalDedup) {
+            globallyAssignedMovieIds.add(movie.id);
+          }
           eligibleCount += 1;
           totalEligible += 1;
           duplicateCounter.set(movie.tmdbId, (duplicateCounter.get(movie.tmdbId) ?? 0) + 1);
         }
       }
 
-      while (assignments.length < nodeSize && discoverCursor < discoverTmdbIds.length) {
+      while (enableTopup && assignments.length < nodeSize && discoverCursor < discoverTmdbIds.length) {
         const tmdbId = discoverTmdbIds[discoverCursor]!;
         discoverCursor += 1;
         discoverAttempts += 1;
@@ -1222,6 +1260,16 @@ async function main(): Promise<void> {
           continue;
         }
         const details = await fetchTmdbDetailsById(tmdbId);
+        if (isAfterSeason2YearCap(details?.year ?? hydrated.year)) {
+          reviewQueue.push({
+            tmdbId,
+            title: hydrated.title,
+            year: details?.year ?? hydrated.year,
+            reason: 'YEAR_CAP_EXCLUDED_DISCOVERY',
+            nodeSlug: specNode.slug,
+          });
+          continue;
+        }
         const key = toTitleKey({ title: hydrated.title, year: hydrated.year });
         if (blocklist.has(key) && !allowlist.has(key)) {
           reviewQueue.push({
@@ -1272,7 +1320,7 @@ async function main(): Promise<void> {
           });
           continue;
         }
-        if (globallyAssignedMovieIds.has(hydrated.id)) {
+        if (enforceGlobalDedup && globallyAssignedMovieIds.has(hydrated.id)) {
           continue;
         }
         const evaluation = evaluateCurriculumEligibility({
@@ -1291,7 +1339,9 @@ async function main(): Promise<void> {
           movieId: hydrated.id,
           rank: assignments.length + 1,
         });
-        globallyAssignedMovieIds.add(hydrated.id);
+        if (enforceGlobalDedup) {
+          globallyAssignedMovieIds.add(hydrated.id);
+        }
         eligibleCount += 1;
         totalEligible += 1;
         discoverInserted += 1;

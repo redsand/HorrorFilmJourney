@@ -25,7 +25,7 @@ async function ensureDefaultPack(prisma: PrismaClient): Promise<{ id: string; sl
       name: DEFAULT_SEASON_NAME,
       isActive: true,
     },
-    update: { isActive: true },
+    update: { name: DEFAULT_SEASON_NAME },
     select: { id: true, slug: true },
   });
 
@@ -55,6 +55,26 @@ async function ensureDefaultPack(prisma: PrismaClient): Promise<{ id: string; sl
   });
 }
 
+async function resolveFallbackPack(prisma: PrismaClient): Promise<{ id: string; slug: string; primaryGenre: string; season: { slug: string } }> {
+  const activePack = await prisma.genrePack.findFirst({
+    where: {
+      isEnabled: true,
+      season: { isActive: true },
+    },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      slug: true,
+      primaryGenre: true,
+      season: { select: { slug: true } },
+    },
+  });
+  if (activePack) {
+    return activePack;
+  }
+  return ensureDefaultPack(prisma);
+}
+
 export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: string): Promise<EffectivePack> {
   if (!seasonsPacksEnabled()) {
     return {
@@ -65,7 +85,7 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
     };
   }
 
-  const defaultPack = await ensureDefaultPack(prisma);
+  const defaultPack = await resolveFallbackPack(prisma);
   const profile = await prisma.userProfile.findUnique({
     where: { userId },
     select: {
@@ -76,13 +96,13 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
           slug: true,
           isEnabled: true,
           primaryGenre: true,
-          season: { select: { slug: true } },
+          season: { select: { slug: true, isActive: true } },
         },
       },
     },
   });
 
-  if (profile?.selectedPack && profile.selectedPack.isEnabled) {
+  if (profile?.selectedPack && profile.selectedPack.isEnabled && profile.selectedPack.season.isActive) {
     return {
       packId: profile.selectedPack.id,
       packSlug: profile.selectedPack.slug,

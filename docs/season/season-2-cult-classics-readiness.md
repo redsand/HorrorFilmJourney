@@ -1,49 +1,49 @@
 # Season 2 Cult Classics Readiness
 
-Generated: 2026-03-03T22:08:22.842Z
+Generated: 2026-03-03T23:08:13.785Z
 
 ## Coverage
 
 | Node | Requested | Resolved | Eligible | Inserted |
 | --- | ---: | ---: | ---: | ---: |
-| birth-of-midnight | 5000 | 46 | 2917 | 2917 |
-| grindhouse-exploitation | 5000 | 46 | 31 | 31 |
-| so-bad-its-good | 5000 | 46 | 43 | 43 |
-| cult-sci-fi-fantasy | 5000 | 46 | 21 | 21 |
-| punk-counterculture | 5000 | 48 | 38 | 38 |
-| vhs-video-store-era | 5000 | 46 | 32 | 32 |
-| cult-comedy-absurdism | 5000 | 46 | 27 | 27 |
-| modern-cult-phenomena | 5000 | 45 | 14 | 14 |
+| birth-of-midnight | 30 | 30 | 30 | 30 |
+| grindhouse-exploitation | 30 | 30 | 30 | 30 |
+| so-bad-its-good | 30 | 27 | 27 | 27 |
+| cult-sci-fi-fantasy | 30 | 28 | 28 | 28 |
+| punk-counterculture | 32 | 28 | 28 | 28 |
+| vhs-video-store-era | 30 | 30 | 30 | 30 |
+| cult-comedy-absurdism | 30 | 25 | 25 | 25 |
+| modern-cult-phenomena | 30 | 10 | 10 | 10 |
 
 ## External Source Imports
 
-- IMDb CSV path: resources/cult classic list 1.csv
-- IMDb imported unique titles: 127
+- IMDb CSV path: not configured
+- IMDb imported unique titles: 0
 
 ## Missing Metadata Blockers
 
 | Node | Poster | Ratings | Reception | Credits | Streaming |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| birth-of-midnight | 0 | 0 | 0 | 0 | 43 |
-| grindhouse-exploitation | 0 | 0 | 0 | 0 | 44 |
-| so-bad-its-good | 0 | 0 | 0 | 0 | 45 |
-| cult-sci-fi-fantasy | 0 | 0 | 0 | 0 | 42 |
-| punk-counterculture | 0 | 0 | 0 | 0 | 46 |
-| vhs-video-store-era | 0 | 0 | 0 | 0 | 45 |
-| cult-comedy-absurdism | 0 | 0 | 0 | 0 | 46 |
-| modern-cult-phenomena | 0 | 0 | 0 | 0 | 45 |
+| birth-of-midnight | 0 | 0 | 0 | 0 | 28 |
+| grindhouse-exploitation | 0 | 0 | 0 | 0 | 29 |
+| so-bad-its-good | 0 | 0 | 0 | 0 | 27 |
+| cult-sci-fi-fantasy | 0 | 0 | 0 | 0 | 26 |
+| punk-counterculture | 0 | 0 | 0 | 0 | 27 |
+| vhs-video-store-era | 0 | 0 | 0 | 0 | 29 |
+| cult-comedy-absurdism | 0 | 0 | 0 | 0 | 25 |
+| modern-cult-phenomena | 0 | 0 | 0 | 0 | 10 |
 
 ## Duplicate Analysis
 
-- Eligible assigned titles: 3123
-- Discover page mode: all
+- Eligible assigned titles: 208
+- Discover page mode: 200
 - TMDB discover total pages reported: 4618
-- TMDB discover pages scanned: 500
-- TMDB discovery attempts: 10000
+- TMDB discover pages scanned: 200
+- TMDB discovery attempts: 0
 - TMDB discovery inserted: 0
-- Review queue candidates: 64297
-- Duplicate titles across nodes: 0
-- Duplicate rate: 0.00%
+- Review queue candidates: 34
+- Duplicate titles across nodes: 6
+- Duplicate rate: 2.88%
 
 ## Needs Human Resolution
 

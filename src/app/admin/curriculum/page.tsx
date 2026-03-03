@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 
 type CurriculumNodeTitle = {
@@ -84,6 +84,14 @@ type CurriculumResponse = {
   };
 };
 
+type AdminTmdbSearchItem = {
+  tmdbId: number;
+  title: string;
+  year: number | null;
+  posterUrl: string;
+  overview: string;
+};
+
 export default function AdminCurriculumPage() {
   type LinkEditorState = {
     loading?: boolean;
@@ -102,6 +110,12 @@ export default function AdminCurriculumPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editorByMovieId, setEditorByMovieId] = useState<Record<string, LinkEditorState>>({});
+  const [searchQueryByNodeId, setSearchQueryByNodeId] = useState<Record<string, string>>({});
+  const [searchResultsByNodeId, setSearchResultsByNodeId] = useState<Record<string, AdminTmdbSearchItem[]>>({});
+  const [searchLoadingByNodeId, setSearchLoadingByNodeId] = useState<Record<string, boolean>>({});
+  const [searchErrorByNodeId, setSearchErrorByNodeId] = useState<Record<string, string | null>>({});
+  const [addingTmdbByNodeId, setAddingTmdbByNodeId] = useState<Record<string, number | null>>({});
+  const searchTimersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   async function load(): Promise<void> {
     setLoading(true);
@@ -123,6 +137,84 @@ export default function AdminCurriculumPage() {
   useEffect(() => {
     void load();
   }, []);
+
+  useEffect(() => () => {
+    Object.values(searchTimersRef.current).forEach((timer) => clearTimeout(timer));
+  }, []);
+
+  async function runNodeTmdbSearch(nodeId: string, query: string): Promise<void> {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) {
+      setSearchResultsByNodeId((prev) => ({ ...prev, [nodeId]: [] }));
+      setSearchErrorByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+      setSearchLoadingByNodeId((prev) => ({ ...prev, [nodeId]: false }));
+      return;
+    }
+
+    setSearchLoadingByNodeId((prev) => ({ ...prev, [nodeId]: true }));
+    setSearchErrorByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+
+    const response = await fetch(`/api/admin/curriculum/tmdb-search?q=${encodeURIComponent(trimmed)}&limit=12`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      setSearchResultsByNodeId((prev) => ({ ...prev, [nodeId]: [] }));
+      setSearchErrorByNodeId((prev) => ({
+        ...prev,
+        [nodeId]: payload?.error?.message ?? 'Unable to search TMDB.',
+      }));
+      setSearchLoadingByNodeId((prev) => ({ ...prev, [nodeId]: false }));
+      return;
+    }
+
+    const items = Array.isArray(payload?.data?.items) ? (payload.data.items as AdminTmdbSearchItem[]) : [];
+    setSearchResultsByNodeId((prev) => ({ ...prev, [nodeId]: items }));
+    setSearchErrorByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+    setSearchLoadingByNodeId((prev) => ({ ...prev, [nodeId]: false }));
+  }
+
+  function queueNodeTmdbSearch(nodeId: string, query: string): void {
+    setSearchQueryByNodeId((prev) => ({ ...prev, [nodeId]: query }));
+
+    const existing = searchTimersRef.current[nodeId];
+    if (existing) {
+      clearTimeout(existing);
+    }
+
+    searchTimersRef.current[nodeId] = setTimeout(() => {
+      void runNodeTmdbSearch(nodeId, query);
+    }, 250);
+  }
+
+  async function addTmdbMovieToNode(nodeId: string, tmdbId: number): Promise<void> {
+    setAddingTmdbByNodeId((prev) => ({ ...prev, [nodeId]: tmdbId }));
+    setSearchErrorByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+
+    const response = await fetch('/api/admin/curriculum/node-movies', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ nodeId, tmdbId }),
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      setSearchErrorByNodeId((prev) => ({
+        ...prev,
+        [nodeId]: payload?.error?.message ?? 'Unable to add movie to node.',
+      }));
+      setAddingTmdbByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+      return;
+    }
+
+    setSearchResultsByNodeId((prev) => ({
+      ...prev,
+      [nodeId]: (prev[nodeId] ?? []).filter((item) => item.tmdbId !== tmdbId),
+    }));
+    setAddingTmdbByNodeId((prev) => ({ ...prev, [nodeId]: null }));
+    await load();
+  }
 
   async function openEditor(movieId: string, seasonId: string): Promise<void> {
     setEditorByMovieId((prev) => ({
@@ -372,6 +464,53 @@ export default function AdminCurriculumPage() {
                   </p>
                 </summary>
                 <div className="mt-3 space-y-2">
+                  <div className="space-y-2 rounded-lg border border-[var(--border)] bg-[rgba(0,0,0,0.2)] p-2">
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-muted)]">Add Movie (TMDB)</p>
+                    <input
+                      className="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5 text-xs"
+                      onChange={(event) => {
+                        queueNodeTmdbSearch(node.id, event.currentTarget.value);
+                      }}
+                      placeholder="Search TMDB title..."
+                      value={searchQueryByNodeId[node.id] ?? ''}
+                    />
+                    {searchLoadingByNodeId[node.id] ? (
+                      <p className="text-xs text-[var(--text-muted)]">Searching TMDB…</p>
+                    ) : null}
+                    {searchErrorByNodeId[node.id] ? (
+                      <p className="text-xs text-[var(--accent)]">{searchErrorByNodeId[node.id]}</p>
+                    ) : null}
+                    {(searchResultsByNodeId[node.id] ?? []).length > 0 ? (
+                      <ul className="space-y-1">
+                        {(searchResultsByNodeId[node.id] ?? []).slice(0, 8).map((item) => {
+                          const alreadyAssigned = node.titles.some((title) => title.tmdbId === item.tmdbId);
+                          const isAdding = addingTmdbByNodeId[node.id] === item.tmdbId;
+                          return (
+                            <li className="flex items-center gap-2 rounded border border-[var(--border)] bg-[rgba(0,0,0,0.2)] p-1.5" key={`tmdb-result-${node.id}-${item.tmdbId}`}>
+                              <div
+                                className="h-12 w-8 shrink-0 rounded bg-[var(--bg)] bg-cover bg-center"
+                                style={{ backgroundImage: `url(${item.posterUrl})` }}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-xs">{item.title}</p>
+                                <p className="text-[11px] text-[var(--text-muted)]">
+                                  TMDB {item.tmdbId}{item.year ? ` · ${item.year}` : ''}
+                                </p>
+                              </div>
+                              <button
+                                className="rounded-md border border-[var(--border)] px-2 py-1 text-[11px] disabled:cursor-not-allowed disabled:opacity-60"
+                                disabled={alreadyAssigned || isAdding}
+                                onClick={() => { void addTmdbMovieToNode(node.id, item.tmdbId); }}
+                                type="button"
+                              >
+                                {alreadyAssigned ? 'Added' : isAdding ? 'Adding…' : '+ Add'}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
+                  </div>
                   {node.titles.map((title) => (
                     <div className="flex gap-3 rounded-lg border border-[var(--border)] p-2" key={title.id}>
                       <div
