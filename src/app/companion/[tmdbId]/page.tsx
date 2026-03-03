@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { CompanionActions } from '@/components/companion/CompanionActions';
+import { FurtherReadingSection } from '@/components/companion/FurtherReadingSection';
 import { BottomNav, Card, Chip, LogoutIconButton, PosterImage, RatingBadges } from '@/components/ui';
+import type { ExternalReading } from '@/lib/contracts/companion-contract';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 type MeResponse = {
@@ -56,6 +58,7 @@ type CompanionResponse = {
   };
   spoilerPolicy: SpoilerPolicy;
   evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: string }>;
+  externalReadings?: ExternalReading[];
 };
 
 const spoilerPolicyLabel: Record<SpoilerPolicy, string> = {
@@ -295,6 +298,8 @@ export default async function CompanionPage({
                   <p className="text-sm text-[var(--text-muted)]">No evidence packets available for this title.</p>
                 )}
               </div>
+
+              <FurtherReadingSection externalReadings={payload.externalReadings} />
             </div>
           </Card>
 

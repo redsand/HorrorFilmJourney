@@ -24,6 +24,9 @@ function main(): void {
   run('npm test -- tests/unit');
   run('npm test -- tests/api tests/prisma tests/acceptance');
   run('npm run test:e2e');
+  if (process.env.SKIP_EXTERNAL_LINK_GATES !== 'true') {
+    run('npm run check:external-links:gates');
+  }
   console.log('RC validation passed.');
 }
 

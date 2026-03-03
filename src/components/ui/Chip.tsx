@@ -1,3 +1,4 @@
+import React from 'react';
 import type { HTMLAttributes } from 'react';
 
 type ChipTone = 'default' | 'accent';

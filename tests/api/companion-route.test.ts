@@ -6,6 +6,8 @@ const {
   userFindUniqueMock,
   movieFindUniqueMock,
   evidenceFindManyMock,
+  externalReadingFindManyMock,
+  userProfileFindUniqueMock,
   userTasteProfileFindUniqueMock,
   movieStreamingCacheFindUniqueMock,
   companionCacheFindUniqueMock,
@@ -17,6 +19,8 @@ const {
   userFindUniqueMock: vi.fn(),
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
+  externalReadingFindManyMock: vi.fn(),
+  userProfileFindUniqueMock: vi.fn(),
   userTasteProfileFindUniqueMock: vi.fn(),
   movieStreamingCacheFindUniqueMock: vi.fn(),
   companionCacheFindUniqueMock: vi.fn(),
@@ -30,8 +34,10 @@ vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
+    userProfile: { findUnique: userProfileFindUniqueMock },
     userTasteProfile: { findUnique: userTasteProfileFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
+    externalReadingCuration: { findMany: externalReadingFindManyMock },
     movieStreamingCache: { findUnique: movieStreamingCacheFindUniqueMock },
     companionCache: {
       findUnique: companionCacheFindUniqueMock,
@@ -50,6 +56,8 @@ describe('GET /api/companion', () => {
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
+    externalReadingFindManyMock.mockReset();
+    userProfileFindUniqueMock.mockReset();
     userTasteProfileFindUniqueMock.mockReset();
     movieStreamingCacheFindUniqueMock.mockReset();
     companionCacheFindUniqueMock.mockReset();
@@ -60,6 +68,10 @@ describe('GET /api/companion', () => {
     companionCacheFindUniqueMock.mockResolvedValue(null);
     movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
     userTasteProfileFindUniqueMock.mockResolvedValue(null);
+    userProfileFindUniqueMock.mockResolvedValue({
+      selectedPack: { seasonId: 'season-1' },
+    });
+    externalReadingFindManyMock.mockResolvedValue([]);
     companionCacheUpsertMock.mockResolvedValue(null);
     companionCacheDeleteManyMock.mockResolvedValue({ count: 0 });
     delete process.env.LLM_PROVIDER;
@@ -145,7 +157,64 @@ describe('GET /api/companion', () => {
     ).toBe(true);
     expect(body.data.spoilerPolicy).toBe('NO_SPOILERS');
     expect(Array.isArray(body.data.evidence)).toBe(true);
+    expect(body.data.externalReadings).toEqual([]);
     expect(body.data.streaming).toEqual({ region: 'US', offers: [] });
+  });
+
+  it('includes externalReadings for a Season 1 film with a curated registry entry', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    userProfileFindUniqueMock.mockResolvedValueOnce({
+      selectedPack: { seasonId: 'season-1' },
+    });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_17',
+      tmdbId: 17,
+      title: 'The Dark',
+      year: 2005,
+      posterUrl: 'https://img/17.jpg',
+      director: 'John Fawcett',
+      castTop: [{ name: 'Maria Bello', role: 'Adelle' }],
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([]);
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=17&spoilerPolicy=NO_SPOILERS', {
+        headers: { cookie: makeSessionCookie('user_1') },
+      }),
+    );
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(Array.isArray(body.data.externalReadings)).toBe(true);
+    expect(body.data.externalReadings.length).toBeGreaterThan(0);
+    expect(body.data.externalReadings.some((entry: { url: string }) => entry.url.includes('bloody-disgusting.com'))).toBe(true);
+  });
+
+  it('returns no externalReadings for Season 2 when only Season 1 curated links exist', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    userProfileFindUniqueMock.mockResolvedValueOnce({
+      selectedPack: { seasonId: 'season-2' },
+    });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_17',
+      tmdbId: 17,
+      title: 'The Dark',
+      year: 2005,
+      posterUrl: 'https://img/17.jpg',
+      director: 'John Fawcett',
+      castTop: [{ name: 'Maria Bello', role: 'Adelle' }],
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([]);
+
+    const response = await GET(
+      new Request('http://localhost/api/companion?tmdbId=17&spoilerPolicy=NO_SPOILERS', {
+        headers: { cookie: makeSessionCookie('user_1') },
+      }),
+    );
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.data.externalReadings).toEqual([]);
   });
 
   it('rejects forceRefresh for non-admin users', async () => {

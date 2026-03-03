@@ -26,6 +26,7 @@
     "smoke:prod": "node --experimental-strip-types scripts/smoke-prod.ts",
     "eval:recs:offline": "node --experimental-strip-types scripts/eval-recommendations.ts",
     "audit:cult:controls": "node --experimental-strip-types scripts/audit-cult-controls.ts",
+    "check:external-links:gates": "node --experimental-strip-types scripts/check-external-reading-gates.ts",
     "setup:dev": "npx prisma migrate deploy && npm run bootstrap:admin && npm run seed:catalog",
     "setup:test": "node --experimental-strip-types scripts/setup-test.ts",
     "reset:test-db": "node --experimental-strip-types scripts/reset-test-db.ts",

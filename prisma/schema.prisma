@@ -35,6 +35,12 @@ enum FeedbackPriority {
   CRITICAL
 }
 
+enum ExternalReadingSourceType {
+  REVIEW
+  ESSAY
+  RETROSPECTIVE
+}
+
 model User {
   id             String                 @id @default(cuid())
   displayName    String
@@ -51,6 +57,7 @@ model User {
   feedback      Feedback[]
   auditEvents   AuditEvent[]
   errorLogs     AppErrorLog[]
+  externalReadingCurations ExternalReadingCuration[]
 }
 
 model UserCredential {
@@ -152,6 +159,28 @@ model Movie {
   streamingCache   MovieStreamingCache[]
   companionCache   CompanionCache[]
   nodeAssignments  NodeMovie[]
+  externalReadings ExternalReadingCuration[]
+}
+
+model ExternalReadingCuration {
+  id              String                    @id @default(cuid())
+  movieId         String
+  seasonId        String
+  sourceName      String
+  articleTitle    String
+  url             String
+  sourceType      ExternalReadingSourceType
+  publicationDate DateTime?
+  createdByUserId String?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  movie         Movie   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  season        Season  @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  createdByUser User?   @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([movieId, seasonId, url])
+  @@index([seasonId, movieId])
 }
 
 model UserMovieInteraction {
@@ -380,6 +409,7 @@ model Season {
   updatedAt DateTime @updatedAt
 
   packs GenrePack[]
+  externalReadings ExternalReadingCuration[]
 }
 
 model GenrePack {

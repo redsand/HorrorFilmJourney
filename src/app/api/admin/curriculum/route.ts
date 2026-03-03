@@ -1,5 +1,6 @@
 import { fail, ok } from '@/lib/api-envelope';
 import { requireAdmin } from '@/lib/auth/guards';
+import { buildExternalLinkCoverageReport } from '@/lib/companion/external-reading-ops';
 import { evaluateCurriculumEligibility } from '@/lib/curriculum/eligibility';
 import { prisma } from '@/lib/prisma';
 
@@ -22,6 +23,7 @@ export async function GET(request: Request): Promise<Response> {
           id: true,
           slug: true,
           name: true,
+          seasonId: true,
           isEnabled: true,
           nodes: {
             orderBy: { orderIndex: 'asc' },
@@ -44,6 +46,16 @@ export async function GET(request: Request): Promise<Response> {
                       castTop: true,
                       ratings: { select: { source: true } },
                       streamingCache: { select: { id: true }, take: 1 },
+                      externalReadings: {
+                        select: {
+                          id: true,
+                          seasonId: true,
+                          sourceName: true,
+                          articleTitle: true,
+                          url: true,
+                          sourceType: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -67,6 +79,7 @@ export async function GET(request: Request): Promise<Response> {
     id: string;
     slug: string;
     name: string;
+    seasonId: string;
     isEnabled: boolean;
     nodes: Array<{
       id: string;
@@ -84,6 +97,14 @@ export async function GET(request: Request): Promise<Response> {
           castTop: unknown;
           ratings: Array<{ source: string }>;
           streamingCache: Array<{ id: string }>;
+          externalReadings: Array<{
+            id: string;
+            seasonId: string;
+            sourceName: string;
+            articleTitle: string;
+            url: string;
+            sourceType: string;
+          }>;
         };
       }>;
     }>;
@@ -160,8 +181,21 @@ export async function GET(request: Request): Promise<Response> {
             credits: evaluation.missingCredits,
             streaming: evaluation.missingStreaming,
           },
+          externalReadings: (Array.isArray(assignment.movie.externalReadings) ? assignment.movie.externalReadings : [])
+            .filter((reading) => reading.id && reading.url && reading.seasonId === pack.seasonId)
+            .map((reading) => ({
+              id: reading.id,
+              sourceName: reading.sourceName,
+              articleTitle: reading.articleTitle,
+              url: reading.url,
+              sourceType: reading.sourceType.toLowerCase(),
+            })),
         };
       });
+      const titlesWithExternalLinks = titles.filter((title) => title.externalReadings.length > 0).length;
+      const externalLinkCoveragePct = titles.length > 0
+        ? Math.round((titlesWithExternalLinks / titles.length) * 10000) / 100
+        : 0;
 
       return {
         id: node.id,
@@ -175,6 +209,8 @@ export async function GET(request: Request): Promise<Response> {
         missingReceptionCount,
         missingCreditsCount,
         missingStreamingCount,
+        titlesWithExternalLinks,
+        externalLinkCoveragePct,
         titles,
         eligibilityCoverage: titles.length > 0
           ? Math.round((eligibleTitles / titles.length) * 100)
@@ -193,6 +229,52 @@ export async function GET(request: Request): Promise<Response> {
     packs: mapPacks(season.packs),
   }));
   const activePacks = activeSeason ? mapPacks(activeSeason.packs) : [];
+  const coverageReport = await buildExternalLinkCoverageReport(prisma, {
+    seasonSlug: 'season-1',
+    targetPct: Number.parseInt(process.env.EXTERNAL_LINKS_MIN_COVERAGE_PCT ?? '80', 10),
+  });
+
+  let topViewedMissingExternalLinks: Array<{ movieId: string; tmdbId: number; title: string; views: number }> = [];
+  try {
+    const topViewedMovieCounts = await prisma.userMovieInteraction.groupBy({
+      by: ['movieId'],
+      _count: { _all: true },
+      orderBy: { _count: { movieId: 'desc' } },
+      take: 20,
+    });
+    const topViewedMovieIds = topViewedMovieCounts.map((item) => item.movieId);
+    const topViewedMovies = topViewedMovieIds.length > 0
+      ? await prisma.movie.findMany({
+        where: { id: { in: topViewedMovieIds } },
+        select: {
+          id: true,
+          tmdbId: true,
+          title: true,
+          externalReadings: {
+            where: { season: { slug: 'season-1' } },
+            select: { id: true },
+          },
+        },
+      })
+      : [];
+    const topViewedMovieById = new Map(topViewedMovies.map((movie) => [movie.id, movie]));
+    topViewedMissingExternalLinks = topViewedMovieCounts
+      .map((item) => {
+        const movie = topViewedMovieById.get(item.movieId);
+        if (!movie || movie.externalReadings.length > 0) {
+          return null;
+        }
+        return {
+          movieId: movie.id,
+          tmdbId: movie.tmdbId,
+          title: movie.title,
+          views: item._count._all,
+        };
+      })
+      .filter((row): row is { movieId: string; tmdbId: number; title: string; views: number } => row !== null);
+  } catch {
+    topViewedMissingExternalLinks = [];
+  }
 
   return ok({
     activeSeason: activeSeason
@@ -204,5 +286,9 @@ export async function GET(request: Request): Promise<Response> {
       : null,
     seasons: seasonPayload,
     packs: activePacks,
+    externalLinksOps: {
+      coverageReport,
+      topViewedMissingExternalLinks,
+    },
   });
 }

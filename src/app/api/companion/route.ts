@@ -2,6 +2,9 @@ import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
 import { getLlmProviderFromEnv } from '@/ai';
+import { zExternalReading } from '@/lib/contracts/companion-contract';
+import type { ExternalReading } from '@/lib/contracts/companion-contract';
+import { getExternalReadingsForFilm } from '@/lib/companion/external-reading-registry';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
@@ -55,6 +58,7 @@ type CompanionResponsePayload = {
   };
   spoilerPolicy: SpoilerPolicy;
   evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: Date }>;
+  externalReadings?: ExternalReading[];
 };
 type TmdbCreditPerson = { name?: string; job?: string; character?: string };
 type TmdbMoviePayload = {
@@ -110,6 +114,7 @@ const COMPANION_LLM_JSON_SCHEMA = {
     },
   },
 } as const;
+
 
 function normalizeSpoilerPolicy(value: string | null): SpoilerPolicy | null {
   if (!value) {
@@ -308,6 +313,15 @@ function normalizeCachedCompanionPayload(value: unknown): CompanionResponsePaylo
   if (!record.streaming || typeof record.streaming !== 'object') {
     record.streaming = { region: 'US', offers: [] };
   }
+  if (!Array.isArray(record.externalReadings)) {
+    record.externalReadings = [];
+  } else {
+    const normalizedReadings = (record.externalReadings as unknown[])
+      .map((entry) => zExternalReading.safeParse(entry))
+      .filter((entry): entry is { success: true; data: ExternalReading } => entry.success)
+      .map((entry) => entry.data);
+    record.externalReadings = normalizedReadings;
+  }
   if (record.sections && typeof record.sections === 'object') {
     const sections = record.sections as Record<string, unknown>;
     if (!Array.isArray(sections.techniqueBreakdown)) {
@@ -435,6 +449,7 @@ function isCompanionLlmEnabled(): boolean {
   return typeof process.env.LLM_PROVIDER === 'string' && process.env.LLM_PROVIDER.length > 0;
 }
 
+
 function companionLlmMaxRetries(): number {
   const parsed = Number.parseInt(process.env.COMPANION_LLM_MAX_RETRIES ?? '', 10);
   if (!Number.isInteger(parsed) || parsed < 0) {
@@ -532,6 +547,7 @@ async function generateCompanionLlmOutput(input: {
   }
   return { output: null, reason: `PROVIDER_ERROR:${lastErrorMessage}` };
 }
+
 
 function hasTmdbApi(): boolean {
   return typeof process.env.TMDB_API_KEY === 'string' && process.env.TMDB_API_KEY.length > 0;
@@ -917,6 +933,22 @@ export async function GET(request: Request): Promise<Response> {
     title: movie.title,
     year: movie.year,
   });
+  const profileWithPack = await prisma.userProfile.findUnique({
+    where: { userId: auth.userId },
+    select: {
+      selectedPack: {
+        select: {
+          seasonId: true,
+        },
+      },
+    },
+  });
+  const seasonId = profileWithPack?.selectedPack?.seasonId ?? 'season-1';
+  const externalReadings = await getExternalReadingsForFilm({
+    filmId: String(movie.tmdbId),
+    seasonId,
+    prismaClient: prisma,
+  });
   const streamingCache = await prisma.movieStreamingCache.findUnique({
     where: {
       movieId_region: {
@@ -1049,6 +1081,7 @@ export async function GET(request: Request): Promise<Response> {
       },
       spoilerPolicy: policy,
       evidence,
+      externalReadings,
     };
     const fullyPopulated = isCompanionFullyPopulated({
       usedTmdbFacts: Boolean(tmdbFacts),
