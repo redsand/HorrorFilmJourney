@@ -13,6 +13,24 @@ type Me = {
 
 type RecommendationStyle = 'diversity' | 'popularity';
 type PacePreference = 'slowburn' | 'balanced' | 'shock';
+type Insight = {
+  id: string;
+  type: 'decade' | 'subgenre' | 'intensity' | 'comparison';
+  message: string;
+  delta: number;
+  sampleSize: number;
+};
+type DnaHistory = {
+  snapshots: Array<{ takenAt: string }>;
+  evolutionNarrative: string;
+};
+type ProgressionData = {
+  currentNode: string;
+  masteryScore: number;
+  completedCount: number;
+  nextMilestone: number;
+  unlockedThemes: string[];
+};
 
 export default function ProfilePage() {
   const [me, setMe] = useState<Me | null>(null);
@@ -23,6 +41,9 @@ export default function ProfilePage() {
   const [savingOnboarding, setSavingOnboarding] = useState(false);
   const [onboardingMessage, setOnboardingMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [insights, setInsights] = useState<Insight[]>([]);
+  const [dnaHistory, setDnaHistory] = useState<DnaHistory | null>(null);
+  const [progression, setProgression] = useState<ProgressionData | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -53,9 +74,34 @@ export default function ProfilePage() {
           setPacePreference(nextPace);
         }
       }
+      const insightResponse = await fetch('/api/profile/insights', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (insightResponse.ok) {
+        const insightPayload = await insightResponse.json();
+        setInsights(Array.isArray(insightPayload?.data?.insights) ? insightPayload.data.insights as Insight[] : []);
+      }
+      const [historyResponse, progressionResponse] = await Promise.all([
+        fetch('/api/profile/dna/history', { method: 'GET', credentials: 'include' }),
+        fetch('/api/profile/progression', { method: 'GET', credentials: 'include' }),
+      ]);
+      if (historyResponse.ok) {
+        const historyPayload = await historyResponse.json();
+        setDnaHistory(historyPayload?.data as DnaHistory);
+      }
+      if (progressionResponse.ok) {
+        const progressionPayload = await progressionResponse.json();
+        setProgression(progressionPayload?.data as ProgressionData);
+      }
       setLoading(false);
     })();
   }, []);
+
+  const foundationalTarget = 10;
+  const masteryRatio = progression
+    ? Math.max(0, Math.min(1, progression.completedCount / foundationalTarget))
+    : 0;
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-20">
@@ -124,6 +170,20 @@ export default function ProfilePage() {
             <p className="text-xs text-[var(--text-muted)]">
               Diversity broadens eras/subgenres. Popularity prioritizes widely favored titles.
             </p>
+          </div>
+          <div className="space-y-2 border-t border-[var(--border)] pt-3">
+            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Insights</p>
+            {insights.length > 0 ? (
+              <ul className="space-y-2 text-sm text-[var(--text)]">
+                {insights.map((insight) => (
+                  <li className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 leading-6" key={insight.id}>
+                    {insight.message}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-[var(--text-muted)]">Keep rating films to unlock thematic insights.</p>
+            )}
           </div>
           <div className="space-y-3 border-t border-[var(--border)] pt-3">
             <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Onboarding preferences</p>
@@ -218,16 +278,75 @@ export default function ProfilePage() {
               <p className="text-xs text-[var(--text-muted)]">{onboardingMessage}</p>
             ) : null}
           </div>
+          <div className="border-t border-[var(--border)] pt-3">
+            <Link className="mb-2 inline-flex w-full" href="/profile/progression">
+              <Button className="w-full" variant="secondary">
+                <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <path d="M4 18V9m5 9V6m5 12v-7m5 7V4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                </svg>
+                View Journey Progression
+              </Button>
+            </Link>
+            <Link className="inline-flex w-full" href="/profile/dna">
+              <Button className="w-full" variant="secondary">
+                <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <path d="M4 18V8m4 10V6m4 12V10m4 8V4m4 14V12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                </svg>
+                View Cinematic DNA
+              </Button>
+            </Link>
+          </div>
           {me.role === 'ADMIN' ? (
             <Link className="inline-flex" href="/admin/users"><Button variant="secondary">Manage Users</Button></Link>
           ) : null}
         </Card>
       )}
 
+      {!loading && me ? (
+        <>
+          <Card className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Your Evolution</p>
+            <p className="text-sm leading-6 text-[var(--text)]">
+              {dnaHistory?.evolutionNarrative ?? 'Keep rating films to unlock your evolution narrative.'}
+            </p>
+            <p className="text-xs text-[var(--text-muted)]">
+              {dnaHistory?.snapshots?.length
+                ? `${dnaHistory.snapshots.length} DNA snapshots captured so far.`
+                : 'No snapshots yet.'}
+            </p>
+          </Card>
+
+          <Card className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Mastery Progress</p>
+            <div className="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
+              <div
+                className="h-full rounded-full bg-[linear-gradient(90deg,rgba(127,29,29,0.95),rgba(220,38,38,0.95))] transition-all duration-700 ease-out"
+                style={{ width: `${Math.max(6, Math.round(masteryRatio * 100))}%` }}
+              />
+            </div>
+            <p className="text-sm leading-6 text-[var(--text)]">
+              You&apos;ve completed {progression?.completedCount ?? 0}/{foundationalTarget} foundational psychological horror films.
+            </p>
+            <p className="text-xs text-[var(--text-muted)]">
+              Mastery score: {progression?.masteryScore?.toFixed(2) ?? '0.00'}
+            </p>
+          </Card>
+
+          <Card className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Next Stage</p>
+            <p className="text-sm leading-6 text-[var(--text)]">
+              {progression
+                ? `Your current node is ${progression.currentNode}. Reaching ${progression.nextMilestone} completed films deepens your command of horror language and unlocks harder thematic comparisons.`
+                : 'Your next stage unlocks once you complete and rate more films.'}
+            </p>
+          </Card>
+        </>
+      ) : null}
+
       <BottomNav
         activeId="profile"
         items={[
-          { id: 'journey', label: 'Journey', href: '/' },
+          { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
         ]}

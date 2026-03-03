@@ -21,9 +21,12 @@ model User {
   updatedAt      DateTime               @updatedAt
   credentials    UserCredential[]
   profile        UserProfile?
+  tasteProfile   UserTasteProfile?
+  tasteSnapshots TasteSnapshot[]
   interactions   UserMovieInteraction[]
   batches        RecommendationBatch[]
   embeddingSnapshots UserEmbeddingSnapshot[]
+  journeyProgress JourneyProgress[]
 }
 
 model UserCredential {
@@ -50,6 +53,55 @@ model UserProfile {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserTasteProfile {
+  id                         String   @id @default(cuid())
+  userId                     String   @unique
+  intensityPreference        Float    @default(0.5)
+  pacingPreference           Float    @default(0.5)
+  psychologicalVsSupernatural Float   @default(0.5)
+  goreTolerance              Float    @default(0.5)
+  ambiguityTolerance         Float    @default(0.5)
+  nostalgiaBias              Float    @default(0.5)
+  auteurAffinity             Float    @default(0.5)
+  lastComputedAt             DateTime @default(now())
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TasteSnapshot {
+  id                         String   @id @default(cuid())
+  userId                     String
+  takenAt                    DateTime @default(now())
+  intensityPreference        Float
+  pacingPreference           Float
+  psychologicalVsSupernatural Float
+  goreTolerance              Float
+  ambiguityTolerance         Float
+  nostalgiaBias              Float
+  auteurAffinity             Float
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, takenAt])
+}
+
+model JourneyProgress {
+  id             String   @id @default(cuid())
+  userId         String
+  journeyNode    String
+  completedCount Int      @default(0)
+  masteryScore   Float    @default(0)
+  lastUpdatedAt  DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, journeyNode])
+  @@index([userId, lastUpdatedAt])
 }
 
 model Movie {

@@ -30,6 +30,9 @@ type CompanionResponse = {
     productionNotes: string[];
     historicalNotes: string[];
     receptionNotes: string[];
+    techniqueBreakdown: string[];
+    influenceMap: string[];
+    afterWatchingReflection: string[];
     trivia: string[];
   };
   ratings: Array<{
@@ -159,7 +162,7 @@ export default async function CompanionPage({
                 src={payload.movie.posterUrl}
               />
             </div>
-            <div className="space-y-4 p-4 leading-relaxed">
+            <div className="space-y-5 p-4 leading-relaxed">
               <div>
                 <div className="flex items-baseline justify-between gap-3">
                   <h2 className="text-2xl font-semibold">{payload.movie.title}</h2>
@@ -174,7 +177,7 @@ export default async function CompanionPage({
                 <RatingBadges ratings={payload.ratings} />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Where to watch</p>
                 <div className="flex flex-wrap gap-2">
                   {payload.streaming.offers.length > 0 ? (
@@ -191,7 +194,7 @@ export default async function CompanionPage({
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">SUBGENRE(S)</p>
                 <div className="flex flex-wrap gap-2">
                   {payload.metadata.genres.length > 0
@@ -199,7 +202,7 @@ export default async function CompanionPage({
                     : <Chip>Genres unavailable</Chip>}
                 </div>
                 <p className="mt-4 text-xs uppercase tracking-wide text-[var(--text-muted)]">Movie details</p>
-                <div className="grid grid-cols-1 gap-1 text-sm text-[var(--text-muted)]">
+                <div className="grid grid-cols-1 gap-1.5 text-base text-[var(--text-muted)]">
                   <p><span className="text-[var(--text)]">Runtime:</span> {payload.metadata.runtimeText}</p>
                   <p><span className="text-[var(--text)]">Languages:</span> {payload.metadata.languages.length > 0 ? payload.metadata.languages.join(', ') : 'Unknown'}</p>
                   <p><span className="text-[var(--text)]">Countries:</span> {payload.metadata.countries.length > 0 ? payload.metadata.countries.join(', ') : 'Unknown'}</p>
@@ -260,7 +263,7 @@ export default async function CompanionPage({
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Sources</p>
                 {payload.evidence.length > 0 ? (
-                  <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+                  <ul className="list-disc space-y-2 pl-5 text-base leading-relaxed">
                     {payload.evidence.slice(0, 5).map((item) => (
                       <li key={`${item.sourceName}-${item.url}`}>
                         <span className="font-medium">{item.sourceName}</span>
@@ -282,11 +285,14 @@ export default async function CompanionPage({
             },
             { title: 'Historical', lines: payload.sections.historicalNotes },
             { title: 'Reception', lines: payload.sections.receptionNotes },
+            { title: 'Technique Breakdown', lines: payload.sections.techniqueBreakdown },
+            { title: 'Influence Map', lines: payload.sections.influenceMap },
+            { title: 'After Watching Reflection', lines: payload.sections.afterWatchingReflection },
             { title: 'Trivia', lines: payload.sections.trivia },
           ].map((section) => (
-            <Card key={section.title}>
-              <h3 className="text-lg font-semibold">{section.title}</h3>
-              <ul className="mt-2 list-disc space-y-2 pl-5 text-base leading-relaxed">
+            <Card className="border-[rgba(255,255,255,0.16)] bg-[rgba(12,12,16,0.92)]" key={section.title}>
+              <h3 className="text-xl font-semibold tracking-tight">{section.title}</h3>
+              <ul className="mt-3 list-disc space-y-3 pl-5 text-lg leading-8">
                 {section.lines.map((line) => <li key={line}>{line}</li>)}
               </ul>
             </Card>
@@ -297,7 +303,7 @@ export default async function CompanionPage({
       <BottomNav
         activeId="journey"
         items={[
-          { id: 'journey', label: 'Journey', href: '/' },
+          { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
         ]}

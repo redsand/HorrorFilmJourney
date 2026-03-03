@@ -11,10 +11,10 @@ export type CreateBatchInput = {
     whatItTeaches: string;
     historicalContext: string;
     nextStepHint: string;
-    watchFor: Prisma.JsonValue;
-    reception?: Prisma.JsonValue;
-    castHighlights?: Prisma.JsonValue;
-    streaming?: Prisma.JsonValue;
+    watchFor: Prisma.InputJsonValue;
+    reception?: Prisma.InputJsonValue;
+    castHighlights?: Prisma.InputJsonValue;
+    streaming?: Prisma.InputJsonValue;
     spoilerPolicy: string;
   }>;
 };
@@ -29,7 +29,9 @@ export class BatchRepo {
         journeyNode: input.journeyNode,
         rationale: input.rationale,
         items: {
-          create: input.items,
+          createMany: {
+            data: input.items,
+          },
         },
       },
       include: {

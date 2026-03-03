@@ -3,6 +3,8 @@ import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
 import { requireAuth } from '@/lib/auth/guards';
+import { TasteComputationService } from '@/lib/taste/taste-computation-service';
+import { JourneyProgressionService } from '@/lib/journey/journey-progression-service';
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
@@ -91,6 +93,38 @@ export async function POST(request: Request): Promise<Response> {
       },
     },
   });
+  if (status === InteractionStatus.WATCHED || status === InteractionStatus.ALREADY_SEEN) {
+    try {
+      const tasteService = new TasteComputationService(prisma);
+      await tasteService.computeTasteProfile(auth.userId);
+    } catch (error) {
+      console.warn('[taste.profile] recompute failed', {
+        userId: auth.userId,
+        error: error instanceof Error ? error.message : 'unknown',
+      });
+    }
+  }
+  if (status === InteractionStatus.WATCHED) {
+    try {
+      const progressionService = new JourneyProgressionService(prisma);
+      await progressionService.trackWatched({
+        userId: auth.userId,
+        recommendationItemId: (recommendationItemId as string | undefined) ?? null,
+        rating: (rating as number | undefined) ?? null,
+        intensity: (intensity as number | undefined) ?? null,
+        emotions: (emotions as string[] | undefined) ?? null,
+        workedBest: (workedBest as string[] | undefined) ?? null,
+        agedWell: (agedWell as string | undefined) ?? null,
+        recommend: (recommend as boolean | undefined) ?? null,
+        note: (note as string | undefined) ?? null,
+      });
+    } catch (error) {
+      console.warn('[journey.progress] update failed', {
+        userId: auth.userId,
+        error: error instanceof Error ? error.message : 'unknown',
+      });
+    }
+  }
 
   let nextBatch: Awaited<ReturnType<typeof generateRecommendationBatch>> | undefined;
 

@@ -5,7 +5,7 @@ export type CreateUserInput = {
   profile?: {
     tolerance?: number;
     pacePreference?: string | null;
-    horrorDNA?: Prisma.JsonValue;
+    horrorDNA?: Prisma.InputJsonValue;
   };
 };
 

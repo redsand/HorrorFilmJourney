@@ -38,6 +38,9 @@ type CompanionResponsePayload = {
     productionNotes: string[];
     historicalNotes: string[];
     receptionNotes: string[];
+    techniqueBreakdown: string[];
+    influenceMap: string[];
+    afterWatchingReflection: string[];
     trivia: string[];
   };
   ratings: RatingRow[];
@@ -266,6 +269,9 @@ function isCompanionFullyPopulated(input: {
     productionNotes: string[];
     historicalNotes: string[];
     receptionNotes: string[];
+    techniqueBreakdown: string[];
+    influenceMap: string[];
+    afterWatchingReflection: string[];
     trivia: string[];
   };
 }): boolean {
@@ -275,6 +281,9 @@ function isCompanionFullyPopulated(input: {
     && input.sections.productionNotes.length > 0
     && input.sections.historicalNotes.length > 0
     && input.sections.receptionNotes.length > 0
+    && input.sections.techniqueBreakdown.length > 0
+    && input.sections.influenceMap.length > 0
+    && input.sections.afterWatchingReflection.length > 0
     && input.ratingsCount >= 2
     && (Boolean(input.resolvedDirector) || input.resolvedCastCount > 0);
 }
@@ -299,7 +308,68 @@ function normalizeCachedCompanionPayload(value: unknown): CompanionResponsePaylo
   if (!record.streaming || typeof record.streaming !== 'object') {
     record.streaming = { region: 'US', offers: [] };
   }
+  if (record.sections && typeof record.sections === 'object') {
+    const sections = record.sections as Record<string, unknown>;
+    if (!Array.isArray(sections.techniqueBreakdown)) {
+      sections.techniqueBreakdown = [];
+    }
+    if (!Array.isArray(sections.influenceMap)) {
+      sections.influenceMap = [];
+    }
+    if (!Array.isArray(sections.afterWatchingReflection)) {
+      sections.afterWatchingReflection = [];
+    }
+  }
   return record as unknown as CompanionResponsePayload;
+}
+
+type UserTasteProfileShape = {
+  intensityPreference: number;
+  pacingPreference: number;
+  psychologicalVsSupernatural: number;
+  goreTolerance: number;
+  ambiguityTolerance: number;
+  nostalgiaBias: number;
+  auteurAffinity: number;
+} | null;
+
+function buildReflectionPrompts(input: {
+  title: string;
+  taste: UserTasteProfileShape;
+  spoilerPolicy: SpoilerPolicy;
+}): string[] {
+  const taste = input.taste;
+  const policyPrompt = input.spoilerPolicy === 'FULL'
+    ? 'In full context, did the ending payoff feel earned by earlier setup?'
+    : input.spoilerPolicy === 'LIGHT'
+      ? 'Based on the first two acts, what ending direction do you predict?'
+      : 'Without spoilers, what unresolved thread are you most curious about?';
+  if (!taste) {
+    return [
+      `What scene from ${input.title} stayed with you the longest, and why?`,
+      'Which technical choice changed your tension level the most?',
+      policyPrompt,
+    ];
+  }
+
+  const prompts: string[] = [];
+  if (taste.pacingPreference <= 0.4) {
+    prompts.push('Did the slow-burn setup feel rewarding by the midpoint?');
+  } else if (taste.pacingPreference >= 0.65) {
+    prompts.push('Which high-intensity sequence felt most effective and why?');
+  } else {
+    prompts.push('Which pacing shift (quiet to intense) worked best for you?');
+  }
+
+  if (taste.psychologicalVsSupernatural >= 0.55) {
+    prompts.push('Which psychological theme felt most convincing or unsettling?');
+  } else {
+    prompts.push('Which supernatural or lore element felt most coherent?');
+  }
+
+  prompts.push(policyPrompt);
+
+  return prompts.slice(0, 3);
 }
 
 function parseStreamingOffers(value: unknown): Array<{
@@ -645,6 +715,7 @@ function buildSections(
     facts: TmdbCompanionFacts | null;
   },
   spoilerPolicy: SpoilerPolicy,
+  userTasteProfile: UserTasteProfileShape,
   hasCredits: boolean,
   ratings: RatingRow[],
   evidenceCount: number,
@@ -696,6 +767,18 @@ function buildSections(
   const receptionNotes = ratings.length > 0
     ? [...ratings.slice(0, 3).map(formatRatingLine), tmdbScoreText]
     : [tmdbScoreText, 'Reception scores are currently unavailable for this title.'];
+  const techniqueBreakdown = [
+    'Cinematography: track framing distance, lens choice feel, and shadow composition scene-to-scene.',
+    'Score: note when music drives dread versus when silence is used as pressure.',
+    'Editing rhythm: compare average shot length in setup versus escalation beats.',
+  ];
+  const influenceMap = [
+    `Predecessor films: compare ${title}${yearText} with earlier horror mood-builders from adjacent subgenres.`,
+    input.facts?.director
+      ? `Director lineage: map recurring signatures from ${input.facts.director}'s prior work into this film.`
+      : 'Director lineage: unavailable; compare visual grammar with genre contemporaries instead.',
+    `Genre lineage: connect this title's ${genresText} patterns to modern horror techniques.`,
+  ];
   const topCast = input.facts?.cast.slice(0, 3).map((item) => item.name).join(', ');
   const fallbackTrivia = [
     topCast
@@ -744,6 +827,13 @@ function buildSections(
     productionNotes,
     historicalNotes,
     receptionNotes,
+    techniqueBreakdown,
+    influenceMap,
+    afterWatchingReflection: buildReflectionPrompts({
+      title,
+      taste: userTasteProfile,
+      spoilerPolicy,
+    }),
     trivia: trivia.slice(0, 5),
   };
 }
@@ -793,6 +883,18 @@ export async function GET(request: Request): Promise<Response> {
   if (!movie) {
     return fail({ code: 'NOT_FOUND', message: 'Movie not found' }, 404);
   }
+  const userTasteProfile = await prisma.userTasteProfile.findUnique({
+    where: { userId: auth.userId },
+    select: {
+      intensityPreference: true,
+      pacingPreference: true,
+      psychologicalVsSupernatural: true,
+      goreTolerance: true,
+      ambiguityTolerance: true,
+      nostalgiaBias: true,
+      auteurAffinity: true,
+    },
+  });
 
   const evidence = await prisma.evidencePacket.findMany({
     where: { movieId: movie.id },
@@ -891,6 +993,7 @@ export async function GET(request: Request): Promise<Response> {
         facts: tmdbFacts,
       },
       policy,
+      userTasteProfile,
       Boolean(resolvedDirector) || resolvedCast.length > 0,
       responseRatings,
       evidence.length,

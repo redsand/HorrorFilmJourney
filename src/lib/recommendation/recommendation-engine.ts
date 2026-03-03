@@ -100,6 +100,15 @@ type RerankComponentScores = {
   trend: number;
   quality: number;
   confidence: number;
+  dnaScore: number;
+  novelty: number;
+  exploration: number;
+};
+
+type PopularityComponentScores = {
+  trend: number;
+  quality: number;
+  confidence: number;
 };
 
 type RerankCandidateDiagnostics = {
@@ -240,6 +249,31 @@ function safeUserSignals(userProfile: unknown): { tolerance?: number; pacePrefer
   };
 }
 
+function normalizeCastHighlights(value: unknown): Array<{ name: string; role?: string }> {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+        return null;
+      }
+      const record = entry as Record<string, unknown>;
+      if (typeof record.name !== 'string' || record.name.trim().length === 0) {
+        return null;
+      }
+
+      return {
+        name: record.name.trim(),
+        ...(typeof record.role === 'string' && record.role.trim().length > 0
+          ? { role: record.role.trim() }
+          : {}),
+      };
+    })
+    .filter((entry): entry is { name: string; role?: string } => Boolean(entry));
+}
+
 function summarizeProfileSignals(userProfile: unknown): string | undefined {
   const signals = safeUserSignals(userProfile);
   const entries = Object.entries(signals);
@@ -338,10 +372,12 @@ function parseQualityScore(ratings: RatingBundle): number {
 }
 
 function parseConfidenceScore(ratings: RatingBundle): number {
-  const confidenceSourceCount = new Set(
-    [ratings.imdb, ...ratings.additional.filter((rating) => rating.source !== 'TMDB_POPULARITY')]
+  const confidenceSourceCount = new Set([
+    'IMDB',
+    ...ratings.additional
+      .filter((rating) => rating.source !== 'TMDB_POPULARITY')
       .map((rating) => rating.source),
-  ).size;
+  ]).size;
   return Math.max(0, Math.min(1, confidenceSourceCount / 3));
 }
 
@@ -355,7 +391,7 @@ function computeBlendedPopularityScore(ratings: RatingBundle): number {
   return (trendScore * 0.55) + (qualityScore * 0.3) + (confidenceScore * 0.15);
 }
 
-function computePopularityComponents(ratings: RatingBundle): RerankComponentScores {
+function computePopularityComponents(ratings: RatingBundle): PopularityComponentScores {
   return {
     trend: parsePopularityRating(ratings.additional.map((rating) => ({
       source: rating.source,
@@ -377,6 +413,205 @@ function resolveRecommendationStyle(horrorDna: unknown): RecommendationStyle {
     return value;
   }
   return 'diversity';
+}
+
+type UserTasteProfileLike = {
+  intensityPreference: number;
+  pacingPreference: number;
+  psychologicalVsSupernatural: number;
+  goreTolerance: number;
+  ambiguityTolerance: number;
+  nostalgiaBias: number;
+  auteurAffinity: number;
+};
+
+function clamp01(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, value));
+}
+
+function traitMatch(a: number, b: number): number {
+  return 1 - Math.abs(clamp01(a) - clamp01(b));
+}
+
+function movieIntensityScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  let score = 0.45;
+  if (genres.has('slasher') || genres.has('body-horror') || genres.has('gore')) {
+    score += 0.35;
+  }
+  if (genres.has('psychological') || genres.has('gothic') || genres.has('slowburn')) {
+    score -= 0.2;
+  }
+  return clamp01(score);
+}
+
+function moviePacingScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  let score = 0.5;
+  if (genres.has('slasher') || genres.has('body-horror') || genres.has('monster')) {
+    score += 0.25;
+  }
+  if (genres.has('psychological') || genres.has('gothic') || genres.has('slowburn')) {
+    score -= 0.25;
+  }
+  return clamp01(score);
+}
+
+function moviePsychologicalScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  if (genres.has('psychological')) {
+    return 1;
+  }
+  if (genres.has('supernatural') || genres.has('occult') || genres.has('paranormal')) {
+    return 0;
+  }
+  return 0.5;
+}
+
+function movieGoreScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  if (genres.has('body-horror') || genres.has('gore') || genres.has('slasher')) {
+    return 0.9;
+  }
+  if (genres.has('psychological') || genres.has('gothic')) {
+    return 0.25;
+  }
+  return 0.5;
+}
+
+function movieAmbiguityScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  if (genres.has('psychological') || genres.has('surreal') || genres.has('mystery')) {
+    return 0.85;
+  }
+  if (genres.has('slasher')) {
+    return 0.25;
+  }
+  return 0.5;
+}
+
+function movieNostalgiaScore(movie: CandidateMovie): number {
+  if (!movie.year) {
+    return 0.5;
+  }
+  if (movie.year <= 1989) {
+    return 1;
+  }
+  if (movie.year <= 1999) {
+    return 0.8;
+  }
+  if (movie.year <= 2009) {
+    return 0.6;
+  }
+  if (movie.year <= 2019) {
+    return 0.35;
+  }
+  return 0.2;
+}
+
+function movieAuteurScore(movie: CandidateMovie): number {
+  const genres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  if (genres.has('psychological') || genres.has('gothic') || genres.has('surreal')) {
+    return 0.8;
+  }
+  if (genres.has('slasher')) {
+    return 0.35;
+  }
+  return 0.5;
+}
+
+function genreAlignmentScore(movie: CandidateMovie, genreAffinity: Map<string, number>): number {
+  if (movie.genres.length === 0) {
+    return 0.5;
+  }
+  const affinityValues = movie.genres.map((genre) => genreAffinity.get(genre) ?? 0);
+  const maxAbs = Math.max(1, ...affinityValues.map((v) => Math.abs(v)));
+  const mean = affinityValues.reduce((sum, value) => sum + value, 0) / movie.genres.length;
+  return clamp01((mean / maxAbs + 1) / 2);
+}
+
+function noveltyFactor(movie: CandidateMovie, recentGenreSets: Array<Set<string>>): number {
+  if (recentGenreSets.length === 0) {
+    return 0.7;
+  }
+  const movieGenres = new Set(movie.genres.map((g) => g.toLowerCase()));
+  if (movieGenres.size === 0) {
+    return 0.5;
+  }
+  const similarities = recentGenreSets.map((recent) => {
+    const intersection = [...movieGenres].filter((g) => recent.has(g)).length;
+    const union = new Set([...movieGenres, ...recent]).size;
+    return union === 0 ? 0 : intersection / union;
+  });
+  const avgSimilarity = similarities.reduce((sum, value) => sum + value, 0) / similarities.length;
+  return clamp01(1 - avgSimilarity);
+}
+
+function explorationFactor(movie: CandidateMovie): number {
+  const seeded = Math.abs((movie.tmdbId * 2654435761) % 1000) / 1000;
+  return clamp01(seeded);
+}
+
+export function scoreCandidate(
+  movie: CandidateMovie,
+  userTasteProfile: UserTasteProfileLike | null,
+  input: {
+    baseScore: number;
+    genreAffinity: Map<string, number>;
+    recentGenreSets: Array<Set<string>>;
+    recommendationStyle: RecommendationStyle;
+  },
+): {
+  finalScore: number;
+  dnaScore: number;
+  explorationBonus: number;
+  novelty: number;
+} {
+  const novelty = noveltyFactor(movie, input.recentGenreSets);
+  const exploration = explorationFactor(movie);
+
+  if (!userTasteProfile) {
+    const explorationBonus = exploration * (input.recommendationStyle === 'diversity' ? 0.06 : 0.03);
+    return {
+      finalScore: input.baseScore + explorationBonus,
+      dnaScore: 0,
+      explorationBonus,
+      novelty,
+    };
+  }
+
+  const intensityMatch = traitMatch(userTasteProfile.intensityPreference, movieIntensityScore(movie));
+  const pacingMatch = traitMatch(userTasteProfile.pacingPreference, moviePacingScore(movie));
+  const psychMatch = traitMatch(userTasteProfile.psychologicalVsSupernatural, moviePsychologicalScore(movie));
+  const goreMatch = traitMatch(userTasteProfile.goreTolerance, movieGoreScore(movie));
+  const ambiguityMatch = traitMatch(userTasteProfile.ambiguityTolerance, movieAmbiguityScore(movie));
+  const nostalgiaMatch = traitMatch(userTasteProfile.nostalgiaBias, movieNostalgiaScore(movie));
+  const auteurMatch = traitMatch(userTasteProfile.auteurAffinity, movieAuteurScore(movie));
+  const genreAlign = genreAlignmentScore(movie, input.genreAffinity);
+
+  const dnaScore = (
+    intensityMatch * 0.24
+    + pacingMatch * 0.17
+    + genreAlign * 0.16
+    + psychMatch * 0.12
+    + goreMatch * 0.1
+    + ambiguityMatch * 0.08
+    + nostalgiaMatch * 0.07
+    + auteurMatch * 0.06
+    + novelty * 0.1
+  ) * (input.recommendationStyle === 'diversity' ? 1.05 : 0.92);
+
+  const explorationBonus = exploration * (input.recommendationStyle === 'diversity' ? 0.08 : 0.04);
+  const finalScore = input.baseScore + dnaScore + explorationBonus;
+  return {
+    finalScore,
+    dnaScore,
+    explorationBonus,
+    novelty,
+  };
 }
 
 function rankFromJourneyNode(journeyNode: string): number {
@@ -567,10 +802,22 @@ export class HeuristicRerankerV1 implements Reranker {
   }
 
   async rerank(_userId: string, candidateIds: CandidateMovieId[], context: RecommendationContext): Promise<RankedMovieId[]> {
-    const [profile, history] = await Promise.all([
+    const [profile, tasteProfile, history] = await Promise.all([
       this.prisma.userProfile.findUnique({
         where: { userId: _userId },
         select: { tolerance: true, pacePreference: true, horrorDNA: true },
+      }),
+      this.prisma.userTasteProfile.findUnique({
+        where: { userId: _userId },
+        select: {
+          intensityPreference: true,
+          pacingPreference: true,
+          psychologicalVsSupernatural: true,
+          goreTolerance: true,
+          ambiguityTolerance: true,
+          nostalgiaBias: true,
+          auteurAffinity: true,
+        },
       }),
       this.prisma.userMovieInteraction.findMany({
         where: { userId: _userId },
@@ -632,6 +879,10 @@ export class HeuristicRerankerV1 implements Reranker {
         };
       })
       .filter((movie): movie is CandidateMovie => movie !== null);
+    const recentGenreSets = history
+      .filter((interaction) => interaction.status === InteractionStatus.WATCHED || interaction.status === InteractionStatus.ALREADY_SEEN)
+      .slice(0, 3)
+      .map((interaction) => new Set(normalizeGenres(interaction.movie.genres).map((g) => g.toLowerCase())));
 
     const scored = mapped.map((movie) => {
       const genres = movie.genres;
@@ -655,8 +906,22 @@ export class HeuristicRerankerV1 implements Reranker {
 
       const popularityWeight = recommendationStyle === 'popularity' ? 1 : 0.2;
       const affinityWeight = recommendationStyle === 'popularity' ? 0.7 : 1;
-      const modelScore = (genreScore + decadeScore) * affinityWeight + popularityScore * popularityWeight + paceBias + tolerancePenalty;
-      return { movie, modelScore, popularityComponents };
+      const baseScore = (genreScore + decadeScore) * affinityWeight + popularityScore * popularityWeight + paceBias + tolerancePenalty;
+      const dna = scoreCandidate(movie, tasteProfile, {
+        baseScore,
+        genreAffinity,
+        recentGenreSets,
+        recommendationStyle,
+      });
+      return {
+        movie,
+        modelScore: dna.finalScore,
+        baseScore,
+        popularityComponents,
+        dnaScore: dna.dnaScore,
+        novelty: dna.novelty,
+        exploration: dna.explorationBonus,
+      };
     });
 
     const rankedByModel = scored
@@ -696,6 +961,9 @@ export class HeuristicRerankerV1 implements Reranker {
         trend: Number(entry.popularityComponents.trend.toFixed(4)),
         quality: Number(entry.popularityComponents.quality.toFixed(4)),
         confidence: Number(entry.popularityComponents.confidence.toFixed(4)),
+        dnaScore: Number(entry.dnaScore.toFixed(4)),
+        novelty: Number(entry.novelty.toFixed(4)),
+        exploration: Number(entry.exploration.toFixed(4)),
       },
     }));
     this.lastDiagnostics = {
@@ -1017,6 +1285,12 @@ export async function generateRecommendationBatchModern(
   const rerankDiagnostics = typeof deps.reranker.getLastRerankDiagnostics === 'function'
     ? deps.reranker.getLastRerankDiagnostics()
     : null;
+  const avgDnaScore = rerankDiagnostics && rerankDiagnostics.topModelSample.length > 0
+    ? Number((
+      rerankDiagnostics.topModelSample.reduce((sum, entry) => sum + entry.components.dnaScore, 0)
+      / rerankDiagnostics.topModelSample.length
+    ).toFixed(4))
+    : null;
   const recentInteractions = await prisma.userMovieInteraction.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
@@ -1057,6 +1331,9 @@ export async function generateRecommendationBatchModern(
           positiveRateTrendLast20VsPrev20: engagementTrend,
         },
         reranker: rerankDiagnostics,
+        dna: {
+          avgTopModelDnaScore: avgDnaScore,
+        },
       },
       explorationUsed: exploration.explorationUsed,
       notes: 'modern mode diagnostics',
@@ -1089,10 +1366,21 @@ export async function generateRecommendationBatchModern(
         whatItTeaches: item.whatItTeaches,
         watchFor: normalizeGenres(item.watchFor),
         historicalContext: item.historicalContext,
-        reception: item.reception ?? {},
-        castHighlights: Array.isArray(item.castHighlights) ? item.castHighlights : [],
+        reception: (() => {
+          const raw = item.reception;
+          if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+            return {};
+          }
+          const record = raw as Record<string, unknown>;
+          return {
+            ...(typeof record.critics === 'number' ? { critics: record.critics } : {}),
+            ...(typeof record.audience === 'number' ? { audience: record.audience } : {}),
+            ...(typeof record.summary === 'string' ? { summary: record.summary } : {}),
+          };
+        })(),
+        castHighlights: normalizeCastHighlights(item.castHighlights),
         streaming: streamingByMovieId.get(item.movie.id) ?? [],
-        spoilerPolicy: item.spoilerPolicy,
+        spoilerPolicy: item.spoilerPolicy as 'NO_SPOILERS' | 'LIGHT' | 'FULL',
         journeyNode: batch.journeyNode ?? 'ENGINE_V1_CORE',
         nextStepHint: item.nextStepHint,
         ratings: toRatings(item.movie.ratings)!,

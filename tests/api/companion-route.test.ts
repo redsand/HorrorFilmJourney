@@ -6,6 +6,7 @@ const {
   userFindUniqueMock,
   movieFindUniqueMock,
   evidenceFindManyMock,
+  userTasteProfileFindUniqueMock,
   movieStreamingCacheFindUniqueMock,
   companionCacheFindUniqueMock,
   companionCacheUpsertMock,
@@ -15,6 +16,7 @@ const {
   userFindUniqueMock: vi.fn(),
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
+  userTasteProfileFindUniqueMock: vi.fn(),
   movieStreamingCacheFindUniqueMock: vi.fn(),
   companionCacheFindUniqueMock: vi.fn(),
   companionCacheUpsertMock: vi.fn(),
@@ -26,6 +28,7 @@ vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
+    userTasteProfile: { findUnique: userTasteProfileFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
     movieStreamingCache: { findUnique: movieStreamingCacheFindUniqueMock },
     companionCache: { findUnique: companionCacheFindUniqueMock, upsert: companionCacheUpsertMock },
@@ -41,6 +44,7 @@ describe('GET /api/companion', () => {
     userFindUniqueMock.mockReset();
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
+    userTasteProfileFindUniqueMock.mockReset();
     movieStreamingCacheFindUniqueMock.mockReset();
     companionCacheFindUniqueMock.mockReset();
     companionCacheUpsertMock.mockReset();
@@ -48,6 +52,7 @@ describe('GET /api/companion', () => {
     generateJsonMock.mockReset();
     companionCacheFindUniqueMock.mockResolvedValue(null);
     movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
+    userTasteProfileFindUniqueMock.mockResolvedValue(null);
     companionCacheUpsertMock.mockResolvedValue(null);
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
@@ -121,6 +126,10 @@ describe('GET /api/companion', () => {
     expect(Array.isArray(body.data.sections.productionNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.historicalNotes)).toBe(true);
     expect(Array.isArray(body.data.sections.receptionNotes)).toBe(true);
+    expect(Array.isArray(body.data.sections.techniqueBreakdown)).toBe(true);
+    expect(Array.isArray(body.data.sections.influenceMap)).toBe(true);
+    expect(Array.isArray(body.data.sections.afterWatchingReflection)).toBe(true);
+    expect(body.data.sections.afterWatchingReflection).toHaveLength(3);
     expect(Array.isArray(body.data.sections.trivia)).toBe(true);
     expect(body.data.sections.trivia).toHaveLength(5);
     expect(
@@ -175,6 +184,15 @@ describe('GET /api/companion', () => {
     expect(noSpoilers.data.sections.productionNotes).not.toEqual(full.data.sections.productionNotes);
     expect(light.data.sections.productionNotes.some((line: string) => line.includes('Act I-II summary'))).toBe(true);
     expect(full.data.sections.productionNotes.some((line: string) => line.includes('includes ending'))).toBe(true);
+    expect(full.data.sections.afterWatchingReflection).toHaveLength(3);
+    expect(
+      light.data.sections.afterWatchingReflection.some((line: string) =>
+        line.toLowerCase().includes('predict')),
+    ).toBe(true);
+    expect(
+      noSpoilers.data.sections.afterWatchingReflection.some((line: string) =>
+        line.toLowerCase().includes('without spoilers')),
+    ).toBe(true);
     expect(full.data.sections.trivia).toHaveLength(5);
     expect(
       noSpoilers.data.sections.receptionNotes.some((line: string) =>
@@ -203,6 +221,9 @@ describe('GET /api/companion', () => {
           productionNotes: ['p1'],
           historicalNotes: ['h1'],
           receptionNotes: ['r1'],
+          techniqueBreakdown: ['t1'],
+          influenceMap: ['i1'],
+          afterWatchingReflection: ['r1', 'r2', 'r3'],
           trivia: ['t1', 't2', 't3', 't4', 't5'],
         },
         ratings: [],

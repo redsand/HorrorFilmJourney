@@ -86,7 +86,7 @@ export default async function HistoryPage() {
       <BottomNav
         activeId="history"
         items={[
-          { id: 'journey', label: 'Journey', href: '/' },
+          { id: 'journey', label: 'Journey', href: '/journey' },
           { id: 'history', label: 'History', href: '/history' },
           { id: 'profile', label: 'Profile', href: '/profile' },
         ]}

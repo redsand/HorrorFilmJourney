@@ -85,3 +85,65 @@ Evidence packets are deduped by `(movieId, sourceName, url, snippet-hash)`.
 - Prefer concise snippets that can be shown in UI.
 - Include URLs when available for traceability.
 - Keep source names stable (e.g., `Wikipedia`, `IMDb Editorial`, `Studio Press Kit`) for consistent filtering and attribution.
+
+## Cinematic DNA model
+
+The app maintains a persistent, evolving `UserTasteProfile` derived from interaction behavior and movie metadata.
+
+### Stored traits
+
+- `intensityPreference`
+- `pacingPreference`
+- `psychologicalVsSupernatural`
+- `goreTolerance`
+- `ambiguityTolerance`
+- `nostalgiaBias`
+- `auteurAffinity`
+- `lastComputedAt`
+
+Trait values are normalized floats in `0..1` and persisted in Prisma model `UserTasteProfile`.
+
+### Inputs used for computation
+
+- interactions:
+  - `status` (`WATCHED`, `ALREADY_SEEN`)
+  - `rating`
+  - `intensity`
+  - `emotions`
+  - `workedBest`
+  - `agedWell`
+  - `recommend`
+- movie metadata:
+  - genre/subgenre tags
+  - release year/decade
+
+### Recency bias
+
+- Interactions are processed newest-first.
+- Weight decays by index (`0.92^index`), so recent activity shifts traits faster than old behavior.
+- Interaction direction uses rating/recommend/emotions, so negative reactions (e.g. `bored`, `slow`, `dull`) push traits away from similar content.
+
+### Recompute trigger
+
+- Recomputed after each `WATCHED` or `ALREADY_SEEN` interaction write.
+- Exposed via `GET /api/profile/dna`.
+
+### Taste snapshots and evolution
+
+- `TasteSnapshot` stores historical DNA checkpoints:
+  - `userId`
+  - `takenAt`
+  - all seven trait values
+- Snapshot cadence is configurable with `TASTE_SNAPSHOT_INTERVAL` (default `5`).
+- A snapshot is persisted only when at least `N` new `WATCHED`/`ALREADY_SEEN` interactions have occurred since the previous snapshot.
+- Timeline endpoint: `GET /api/profile/dna/history`
+  - returns ordered `snapshots[]`
+  - returns `evolutionNarrative` (deterministic summary of directional trait drift)
+
+### API output
+
+`GET /api/profile/dna` returns:
+
+- `traits` (all numeric taste traits)
+- `summaryNarrative` (human-readable deterministic summary)
+- `evolution` (reserved placeholder)

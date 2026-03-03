@@ -312,4 +312,147 @@ describe('Recommendation proof gates', () => {
     expect(strongQualityIndex).toBeGreaterThanOrEqual(0);
     expect(strongQualityIndex).toBeLessThan(lowQualityIndex);
   });
+
+  it('dna gate: high intensity preference ranks intense films higher', async () => {
+    const user = await prisma.user.create({
+      data: {
+        displayName: 'High Intensity DNA',
+        profile: {
+          create: {
+            onboardingCompleted: true,
+            tolerance: 5,
+            pacePreference: 'shock',
+          },
+        },
+        tasteProfile: {
+          create: {
+            intensityPreference: 0.95,
+            pacingPreference: 0.82,
+            psychologicalVsSupernatural: 0.35,
+            goreTolerance: 0.9,
+            ambiguityTolerance: 0.3,
+            nostalgiaBias: 0.4,
+            auteurAffinity: 0.25,
+          },
+        },
+      },
+    });
+
+    for (let i = 0; i < 6; i += 1) {
+      const intense = await prisma.movie.create({
+        data: {
+          tmdbId: 25000 + i,
+          title: `Intense DNA Movie ${i}`,
+          year: 1995 + i,
+          posterUrl: `https://image.tmdb.org/t/p/w500/intense_dna_${i}.jpg`,
+          posterLastValidatedAt: new Date(),
+          genres: ['horror', 'slasher', 'body-horror'],
+        },
+      });
+      await addCustomRatings(intense.id, { imdb: 7.1, rotten: 72, metacritic: 68, popularity: 64 });
+
+      const restrained = await prisma.movie.create({
+        data: {
+          tmdbId: 25100 + i,
+          title: `Restrained DNA Movie ${i}`,
+          year: 1980 + i,
+          posterUrl: `https://image.tmdb.org/t/p/w500/restrained_dna_${i}.jpg`,
+          posterLastValidatedAt: new Date(),
+          genres: ['horror', 'psychological', 'gothic'],
+        },
+      });
+      await addCustomRatings(restrained.id, { imdb: 7.1, rotten: 72, metacritic: 68, popularity: 64 });
+    }
+
+    const batch = await generateRecommendationBatch(user.id, prisma);
+    const intenseCount = batch.cards.filter((card) =>
+      card.movie.genres.includes('slasher') || card.movie.genres.includes('body-horror')).length;
+    expect(intenseCount).toBeGreaterThanOrEqual(3);
+
+    const diagnostics = await prisma.recommendationDiagnostics.findUnique({ where: { batchId: batch.batchId } });
+    const diversityStats = diagnostics?.diversityStats as Record<string, unknown>;
+    expect((diversityStats?.dna as Record<string, unknown>)?.avgTopModelDnaScore).toBeTypeOf('number');
+  });
+
+  it('dna gate: recommendations differ between users with distinct DNA profiles', async () => {
+    const highIntensityUser = await prisma.user.create({
+      data: {
+        displayName: 'DNA High',
+        profile: {
+          create: { onboardingCompleted: true, tolerance: 5, pacePreference: 'shock' },
+        },
+        tasteProfile: {
+          create: {
+            intensityPreference: 0.92,
+            pacingPreference: 0.82,
+            psychologicalVsSupernatural: 0.25,
+            goreTolerance: 0.88,
+            ambiguityTolerance: 0.28,
+            nostalgiaBias: 0.35,
+            auteurAffinity: 0.2,
+          },
+        },
+      },
+    });
+    const psychologicalUser = await prisma.user.create({
+      data: {
+        displayName: 'DNA Psychological',
+        profile: {
+          create: { onboardingCompleted: true, tolerance: 2, pacePreference: 'slowburn' },
+        },
+        tasteProfile: {
+          create: {
+            intensityPreference: 0.18,
+            pacingPreference: 0.22,
+            psychologicalVsSupernatural: 0.9,
+            goreTolerance: 0.15,
+            ambiguityTolerance: 0.84,
+            nostalgiaBias: 0.62,
+            auteurAffinity: 0.75,
+          },
+        },
+      },
+    });
+
+    for (let i = 0; i < 10; i += 1) {
+      const intense = await prisma.movie.create({
+        data: {
+          tmdbId: 26000 + i,
+          title: `Divergence Intense ${i}`,
+          year: 2000 + i,
+          posterUrl: `https://image.tmdb.org/t/p/w500/div_intense_${i}.jpg`,
+          posterLastValidatedAt: new Date(),
+          genres: ['horror', 'slasher', 'body-horror'],
+        },
+      });
+      await addCustomRatings(intense.id, { imdb: 7.2, rotten: 74, metacritic: 66, popularity: 68 });
+
+      const psych = await prisma.movie.create({
+        data: {
+          tmdbId: 26100 + i,
+          title: `Divergence Psych ${i}`,
+          year: 1975 + i,
+          posterUrl: `https://image.tmdb.org/t/p/w500/div_psych_${i}.jpg`,
+          posterLastValidatedAt: new Date(),
+          genres: ['horror', 'psychological', 'gothic', 'surreal'],
+        },
+      });
+      await addCustomRatings(psych.id, { imdb: 7.2, rotten: 74, metacritic: 66, popularity: 68 });
+    }
+
+    const highBatch = await generateRecommendationBatch(highIntensityUser.id, prisma);
+    const psychBatch = await generateRecommendationBatch(psychologicalUser.id, prisma);
+
+    const highIntense = highBatch.cards.filter((card) =>
+      card.movie.genres.includes('slasher') || card.movie.genres.includes('body-horror')).length;
+    const psychFocused = psychBatch.cards.filter((card) =>
+      card.movie.genres.includes('psychological') || card.movie.genres.includes('gothic')).length;
+    expect(highIntense).toBeGreaterThanOrEqual(3);
+    expect(psychFocused).toBeGreaterThanOrEqual(3);
+
+    const overlap = highBatch.cards
+      .map((card) => card.movie.tmdbId)
+      .filter((tmdbId) => psychBatch.cards.some((card) => card.movie.tmdbId === tmdbId)).length;
+    expect(overlap).toBeLessThanOrEqual(2);
+  });
 });

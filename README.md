@@ -1,77 +1,134 @@
 # HorrorFilmJourney
 
-Next.js App Router + TypeScript scaffold with Prisma (PostgreSQL), admin-token route gating, and request-scoped user resolution.
+Mobile-first horror recommendation app with:
 
-## Setup
+- personalized 5-film bundles
+- evidence-grounded narratives (RAG-style, citation hints)
+- companion mode with spoiler policies
+- quick feedback loop that adapts future picks
 
-1. Install dependencies:
+Built with Next.js App Router + TypeScript + Prisma + PostgreSQL.
 
-   ```bash
-   npm install
-   ```
+## Why It Is Valuable
 
-2. Configure environment variables:
+- Most movie apps optimize for browsing. HorrorFilmJourney optimizes for learning and progression.
+- Users get a curated path (not an endless feed), then shape it with fast feedback.
+- Companion mode supports active viewing with context controls (`NO_SPOILERS`, `LIGHT`, `FULL`).
 
-   ```bash
-   cp .env.example .env
-   ```
+## What Is Innovative
 
-   Ensure PostgreSQL is running locally with credentials `postgres/postgres`, and create database `horror_film_journey` if it does not already exist.
+1. Evidence-first narrative generation
+- Narrative prompts include structured evidence packets when available.
+- Model outputs are validated against strict Zod contracts.
+- Invalid schema/citation output falls back to deterministic templates so UX does not break.
 
-   Minimum required vars:
+2. Recommendation proof gates
+- Determinism and personalization are tested explicitly.
+- Offline evaluation metrics are available (`precision@5`, `nDCG@5`, coverage, novelty).
 
-   - `DATABASE_URL`
-   - `ADMIN_TOKEN`
+3. Closed-loop ratings + interaction feedback
+- `WATCHED` and `ALREADY_SEEN` require rating.
+- Quick Poll captures intensity/emotions/what worked.
+- Signals feed reranking (including negative emotion penalties such as `bored`, `slow`, `dull`).
 
-   Additional supported vars:
+## RAG / Evidence System
 
-   - `REC_ENGINE_MODE` (`v1` or `modern`)
-   - `DATABASE_URL_TEST` (dedicated test DB/schema URL)
-   - `TEST_DATABASE_URL` (alternate test DB URL used by helpers/scripts)
-   - `LLM_PROVIDER` (`gemini` or `ollama`)
-   - `GEMINI_API_KEY` (required for `LLM_PROVIDER=gemini`)
-   - `GEMINI_MODEL` (optional override; default `gemini-1.5-flash`)
-   - `OLLAMA_MODEL` (required for `LLM_PROVIDER=ollama`)
-   - `OLLAMA_HOST` (optional; default `http://localhost:11434`)
-   - `USE_LLM` (test determinism toggle; commonly `false` in test/E2E)
+Narratives are grounded through `EvidencePacket` records:
 
-3. Generate Prisma client and apply migration:
+- `sourceName`
+- optional `url`
+- `snippet`
+- `retrievedAt`
+- dedupe hash
 
-   ```bash
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
+Generation behavior:
 
-## Test commands
+- requests JSON-only responses
+- validates with Zod schema
+- supports citation hints like `[E1]`, `[E2]`
+- rejects invalid refs and falls back safely
+
+See: [docs/ai.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/ai.md)
+
+## Rating and Feedback System
+
+- Rating is required for:
+  - `WATCHED`
+  - `ALREADY_SEEN`
+- `SKIPPED` does not require rating.
+- Quick Poll collects:
+  - star rating (1-5)
+  - intensity (1-5)
+  - emotions (max 5)
+  - worked best (max 3)
+  - aged well
+  - recommend yes/no
+
+These interactions are persisted and used by modern reranking.
+
+See: [docs/recommendation-engine.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/recommendation-engine.md)
+
+## Authentication
+
+Production auth is cookie-session based.
+
+- login: `POST /api/auth/login`
+- signup: `POST /api/auth/signup`
+- protected routes require session cookie
+- admin routes require admin role
+
+See: [docs/auth.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/auth.md)
+
+## Quick Start
+
+1. Install:
 
 ```bash
-npm test
-npm run test:watch
+npm install
 ```
 
-## Run locally
+2. Configure env:
 
-Start the development server:
+```bash
+cp .env.example .env
+```
+
+3. Ensure PostgreSQL is running and set:
+
+- `DATABASE_URL`
+- `DATABASE_URL_TEST` (recommended for tests)
+- `INITIAL_ADMIN_EMAIL`
+- `INITIAL_ADMIN_PASSWORD`
+
+4. Setup dev data:
+
+```bash
+npm run setup:dev
+```
+
+5. Start app:
 
 ```bash
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-Health check endpoint:
+## Useful Scripts
 
-- `GET /api/health`
-- Required headers:
-  - `x-admin-token: <ADMIN_TOKEN>`
-- Success response: `{ "data": { "ok": true }, "error": null }`
+- `npm run prisma:generate`
+- `npm run prisma:migrate`
+- `npm run bootstrap:admin`
+- `npm run seed:catalog`
+- `npm run sync:tmdb:catalog`
+- `npm run sync:tmdb:update`
+- `npm run test`
+- `npm run test:e2e`
+- `npm run validate:rc`
 
+## Key Docs
 
-## Docs
-
-- Multi-user data model: `docs/data-model.md`
-- Admin access and acting as a user: `docs/admin-access.md`
-- API examples and required headers: `docs/api.md`
-- Narrative and quick-poll contracts: `docs/narrative-contracts.md`
-- UX flow and experience state machine: `docs/ux-flow.md`
-- Recommendation engine v1 pipeline and seams: `docs/recommendation-engine.md`
+- [docs/api.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/api.md)
+- [docs/testing.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/testing.md)
+- [docs/release/test-plan.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/release/test-plan.md)
+- [docs/release/user-testing-runbook.md](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/docs/release/user-testing-runbook.md)

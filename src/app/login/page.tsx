@@ -33,7 +33,7 @@ export default function LoginPage() {
                 setError(body?.error?.message ?? 'Login failed');
                 return;
               }
-              router.push('/');
+              router.push('/journey');
               router.refresh();
             } finally {
               setLoading(false);

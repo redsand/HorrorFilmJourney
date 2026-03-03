@@ -6,8 +6,8 @@ export type CreateInteractionInput = {
   status: InteractionStatus;
   rating?: number;
   intensity?: number;
-  emotions?: Prisma.JsonValue;
-  workedBest?: Prisma.JsonValue;
+  emotions?: Prisma.InputJsonValue;
+  workedBest?: Prisma.InputJsonValue;
   agedWell?: string;
   recommend?: boolean;
   note?: string;

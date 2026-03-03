@@ -34,7 +34,7 @@ export default function SignupPage() {
                 setError(body?.error?.message ?? 'Signup failed');
                 return;
               }
-              router.push('/');
+              router.push('/journey');
               router.refresh();
             } finally {
               setLoading(false);

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
@@ -53,13 +54,13 @@ export async function POST(request: Request): Promise<Response> {
       onboardingCompleted: true,
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
-      horrorDNA: normalizedHorrorDna,
+      horrorDNA: normalizedHorrorDna as Prisma.InputJsonValue,
     },
     update: {
       onboardingCompleted: true,
       tolerance: parsed.data.tolerance,
       pacePreference: parsed.data.pacePreference,
-      horrorDNA: normalizedHorrorDna,
+      horrorDNA: normalizedHorrorDna as Prisma.InputJsonValue,
     },
   });
 

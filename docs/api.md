@@ -169,6 +169,9 @@ Companion Mode endpoint for in-movie mobile usage.
       "productionNotes": ["..."],
       "historicalNotes": ["..."],
       "receptionNotes": ["..."],
+      "techniqueBreakdown": ["..."],
+      "influenceMap": ["..."],
+      "afterWatchingReflection": ["..."],
       "trivia": ["..."]
     },
     "spoilerPolicy": "NO_SPOILERS",
@@ -185,6 +188,13 @@ Companion Mode endpoint for in-movie mobile usage.
 - `NO_SPOILERS`: general non-spoiler notes only.
 - `LIGHT`: mild thematic/craft hints are allowed.
 - `FULL`: spoiler-rich notes are allowed.
+- Policy also controls summary depth and reflection prompt framing.
+
+### Structured depth sections
+
+- `sections.techniqueBreakdown`: cinematography, score, and editing rhythm prompts.
+- `sections.influenceMap`: predecessor films, director lineage, and genre lineage cues.
+- `sections.afterWatchingReflection`: exactly 3 short prompts, personalized from user DNA when available.
 
 ### Credits fallback behavior
 

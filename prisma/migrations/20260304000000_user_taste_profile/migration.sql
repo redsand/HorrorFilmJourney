@@ -1,0 +1,24 @@
+CREATE TABLE "UserTasteProfile" (
+  "id" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+  "intensityPreference" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "pacingPreference" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "psychologicalVsSupernatural" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "goreTolerance" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "ambiguityTolerance" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "nostalgiaBias" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "auteurAffinity" DOUBLE PRECISION NOT NULL DEFAULT 0.5,
+  "lastComputedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  CONSTRAINT "UserTasteProfile_pkey" PRIMARY KEY ("id")
+);
+
+CREATE UNIQUE INDEX "UserTasteProfile_userId_key" ON "UserTasteProfile"("userId");
+
+ALTER TABLE "UserTasteProfile"
+ADD CONSTRAINT "UserTasteProfile_userId_fkey"
+FOREIGN KEY ("userId") REFERENCES "User"("id")
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+

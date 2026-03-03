@@ -5,9 +5,9 @@ export type UpsertMovieInput = {
   title: string;
   year?: number;
   posterUrl: string;
-  genres?: Prisma.JsonValue;
+  genres?: Prisma.InputJsonValue;
   director?: string;
-  castTop?: Prisma.JsonValue;
+  castTop?: Prisma.InputJsonValue;
 };
 
 export class MovieRepo {
