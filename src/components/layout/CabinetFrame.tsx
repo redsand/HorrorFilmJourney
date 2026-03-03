@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
 const HORROR_CABINET_PATH = '/assets/cabinets/horror-season-1.png';
@@ -15,6 +15,9 @@ export function CabinetFrame({
   themeName?: string;
 }) {
   const [activeCabinetImagePath, setActiveCabinetImagePath] = useState(cabinetImagePath);
+  useEffect(() => {
+    setActiveCabinetImagePath(cabinetImagePath);
+  }, [cabinetImagePath]);
   const frameClassName = useMemo(() => {
     if (themeName === 'cult') {
       return 'cabinet-frame theme-cult';

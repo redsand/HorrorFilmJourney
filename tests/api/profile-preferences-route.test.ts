@@ -17,7 +17,14 @@ const {
 vi.mock('@/lib/packs/pack-resolver', () => ({
   listAvailablePacks: vi.fn(async () => ({
     activeSeason: { slug: 'season-1', name: 'Season 1' },
-    packs: [{ slug: 'horror', name: 'Horror', isEnabled: true, seasonSlug: 'season-1' }],
+    packs: [{
+      slug: 'horror',
+      name: 'Horror',
+      isEnabled: true,
+      seasonSlug: 'season-1',
+      seasonLabel: 'Season 1',
+      themeKey: 'horror',
+    }],
   })),
   resolveEffectivePackForUser: vi.fn(async () => ({
     packId: 'pack_1',
@@ -46,7 +53,6 @@ describe('profile preferences route', () => {
     profileFindUniqueMock.mockReset();
     profileUpsertMock.mockReset();
     genrePackFindUniqueMock.mockReset();
-    delete process.env.SEASONS_PACKS_ENABLED;
   });
 
   it('returns default diversity for missing profile', async () => {
@@ -65,6 +71,7 @@ describe('profile preferences route', () => {
         recommendationStyle: 'diversity',
         tolerance: 3,
         pacePreference: 'balanced',
+        selectedPackSlug: 'horror',
       },
       error: null,
     });
@@ -122,13 +129,13 @@ describe('profile preferences route', () => {
         recommendationStyle: 'popularity',
         tolerance: 5,
         pacePreference: 'shock',
+        selectedPackSlug: 'horror',
       },
       error: null,
     });
   });
 
-  it('updates selectedPackSlug when seasons flag is enabled', async () => {
-    process.env.SEASONS_PACKS_ENABLED = 'true';
+  it('updates selectedPackSlug', async () => {
     userFindUniqueMock.mockResolvedValue({ id: 'user_1' });
     profileFindUniqueMock.mockResolvedValue({
       tolerance: 3,

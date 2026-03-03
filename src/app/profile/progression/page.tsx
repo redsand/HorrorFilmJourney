@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
+import { getPackCopy } from '@/lib/packs/pack-copy';
 
 type ProgressionData = {
   currentNode: string;
@@ -12,10 +13,15 @@ type ProgressionData = {
   unlockedThemes: string[];
 };
 
+type PreferenceData = {
+  selectedPackSlug?: string;
+};
+
 export default function ProgressionPage() {
   const [data, setData] = useState<ProgressionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPackSlug, setSelectedPackSlug] = useState<string>('horror');
 
   useEffect(() => {
     void (async () => {
@@ -30,6 +36,17 @@ export default function ProgressionPage() {
         }
         const payload = await response.json();
         setData(payload.data as ProgressionData);
+        const preferenceResponse = await fetch('/api/profile/preferences', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (preferenceResponse.ok) {
+          const preferencePayload = await preferenceResponse.json();
+          const preferenceData = (preferencePayload?.data ?? {}) as PreferenceData;
+          if (typeof preferenceData.selectedPackSlug === 'string' && preferenceData.selectedPackSlug.trim().length > 0) {
+            setSelectedPackSlug(preferenceData.selectedPackSlug);
+          }
+        }
       } catch {
         setError('Unable to load progression.');
       } finally {
@@ -39,6 +56,7 @@ export default function ProgressionPage() {
   }, []);
 
   const completionRatio = data ? Math.max(0, Math.min(1, data.completedCount / Math.max(1, data.nextMilestone))) : 0;
+  const packCopy = getPackCopy(selectedPackSlug);
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
@@ -64,7 +82,7 @@ export default function ProgressionPage() {
               />
             </div>
             <p className="text-xs leading-relaxed text-[var(--text-muted)]">
-              Completed {data.completedCount} items. Next milestone at {data.nextMilestone}.
+              Completed {data.completedCount} {packCopy.masteryUnitLabel}. Next milestone at {data.nextMilestone}.
             </p>
           </Card>
 

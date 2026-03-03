@@ -4,25 +4,26 @@ import { makeSessionCookie } from '../helpers/session-cookie';
 
 const {
   userFindUniqueMock,
-  userTasteProfileFindUniqueMock,
   computeTasteProfileMock,
 } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
-  userTasteProfileFindUniqueMock: vi.fn(),
   computeTasteProfileMock: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
-    userTasteProfile: { findUnique: userTasteProfileFindUniqueMock },
   },
+}));
+
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  resolveEffectivePackForUser: vi.fn(async () => ({ packId: 'pack_horror', packSlug: 'horror', seasonSlug: 'season-1', primaryGenre: 'horror' })),
 }));
 
 vi.mock('@/lib/taste/taste-computation-service', () => ({
   TasteComputationService: class {
-    computeTasteProfile(userId: string) {
-      return computeTasteProfileMock(userId);
+    computeTasteProfile(userId: string, options?: unknown) {
+      return computeTasteProfileMock(userId, options);
     }
   },
   summarizeTasteProfile: (traits: Record<string, unknown>) => `DNA summary for ${Object.keys(traits).length} traits`,
@@ -31,13 +32,12 @@ vi.mock('@/lib/taste/taste-computation-service', () => ({
 describe('GET /api/profile/dna', () => {
   beforeEach(() => {
     userFindUniqueMock.mockReset();
-    userTasteProfileFindUniqueMock.mockReset();
     computeTasteProfileMock.mockReset();
   });
 
-  it('returns existing DNA profile when present', async () => {
+  it('computes season-scoped DNA profile', async () => {
     userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
-    userTasteProfileFindUniqueMock.mockResolvedValueOnce({
+    computeTasteProfileMock.mockResolvedValueOnce({
       intensityPreference: 0.7,
       pacingPreference: 0.4,
       psychologicalVsSupernatural: 0.6,
@@ -56,12 +56,11 @@ describe('GET /api/profile/dna', () => {
     expect(response.status).toBe(200);
     expect(body.data.traits.intensityPreference).toBe(0.7);
     expect(body.data.summaryNarrative).toContain('DNA summary');
-    expect(computeTasteProfileMock).not.toHaveBeenCalled();
+    expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1', { packId: 'pack_horror', persist: false });
   });
 
-  it('computes DNA profile when missing', async () => {
+  it('returns computed DNA values', async () => {
     userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
-    userTasteProfileFindUniqueMock.mockResolvedValueOnce(null);
     computeTasteProfileMock.mockResolvedValueOnce({
       intensityPreference: 0.3,
       pacingPreference: 0.6,
@@ -79,8 +78,7 @@ describe('GET /api/profile/dna', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1');
+    expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1', { packId: 'pack_horror', persist: false });
     expect(body.data.traits.goreTolerance).toBe(0.2);
   });
 });
-

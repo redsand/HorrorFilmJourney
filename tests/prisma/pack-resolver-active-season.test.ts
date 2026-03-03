@@ -29,8 +29,8 @@ beforeEach(async () => {
   await prisma.user.deleteMany();
 });
 
-describe('resolveEffectivePackForUser active season guard', () => {
-  it('falls back to active season pack when selected pack belongs to inactive season', async () => {
+describe('resolveEffectivePackForUser user-specific selection', () => {
+  it('keeps the user-selected enabled pack even if that season is globally inactive', async () => {
     const season1 = await prisma.season.create({
       data: { slug: 'season-1', name: 'Season 1', isActive: false },
     });
@@ -71,8 +71,8 @@ describe('resolveEffectivePackForUser active season guard', () => {
 
     const effective = await resolveEffectivePackForUser(prisma, user.id);
 
-    expect(effective.packSlug).toBe('cult-classics');
-    expect(effective.seasonSlug).toBe('season-2');
+    expect(effective.packSlug).toBe('horror');
+    expect(effective.seasonSlug).toBe('season-1');
     const profile = await prisma.userProfile.findUnique({
       where: { userId: user.id },
       select: {
@@ -84,7 +84,7 @@ describe('resolveEffectivePackForUser active season guard', () => {
         },
       },
     });
-    expect(profile?.selectedPack?.slug).toBe(cultPack.slug);
-    expect(profile?.selectedPack?.season.slug).toBe('season-2');
+    expect(profile?.selectedPack?.slug).toBe(horrorPack.slug);
+    expect(profile?.selectedPack?.season.slug).toBe('season-1');
   });
 });

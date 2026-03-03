@@ -58,7 +58,7 @@ describe('/api/packs route', () => {
         slug: 'horror',
         name: 'Horror',
         isEnabled: true,
-        season: { slug: 'season-1' },
+        season: { slug: 'season-1', name: 'Season 1' },
       },
     ]);
 
@@ -85,7 +85,7 @@ describe('/api/packs route', () => {
         slug: 'cult-classics',
         name: 'Cult Classics',
         isEnabled: true,
-        season: { slug: 'season-2' },
+        season: { slug: 'season-2', name: 'Season 2' },
       },
     ]);
 

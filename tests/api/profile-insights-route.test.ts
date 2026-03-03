@@ -17,6 +17,10 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  resolveEffectivePackForUser: vi.fn(async () => ({ packId: 'pack_horror', packSlug: 'horror', seasonSlug: 'season-1', primaryGenre: 'horror' })),
+}));
+
 describe('GET /api/profile/insights', () => {
   beforeEach(() => {
     userFindUniqueMock.mockReset();

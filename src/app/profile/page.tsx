@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
+import { getPackCopy } from '@/lib/packs/pack-copy';
 
 type Me = {
   id: string;
@@ -33,10 +35,11 @@ type ProgressionData = {
 };
 type PacksResponse = {
   activeSeason: { slug: string; name: string };
-  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string }>;
+  packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string; seasonLabel: string }>;
 };
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
   const [recommendationStyle, setRecommendationStyle] = useState<RecommendationStyle>('diversity');
   const [tolerance, setTolerance] = useState<number>(3);
@@ -44,6 +47,7 @@ export default function ProfilePage() {
   const [savingPreference, setSavingPreference] = useState(false);
   const [savingOnboarding, setSavingOnboarding] = useState(false);
   const [onboardingMessage, setOnboardingMessage] = useState<string | null>(null);
+  const [themeMessage, setThemeMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [insights, setInsights] = useState<Insight[]>([]);
   const [dnaHistory, setDnaHistory] = useState<DnaHistory | null>(null);
@@ -120,6 +124,14 @@ export default function ProfilePage() {
   const masteryRatio = progression
     ? Math.max(0, Math.min(1, progression.completedCount / foundationalTarget))
     : 0;
+  const packCopy = getPackCopy(selectedPackSlug);
+  const applyThemeTransition = () => {
+    setThemeMessage('Theme updated.');
+    setTimeout(() => {
+      router.replace('/profile');
+      router.refresh();
+    }, 150);
+  };
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
@@ -135,6 +147,9 @@ export default function ProfilePage() {
         <Card className="space-y-4">
           <h2 className="text-lg font-semibold">{me.displayName}</h2>
           <p className="text-sm leading-6 text-[var(--text-muted)]">{me.email}</p>
+          {themeMessage ? (
+            <p className="text-xs text-[var(--text-muted)]">{themeMessage}</p>
+          ) : null}
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Role</span>
             <Chip tone={me.role === 'ADMIN' ? 'accent' : 'default'}>{me.role}</Chip>
@@ -142,22 +157,7 @@ export default function ProfilePage() {
           <div className="space-y-2">
             {packs?.packs?.length ? (
               <>
-                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Pack ({packs.activeSeason.name})</p>
-                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">Season Control</p>
-                  <p className="pt-1 text-sm leading-6 text-[var(--text)]">
-                    Active season: <span className="font-semibold">{packs.activeSeason.name}</span>
-                  </p>
-                  {me.role === 'ADMIN' ? (
-                    <Link className="mt-2 inline-flex w-full" href="/admin/packs">
-                      <Button className="w-full" variant="secondary">Switch Active Season</Button>
-                    </Link>
-                  ) : (
-                    <p className="pt-1 text-xs text-[var(--text-muted)]">
-                      Season switching is managed by admins.
-                    </p>
-                  )}
-                </div>
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Season & Pack</p>
                 <div className="grid grid-cols-1 gap-2">
                   {packs.packs.filter((pack) => pack.isEnabled).map((pack) => (
                     <button
@@ -181,6 +181,7 @@ export default function ProfilePage() {
                           });
                           if (response.ok) {
                             setSelectedPackSlug(pack.slug);
+                            applyThemeTransition();
                           }
                         } finally {
                           setSavingPreference(false);
@@ -188,7 +189,10 @@ export default function ProfilePage() {
                       }}
                       type="button"
                     >
-                      {pack.name}
+                      <span className="font-medium">{pack.name}</span>
+                      <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                        {pack.seasonLabel}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -320,6 +324,7 @@ export default function ProfilePage() {
                     });
                     if (response.ok) {
                       setOnboardingMessage('Preferences updated.');
+                      applyThemeTransition();
                     } else {
                       setOnboardingMessage('Unable to save preferences.');
                     }
@@ -403,7 +408,7 @@ export default function ProfilePage() {
               />
             </div>
             <p className="text-sm leading-6 text-[var(--text)]">
-              You&apos;ve completed {progression?.completedCount ?? 0}/{foundationalTarget} foundational psychological horror films.
+              You&apos;ve completed {progression?.completedCount ?? 0}/{foundationalTarget} {packCopy.masteryUnitLabel}.
             </p>
             <p className="text-xs text-[var(--text-muted)]">
               Mastery score: {progression?.masteryScore?.toFixed(2) ?? '0.00'}
@@ -414,7 +419,7 @@ export default function ProfilePage() {
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Next Stage</p>
             <p className="text-sm leading-6 text-[var(--text)]">
               {progression
-                ? `Your current node is ${progression.currentNode}. Reaching ${progression.nextMilestone} completed films deepens your command of horror language and unlocks harder thematic comparisons.`
+                ? `Your current node is ${progression.currentNode}. Reaching ${progression.nextMilestone} completed films deepens your command of ${packCopy.masteryDisciplineLabel} and unlocks ${packCopy.nextStageDescription}.`
                 : 'Your next stage unlocks once you complete and rate more films.'}
             </p>
           </Card>

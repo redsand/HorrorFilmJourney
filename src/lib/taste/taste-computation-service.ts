@@ -1,5 +1,6 @@
 import { InteractionStatus, PrismaClient, type Prisma } from '@prisma/client';
 import { tasteSnapshotInterval } from '@/lib/taste/taste-evolution-service';
+import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
 
 type TraitSnapshot = {
   intensityPreference: number;
@@ -196,7 +197,10 @@ function computeTraitFromInteractions(
 export class TasteComputationService {
   constructor(private readonly prisma: PrismaClient) {}
 
-  private async maybeSaveSnapshot(userId: string, traits: TraitSnapshot, takenAt: Date): Promise<void> {
+  private async maybeSaveSnapshot(userId: string, traits: TraitSnapshot, takenAt: Date, packId?: string | null): Promise<void> {
+    if (packId) {
+      return;
+    }
     const interval = tasteSnapshotInterval();
     const latestSnapshot = await this.prisma.tasteSnapshot.findFirst({
       where: { userId },
@@ -204,9 +208,10 @@ export class TasteComputationService {
       select: { takenAt: true },
     });
 
-    const countWhereBase = {
+    const countWhereBase: Prisma.UserMovieInteractionWhereInput = {
       userId,
       status: { in: [InteractionStatus.WATCHED, InteractionStatus.ALREADY_SEEN] as InteractionStatus[] },
+      ...buildPackScopedInteractionWhere(packId),
     };
 
     const interactionsSinceLastSnapshot = latestSnapshot
@@ -239,11 +244,17 @@ export class TasteComputationService {
     });
   }
 
-  async computeTasteProfile(userId: string): Promise<TraitSnapshot & { lastComputedAt: Date }> {
+  async computeTasteProfile(
+    userId: string,
+    options?: { packId?: string | null; persist?: boolean },
+  ): Promise<TraitSnapshot & { lastComputedAt: Date }> {
+    const packId = options?.packId ?? null;
+    const persist = options?.persist ?? !packId;
     const interactions = await this.prisma.userMovieInteraction.findMany({
       where: {
         userId,
         status: { in: [InteractionStatus.WATCHED, InteractionStatus.ALREADY_SEEN] },
+        ...buildPackScopedInteractionWhere(packId),
       },
       orderBy: { createdAt: 'desc' },
       select: {
@@ -294,30 +305,32 @@ export class TasteComputationService {
     const auteurAffinity = computeTraitFromInteractions(interactions, ({ workedBest }) => mapWorkedBestToAuteur(workedBest));
 
     const lastComputedAt = new Date();
-    await this.prisma.userTasteProfile.upsert({
-      where: { userId },
-      create: {
-        userId,
-        intensityPreference,
-        pacingPreference,
-        psychologicalVsSupernatural,
-        goreTolerance,
-        ambiguityTolerance,
-        nostalgiaBias,
-        auteurAffinity,
-        lastComputedAt,
-      },
-      update: {
-        intensityPreference,
-        pacingPreference,
-        psychologicalVsSupernatural,
-        goreTolerance,
-        ambiguityTolerance,
-        nostalgiaBias,
-        auteurAffinity,
-        lastComputedAt,
-      },
-    });
+    if (persist) {
+      await this.prisma.userTasteProfile.upsert({
+        where: { userId },
+        create: {
+          userId,
+          intensityPreference,
+          pacingPreference,
+          psychologicalVsSupernatural,
+          goreTolerance,
+          ambiguityTolerance,
+          nostalgiaBias,
+          auteurAffinity,
+          lastComputedAt,
+        },
+        update: {
+          intensityPreference,
+          pacingPreference,
+          psychologicalVsSupernatural,
+          goreTolerance,
+          ambiguityTolerance,
+          nostalgiaBias,
+          auteurAffinity,
+          lastComputedAt,
+        },
+      });
+    }
 
     await this.maybeSaveSnapshot(userId, {
       intensityPreference,
@@ -327,7 +340,7 @@ export class TasteComputationService {
       ambiguityTolerance,
       nostalgiaBias,
       auteurAffinity,
-    }, lastComputedAt);
+    }, lastComputedAt, packId);
 
     return {
       intensityPreference,

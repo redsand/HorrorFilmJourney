@@ -34,16 +34,16 @@ beforeEach(async () => {
 });
 
 describe('experience state decisions', () => {
-  it('returns ONBOARDING_NEEDED when user has no profile', async () => {
+  it('returns PACK_SELECTION_NEEDED when user has no profile', async () => {
     const user = await prisma.user.create({ data: { displayName: 'NoProfile User' } });
 
     const result = await getExperience(user.id, prisma);
 
-    expect(result.state).toBe('ONBOARDING_NEEDED');
-    expect(result.onboardingQuestions?.length).toBeGreaterThan(0);
+    expect(result.state).toBe('PACK_SELECTION_NEEDED');
+    expect(result.packSelection?.packs.length).toBeGreaterThan(0);
   });
 
-  it('returns ONBOARDING_NEEDED when profile exists but onboarding is not completed', async () => {
+  it('returns PACK_SELECTION_NEEDED when profile exists but onboarding is not completed and no pack is selected', async () => {
     const user = await prisma.user.create({
       data: {
         displayName: 'Profile User',
@@ -54,7 +54,7 @@ describe('experience state decisions', () => {
 
     const result = await getExperience(user.id, prisma);
 
-    expect(result.state).toBe('ONBOARDING_NEEDED');
+    expect(result.state).toBe('PACK_SELECTION_NEEDED');
   });
 
   it('returns SHOW_RECOMMENDATION_BUNDLE when onboarding is completed and user has no batch', async () => {
@@ -133,10 +133,29 @@ describe('experience state decisions', () => {
   });
 
   it('returns SHOW_RECOMMENDATION_BUNDLE with cards when user has profile and batch', async () => {
+    const season = await prisma.season.create({
+      data: { slug: 'season-1', name: 'Season 1', isActive: true },
+    });
+    const pack = await prisma.genrePack.create({
+      data: {
+        slug: 'horror',
+        name: 'Horror',
+        seasonId: season.id,
+        isEnabled: true,
+        primaryGenre: 'horror',
+      },
+    });
     const user = await prisma.user.create({
       data: {
         displayName: 'Batch User',
-        profile: { create: { tolerance: 4, pacePreference: 'balanced', onboardingCompleted: true } },
+        profile: {
+          create: {
+            tolerance: 4,
+            pacePreference: 'balanced',
+            onboardingCompleted: true,
+            selectedPackId: pack.id,
+          },
+        },
       },
     });
 
@@ -147,6 +166,7 @@ describe('experience state decisions', () => {
     await prisma.recommendationBatch.create({
       data: {
         userId: user.id,
+        packId: pack.id,
         journeyNode: 'node-1',
         items: {
           create: {

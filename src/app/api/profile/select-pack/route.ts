@@ -29,7 +29,6 @@ export async function POST(request: Request): Promise<Response> {
   const pack = await prisma.genrePack.findFirst({
     where: {
       isEnabled: true,
-      season: { isActive: true },
       ...(payload.packId ? { id: payload.packId } : { slug: payload.packSlug?.toLowerCase() }),
     },
     select: { id: true, slug: true, season: { select: { slug: true } } },

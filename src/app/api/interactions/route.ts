@@ -5,6 +5,7 @@ import { generateRecommendationBatch } from '@/lib/recommendation/recommendation
 import { requireAuth } from '@/lib/auth/guards';
 import { TasteComputationService } from '@/lib/taste/taste-computation-service';
 import { JourneyProgressionService } from '@/lib/journey/journey-progression-service';
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
@@ -105,10 +106,17 @@ export async function POST(request: Request): Promise<Response> {
     });
   }
 
+  const effectivePack = (status === InteractionStatus.WATCHED || status === InteractionStatus.ALREADY_SEEN)
+    ? await resolveEffectivePackForUser(prisma, auth.userId)
+    : null;
+
   if (status === InteractionStatus.WATCHED || status === InteractionStatus.ALREADY_SEEN) {
     try {
       const tasteService = new TasteComputationService(prisma);
-      await tasteService.computeTasteProfile(auth.userId);
+      await tasteService.computeTasteProfile(auth.userId, {
+        packId: effectivePack?.packId ?? null,
+        persist: false,
+      });
     } catch (error) {
       console.warn('[taste.profile] recompute failed', {
         userId: auth.userId,
@@ -129,7 +137,7 @@ export async function POST(request: Request): Promise<Response> {
         agedWell: (agedWell as string | undefined) ?? null,
         recommend: (recommend as boolean | undefined) ?? null,
         note: (note as string | undefined) ?? null,
-      });
+      }, { packId: effectivePack?.packId ?? null });
     } catch (error) {
       console.warn('[journey.progress] update failed', {
         userId: auth.userId,

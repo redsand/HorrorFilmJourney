@@ -1,4 +1,5 @@
 import { InteractionStatus, PrismaClient, type Prisma } from '@prisma/client';
+import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
 
 type InsightType = 'decade' | 'subgenre' | 'intensity' | 'comparison';
 
@@ -128,12 +129,16 @@ function buildComparisonInsight(decadeGroups: Map<string, number[]>): ThematicIn
 export class ThematicInsightService {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getInsights(userId: string): Promise<{ insights: ThematicInsight[]; totalRated: number }> {
+  async getInsights(
+    userId: string,
+    options?: { packId?: string | null },
+  ): Promise<{ insights: ThematicInsight[]; totalRated: number }> {
     const rows = await this.prisma.userMovieInteraction.findMany({
       where: {
         userId,
         status: { in: [InteractionStatus.WATCHED, InteractionStatus.ALREADY_SEEN] },
         rating: { not: null },
+        ...buildPackScopedInteractionWhere(options?.packId),
       },
       select: {
         rating: true,

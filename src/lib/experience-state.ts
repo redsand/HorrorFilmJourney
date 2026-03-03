@@ -1,6 +1,6 @@
 import { InteractionStatus, PrismaClient } from '@prisma/client';
 import { seasonsPacksEnabled } from '@/lib/feature-flags';
-import { listAvailablePacks } from '@/lib/packs/pack-resolver';
+import { listAvailablePacks, resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 
 export type ExperienceState =
   | 'PACK_SELECTION_NEEDED'
@@ -141,8 +141,15 @@ export async function getExperience(
     };
   }
 
+  const effectivePack = seasonsPacksEnabled()
+    ? await resolveEffectivePackForUser(prisma, userId)
+    : null;
+
   const latestBatch = await prisma.recommendationBatch.findFirst({
-    where: { userId },
+    where: {
+      userId,
+      ...(effectivePack?.packId ? { packId: effectivePack.packId } : {}),
+    },
     orderBy: { createdAt: 'desc' },
     include: {
       items: {

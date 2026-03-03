@@ -39,18 +39,22 @@ vi.mock('@/lib/recommendation/recommendation-engine', () => ({
 
 vi.mock('@/lib/taste/taste-computation-service', () => ({
   TasteComputationService: class {
-    computeTasteProfile(userId: string) {
-      return computeTasteProfileMock(userId);
+    computeTasteProfile(userId: string, options?: unknown) {
+      return computeTasteProfileMock(userId, options);
     }
   },
 }));
 
 vi.mock('@/lib/journey/journey-progression-service', () => ({
   JourneyProgressionService: class {
-    trackWatched(input: unknown) {
-      return trackWatchedMock(input);
+    trackWatched(input: unknown, scope?: unknown) {
+      return trackWatchedMock(input, scope);
     }
   },
+}));
+
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  resolveEffectivePackForUser: vi.fn(async () => ({ packId: 'pack_horror', packSlug: 'horror', seasonSlug: 'season-1', primaryGenre: 'horror' })),
 }));
 
 describe('POST /api/interactions', () => {
@@ -128,7 +132,7 @@ describe('POST /api/interactions', () => {
       },
       error: null,
     });
-    expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1');
+    expect(computeTasteProfileMock).toHaveBeenCalledWith('user_1', { packId: 'pack_horror', persist: false });
     expect(trackWatchedMock).toHaveBeenCalledTimes(1);
     expect(interactionDeleteManyMock).toHaveBeenCalledWith({
       where: {

@@ -19,6 +19,8 @@ import { DeterministicStubStreamingProvider } from '@/lib/streaming/streaming-pr
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
 import { syncTmdbHorrorCandidates } from '@/lib/tmdb/live-candidate-sync';
 import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
+import { TasteComputationService } from '@/lib/taste/taste-computation-service';
+import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
 import {
   computeEvidenceHashes,
   computeNarrativeHash,
@@ -80,6 +82,7 @@ export type CandidateConstraints = {
 
 export type RecommendationContext = {
   targetCount: number;
+  packId?: string | null;
 };
 
 export type ExplorationContext = {
@@ -779,13 +782,40 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
       },
     });
     latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
+    const hasPackCatalog = constraints.packId
+      ? (await this.prisma.nodeMovie.count({
+        where: {
+          node: {
+            packId: constraints.packId,
+          },
+        },
+      })) > 0
+      : false;
+
     const allMovies = await this.prisma.movie.findMany({
+      where: constraints.packId
+        ? hasPackCatalog
+          ? {
+            nodeAssignments: {
+              some: {
+                node: {
+                  packId: constraints.packId,
+                },
+              },
+            },
+          }
+          : undefined
+        : undefined,
       orderBy: { tmdbId: 'asc' },
       select: { id: true, tmdbId: true, posterUrl: true, genres: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
     });
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
-      .filter((movie) => normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase()))
+      .filter((movie) => (
+        constraints.packId && hasPackCatalog
+          ? true
+          : normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase())
+      ))
       .filter((movie) => isRecommendationEligibleMovie({
         posterUrl: movie.posterUrl,
         posterLastValidatedAt: movie.posterLastValidatedAt,
@@ -850,20 +880,15 @@ export class HeuristicRerankerV1 implements Reranker {
         where: { userId: _userId },
         select: { tolerance: true, pacePreference: true, horrorDNA: true },
       }),
-      this.prisma.userTasteProfile.findUnique({
-        where: { userId: _userId },
-        select: {
-          intensityPreference: true,
-          pacingPreference: true,
-          psychologicalVsSupernatural: true,
-          goreTolerance: true,
-          ambiguityTolerance: true,
-          nostalgiaBias: true,
-          auteurAffinity: true,
-        },
+      new TasteComputationService(this.prisma).computeTasteProfile(_userId, {
+        packId: context.packId ?? null,
+        persist: false,
       }),
       this.prisma.userMovieInteraction.findMany({
-        where: { userId: _userId },
+        where: {
+          userId: _userId,
+          ...buildPackScopedInteractionWhere(context.packId),
+        },
         orderBy: { createdAt: 'desc' },
         take: 120,
         select: {
@@ -946,10 +971,27 @@ export class HeuristicRerankerV1 implements Reranker {
       const tolerancePenalty = typeof profile?.tolerance === 'number' && profile.tolerance <= 2
         ? (genres.includes('body-horror') ? -0.2 : 0)
         : 0;
+      const paceTarget = profile?.pacePreference === 'slowburn'
+        ? 0.25
+        : profile?.pacePreference === 'shock'
+          ? 0.85
+          : 0.5;
+      const paceAlignment = 1 - Math.abs(moviePacingScore(movie) - paceTarget);
+      const pacePreferenceScore = (paceAlignment - 0.5) * 0.9;
+      const toleranceTarget = typeof profile?.tolerance === 'number'
+        ? (profile.tolerance - 1) / 4
+        : 0.5;
+      const intensityAlignment = 1 - Math.abs(movieIntensityScore(movie) - toleranceTarget);
+      const intensityPreferenceScore = (intensityAlignment - 0.5) * 0.85;
 
       const popularityWeight = recommendationStyle === 'popularity' ? 1 : 0.2;
       const affinityWeight = recommendationStyle === 'popularity' ? 0.7 : 1;
-      const baseScore = (genreScore + decadeScore) * affinityWeight + popularityScore * popularityWeight + paceBias + tolerancePenalty;
+      const baseScore = (genreScore + decadeScore) * affinityWeight
+        + popularityScore * popularityWeight
+        + paceBias
+        + tolerancePenalty
+        + pacePreferenceScore
+        + intensityPreferenceScore;
       const dna = scoreCandidate(movie, tasteProfile, {
         baseScore,
         genreAffinity,
@@ -1156,7 +1198,10 @@ export async function generateRecommendationBatchModern(
   });
 
   const rerankStartedAt = nowMs();
-  const rankedIds = await deps.reranker.rerank(userId, candidateIds, { targetCount });
+  const rankedIds = await deps.reranker.rerank(userId, candidateIds, {
+    targetCount,
+    packId: options.packId ?? null,
+  });
   console.info('[recommendations.engine] modern rerank completed', {
     durationMs: elapsedMs(rerankStartedAt),
     rankedCount: rankedIds.length,

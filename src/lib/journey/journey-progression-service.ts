@@ -15,6 +15,10 @@ type WatchSignal = {
   note?: string | null;
 };
 
+type ProgressionScope = {
+  packId?: string | null;
+};
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -72,6 +76,21 @@ function masteryDelta(signal: WatchSignal, journeyNode: string, rank: number | n
   return Number((ratingWeight * depth * engagement).toFixed(4));
 }
 
+function scopedJourneyNode(journeyNode: string, packId?: string | null): string {
+  if (!packId) {
+    return journeyNode;
+  }
+  return `${packId}:${journeyNode}`;
+}
+
+function unscopedJourneyNode(journeyNode: string, packId?: string | null): string {
+  if (!packId) {
+    return journeyNode;
+  }
+  const prefix = `${packId}:`;
+  return journeyNode.startsWith(prefix) ? journeyNode.slice(prefix.length) : journeyNode;
+}
+
 export function nextMilestoneForCount(completedCount: number): number {
   return Math.ceil((completedCount + 1) / MILESTONE_STEP) * MILESTONE_STEP;
 }
@@ -79,7 +98,7 @@ export function nextMilestoneForCount(completedCount: number): number {
 export class JourneyProgressionService {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async trackWatched(signal: WatchSignal): Promise<void> {
+  async trackWatched(signal: WatchSignal, scope?: ProgressionScope): Promise<void> {
     const recommendationItem = signal.recommendationItemId
       ? await this.prisma.recommendationItem.findUnique({
         where: { id: signal.recommendationItemId },
@@ -89,14 +108,18 @@ export class JourneyProgressionService {
 
     const latestBatch = !recommendationItem
       ? await this.prisma.recommendationBatch.findFirst({
-        where: { userId: signal.userId },
+        where: {
+          userId: signal.userId,
+          ...(scope?.packId ? { packId: scope.packId } : {}),
+        },
         orderBy: { createdAt: 'desc' },
         select: { journeyNode: true, packId: true },
       })
       : null;
 
     const journeyNode = recommendationItem?.batch.journeyNode ?? latestBatch?.journeyNode ?? DEFAULT_NODE;
-    const packId = recommendationItem?.batch.packId ?? latestBatch?.packId ?? null;
+    const packId = recommendationItem?.batch.packId ?? latestBatch?.packId ?? scope?.packId ?? null;
+    const storedJourneyNode = scopedJourneyNode(journeyNode, packId);
     const delta = masteryDelta(signal, journeyNode, recommendationItem?.rank ?? null);
     const now = new Date();
 
@@ -104,13 +127,13 @@ export class JourneyProgressionService {
       where: {
         userId_journeyNode: {
           userId: signal.userId,
-          journeyNode,
+          journeyNode: storedJourneyNode,
         },
       },
       create: {
         userId: signal.userId,
         ...(packId ? { packId } : {}),
-        journeyNode,
+        journeyNode: storedJourneyNode,
         completedCount: 1,
         masteryScore: delta,
         lastUpdatedAt: now,
@@ -124,7 +147,7 @@ export class JourneyProgressionService {
     });
   }
 
-  async getProfileProgress(userId: string): Promise<{
+  async getProfileProgress(userId: string, scope?: ProgressionScope): Promise<{
     currentNode: string;
     masteryScore: number;
     completedCount: number;
@@ -132,7 +155,10 @@ export class JourneyProgressionService {
     unlockedThemes: string[];
   }> {
     const current = await this.prisma.journeyProgress.findFirst({
-      where: { userId },
+      where: {
+        userId,
+        ...(scope?.packId ? { packId: scope.packId } : {}),
+      },
       orderBy: { lastUpdatedAt: 'desc' },
       select: {
         journeyNode: true,
@@ -152,18 +178,22 @@ export class JourneyProgressionService {
     }
 
     const all = await this.prisma.journeyProgress.findMany({
-      where: { userId, masteryScore: { gte: 3 } },
+      where: {
+        userId,
+        masteryScore: { gte: 3 },
+        ...(scope?.packId ? { packId: scope.packId } : {}),
+      },
       orderBy: { masteryScore: 'desc' },
       select: { journeyNode: true },
       take: 6,
     });
 
     return {
-      currentNode: current.journeyNode,
+      currentNode: unscopedJourneyNode(current.journeyNode, scope?.packId),
       masteryScore: Number(current.masteryScore.toFixed(2)),
       completedCount: current.completedCount,
       nextMilestone: nextMilestoneForCount(current.completedCount),
-      unlockedThemes: all.map((item) => item.journeyNode),
+      unlockedThemes: all.map((item) => unscopedJourneyNode(item.journeyNode, scope?.packId)),
     };
   }
 }

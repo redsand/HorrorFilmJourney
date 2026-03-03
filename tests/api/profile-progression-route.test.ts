@@ -18,10 +18,14 @@ vi.mock('@/lib/prisma', () => ({
 
 vi.mock('@/lib/journey/journey-progression-service', () => ({
   JourneyProgressionService: class {
-    getProfileProgress(userId: string) {
-      return getProfileProgressMock(userId);
+    getProfileProgress(userId: string, scope?: { packId?: string | null }) {
+      return getProfileProgressMock(userId, scope);
     }
   },
+}));
+
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  resolveEffectivePackForUser: vi.fn(async () => ({ packId: 'pack_horror', packSlug: 'horror', seasonSlug: 'season-1', primaryGenre: 'horror' })),
 }));
 
 describe('GET /api/profile/progression', () => {
@@ -46,7 +50,7 @@ describe('GET /api/profile/progression', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(getProfileProgressMock).toHaveBeenCalledWith('user_1');
+    expect(getProfileProgressMock).toHaveBeenCalledWith('user_1', { packId: 'pack_horror' });
     expect(body.data.currentNode).toBe('ENGINE_V1_CORE#RANK_2');
     expect(body.data.nextMilestone).toBe(5);
   });

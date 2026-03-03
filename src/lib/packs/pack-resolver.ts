@@ -96,13 +96,13 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
           slug: true,
           isEnabled: true,
           primaryGenre: true,
-          season: { select: { slug: true, isActive: true } },
+          season: { select: { slug: true } },
         },
       },
     },
   });
 
-  if (profile?.selectedPack && profile.selectedPack.isEnabled && profile.selectedPack.season.isActive) {
+  if (profile?.selectedPack && profile.selectedPack.isEnabled) {
     return {
       packId: profile.selectedPack.id,
       packSlug: profile.selectedPack.slug,
@@ -161,13 +161,13 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
   });
 
   const packs = await prisma.genrePack.findMany({
-    where: { season: { slug: activeSeason?.slug ?? defaultPack.season.slug } },
-    orderBy: { createdAt: 'asc' },
+    where: { isEnabled: true },
+    orderBy: [{ seasonId: 'asc' }, { createdAt: 'asc' }],
     select: {
       slug: true,
       name: true,
       isEnabled: true,
-      season: { select: { slug: true } },
+      season: { select: { slug: true, name: true } },
     },
   });
 
@@ -181,7 +181,7 @@ export async function listAvailablePacks(prisma: PrismaClient): Promise<{
         name: pack.name,
         isEnabled: pack.isEnabled,
         seasonSlug: pack.season.slug,
-        seasonLabel: activeSeason?.name ?? DEFAULT_SEASON_NAME,
+        seasonLabel: pack.season.name,
         themeKey: getThemePresetForPackSlug(pack.slug)?.themeName
           ?? getThemeConfigForPackSlug(pack.slug).themeName,
       }))

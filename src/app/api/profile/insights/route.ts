@@ -2,6 +2,7 @@ import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
 import { ThematicInsightService } from '@/lib/taste/thematic-insight-service';
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAuth(request, prisma);
@@ -10,6 +11,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const service = new ThematicInsightService(prisma);
-  const result = await service.getInsights(auth.userId);
+  const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
+  const result = await service.getInsights(auth.userId, { packId: effectivePack.packId });
   return ok(result, { status: 200 });
 }
