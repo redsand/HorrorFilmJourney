@@ -486,6 +486,18 @@ function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
+function resolveSeason1NodeMinConfidence(): number {
+  const raw = process.env.SEASON1_NODE_MIN_RECOMMENDATION_CONFIDENCE?.trim();
+  if (!raw) {
+    return 0.58;
+  }
+  const parsed = Number.parseFloat(raw);
+  if (!Number.isFinite(parsed)) {
+    return 0.58;
+  }
+  return Math.max(0, Math.min(1, parsed));
+}
+
 function traitMatch(a: number, b: number): number {
   return 1 - Math.abs(clamp01(a) - clamp01(b));
 }
@@ -895,7 +907,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
             nodeSlug: constraints.journeyNodeSlug,
           },
           orderBy: { rank: 'asc' },
-          select: { movieId: true },
+          select: { movieId: true, source: true, score: true },
         })
         : await this.prisma.nodeMovie.findMany({
           where: {
@@ -905,25 +917,41 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
             },
           },
           orderBy: { rank: 'asc' },
-          select: { movieId: true },
+          select: { movieId: true, source: true, score: true },
         });
       const curatedSet = new Set(curatedAssignments.map((item) => item.movieId));
       const eligibleSet = new Set(eligible.map((movie) => movie.id));
-      curatedIds = curatedAssignments
-        .map((item) => item.movieId)
-        .filter((movieId) => eligibleSet.has(movieId));
+      const minConfidence = resolveSeason1NodeMinConfidence();
+      const highConfidenceIds: string[] = [];
+      const fallbackLowConfidenceIds: string[] = [];
+      for (const item of curatedAssignments) {
+        if (!eligibleSet.has(item.movieId)) {
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+        const bypass = item.source === 'curated' || item.source === 'override';
+        const confident = bypass || item.score === null || item.score >= minConfidence;
+        if (confident) {
+          highConfidenceIds.push(item.movieId);
+        } else {
+          fallbackLowConfidenceIds.push(item.movieId);
+        }
+      }
+      curatedIds = highConfidenceIds;
       const fallbackIds = eligible
         .filter((movie) => !curatedSet.has(movie.id))
         .map((movie) => movie.id);
       console.info('[recommendations.engine] curriculum candidates', {
         journeyNodeSlug: constraints.journeyNodeSlug,
         curatedCount: curatedIds.length,
+        lowConfidenceCuratedCount: fallbackLowConfidenceIds.length,
         fallbackCount: fallbackIds.length,
+        minConfidence,
       });
       if (curatedIds.length >= constraints.targetCount) {
         return curatedIds;
       }
-      return [...curatedIds, ...fallbackIds];
+      return [...curatedIds, ...fallbackLowConfidenceIds, ...fallbackIds];
     }
     console.info('[recommendations.engine] candidate poster quality', {
       totalMovies: allMovies.length,

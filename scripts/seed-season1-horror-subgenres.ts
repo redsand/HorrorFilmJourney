@@ -6,6 +6,11 @@ import {
   inferNodeProbabilities,
   type LabelingFunction,
 } from '../src/lib/nodes/weak-supervision/index.ts';
+import {
+  loadSeason1ClassifierArtifact,
+  scoreMovieWithSeason1Classifier,
+  type Season1NodeClassifierArtifact,
+} from '../src/lib/nodes/classifier/index.ts';
 import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
 import {
   applySeason1GovernanceEnvOverrides,
@@ -16,6 +21,7 @@ import {
   toPairKey,
 } from '../src/lib/nodes/governance/season1-governance.ts';
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
+import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
 
 type CurriculumTitle = {
   title: string;
@@ -40,7 +46,13 @@ type CatalogMovie = {
   tmdbId: number;
   title: string;
   year: number | null;
+  synopsis: string | null;
   genres: string[];
+  keywords: string[];
+  country: string | null;
+  director: string | null;
+  cast: string[];
+  embeddingVector?: number[];
   popularity: number;
   eligible: boolean;
 };
@@ -61,6 +73,8 @@ type WeakCandidate = {
   nodeId: string;
   movie: CatalogMovie;
   rawProbability: number;
+  classifierProbability: number | null;
+  assistProbability: number;
   adjustedProbability: number;
   threshold: number;
   firedLfNames: string[];
@@ -139,6 +153,24 @@ function parseJsonStringArray(value: unknown): string[] {
     .filter((entry) => entry.length > 0);
 }
 
+function parseCastNames(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => {
+      if (typeof entry === 'string') {
+        return entry.trim();
+      }
+      if (entry && typeof entry === 'object' && typeof (entry as { name?: unknown }).name === 'string') {
+        return ((entry as { name: string }).name).trim();
+      }
+      return '';
+    })
+    .filter((entry) => entry.length > 0)
+    .slice(0, 8);
+}
+
 function tokenizeTitle(value: string): string[] {
   return value
     .toLowerCase()
@@ -212,6 +244,15 @@ function parseIntEnv(name: string, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function parseFloatEnv(name: string, fallback: number): number {
+  const raw = process.env[name]?.trim();
+  if (!raw) {
+    return fallback;
+  }
+  const parsed = Number.parseFloat(raw);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
 function parseBooleanEnv(name: string, fallback: boolean): boolean {
   const raw = process.env[name]?.trim().toLowerCase();
   if (!raw) {
@@ -252,15 +293,32 @@ function isPairMatch(a: string, b: string, left: string, right: string): boolean
 }
 
 async function main(): Promise<void> {
+  if (!isLikelyLocalPostgresUrl(process.env.DATABASE_URL)) {
+    throw new Error('seed:season1:subgenres is local-only. Use remote:publish-catalog for remote writes.');
+  }
   const prisma = new PrismaClient();
   const limitPerNode = parseIntEnv('SEASON1_REQUIRED_LIMIT_PER_NODE', 20);
   const runId = process.env.SEASON1_ASSIGNMENT_RUN_ID?.trim() || `season1-weak-supervision-${new Date().toISOString()}`;
   const publishSnapshot = parseBooleanEnv('SEASON1_PUBLISH_SNAPSHOT', false);
+  const classifierAssistEnabled = parseBooleanEnv('SEASON1_CLASSIFIER_ASSIST_ENABLED', false);
+  const classifierAssistWeight = Math.max(0, Math.min(0.8, parseFloatEnv('SEASON1_CLASSIFIER_ASSIST_WEIGHT', 0.25)));
 
   try {
     const spec = await loadSpec();
     const configRaw = await loadSeason1NodeGovernanceConfig();
     const config = applySeason1GovernanceEnvOverrides(configRaw, spec.nodes.map((n) => n.slug));
+    const classifierPath = resolve(
+      process.env.SEASON1_CLASSIFIER_ARTIFACT_PATH?.trim()
+        || `artifacts/season1-node-classifier/${config.taxonomyVersion}/model.json`,
+    );
+    let classifierArtifact: Season1NodeClassifierArtifact | null = null;
+    if (classifierAssistEnabled) {
+      try {
+        classifierArtifact = await loadSeason1ClassifierArtifact(classifierPath);
+      } catch (error) {
+        console.warn(`Season 1 classifier assist disabled; artifact not loaded at ${classifierPath}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
 
     const season = await prisma.season.upsert({
       where: { slug: spec.seasonSlug },
@@ -298,10 +356,14 @@ async function main(): Promise<void> {
         tmdbId: true,
         title: true,
         year: true,
+        synopsis: true,
         genres: true,
+        keywords: true,
+        country: true,
         posterUrl: true,
         director: true,
         castTop: true,
+        embedding: { select: { vectorJson: true } },
         ratings: { select: { source: true, value: true } },
       },
     });
@@ -321,7 +383,15 @@ async function main(): Promise<void> {
         tmdbId: movie.tmdbId,
         title: movie.title,
         year: movie.year,
+        synopsis: movie.synopsis,
         genres,
+        keywords: parseJsonStringArray(movie.keywords),
+        country: movie.country,
+        director: movie.director,
+        cast: parseCastNames(movie.castTop),
+        embeddingVector: Array.isArray(movie.embedding?.vectorJson)
+          ? movie.embedding!.vectorJson.filter((entry): entry is number => typeof entry === 'number')
+          : undefined,
         popularity,
         eligible: eligibility.isEligible,
       };
@@ -329,6 +399,13 @@ async function main(): Promise<void> {
 
     const eligibleHorrorPool = allMovies.filter((movie) => movie.eligible && movie.genres.includes('horror'));
     const movieByLookup = new Map(allMovies.map((movie) => [makeLookupKey(movie.title, movie.year), movie] as const));
+    const classifierByMovie = new Map<string, Map<string, number>>();
+    if (classifierArtifact) {
+      for (const movie of eligibleHorrorPool) {
+        const scored = scoreMovieWithSeason1Classifier(classifierArtifact, movie);
+        classifierByMovie.set(movie.id, new Map(scored.map((item) => [item.nodeSlug, item.probability] as const)));
+      }
+    }
 
     const unresolved: Array<{ nodeSlug: string; title: string; year: number; reason: string }> = [];
     const nodeBySlug = new Map<string, { id: string; name: string }>();
@@ -418,9 +495,15 @@ async function main(): Promise<void> {
         .filter((movie) => !curatedMovieIds.has(movie.id))
         .map((movie) => {
           const nodeProbability = inferNodeProbabilities(movie, [node.slug], lfs)[0]!;
+          const classifierProbability = classifierByMovie.get(movie.id)?.get(node.slug) ?? null;
+          const assistProbability = classifierProbability === null
+            ? nodeProbability.probability
+            : ((1 - classifierAssistWeight) * nodeProbability.probability) + (classifierAssistWeight * classifierProbability);
           return {
             movie,
             rawProbability: nodeProbability.probability,
+            classifierProbability,
+            assistProbability,
             threshold,
             firedLfNames: nodeProbability.fired.slice(0, 8).map((f) => f.lfName),
             evidenceSummary: evidenceSummaryFromFired(nodeProbability.fired),
@@ -429,13 +512,15 @@ async function main(): Promise<void> {
           };
         })
         .filter((entry) => entry.rawProbability >= threshold)
-        .sort((a, b) => (b.rawProbability - a.rawProbability) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
+        .sort((a, b) => (b.assistProbability - a.assistProbability) || (b.rawProbability - a.rawProbability) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
         .map((entry) => ({
           nodeSlug: node.slug,
           nodeId: upsertedNode.id,
           movie: entry.movie,
           rawProbability: Number(entry.rawProbability.toFixed(6)),
-          adjustedProbability: Number(entry.rawProbability.toFixed(6)),
+          classifierProbability: entry.classifierProbability === null ? null : Number(entry.classifierProbability.toFixed(6)),
+          assistProbability: Number(entry.assistProbability.toFixed(6)),
+          adjustedProbability: Number(entry.assistProbability.toFixed(6)),
           threshold: entry.threshold,
           firedLfNames: entry.firedLfNames,
           evidenceSummary: entry.evidenceSummary,
@@ -460,7 +545,8 @@ async function main(): Promise<void> {
     const nodeWeakCount = new Map<string, number>(specNodeSlugs.map((slug) => [slug, 0] as const));
     const flattened = [...weakCandidatesByNode.values()].flat();
 
-    flattened.sort((a, b) => (b.rawProbability - a.rawProbability)
+    flattened.sort((a, b) => (b.assistProbability - a.assistProbability)
+      || (b.rawProbability - a.rawProbability)
       || (b.movie.popularity - a.movie.popularity)
       || a.nodeSlug.localeCompare(b.nodeSlug)
       || (a.movie.tmdbId - b.movie.tmdbId));
@@ -496,8 +582,9 @@ async function main(): Promise<void> {
         );
 
       const totalPenalty = penalties.reduce((sum, item) => sum + item.amount, 0);
-      const adjusted = Math.max(0, candidate.rawProbability - totalPenalty);
-      if (adjusted < candidate.threshold) {
+      const penalizedRaw = Math.max(0, candidate.rawProbability - totalPenalty);
+      const adjusted = Math.max(0, candidate.assistProbability - totalPenalty);
+      if (penalizedRaw < candidate.threshold) {
         continue;
       }
 
@@ -550,6 +637,9 @@ async function main(): Promise<void> {
           evidence: {
             threshold: entry.threshold,
             rawProbability: Number(entry.rawProbability.toFixed(4)),
+            classifierProbability: entry.classifierProbability === null ? null : Number(entry.classifierProbability.toFixed(4)),
+            assistProbability: Number(entry.assistProbability.toFixed(4)),
+            assistWeight: classifierArtifact ? classifierAssistWeight : 0,
             adjustedProbability: Number(entry.adjustedProbability.toFixed(4)),
             penalties: entry.penalties,
             firedLfNames: entry.firedLfNames,
@@ -610,6 +700,7 @@ async function main(): Promise<void> {
     lines.push(`Run ID: ${runId}`);
     lines.push(`Taxonomy version: ${config.taxonomyVersion}`);
     lines.push(`Max nodes per movie: ${maxNodesPerMovie}`);
+    lines.push(`Classifier assist: ${classifierArtifact ? `enabled weight=${classifierAssistWeight} artifact=${classifierPath}` : 'disabled'}`);
     lines.push(`Snapshot release: ${release.releaseId}${publishSnapshot ? ' (published)' : ' (draft)'}`);
     lines.push('');
     lines.push(`Requested curated titles: ${totalRequested}`);

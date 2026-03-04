@@ -1,5 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../../../config/seasons/season1-node-governance.ts';
 
 export type OverlapPenaltyRule = {
   a: string;
@@ -28,8 +27,6 @@ export type SeasonNodeGovernanceConfig = {
     penalizedPairs: OverlapPenaltyRule[];
   };
 };
-
-const GOVERNANCE_PATH = resolve('docs/season/season-1-node-governance.json');
 
 function clamp01(value: number): number {
   if (!Number.isFinite(value)) {
@@ -77,8 +74,7 @@ function parseThresholdOverrides(nodeSlugs: string[]): Record<string, number> {
 }
 
 export async function loadSeason1NodeGovernanceConfig(): Promise<SeasonNodeGovernanceConfig> {
-  const raw = await readFile(GOVERNANCE_PATH, 'utf8');
-  return JSON.parse(raw) as SeasonNodeGovernanceConfig;
+  return SEASON1_NODE_GOVERNANCE_CONFIG;
 }
 
 export function resolvePerNodeThreshold(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {

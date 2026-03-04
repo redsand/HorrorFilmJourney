@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { seedStarterHorrorCatalog } from '../src/lib/testing/catalog-seed.ts';
+import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
 
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL_TEST;
+  if (!isLikelyLocalPostgresUrl(databaseUrl)) {
+    throw new Error('seed:catalog is local-only. Use remote:publish-catalog for remote writes.');
+  }
   const prisma = databaseUrl
     ? new PrismaClient({ datasources: { db: { url: databaseUrl } } })
     : new PrismaClient();

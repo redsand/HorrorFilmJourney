@@ -5,6 +5,8 @@ import { getLlmProviderFromEnv } from '@/ai';
 import { zExternalReading } from '@/lib/contracts/companion-contract';
 import type { ExternalReading } from '@/lib/contracts/companion-contract';
 import { getExternalReadingsForFilm } from '@/lib/companion/external-reading-registry';
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
+import { getPublishedSeason1NodesForMovie } from '@/lib/nodes/published-snapshot';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
@@ -24,6 +26,7 @@ type CompanionResponsePayload = {
   };
   metadata: {
     genres: string[];
+    nodes: Array<{ slug: string; label: string; rationale: string }>;
     runtimeText: string;
     countries: string[];
     languages: string[];
@@ -304,10 +307,16 @@ function normalizeCachedCompanionPayload(value: unknown): CompanionResponsePaylo
   if (!record.metadata || typeof record.metadata !== 'object') {
     record.metadata = {
       genres: [],
+      nodes: [],
       runtimeText: 'Runtime unavailable',
       countries: [],
       languages: [],
     };
+  } else {
+    const metadata = record.metadata as Record<string, unknown>;
+    if (!Array.isArray(metadata.nodes)) {
+      metadata.nodes = [];
+    }
   }
   // Backward compatibility for older cache rows before streaming was added.
   if (!record.streaming || typeof record.streaming !== 'object') {
@@ -944,6 +953,13 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
   const seasonId = profileWithPack?.selectedPack?.seasonId ?? 'season-1';
+  const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
+  const publishedNodes = effectivePack.packId
+    ? await getPublishedSeason1NodesForMovie(prisma, {
+      packId: effectivePack.packId,
+      movieId: movie.id,
+    })
+    : [];
   const externalReadings = await getExternalReadingsForFilm({
     filmId: String(movie.tmdbId),
     seasonId,
@@ -1060,6 +1076,11 @@ export async function GET(request: Request): Promise<Response> {
       },
       metadata: {
         genres: tmdbFacts?.genres.length ? tmdbFacts.genres : fallbackGenres,
+        nodes: publishedNodes.map((node) => ({
+          slug: node.nodeSlug,
+          label: node.nodeName,
+          rationale: node.rationale,
+        })),
         runtimeText: formatRuntime(tmdbFacts?.runtimeMinutes),
         countries: tmdbFacts?.countries ?? [],
         languages: tmdbFacts?.languages ?? [],

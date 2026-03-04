@@ -94,6 +94,46 @@ type AdminTmdbSearchItem = {
   overview: string;
 };
 
+type Season1NodeReviewItem = {
+  id: string;
+  nodeSlug: string;
+  nodeName: string;
+  tmdbId: number;
+  title: string;
+  year: number | null;
+  rank: number;
+  source: string;
+  score: number | null;
+  runId: string | null;
+  taxonomyVersion: string;
+  evidence: unknown;
+};
+
+type Season1NodeRelease = {
+  id: string;
+  taxonomyVersion: string;
+  runId: string;
+  isPublished: boolean;
+  createdAt: string;
+  publishedAt: string | null;
+};
+
+type Season1NodeMonitor = {
+  taxonomyVersion: string;
+  publishedSnapshot: {
+    id: string;
+    taxonomyVersion: string;
+    runId: string;
+    publishedAt: string | null;
+  } | null;
+  nodeStats: Array<{ slug: string; name: string; size: number; minEligible: number; targetSize: number }>;
+  overlapAnomalies: Array<{ pair: [string, string]; count: number }>;
+  noNodePct: number;
+  noNodeCount: number;
+  horrorCatalogSize: number;
+  changedAssignmentsFromPrevious: number;
+};
+
 export default function AdminCurriculumPage() {
   type LinkEditorState = {
     loading?: boolean;
@@ -118,6 +158,11 @@ export default function AdminCurriculumPage() {
   const [searchErrorByNodeId, setSearchErrorByNodeId] = useState<Record<string, string | null>>({});
   const [addingTmdbByNodeId, setAddingTmdbByNodeId] = useState<Record<string, number | null>>({});
   const searchTimersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const [season1Releases, setSeason1Releases] = useState<Season1NodeRelease[]>([]);
+  const [season1ReviewItems, setSeason1ReviewItems] = useState<Season1NodeReviewItem[]>([]);
+  const [season1Monitor, setSeason1Monitor] = useState<Season1NodeMonitor | null>(null);
+  const [season1OpsError, setSeason1OpsError] = useState<string | null>(null);
+  const [season1OpsPending, setSeason1OpsPending] = useState(false);
 
   async function load(): Promise<void> {
     setLoading(true);
@@ -136,8 +181,95 @@ export default function AdminCurriculumPage() {
     setLoading(false);
   }
 
+  async function loadSeason1Ops(): Promise<void> {
+    setSeason1OpsPending(true);
+    setSeason1OpsError(null);
+    try {
+      const [releasesRes, reviewRes, monitorRes] = await Promise.all([
+        fetch('/api/admin/season1/node-releases?limit=8', { method: 'GET', credentials: 'include' }),
+        fetch('/api/admin/season1/node-assignments?limit=120', { method: 'GET', credentials: 'include' }),
+        fetch('/api/admin/season1/node-monitor', { method: 'GET', credentials: 'include' }),
+      ]);
+      const [releasesPayload, reviewPayload, monitorPayload] = await Promise.all([
+        releasesRes.json().catch(() => null),
+        reviewRes.json().catch(() => null),
+        monitorRes.json().catch(() => null),
+      ]);
+      if (!releasesRes.ok) {
+        throw new Error(releasesPayload?.error?.message ?? 'Failed to load season 1 releases');
+      }
+      if (!reviewRes.ok) {
+        throw new Error(reviewPayload?.error?.message ?? 'Failed to load season 1 review items');
+      }
+      if (!monitorRes.ok) {
+        throw new Error(monitorPayload?.error?.message ?? 'Failed to load season 1 monitor');
+      }
+      setSeason1Releases(Array.isArray(releasesPayload?.data?.releases) ? releasesPayload.data.releases : []);
+      setSeason1ReviewItems(Array.isArray(reviewPayload?.data?.items) ? reviewPayload.data.items : []);
+      setSeason1Monitor(monitorPayload?.data ?? null);
+    } catch (opsError) {
+      setSeason1OpsError(opsError instanceof Error ? opsError.message : 'Season 1 ops unavailable');
+    } finally {
+      setSeason1OpsPending(false);
+    }
+  }
+
+  async function publishSeason1Snapshot(taxonomyVersion?: string, runId?: string): Promise<void> {
+    setSeason1OpsPending(true);
+    setSeason1OpsError(null);
+    try {
+      const response = await fetch('/api/admin/season1/node-releases', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          ...(taxonomyVersion ? { taxonomyVersion } : {}),
+          ...(runId ? { runId } : {}),
+        }),
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.error?.message ?? 'Failed to publish snapshot');
+      }
+      await loadSeason1Ops();
+      await load();
+    } catch (opsError) {
+      setSeason1OpsError(opsError instanceof Error ? opsError.message : 'Failed to publish snapshot');
+      setSeason1OpsPending(false);
+    }
+  }
+
+  async function reviewSeason1Assignment(action: 'accept' | 'reject', item: Season1NodeReviewItem): Promise<void> {
+    setSeason1OpsPending(true);
+    setSeason1OpsError(null);
+    try {
+      const response = await fetch('/api/admin/season1/node-assignments', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          action,
+          nodeSlug: item.nodeSlug,
+          tmdbId: item.tmdbId,
+          score: item.score ?? 1,
+          rationale: `Admin ${action} from curriculum console`,
+        }),
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.error?.message ?? `Failed to ${action} assignment`);
+      }
+      await loadSeason1Ops();
+      await load();
+    } catch (opsError) {
+      setSeason1OpsError(opsError instanceof Error ? opsError.message : `Failed to ${action} assignment`);
+      setSeason1OpsPending(false);
+    }
+  }
+
   useEffect(() => {
     void load();
+    void loadSeason1Ops();
   }, []);
 
   useEffect(() => () => {
@@ -408,6 +540,84 @@ export default function AdminCurriculumPage() {
           )}
         </Card>
       ) : null}
+
+      <Card className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-sm text-[var(--text-muted)]">Season 1 Node Governance</p>
+          <button
+            className="rounded-md border border-[var(--border)] px-2 py-1 text-xs"
+            onClick={() => { void loadSeason1Ops(); }}
+            type="button"
+          >
+            Refresh
+          </button>
+        </div>
+        {season1Monitor ? (
+          <p className="text-xs text-[var(--text-muted)]">
+            Published: {season1Monitor.publishedSnapshot?.taxonomyVersion ?? 'none'} · no-node {(season1Monitor.noNodePct * 100).toFixed(2)}%
+            {' '}({season1Monitor.noNodeCount}/{season1Monitor.horrorCatalogSize}) · overlap anomalies {season1Monitor.overlapAnomalies.length}
+            {' '}· changed vs previous {season1Monitor.changedAssignmentsFromPrevious}
+          </p>
+        ) : null}
+        {season1OpsError ? <p className="text-xs text-[var(--accent)]">{season1OpsError}</p> : null}
+        <div className="flex flex-wrap gap-2">
+          <button
+            className="rounded-md border border-[var(--cc-accent)] bg-[rgba(155,17,30,0.2)] px-2 py-1 text-xs"
+            disabled={season1OpsPending}
+            onClick={() => {
+              const latestDraft = season1Releases.find((release) => !release.isPublished) ?? season1Releases[0];
+              void publishSeason1Snapshot(latestDraft?.taxonomyVersion, latestDraft?.runId);
+            }}
+            type="button"
+          >
+            {season1OpsPending ? 'Publishing...' : 'Publish Latest Snapshot'}
+          </button>
+        </div>
+        {season1Releases.length > 0 ? (
+          <ul className="space-y-1 text-xs text-[var(--text-muted)]">
+            {season1Releases.slice(0, 5).map((release) => (
+              <li key={release.id}>
+                {release.isPublished ? '[PUBLISHED]' : '[DRAFT]'} {release.taxonomyVersion} · {release.runId}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-[var(--text-muted)]">No releases found.</p>
+        )}
+        {season1ReviewItems.length > 0 ? (
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">Assignment Review (sample)</p>
+            {season1ReviewItems.slice(0, 15).map((item) => (
+              <div className="flex items-center justify-between gap-2 rounded-md border border-[var(--border)] p-2" key={item.id}>
+                <div className="min-w-0">
+                  <p className="truncate text-xs">{item.nodeName} · {item.title} ({item.year ?? 'n/a'})</p>
+                  <p className="text-[11px] text-[var(--text-muted)]">
+                    source={item.source} score={item.score ?? 'n/a'} run={item.runId ?? 'n/a'}
+                  </p>
+                </div>
+                <div className="flex gap-1">
+                  <button
+                    className="rounded border border-[var(--border)] px-2 py-1 text-[11px]"
+                    disabled={season1OpsPending}
+                    onClick={() => { void reviewSeason1Assignment('accept', item); }}
+                    type="button"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="rounded border border-[var(--border)] px-2 py-1 text-[11px]"
+                    disabled={season1OpsPending}
+                    onClick={() => { void reviewSeason1Assignment('reject', item); }}
+                    type="button"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </Card>
 
       {(data?.seasons ?? []).map((season) => (
         <Card className="space-y-3" key={season.id}>

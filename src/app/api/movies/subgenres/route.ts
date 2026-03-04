@@ -1,24 +1,8 @@
 import { fail, ok } from '@/lib/api-envelope';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/guards';
-
-function parseGenreList(value: unknown): string[] {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-  return value
-    .map((entry) => {
-      if (typeof entry === 'string') {
-        return entry.trim();
-      }
-      if (entry && typeof entry === 'object' && typeof (entry as { name?: unknown }).name === 'string') {
-        return (entry as { name: string }).name.trim();
-      }
-      return '';
-    })
-    .filter((name) => name.length > 0)
-    .slice(0, 8);
-}
+import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
+import { getPublishedSeason1NodesForMovie } from '@/lib/nodes/published-snapshot';
 
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAuth(request, prisma);
@@ -35,12 +19,21 @@ export async function GET(request: Request): Promise<Response> {
 
   const movie = await prisma.movie.findUnique({
     where: { tmdbId },
-    select: { genres: true },
+    select: { id: true },
   });
   if (!movie) {
     return fail({ code: 'NOT_FOUND', message: 'Movie not found' }, 404);
   }
 
-  return ok({ subgenres: parseGenreList(movie.genres) });
-}
+  const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
+  if (!effectivePack.packId) {
+    return ok({ subgenres: [] });
+  }
 
+  const nodes = await getPublishedSeason1NodesForMovie(prisma, {
+    packId: effectivePack.packId,
+    movieId: movie.id,
+  });
+
+  return ok({ subgenres: nodes.map((node) => node.nodeName) });
+}

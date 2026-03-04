@@ -19,6 +19,7 @@ type CompanionResponse = {
   };
   metadata: {
     genres: string[];
+    nodes: Array<{ slug: string; label: string; rationale: string }>;
     runtimeText: string;
     countries: string[];
     languages: string[];
@@ -204,10 +205,19 @@ export default async function CompanionPage({
               <div className="space-y-3">
                 <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">SUBGENRE(S)</p>
                 <div className="flex flex-wrap gap-2">
-                  {payload.metadata.genres.length > 0
-                    ? payload.metadata.genres.map((genre) => <Chip key={genre}>{genre}</Chip>)
-                    : <Chip>Genres unavailable</Chip>}
+                  {payload.metadata.nodes.length > 0
+                    ? payload.metadata.nodes.map((node) => <Chip key={node.slug}>{node.label}</Chip>)
+                    : payload.metadata.genres.length > 0
+                      ? payload.metadata.genres.map((genre) => <Chip key={genre}>{genre}</Chip>)
+                      : <Chip>Genres unavailable</Chip>}
                 </div>
+                {payload.metadata.nodes.length > 0 ? (
+                  <ul className="list-disc space-y-1 pl-5 text-xs text-[var(--text-muted)]">
+                    {payload.metadata.nodes.slice(0, 3).map((node) => (
+                      <li key={`rationale-${node.slug}`}>{node.label}: {node.rationale}</li>
+                    ))}
+                  </ul>
+                ) : null}
                 <p className="mt-4 text-xs uppercase tracking-wide text-[var(--text-muted)]">Movie details</p>
                 <div className="grid grid-cols-1 gap-1.5 text-sm leading-relaxed text-[var(--text-muted)]">
                   <p><span className="text-[var(--text)]">Runtime:</span> {payload.metadata.runtimeText}</p>
