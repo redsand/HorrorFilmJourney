@@ -422,6 +422,28 @@ function resolveRecommendationStyle(horrorDna: unknown): RecommendationStyle {
   return 'diversity';
 }
 
+function resolvePackSubgenrePreferences(horrorDna: unknown, packId: string | null | undefined): string[] {
+  if (!horrorDna || typeof horrorDna !== 'object' || !packId) {
+    return [];
+  }
+  const packPreferences = (horrorDna as Record<string, unknown>).packPreferences;
+  if (!packPreferences || typeof packPreferences !== 'object') {
+    return [];
+  }
+  const packPreference = (packPreferences as Record<string, unknown>)[packId];
+  if (!packPreference || typeof packPreference !== 'object') {
+    return [];
+  }
+  const subgenres = (packPreference as Record<string, unknown>).subgenres;
+  if (!Array.isArray(subgenres)) {
+    return [];
+  }
+  return [...new Set(subgenres
+    .filter((value): value is string => typeof value === 'string')
+    .map((value) => value.trim().toLowerCase())
+    .filter((value) => value.length > 0))];
+}
+
 type UserTasteProfileLike = {
   intensityPreference: number;
   pacingPreference: number;
@@ -904,6 +926,7 @@ export class HeuristicRerankerV1 implements Reranker {
     const genreAffinity = new Map<string, number>();
     const decadeAffinity = new Map<number, number>();
     const recommendationStyle = resolveRecommendationStyle(profile?.horrorDNA);
+    const preferredSubgenres = resolvePackSubgenrePreferences(profile?.horrorDNA, context.packId ?? null);
     const historySize = history.length;
     history.forEach((interaction, index) => {
       const recencyWeight = historySize > 0 ? 0.6 + ((historySize - index) / historySize) * 0.4 : 1;
@@ -971,6 +994,12 @@ export class HeuristicRerankerV1 implements Reranker {
       const tolerancePenalty = typeof profile?.tolerance === 'number' && profile.tolerance <= 2
         ? (genres.includes('body-horror') ? -0.2 : 0)
         : 0;
+      const preferredSubgenreMatches = preferredSubgenres.length > 0
+        ? preferredSubgenres.filter((subgenre) => genres.includes(subgenre)).length
+        : 0;
+      const preferredSubgenreScore = preferredSubgenres.length > 0
+        ? (preferredSubgenreMatches / preferredSubgenres.length) * 0.5
+        : 0;
       const paceTarget = profile?.pacePreference === 'slowburn'
         ? 0.25
         : profile?.pacePreference === 'shock'
@@ -990,6 +1019,7 @@ export class HeuristicRerankerV1 implements Reranker {
         + popularityScore * popularityWeight
         + paceBias
         + tolerancePenalty
+        + preferredSubgenreScore
         + pacePreferenceScore
         + intensityPreferenceScore;
       const dna = scoreCandidate(movie, tasteProfile, {

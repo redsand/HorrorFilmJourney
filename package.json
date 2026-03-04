@@ -22,6 +22,7 @@
     "review:season2:candidates": "node --experimental-strip-types scripts/review-season2-candidate-pool.ts",
     "curate:season2": "node --experimental-strip-types scripts/curate-season2-shortlist.ts",
     "season2:lock": "node --experimental-strip-types scripts/season2-lock.ts",
+    "season2:source-votes": "node --experimental-strip-types scripts/season2-source-vote-gate.ts",
     "export:season2:cult": "node --experimental-strip-types scripts/export-season2-mastered.ts",
     "export:season2:canonical": "node --experimental-strip-types scripts/export-season2-canonical.ts",
     "import:season2:cult": "node --experimental-strip-types scripts/import-season2-mastered.ts",

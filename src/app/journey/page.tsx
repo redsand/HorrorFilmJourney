@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
 import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
+import { getPackSubgenreOptions, MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 
 type ExperienceResponse = {
   state: 'PACK_SELECTION_NEEDED' | 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
@@ -230,11 +231,15 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   const tolerance = Number(formData.get('tolerance'));
   const pacePreference = String(formData.get('pacePreference') ?? 'balanced');
   const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
+  const selectedSubgenres = formData.getAll('selectedSubgenres')
+    .map((entry) => String(entry).trim().toLowerCase())
+    .filter((entry) => entry.length > 0)
+    .slice(0, MAX_SELECTED_SUBGENRES);
 
   const onboardingResponse = await apiJson('/api/onboarding', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, horrorDNA: {} }),
+    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, selectedSubgenres, horrorDNA: {} }),
   });
   if (onboardingResponse.status === 200) {
     await apiJson('/api/recommendations/next', {
@@ -270,6 +275,8 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
   const watchlist = !unauthenticated
     ? (await apiJson<WatchlistResponse>(`/api/watchlist?page=${watchlistPage}&pageSize=6`, { method: 'GET' })).data
     : null;
+  const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
+  const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
 
   let recommendations: RecommendationResponse | null = null;
   if (!unauthenticated && (experience?.state === 'SHOW_RECOMMENDATION_BUNDLE' || experience?.state === 'SHOW_QUICK_POLL')) {
@@ -441,6 +448,30 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
                     <input className="peer sr-only" type="radio" name="pacePreference" value={item.id} defaultChecked={item.id === 'balanced'} />
                     <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
                       {item.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                Subgenres (choose up to {MAX_SELECTED_SUBGENRES})
+              </p>
+              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
+                We start with your chosen niches, then broaden based on feedback.
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {onboardingSubgenres.map((subgenre, index) => (
+                  <label key={subgenre} className="cursor-pointer">
+                    <input
+                      className="peer sr-only"
+                      defaultChecked={index < 2}
+                      name="selectedSubgenres"
+                      type="checkbox"
+                      value={subgenre}
+                    />
+                    <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
+                      {subgenre}
                     </span>
                   </label>
                 ))}

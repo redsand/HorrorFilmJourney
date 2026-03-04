@@ -1,244 +1,139 @@
 {
-  "generatedAt": "2026-03-03T23:08:13.787Z",
-  "count": 34,
+  "generatedAt": "2026-03-04T00:41:03.396Z",
+  "count": 19,
   "items": [
     {
-      "tmdbId": 197599,
-      "title": "Fateful Findings",
-      "year": 2013,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "so-bad-its-good"
+      "tmdbId": 16306,
+      "title": "Fantastic Planet",
+      "year": 1973,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "birth-of-midnight"
     },
     {
-      "tmdbId": 870219,
-      "title": "New York Ninja",
-      "year": 2021,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "so-bad-its-good"
-    },
-    {
-      "tmdbId": 457712,
-      "title": "The VelociPastor",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "so-bad-its-good"
-    },
-    {
-      "tmdbId": 698232,
-      "title": "Under the Skin",
-      "year": 2013,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "tmdbId": 12593,
+      "title": "Fritz the Cat",
+      "year": 1972,
+      "reason": "ANIMATION_EXCLUDED",
       "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 300668,
-      "title": "Annihilation",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "tmdbId": 64847,
+      "title": "Belladonna of Sadness",
+      "year": 1973,
+      "reason": "ANIMATION_EXCLUDED",
       "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 122081,
-      "title": "Spring Breakers",
-      "year": 2013,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "punk-counterculture"
+      "tmdbId": 11837,
+      "title": "Watership Down",
+      "year": 1978,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 152603,
-      "title": "Only Lovers Left Alive",
-      "year": 2013,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "punk-counterculture"
+      "tmdbId": 11827,
+      "title": "Heavy Metal",
+      "year": 1981,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 507076,
-      "title": "Climax",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "punk-counterculture"
+      "tmdbId": 10150,
+      "title": "The Last Unicorn",
+      "year": 1982,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 460885,
-      "title": "Mandy",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "punk-counterculture"
+      "tmdbId": 11704,
+      "title": "The Secret of NIMH",
+      "year": 1982,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
     },
     {
-      "tmdbId": 246741,
-      "title": "What We Do in the Shadows",
-      "year": 2014,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "tmdbId": 81,
+      "title": "Nausicaä of the Valley of the Wind",
+      "year": 1984,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 9463,
+      "title": "Vampire Hunter D",
+      "year": 1985,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 21453,
+      "title": "Wicked City",
+      "year": 1987,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 149,
+      "title": "Akira",
+      "year": 1988,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 14282,
+      "title": "Ninja Scroll",
+      "year": 1993,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 9323,
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 10494,
+      "title": "Perfect Blue",
+      "year": 1998,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 128,
+      "title": "Princess Mononoke",
+      "year": 1997,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 11049,
+      "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+      "year": 2003,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 9389,
+      "title": "Renaissance",
+      "year": 2006,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "cult-sci-fi-fantasy"
+    },
+    {
+      "tmdbId": 48624,
+      "title": "Urotsukidōji: Legend of the Overfiend",
+      "year": 1989,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "vhs-video-store-era"
+    },
+    {
+      "tmdbId": 9473,
+      "title": "South Park: Bigger, Longer & Uncut",
+      "year": 1999,
+      "reason": "ANIMATION_EXCLUDED",
       "nodeSlug": "cult-comedy-absurdism"
-    },
-    {
-      "tmdbId": 547009,
-      "title": "Greener Grass",
-      "year": 2019,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "cult-comedy-absurdism"
-    },
-    {
-      "tmdbId": 347031,
-      "title": "Swiss Army Man",
-      "year": 2016,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "cult-comedy-absurdism"
-    },
-    {
-      "tmdbId": 424781,
-      "title": "Sorry to Bother You",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "cult-comedy-absurdism"
-    },
-    {
-      "tmdbId": 320413,
-      "title": "The Greasy Strangler",
-      "year": 2016,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "cult-comedy-absurdism"
-    },
-    {
-      "tmdbId": 7023,
-      "title": "The Cabin in the Woods",
-      "year": 2011,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 64690,
-      "title": "Drive",
-      "year": 2011,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 77987,
-      "title": "Only God Forgives",
-      "year": 2013,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7025,
-      "title": "It Follows",
-      "year": 2014,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7026,
-      "title": "The Witch",
-      "year": 2015,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 306947,
-      "title": "The Invitation",
-      "year": 2016,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 301365,
-      "title": "The Neon Demon",
-      "year": 2016,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 393519,
-      "title": "Raw",
-      "year": 2017,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7027,
-      "title": "Train to Busan",
-      "year": 2016,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7028,
-      "title": "Get Out",
-      "year": 2017,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7029,
-      "title": "Hereditary",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 460885,
-      "title": "Mandy",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 361292,
-      "title": "Suspiria",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 507076,
-      "title": "Climax",
-      "year": 2018,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 513434,
-      "title": "One Cut of the Dead",
-      "year": 2017,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 630240,
-      "title": "Titane",
-      "year": 2021,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 619778,
-      "title": "Malignant",
-      "year": 2021,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 762504,
-      "title": "Nope",
-      "year": 2022,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 7030,
-      "title": "Talk to Me",
-      "year": 2022,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
-    },
-    {
-      "tmdbId": 1520326,
-      "title": "???",
-      "year": 2023,
-      "reason": "YEAR_CAP_EXCLUDED_CURATED",
-      "nodeSlug": "modern-cult-phenomena"
     }
   ]
 }

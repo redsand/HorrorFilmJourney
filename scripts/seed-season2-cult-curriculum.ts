@@ -12,6 +12,7 @@ type CurriculumTitle = {
 type CurriculumNode = {
   slug: string;
   name: string;
+  subgenres?: string[];
   titles: CurriculumTitle[];
 };
 
@@ -30,6 +31,16 @@ const READINESS_PATH = resolve('docs/season/season-2-cult-classics-readiness.md'
 const ALLOWLIST_PATH = resolve('docs/season/season-2-cult-classics-allowlist.json');
 const BLOCKLIST_PATH = resolve('docs/season/season-2-cult-classics-blocklist.json');
 const REVIEW_QUEUE_PATH = resolve('docs/season/season-2-cult-candidates-needing-review.json');
+const DEFAULT_NODE_OBJECTIVES: Record<string, string> = {
+  'birth-of-midnight': 'Origins of cult fandom and underground screenings.',
+  'grindhouse-exploitation': 'Low-budget rebellion, shock cinema, and exploitation craft.',
+  'so-bad-its-good': 'Accidental masterpieces and outsider films with devoted fandom.',
+  'cult-sci-fi-fantasy': 'Visionary oddities, misunderstood epics, and speculative cults.',
+  'punk-counterculture': 'Anti-establishment cinema and transgressive film movements.',
+  'vhs-video-store-era': 'Rental-era discovery mechanics and shelf-driven cult canon.',
+  'cult-comedy-absurdism': 'Offbeat comedic language that built repeat-viewing communities.',
+  'modern-cult-phenomena': 'Internet-era cult formation, meme velocity, and revival loops.',
+};
 
 type TitleListEntry = {
   title: string;
@@ -726,6 +737,7 @@ async function main(): Promise<void> {
   const unresolved: Array<{ nodeSlug: string; title: string; year: number; reason: string }> = [];
   const nodeSummaries: Array<{
     nodeSlug: string;
+    subgenres: string[];
     requested: number;
     resolved: number;
     eligible: number;
@@ -821,6 +833,22 @@ async function main(): Promise<void> {
         });
         continue;
       }
+      const subgenres = Array.isArray(specNode.subgenres)
+        ? specNode.subgenres.map((entry) => entry.trim()).filter((entry) => entry.length > 0)
+        : [];
+      const eraSubgenreFocus = subgenres.length > 0 ? subgenres.join(' | ') : 'cult';
+      const learningObjective = DEFAULT_NODE_OBJECTIVES[specNode.slug] ?? 'Season 2 curated learning objective.';
+      await prisma.journeyNode.update({
+        where: { id: node.id },
+        data: {
+          name: specNode.name,
+          orderIndex: node.orderIndex,
+          learningObjective,
+          eraSubgenreFocus,
+          whatToNotice: [],
+          spoilerPolicyDefault: 'LIGHT',
+        },
+      });
       const nodeSize = enableTopup
         ? defaultNodeSize
         : Math.max(1, specNode.titles.length);
@@ -1359,6 +1387,7 @@ async function main(): Promise<void> {
 
       nodeSummaries.push({
         nodeSlug: specNode.slug,
+        subgenres: Array.isArray(specNode.subgenres) ? specNode.subgenres : [],
         requested: nodeSize,
         resolved: resolvedCount,
         eligible: eligibleCount,
@@ -1384,10 +1413,10 @@ async function main(): Promise<void> {
     lines.push('');
     lines.push('## Coverage');
     lines.push('');
-    lines.push('| Node | Requested | Resolved | Eligible | Inserted |');
-    lines.push('| --- | ---: | ---: | ---: | ---: |');
+    lines.push('| Node | Subgenres | Requested | Resolved | Eligible | Inserted |');
+    lines.push('| --- | --- | ---: | ---: | ---: | ---: |');
     nodeSummaries.forEach((item) => {
-      lines.push(`| ${item.nodeSlug} | ${item.requested} | ${item.resolved} | ${item.eligible} | ${item.inserted} |`);
+      lines.push(`| ${item.nodeSlug} | ${item.subgenres.length > 0 ? item.subgenres.join(', ') : 'n/a'} | ${item.requested} | ${item.resolved} | ${item.eligible} | ${item.inserted} |`);
     });
     lines.push('');
     lines.push('## External Source Imports');

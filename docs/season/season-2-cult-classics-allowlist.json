@@ -14,6 +14,56 @@
       "title": "Pulp Fiction",
       "year": 1994,
       "reason": "user-required-cult-anchor"
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Heavy Metal",
+      "year": 1981,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Watership Down",
+      "year": 1978,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "The Secret of NIMH",
+      "year": 1982,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Fritz the Cat",
+      "year": 1972,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Belladonna of Sadness",
+      "year": 1973,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Vampire Hunter D",
+      "year": 1985,
+      "reason": "season2-animation-cult-required"
+    },
+    {
+      "title": "Wicked City",
+      "year": 1987,
+      "reason": "season2-animation-cult-required"
     }
   ]
 }

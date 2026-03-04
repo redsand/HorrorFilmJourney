@@ -256,6 +256,7 @@ Upserts onboarding profile answers for the current user.
   "tolerance": 4,
   "pacePreference": "balanced",
   "selectedPackSlug": "horror",
+  "selectedSubgenres": ["psychological", "supernatural"],
   "horrorDNA": {
     "subgenres": ["psychological", "supernatural"]
   }
@@ -267,6 +268,7 @@ Upserts onboarding profile answers for the current user.
 - `tolerance` is required and must be an integer `1..5`.
 - `pacePreference` is required and must be one of: `slowburn`, `balanced`, `shock`.
 - `selectedPackSlug` is optional (used when seasons/packs are enabled).
+- `selectedSubgenres` is optional and accepts up to `5` values from the selected pack's allowed subgenre list.
 - Existing profile is updated if present; otherwise created.
 
 ### Success

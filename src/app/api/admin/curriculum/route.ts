@@ -32,6 +32,8 @@ export async function GET(request: Request): Promise<Response> {
               slug: true,
               name: true,
               orderIndex: true,
+              learningObjective: true,
+              eraSubgenreFocus: true,
               movies: {
                 orderBy: { rank: 'asc' },
                 select: {
@@ -86,6 +88,8 @@ export async function GET(request: Request): Promise<Response> {
       slug: string;
       name: string;
       orderIndex: number;
+      learningObjective: string;
+      eraSubgenreFocus: string;
       movies: Array<{
         rank: number;
         movie: {
@@ -202,6 +206,8 @@ export async function GET(request: Request): Promise<Response> {
         slug: node.slug,
         name: node.name,
         orderIndex: node.orderIndex,
+        learningObjective: node.learningObjective,
+        eraSubgenreFocus: node.eraSubgenreFocus,
         totalTitles: titles.length,
         eligibleTitles,
         missingPosterCount,

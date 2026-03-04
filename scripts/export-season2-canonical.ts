@@ -1,10 +1,21 @@
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
+
+type CurriculumSpec = {
+  trackedCultSubgenres?: string[];
+  nodes?: Array<{ slug: string; subgenres?: string[] }>;
+};
 
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   try {
+    const specPath = resolve('docs/season/season-2-cult-classics-curriculum.json');
+    const spec = JSON.parse(await readFile(specPath, 'utf8')) as CurriculumSpec;
+    const nodeSubgenres = new Map(
+      (spec.nodes ?? []).map((node) => [node.slug, Array.isArray(node.subgenres) ? node.subgenres : []] as const),
+    );
+
     const pack = await prisma.genrePack.findUnique({
       where: { slug: 'cult-classics' },
       select: {
@@ -75,10 +86,12 @@ async function main(): Promise<void> {
           pack.nodes.flatMap((node) => node.movies.map((entry) => entry.movie.tmdbId)),
         ).size,
       },
+      trackedCultSubgenres: Array.isArray(spec.trackedCultSubgenres) ? spec.trackedCultSubgenres : [],
       nodes: pack.nodes.map((node) => ({
         slug: node.slug,
         name: node.name,
         orderIndex: node.orderIndex,
+        subgenres: nodeSubgenres.get(node.slug) ?? [],
         count: node.movies.length,
         titles: node.movies.map((entry) => ({
           rank: entry.rank,
@@ -103,4 +116,3 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
-

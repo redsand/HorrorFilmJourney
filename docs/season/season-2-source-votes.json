@@ -1,0 +1,483 @@
+{
+  "generatedAt": "2026-03-04T00:26:53.249Z",
+  "threshold": 3,
+  "sourceRegistry": [
+    {
+      "id": "peary",
+      "name": "Danny Peary Cult Movies"
+    },
+    {
+      "id": "midnight_doc",
+      "name": "The Midnight Movie documentary (2005)"
+    },
+    {
+      "id": "criterion_adjacent",
+      "name": "Criterion cult-adjacent spine"
+    },
+    {
+      "id": "letterboxd_top250",
+      "name": "Letterboxd Top Cult Lists (top 250)"
+    },
+    {
+      "id": "alamo_repertory",
+      "name": "Alamo Drafthouse repertory programming archives"
+    }
+  ],
+  "totals": {
+    "candidates": 25,
+    "inCurriculum": 25,
+    "missingAtOrAboveThreshold": 0
+  },
+  "rows": [
+    {
+      "title": "Grey Gardens",
+      "year": 1975,
+      "normalizedKey": "grey gardens|1975",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Escape from New York",
+      "year": 1981,
+      "normalizedKey": "escape from new york|1981",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "vhs-video-store-era",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Heavy Metal",
+      "year": 1981,
+      "normalizedKey": "heavy metal|1981",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "cult-sci-fi-fantasy",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "The Thing",
+      "year": 1982,
+      "normalizedKey": "the thing|1982",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "vhs-video-store-era",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Sleepaway Camp",
+      "year": 1983,
+      "normalizedKey": "sleepaway camp|1983",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "vhs-video-store-era",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Clue",
+      "year": 1985,
+      "normalizedKey": "clue|1985",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "cult-comedy-absurdism",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "The Stuff",
+      "year": 1985,
+      "normalizedKey": "the stuff|1985",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "vhs-video-store-era",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "The Fly",
+      "year": 1986,
+      "normalizedKey": "the fly|1986",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "vhs-video-store-era",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "normalizedKey": "akira|1988",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "cult-sci-fi-fantasy",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Heathers",
+      "year": 1988,
+      "normalizedKey": "heathers|1988",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "punk-counterculture",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "The Killer",
+      "year": 1989,
+      "normalizedKey": "the killer|1989",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "grindhouse-exploitation",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Hard Boiled",
+      "year": 1992,
+      "normalizedKey": "hard boiled|1992",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "grindhouse-exploitation",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Crumb",
+      "year": 1994,
+      "normalizedKey": "crumb|1994",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "normalizedKey": "ghost in the shell|1995",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "cult-sci-fi-fantasy",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "normalizedKey": "perfect blue|1997",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "cult-sci-fi-fantasy",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Velvet Goldmine",
+      "year": 1998,
+      "normalizedKey": "velvet goldmine|1998",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "punk-counterculture",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "American Movie",
+      "year": 1999,
+      "normalizedKey": "american movie|1999",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Audition",
+      "year": 1999,
+      "normalizedKey": "audition|1999",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "grindhouse-exploitation",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Fight Club",
+      "year": 1999,
+      "normalizedKey": "fight club|1999",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "The Boondock Saints",
+      "year": 1999,
+      "normalizedKey": "the boondock saints|1999",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "The Virgin Suicides",
+      "year": 1999,
+      "normalizedKey": "the virgin suicides|1999",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "American Psycho",
+      "year": 2000,
+      "normalizedKey": "american psycho|2000",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Hedwig and the Angry Inch",
+      "year": 2001,
+      "normalizedKey": "hedwig and the angry inch|2001",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "punk-counterculture",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    },
+    {
+      "title": "Ichi the Killer",
+      "year": 2001,
+      "normalizedKey": "ichi the killer|2001",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "letterboxd_top250",
+        "peary"
+      ],
+      "suggestedNode": "grindhouse-exploitation",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Letterboxd Top Cult Lists (top 250)",
+        "Danny Peary Cult Movies"
+      ]
+    },
+    {
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "normalizedKey": "mulholland drive|2001",
+      "sourceCount": 3,
+      "sources": [
+        "alamo_repertory",
+        "criterion_adjacent",
+        "letterboxd_top250"
+      ],
+      "suggestedNode": "modern-cult-phenomena",
+      "inCurriculum": true,
+      "sourceLabels": [
+        "Alamo Drafthouse repertory programming archives",
+        "Criterion cult-adjacent spine",
+        "Letterboxd Top Cult Lists (top 250)"
+      ]
+    }
+  ]
+}

@@ -33,6 +33,8 @@ type CurriculumNode = {
   slug: string;
   name: string;
   orderIndex: number;
+  learningObjective: string;
+  eraSubgenreFocus: string;
   totalTitles: number;
   eligibleTitles: number;
   missingPosterCount: number;
@@ -451,6 +453,8 @@ export default function AdminCurriculumPage() {
                     <div>
                       <p className="font-semibold">{node.orderIndex}. {node.name}</p>
                       <p className="text-xs text-[var(--text-muted)]">{node.slug}</p>
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">Focus: {node.eraSubgenreFocus}</p>
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">{node.learningObjective}</p>
                     </div>
                     <Chip tone={node.eligibleTitles >= 8 ? 'accent' : 'default'}>
                       {node.eligibleTitles}/{node.totalTitles} eligible ({node.eligibilityCoverage}%)

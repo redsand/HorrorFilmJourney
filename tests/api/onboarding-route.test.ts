@@ -2,16 +2,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/onboarding/route';
 import { makeSessionCookie } from '../helpers/session-cookie';
 
-const { userFindUniqueMock, profileFindUniqueMock, profileUpsertMock } = vi.hoisted(() => ({
+const { userFindUniqueMock, profileFindUniqueMock, profileUpsertMock, genrePackFindUniqueMock } = vi.hoisted(() => ({
   userFindUniqueMock: vi.fn(),
   profileFindUniqueMock: vi.fn(),
   profileUpsertMock: vi.fn(),
+  genrePackFindUniqueMock: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
     userProfile: { findUnique: profileFindUniqueMock, upsert: profileUpsertMock },
+    genrePack: { findUnique: genrePackFindUniqueMock },
   },
 }));
 
@@ -20,6 +22,8 @@ describe('POST /api/onboarding', () => {
     userFindUniqueMock.mockReset();
     profileFindUniqueMock.mockReset();
     profileUpsertMock.mockReset();
+    genrePackFindUniqueMock.mockReset();
+    genrePackFindUniqueMock.mockResolvedValue({ id: 'pack_horror', slug: 'horror', isEnabled: true });
   });
 
   it('returns 400 when tolerance is invalid', async () => {
@@ -67,6 +71,46 @@ describe('POST /api/onboarding', () => {
           cookie: makeSessionCookie('user_1'),
         },
         body: JSON.stringify({ tolerance: 4, pacePreference: 'fast' }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+  });
+
+  it('returns 400 when selectedSubgenres contains values outside pack allowlist', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    profileFindUniqueMock.mockResolvedValueOnce(null);
+
+    const response = await POST(
+      new Request('http://localhost/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: makeSessionCookie('user_1'),
+        },
+        body: JSON.stringify({ tolerance: 3, pacePreference: 'balanced', selectedSubgenres: ['not-a-real-subgenre'] }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+  });
+
+  it('returns 400 when more than 5 subgenres are selected', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    profileFindUniqueMock.mockResolvedValueOnce(null);
+
+    const response = await POST(
+      new Request('http://localhost/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: makeSessionCookie('user_1'),
+        },
+        body: JSON.stringify({
+          tolerance: 3,
+          pacePreference: 'balanced',
+          selectedSubgenres: ['psychological', 'supernatural', 'slasher', 'gothic', 'occult', 'slowburn'],
+        }),
       }),
     );
 

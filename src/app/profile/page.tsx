@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 import { getPackCopy } from '@/lib/packs/pack-copy';
+import { MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 
 type Me = {
   id: string;
@@ -38,6 +39,15 @@ type PacksResponse = {
   packs: Array<{ slug: string; name: string; isEnabled: boolean; seasonSlug: string; seasonLabel: string }>;
 };
 
+type ProfilePreferencesResponse = {
+  recommendationStyle: RecommendationStyle;
+  tolerance: number;
+  pacePreference: PacePreference;
+  selectedPackSlug?: string;
+  selectedSubgenres?: string[];
+  availableSubgenres?: string[];
+};
+
 export default function ProfilePage() {
   const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
@@ -54,6 +64,48 @@ export default function ProfilePage() {
   const [progression, setProgression] = useState<ProgressionData | null>(null);
   const [packs, setPacks] = useState<PacksResponse | null>(null);
   const [selectedPackSlug, setSelectedPackSlug] = useState<string>('horror');
+  const [selectedSubgenres, setSelectedSubgenres] = useState<string[]>([]);
+  const [availableSubgenres, setAvailableSubgenres] = useState<string[]>([]);
+
+  const loadPreferences = async (): Promise<void> => {
+    const preferenceResponse = await fetch('/api/profile/preferences', {
+      method: 'GET',
+      credentials: 'include',
+    });
+    if (!preferenceResponse.ok) {
+      return;
+    }
+    const preferencePayload = await preferenceResponse.json();
+    const preferenceData = (preferencePayload?.data ?? {}) as ProfilePreferencesResponse;
+    const style = preferenceData.recommendationStyle;
+    setRecommendationStyle(style === 'popularity' ? 'popularity' : 'diversity');
+    const nextTolerance = Number(preferenceData.tolerance);
+    const nextPace = preferenceData.pacePreference;
+    if (Number.isInteger(nextTolerance) && nextTolerance >= 1 && nextTolerance <= 5) {
+      setTolerance(nextTolerance);
+    }
+    if (nextPace === 'slowburn' || nextPace === 'balanced' || nextPace === 'shock') {
+      setPacePreference(nextPace);
+    }
+    const nextPackSlug = preferenceData.selectedPackSlug;
+    if (typeof nextPackSlug === 'string' && nextPackSlug.trim().length > 0) {
+      setSelectedPackSlug(nextPackSlug);
+    }
+    const nextSelectedSubgenres = Array.isArray(preferenceData.selectedSubgenres)
+      ? [...new Set(preferenceData.selectedSubgenres
+        .filter((value): value is string => typeof value === 'string')
+        .map((value) => value.trim().toLowerCase())
+        .filter((value) => value.length > 0))]
+      : [];
+    const nextAvailableSubgenres = Array.isArray(preferenceData.availableSubgenres)
+      ? [...new Set(preferenceData.availableSubgenres
+        .filter((value): value is string => typeof value === 'string')
+        .map((value) => value.trim().toLowerCase())
+        .filter((value) => value.length > 0))]
+      : [];
+    setSelectedSubgenres(nextSelectedSubgenres.slice(0, MAX_SELECTED_SUBGENRES));
+    setAvailableSubgenres(nextAvailableSubgenres);
+  };
 
   useEffect(() => {
     void (async () => {
@@ -67,27 +119,7 @@ export default function ProfilePage() {
       }
       const payload = await response.json();
       setMe(payload.data as Me);
-      const preferenceResponse = await fetch('/api/profile/preferences', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (preferenceResponse.ok) {
-        const preferencePayload = await preferenceResponse.json();
-        const style = preferencePayload?.data?.recommendationStyle;
-        setRecommendationStyle(style === 'popularity' ? 'popularity' : 'diversity');
-        const nextTolerance = Number(preferencePayload?.data?.tolerance);
-        const nextPace = preferencePayload?.data?.pacePreference;
-        if (Number.isInteger(nextTolerance) && nextTolerance >= 1 && nextTolerance <= 5) {
-          setTolerance(nextTolerance);
-        }
-        if (nextPace === 'slowburn' || nextPace === 'balanced' || nextPace === 'shock') {
-          setPacePreference(nextPace);
-        }
-        const nextPackSlug = preferencePayload?.data?.selectedPackSlug;
-        if (typeof nextPackSlug === 'string' && nextPackSlug.trim().length > 0) {
-          setSelectedPackSlug(nextPackSlug);
-        }
-      }
+      await loadPreferences();
       const insightResponse = await fetch('/api/profile/insights', {
         method: 'GET',
         credentials: 'include',
@@ -131,6 +163,22 @@ export default function ProfilePage() {
       router.replace('/profile');
       router.refresh();
     }, 150);
+  };
+
+  const toggleSubgenre = (value: string): void => {
+    const normalized = value.trim().toLowerCase();
+    if (!normalized) {
+      return;
+    }
+    setSelectedSubgenres((previous) => {
+      if (previous.includes(normalized)) {
+        return previous.filter((entry) => entry !== normalized);
+      }
+      if (previous.length >= MAX_SELECTED_SUBGENRES) {
+        return previous;
+      }
+      return [...previous, normalized];
+    });
   };
 
   return (
@@ -181,6 +229,7 @@ export default function ProfilePage() {
                           });
                           if (response.ok) {
                             setSelectedPackSlug(pack.slug);
+                            await loadPreferences();
                             applyThemeTransition();
                           }
                         } finally {
@@ -304,6 +353,39 @@ export default function ProfilePage() {
                 ))}
               </div>
             </div>
+            <div>
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                Subgenres (up to {MAX_SELECTED_SUBGENRES})
+              </p>
+              <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
+                Selected subgenres bias your first recommendations in this season.
+              </p>
+              {availableSubgenres.length > 0 ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {availableSubgenres.map((subgenre) => {
+                    const checked = selectedSubgenres.includes(subgenre);
+                    const disabled = !checked && selectedSubgenres.length >= MAX_SELECTED_SUBGENRES;
+                    return (
+                      <button
+                        className={`rounded-lg border px-2 py-2 text-center text-sm ${
+                          checked
+                            ? 'border-[rgba(193,18,31,0.7)] bg-[rgba(155,17,30,0.22)] text-[var(--text)]'
+                            : 'border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text-muted)]'
+                        }`}
+                        disabled={savingOnboarding || disabled}
+                        key={subgenre}
+                        onClick={() => toggleSubgenre(subgenre)}
+                        type="button"
+                      >
+                        {subgenre}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-xs text-[var(--text-muted)]">No subgenres available for this pack yet.</p>
+              )}
+            </div>
             <div className="pt-1">
               <Button
                 className="w-full py-3 text-base"
@@ -320,6 +402,7 @@ export default function ProfilePage() {
                         tolerance,
                         pacePreference,
                         selectedPackSlug,
+                        selectedSubgenres,
                       }),
                     });
                     if (response.ok) {

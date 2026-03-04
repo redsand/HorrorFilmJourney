@@ -1,0 +1,57 @@
+{
+  "sources": [
+    {
+      "id": "peary",
+      "name": "Danny Peary Cult Movies",
+      "entries": []
+    },
+    {
+      "id": "midnight_doc",
+      "name": "The Midnight Movie documentary (2005)",
+      "entries": []
+    },
+    {
+      "id": "criterion_adjacent",
+      "name": "Criterion cult-adjacent spine",
+      "entries": []
+    },
+    {
+      "id": "letterboxd_top250",
+      "name": "Letterboxd Top Cult Lists (top 250)",
+      "entries": []
+    },
+    {
+      "id": "alamo_repertory",
+      "name": "Alamo Drafthouse repertory programming archives",
+      "entries": []
+    }
+  ],
+  "manualVotes": [
+    { "title": "The Thing", "year": 1982, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "vhs-video-store-era" },
+    { "title": "Escape from New York", "year": 1981, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "vhs-video-store-era" },
+    { "title": "The Fly", "year": 1986, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "vhs-video-store-era" },
+    { "title": "Heathers", "year": 1988, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "punk-counterculture" },
+    { "title": "Clue", "year": 1985, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "cult-comedy-absurdism" },
+    { "title": "Mulholland Drive", "year": 2001, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "Audition", "year": 1999, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "grindhouse-exploitation" },
+    { "title": "Ichi the Killer", "year": 2001, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "grindhouse-exploitation" },
+    { "title": "Hard Boiled", "year": 1992, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "grindhouse-exploitation" },
+    { "title": "The Killer", "year": 1989, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "grindhouse-exploitation" },
+    { "title": "Heavy Metal", "year": 1981, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "cult-sci-fi-fantasy" },
+    { "title": "Perfect Blue", "year": 1997, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "cult-sci-fi-fantasy" },
+    { "title": "Ghost in the Shell", "year": 1995, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "cult-sci-fi-fantasy" },
+    { "title": "Akira", "year": 1988, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "cult-sci-fi-fantasy" },
+    { "title": "The Boondock Saints", "year": 1999, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "Fight Club", "year": 1999, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "American Psycho", "year": 2000, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "The Virgin Suicides", "year": 1999, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "Grey Gardens", "year": 1975, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "American Movie", "year": 1999, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "Crumb", "year": 1994, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "modern-cult-phenomena" },
+    { "title": "Hedwig and the Angry Inch", "year": 2001, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "punk-counterculture" },
+    { "title": "Velvet Goldmine", "year": 1998, "sourceIds": ["criterion_adjacent", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "punk-counterculture" },
+    { "title": "The Stuff", "year": 1985, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "vhs-video-store-era" },
+    { "title": "Sleepaway Camp", "year": 1983, "sourceIds": ["peary", "letterboxd_top250", "alamo_repertory"], "suggestedNode": "vhs-video-store-era" }
+  ]
+}
+

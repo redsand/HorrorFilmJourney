@@ -19,291 +19,2253 @@
       "slug": "birth-of-midnight",
       "name": "The Birth of Midnight Movies",
       "titles": [
-        { "title": "Freaks", "year": 1932 },
-        { "title": "The Cabinet of Dr. Caligari", "year": 1920 },
-        { "title": "Carnival of Souls", "year": 1962 },
-        { "title": "Night of the Living Dead", "year": 1968 },
-        { "title": "El Topo", "year": 1970 },
-        { "title": "A Clockwork Orange", "year": 1971 },
-        { "title": "Harold and Maude", "year": 1971 },
-        { "title": "Pink Flamingos", "year": 1972 },
-        { "title": "The Wicker Man", "year": 1973 },
-        { "title": "The Texas Chain Saw Massacre", "year": 1974 },
-        { "title": "Phantom of the Paradise", "year": 1974 },
-        { "title": "The Rocky Horror Picture Show", "year": 1975 },
-        { "title": "Deep Red", "year": 1975 },
-        { "title": "Suspiria", "year": 1977 },
-        { "title": "Eraserhead", "year": 1977 },
-        { "title": "House", "altTitle": "Hausu", "year": 1977 },
-        { "title": "Dawn of the Dead", "year": 1978 },
-        { "title": "The Warriors", "year": 1979 },
-        { "title": "Mad Max", "year": 1979 },
-        { "title": "Possession", "year": 1981 },
-        { "title": "The Evil Dead", "year": 1981 },
-        { "title": "Videodrome", "year": 1983 },
-        { "title": "Liquid Sky", "year": 1982 },
-        { "title": "Repo Man", "year": 1984 },
-        { "title": "The Return of the Living Dead", "year": 1985 },
-        { "title": "Blue Velvet", "year": 1986 },
-        { "title": "Society", "year": 1989 },
-        { "title": "The Cook, the Thief, His Wife & Her Lover", "year": 1989 },
-        { "title": "Tetsuo: The Iron Man", "year": 1989 },
-        { "title": "Santa Sangre", "year": 1989 }
+        {
+          "title": "The Cabinet of Dr. Caligari",
+          "year": 1920
+        },
+        {
+          "title": "Haxan",
+          "year": 1922
+        },
+        {
+          "title": "Un Chien Andalou",
+          "year": 1929
+        },
+        {
+          "title": "Freaks",
+          "year": 1932
+        },
+        {
+          "title": "Vampyr",
+          "year": 1932
+        },
+        {
+          "title": "The Dawn Patrol",
+          "year": 1938
+        },
+        {
+          "title": "Brief Encounter",
+          "year": 1945
+        },
+        {
+          "title": "The Lost Weekend",
+          "year": 1945
+        },
+        {
+          "title": "The Strange Love of Martha Ivers",
+          "year": 1946
+        },
+        {
+          "title": "The Red Shoes",
+          "year": 1948
+        },
+        {
+          "title": "The Night of the Hunter",
+          "year": 1955
+        },
+        {
+          "title": "Run of the Arrow",
+          "year": 1957
+        },
+        {
+          "title": "Black Sunday",
+          "year": 1960
+        },
+        {
+          "title": "Eyes Without a Face",
+          "year": 1960
+        },
+        {
+          "title": "Peeping Tom",
+          "year": 1960
+        },
+        {
+          "title": "One-Eyed Jacks",
+          "year": 1961
+        },
+        {
+          "title": "Viridiana",
+          "year": 1961
+        },
+        {
+          "title": "Carnival of Souls",
+          "year": 1962
+        },
+        {
+          "title": "La Jetee",
+          "year": 1962
+        },
+        {
+          "title": "The Loneliness of the Long Distance Runner",
+          "year": 1962
+        },
+        {
+          "title": "The Trial",
+          "year": 1962
+        },
+        {
+          "title": "Walk on the Wild Side",
+          "year": 1962
+        },
+        {
+          "title": "The Servant",
+          "year": 1963
+        },
+        {
+          "title": "Onibaba",
+          "year": 1964
+        },
+        {
+          "title": "Repulsion",
+          "year": 1965
+        },
+        {
+          "title": "The Hill",
+          "year": 1965
+        },
+        {
+          "title": "Persona",
+          "year": 1966
+        },
+        {
+          "title": "Seconds",
+          "year": 1966
+        },
+        {
+          "title": "A Bullet for the General",
+          "year": 1967
+        },
+        {
+          "title": "Requiescant",
+          "year": 1967
+        },
+        {
+          "title": "Flesh",
+          "year": 1968
+        },
+        {
+          "title": "Hour of the Wolf",
+          "year": 1968
+        },
+        {
+          "title": "Kuroneko",
+          "year": 1968
+        },
+        {
+          "title": "Night of the Living Dead",
+          "year": 1968
+        },
+        {
+          "title": "The Girl on a Motorcycle",
+          "year": 1968
+        },
+        {
+          "title": "The Killing of Sister George",
+          "year": 1968
+        },
+        {
+          "title": "The Cremator",
+          "year": 1969
+        },
+        {
+          "title": "El Topo",
+          "year": 1970
+        },
+        {
+          "title": "Performance",
+          "year": 1970
+        },
+        {
+          "title": "Soldier Blue",
+          "year": 1970
+        },
+        {
+          "title": "The Boys in the Band",
+          "year": 1970
+        },
+        {
+          "title": "The Spider's Stratagem",
+          "year": 1970
+        },
+        {
+          "title": "Too Late the Hero",
+          "year": 1970
+        },
+        {
+          "title": "Valerie and Her Week of Wonders",
+          "year": 1970
+        },
+        {
+          "title": "A Clockwork Orange",
+          "year": 1971
+        },
+        {
+          "title": "Harold and Maude",
+          "year": 1971
+        },
+        {
+          "title": "The Devils",
+          "year": 1971
+        },
+        {
+          "title": "The Last Movie",
+          "year": 1971
+        },
+        {
+          "title": "Wake in Fright",
+          "year": 1971
+        },
+        {
+          "title": "Pink Flamingos",
+          "year": 1972
+        },
+        {
+          "title": "Ulzana's Raid",
+          "year": 1972
+        },
+        {
+          "title": "Don't Look Now",
+          "year": 1973
+        },
+        {
+          "title": "Fantastic Planet",
+          "year": 1973
+        },
+        {
+          "title": "The Wicker Man",
+          "year": 1973
+        },
+        {
+          "title": "Cockfighter",
+          "year": 1974
+        },
+        {
+          "title": "Lenny",
+          "year": 1974
+        },
+        {
+          "title": "Phantom of the Paradise",
+          "year": 1974
+        },
+        {
+          "title": "The Night Porter",
+          "year": 1974
+        },
+        {
+          "title": "The Texas Chain Saw Massacre",
+          "year": 1974
+        },
+        {
+          "title": "Deep Red",
+          "year": 1975
+        },
+        {
+          "title": "Salò, or the 120 Days of Sodom",
+          "year": 1975
+        },
+        {
+          "title": "The Man Who Would Be King",
+          "year": 1975
+        },
+        {
+          "title": "The Rocky Horror Picture Show",
+          "year": 1975
+        },
+        {
+          "title": "Carrie",
+          "year": 1976
+        },
+        {
+          "title": "In the Realm of the Senses",
+          "year": 1976
+        },
+        {
+          "title": "Tracks",
+          "year": 1976
+        },
+        {
+          "title": "Eraserhead",
+          "year": 1977
+        },
+        {
+          "title": "House",
+          "altTitle": "Hausu",
+          "year": 1977
+        },
+        {
+          "title": "Suspiria",
+          "year": 1977
+        },
+        {
+          "title": "The Duellists",
+          "year": 1977
+        },
+        {
+          "title": "Big Wednesday",
+          "year": 1978
+        },
+        {
+          "title": "Dawn of the Dead",
+          "year": 1978
+        },
+        {
+          "title": "Mad Max",
+          "year": 1979
+        },
+        {
+          "title": "Rock 'n' Roll High School",
+          "year": 1979
+        },
+        {
+          "title": "The Warriors",
+          "year": 1979
+        },
+        {
+          "title": "The Forbidden Zone",
+          "year": 1980
+        },
+        {
+          "title": "Possession",
+          "year": 1981
+        },
+        {
+          "title": "The Evil Dead",
+          "year": 1981
+        },
+        {
+          "title": "Liquid Sky",
+          "year": 1982
+        },
+        {
+          "title": "Videodrome",
+          "year": 1983
+        },
+        {
+          "title": "Repo Man",
+          "year": 1984
+        },
+        {
+          "title": "The Return of the Living Dead",
+          "year": 1985
+        },
+        {
+          "title": "Blue Velvet",
+          "year": 1986
+        },
+        {
+          "title": "Santa Sangre",
+          "year": 1989
+        },
+        {
+          "title": "Society",
+          "year": 1989
+        },
+        {
+          "title": "Tetsuo: The Iron Man",
+          "year": 1989
+        },
+        {
+          "title": "The Cook, the Thief, His Wife & Her Lover",
+          "year": 1989
+        }
+      ],
+      "subgenres": [
+        "Midnight Movies (70s-80s theatrical)",
+        "Arthouse reappraisal cult"
       ]
     },
     {
       "slug": "grindhouse-exploitation",
       "name": "Grindhouse & Exploitation",
       "titles": [
-        { "title": "Blood Feast", "year": 1963 },
-        { "title": "Faster, Pussycat! Kill! Kill!", "year": 1965 },
-        { "title": "Spider Baby", "year": 1967 },
-        { "title": "The Swimmer", "year": 1968 },
-        { "title": "I Drink Your Blood", "year": 1971, "altTitle": "I Drink Your Blood" },
-        { "title": "Last House on the Left", "year": 1972 },
-        { "title": "Thriller: A Cruel Picture", "year": 1973 },
-        { "title": "Sisters", "year": 1972 },
-        { "title": "Black Christmas", "year": 1974 },
-        { "title": "Shivers", "year": 1975 },
-        { "title": "Ilsa: She Wolf of the SS", "year": 1975 },
-        { "title": "The Hills Have Eyes", "year": 1977 },
-        { "title": "Rabid", "year": 1977 },
-        { "title": "I Spit on Your Grave", "year": 1978 },
-        { "title": "Zombie", "year": 1979 },
-        { "title": "Cannibal Holocaust", "year": 1980 },
-        { "title": "Maniac", "year": 1980 },
-        { "title": "The New York Ripper", "year": 1982 },
-        { "title": "Basket Case", "year": 1982 },
-        { "title": "Pieces", "year": 1982 },
-        { "title": "Ms. 45", "year": 1981 },
-        { "title": "Tenebrae", "year": 1982 },
-        { "title": "Class of Nuke 'Em High", "year": 1986 },
-        { "title": "Street Trash", "year": 1987 },
-        { "title": "The Blob", "year": 1988 },
-        { "title": "Intruder", "year": 1989 },
-        { "title": "Dead Alive", "altTitle": "Braindead", "year": 1992 },
-        { "title": "From Dusk Till Dawn", "year": 1996 },
-        { "title": "Planet Terror", "year": 2007 },
-        { "title": "Machete", "year": 2010 }
+        {
+          "title": "Blood Feast",
+          "year": 1963
+        },
+        {
+          "title": "Faster, Pussycat! Kill! Kill!",
+          "year": 1965
+        },
+        {
+          "title": "Spider Baby",
+          "year": 1967
+        },
+        {
+          "title": "The Swimmer",
+          "year": 1968
+        },
+        {
+          "title": "A Bay of Blood",
+          "year": 1971
+        },
+        {
+          "title": "I Drink Your Blood",
+          "year": 1971,
+          "altTitle": "I Drink Your Blood"
+        },
+        {
+          "title": "Last House on the Left",
+          "year": 1972
+        },
+        {
+          "title": "Sisters",
+          "year": 1972
+        },
+        {
+          "title": "Street Mobster",
+          "year": 1972
+        },
+        {
+          "title": "Tombs of the Blind Dead",
+          "year": 1972
+        },
+        {
+          "title": "Lady Snowblood",
+          "year": 1973
+        },
+        {
+          "title": "The Last House on Dead End Street",
+          "year": 1973
+        },
+        {
+          "title": "Thriller: A Cruel Picture",
+          "year": 1973
+        },
+        {
+          "title": "Black Christmas",
+          "year": 1974
+        },
+        {
+          "title": "Stone",
+          "year": 1974
+        },
+        {
+          "title": "The Living Dead at Manchester Morgue",
+          "year": 1974
+        },
+        {
+          "title": "Ilsa: She Wolf of the SS",
+          "year": 1975
+        },
+        {
+          "title": "Picnic at Hanging Rock",
+          "year": 1975
+        },
+        {
+          "title": "Shivers",
+          "year": 1975
+        },
+        {
+          "title": "Rabid",
+          "year": 1977
+        },
+        {
+          "title": "The Hills Have Eyes",
+          "year": 1977
+        },
+        {
+          "title": "I Spit on Your Grave",
+          "year": 1978
+        },
+        {
+          "title": "Long Weekend",
+          "year": 1978
+        },
+        {
+          "title": "Zombie",
+          "year": 1979
+        },
+        {
+          "title": "Cannibal Apocalypse",
+          "year": 1980
+        },
+        {
+          "title": "Cannibal Holocaust",
+          "year": 1980
+        },
+        {
+          "title": "Inferno",
+          "year": 1980
+        },
+        {
+          "title": "Maniac",
+          "year": 1980
+        },
+        {
+          "title": "Shogun Assassin",
+          "year": 1980
+        },
+        {
+          "title": "Cannibal Ferox",
+          "year": 1981
+        },
+        {
+          "title": "Ms. 45",
+          "year": 1981
+        },
+        {
+          "title": "Road Games",
+          "year": 1981
+        },
+        {
+          "title": "The Beyond",
+          "year": 1981
+        },
+        {
+          "title": "Basket Case",
+          "year": 1982
+        },
+        {
+          "title": "Pieces",
+          "year": 1982
+        },
+        {
+          "title": "Tenebrae",
+          "year": 1982
+        },
+        {
+          "title": "The New York Ripper",
+          "year": 1982
+        },
+        {
+          "title": "Turkey Shoot",
+          "year": 1982
+        },
+        {
+          "title": "Razorback",
+          "year": 1984
+        },
+        {
+          "title": "Demons",
+          "year": 1985
+        },
+        {
+          "title": "A Better Tomorrow",
+          "year": 1986
+        },
+        {
+          "title": "Class of Nuke 'Em High",
+          "year": 1986
+        },
+        {
+          "title": "Opera",
+          "year": 1987
+        },
+        {
+          "title": "Street Trash",
+          "year": 1987
+        },
+        {
+          "title": "The Blob",
+          "year": 1988
+        },
+        {
+          "title": "Intruder",
+          "year": 1989
+        },
+        {
+          "title": "The Killer",
+          "year": 1989
+        },
+        {
+          "title": "964 Pinocchio",
+          "year": 1991
+        },
+        {
+          "title": "Dead Alive",
+          "altTitle": "Braindead",
+          "year": 1992
+        },
+        {
+          "title": "Full Contact",
+          "year": 1992
+        },
+        {
+          "title": "Hard Boiled",
+          "year": 1992
+        },
+        {
+          "title": "Run and Kill",
+          "year": 1993
+        },
+        {
+          "title": "From Dusk Till Dawn",
+          "year": 1996
+        },
+        {
+          "title": "Naked Blood",
+          "year": 1996
+        },
+        {
+          "title": "Audition",
+          "year": 1999
+        },
+        {
+          "title": "Battle Royale",
+          "year": 2000
+        },
+        {
+          "title": "Ichi the Killer",
+          "year": 2001
+        },
+        {
+          "title": "Suicide Club",
+          "year": 2001
+        },
+        {
+          "title": "Visitor Q",
+          "year": 2001
+        },
+        {
+          "title": "Gozu",
+          "year": 2003
+        },
+        {
+          "title": "Night Watch",
+          "year": 2004
+        },
+        {
+          "title": "Planet Terror",
+          "year": 2007
+        },
+        {
+          "title": "Tokyo Gore Police",
+          "year": 2008
+        },
+        {
+          "title": "Carny",
+          "year": 2009
+        },
+        {
+          "title": "Machete",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "International shock cinema",
+        "Punk/transgressive"
       ]
     },
     {
       "slug": "so-bad-its-good",
       "name": "So-Bad-It's-Good",
       "titles": [
-        { "title": "Plan 9 from Outer Space", "year": 1959 },
-        { "title": "Robot Monster", "year": 1953 },
-        { "title": "The Creeping Terror", "year": 1964 },
-        { "title": "Manos: The Hands of Fate", "year": 1966 },
-        { "title": "Santa Claus Conquers the Martians", "year": 1964 },
-        { "title": "The Room", "year": 2003 },
-        { "title": "Birdemic: Shock and Terror", "year": 2010 },
-        { "title": "Troll 2", "year": 1990 },
-        { "title": "Miami Connection", "year": 1987 },
-        { "title": "Samurai Cop", "year": 1991 },
-        { "title": "The Wicker Man", "year": 2006 },
-        { "title": "Battlefield Earth", "year": 2000 },
-        { "title": "The Happening", "year": 2008 },
-        { "title": "Showgirls", "year": 1995 },
-        { "title": "Gymkata", "year": 1985 },
-        { "title": "Hard Ticket to Hawaii", "year": 1987 },
-        { "title": "Mac and Me", "year": 1988 },
-        { "title": "Cool as Ice", "year": 1991 },
-        { "title": "Double Team", "year": 1997 },
-        { "title": "Fateful Findings", "year": 2013 },
-        { "title": "Ben and Arthur", "year": 2002 },
-        { "title": "The Giant Claw", "year": 1957 },
-        { "title": "The Beast of Yucca Flats", "year": 1961 },
-        { "title": "Hobgoblins", "year": 1988 },
-        { "title": "Silent Night, Deadly Night Part 2", "year": 1987 },
-        { "title": "Riki-Oh: The Story of Ricky", "year": 1991 },
-        { "title": "New York Ninja", "year": 2021 },
-        { "title": "Suburban Sasquatch", "year": 2004 },
-        { "title": "Who Killed Captain Alex?", "year": 2010 },
-        { "title": "The VelociPastor", "year": 2018 }
+        {
+          "title": "Reefer Madness",
+          "year": 1936
+        },
+        {
+          "title": "Robot Monster",
+          "year": 1953
+        },
+        {
+          "title": "The Giant Claw",
+          "year": 1957
+        },
+        {
+          "title": "The Wild Women of Wongo",
+          "year": 1958
+        },
+        {
+          "title": "Plan 9 from Outer Space",
+          "year": 1959
+        },
+        {
+          "title": "The Beast of Yucca Flats",
+          "year": 1961
+        },
+        {
+          "title": "Santa Claus Conquers the Martians",
+          "year": 1964
+        },
+        {
+          "title": "The Creeping Terror",
+          "year": 1964
+        },
+        {
+          "title": "The Horror of Party Beach",
+          "year": 1964
+        },
+        {
+          "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+          "year": 1964
+        },
+        {
+          "title": "Manos: The Hands of Fate",
+          "year": 1966
+        },
+        {
+          "title": "The Star Wars Holiday Special",
+          "year": 1978
+        },
+        {
+          "title": "The Apple",
+          "year": 1980
+        },
+        {
+          "title": "Yor, the Hunter from the Future",
+          "year": 1983
+        },
+        {
+          "title": "Gymkata",
+          "year": 1985
+        },
+        {
+          "title": "The Wraith",
+          "year": 1986
+        },
+        {
+          "title": "Hard Ticket to Hawaii",
+          "year": 1987
+        },
+        {
+          "title": "Miami Connection",
+          "year": 1987
+        },
+        {
+          "title": "Over the Top",
+          "year": 1987
+        },
+        {
+          "title": "Silent Night, Deadly Night Part 2",
+          "year": 1987
+        },
+        {
+          "title": "Hobgoblins",
+          "year": 1988
+        },
+        {
+          "title": "Mac and Me",
+          "year": 1988
+        },
+        {
+          "title": "No Holds Barred",
+          "year": 1989
+        },
+        {
+          "title": "Robot Jox",
+          "year": 1989
+        },
+        {
+          "title": "Troll 2",
+          "year": 1990
+        },
+        {
+          "title": "Cool as Ice",
+          "year": 1991
+        },
+        {
+          "title": "Riki-Oh: The Story of Ricky",
+          "year": 1991
+        },
+        {
+          "title": "Samurai Cop",
+          "year": 1991
+        },
+        {
+          "title": "Showdown in Little Tokyo",
+          "year": 1991
+        },
+        {
+          "title": "Street Fighter",
+          "year": 1994
+        },
+        {
+          "title": "Showgirls",
+          "year": 1995
+        },
+        {
+          "title": "Batman & Robin",
+          "year": 1997
+        },
+        {
+          "title": "Double Team",
+          "year": 1997
+        },
+        {
+          "title": "Battlefield Earth",
+          "year": 2000
+        },
+        {
+          "title": "Ben and Arthur",
+          "year": 2002
+        },
+        {
+          "title": "The Core",
+          "year": 2003
+        },
+        {
+          "title": "The Room",
+          "year": 2003
+        },
+        {
+          "title": "Suburban Sasquatch",
+          "year": 2004
+        },
+        {
+          "title": "The Wicker Man",
+          "year": 2006
+        },
+        {
+          "title": "The Happening",
+          "year": 2008
+        },
+        {
+          "title": "Birdemic: Shock and Terror",
+          "year": 2010
+        },
+        {
+          "title": "Who Killed Captain Alex?",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "So-bad-it's-good",
+        "Meme-era cult"
       ]
     },
     {
       "slug": "cult-sci-fi-fantasy",
       "name": "Cult Sci-Fi & Fantasy",
       "titles": [
-        { "title": "Barbarella", "year": 1968 },
-        { "title": "THX 1138", "year": 1971 },
-        { "title": "Solaris", "year": 1972 },
-        { "title": "Rollerball", "year": 1975 },
-        { "title": "Zardoz", "year": 1974 },
-        { "title": "The Man Who Fell to Earth", "year": 1976 },
-        { "title": "The Last Wave", "year": 1977 },
-        { "title": "Close Encounters of the Third Kind", "year": 1977 },
-        { "title": "Scanners", "year": 1981 },
-        { "title": "Time Bandits", "year": 1981 },
-        { "title": "Blade Runner", "year": 1982 },
-        { "title": "Tron", "year": 1982 },
-        { "title": "The Dark Crystal", "year": 1982 },
-        { "title": "Krull", "year": 1983 },
-        { "title": "The Last Starfighter", "year": 1984 },
-        { "title": "Brazil", "year": 1985 },
-        { "title": "Legend", "year": 1985 },
-        { "title": "Labyrinth", "year": 1986 },
-        { "title": "Highlander", "year": 1986 },
-        { "title": "RoboCop", "year": 1987 },
-        { "title": "The Quiet Earth", "year": 1985 },
-        { "title": "They Live", "year": 1988 },
-        { "title": "The Adventures of Baron Munchausen", "year": 1988 },
-        { "title": "The City of Lost Children", "year": 1995 },
-        { "title": "Dark City", "year": 1998 },
-        { "title": "Donnie Darko", "year": 2001 },
-        { "title": "Primer", "year": 2004 },
-        { "title": "Moon", "year": 2009 },
-        { "title": "Under the Skin", "year": 2013 },
-        { "title": "Annihilation", "year": 2018 }
+        {
+          "title": "Orpheus",
+          "year": 1950
+        },
+        {
+          "title": "The 7th Voyage of Sinbad",
+          "year": 1958
+        },
+        {
+          "title": "Barbarella",
+          "year": 1968
+        },
+        {
+          "title": "200 Motels",
+          "year": 1971
+        },
+        {
+          "title": "THX 1138",
+          "year": 1971
+        },
+        {
+          "title": "Fritz the Cat",
+          "year": 1972
+        },
+        {
+          "title": "Silent Running",
+          "year": 1972
+        },
+        {
+          "title": "Solaris",
+          "year": 1972
+        },
+        {
+          "title": "Belladonna of Sadness",
+          "year": 1973
+        },
+        {
+          "title": "Dark Star",
+          "year": 1974
+        },
+        {
+          "title": "Zardoz",
+          "year": 1974
+        },
+        {
+          "title": "A Boy and His Dog",
+          "year": 1975
+        },
+        {
+          "title": "Rollerball",
+          "year": 1975
+        },
+        {
+          "title": "The Man Who Fell to Earth",
+          "year": 1976
+        },
+        {
+          "title": "Close Encounters of the Third Kind",
+          "year": 1977
+        },
+        {
+          "title": "The Last Wave",
+          "year": 1977
+        },
+        {
+          "title": "Watership Down",
+          "year": 1978
+        },
+        {
+          "title": "Stalker",
+          "year": 1979
+        },
+        {
+          "title": "Altered States",
+          "year": 1980
+        },
+        {
+          "title": "Heavy Metal",
+          "year": 1981
+        },
+        {
+          "title": "Scanners",
+          "year": 1981
+        },
+        {
+          "title": "Time Bandits",
+          "year": 1981
+        },
+        {
+          "title": "Blade Runner",
+          "year": 1982
+        },
+        {
+          "title": "The Dark Crystal",
+          "year": 1982
+        },
+        {
+          "title": "The Last Unicorn",
+          "year": 1982
+        },
+        {
+          "title": "The Secret of NIMH",
+          "year": 1982
+        },
+        {
+          "title": "Tron",
+          "year": 1982
+        },
+        {
+          "title": "Krull",
+          "year": 1983
+        },
+        {
+          "title": "The Keep",
+          "year": 1983
+        },
+        {
+          "title": "Nausicaa of the Valley of the Wind",
+          "year": 1984
+        },
+        {
+          "title": "The Brother from Another Planet",
+          "year": 1984
+        },
+        {
+          "title": "The Last Starfighter",
+          "year": 1984
+        },
+        {
+          "title": "Brazil",
+          "year": 1985
+        },
+        {
+          "title": "Legend",
+          "year": 1985
+        },
+        {
+          "title": "The Quiet Earth",
+          "year": 1985
+        },
+        {
+          "title": "Vampire Hunter D",
+          "year": 1985
+        },
+        {
+          "title": "Highlander",
+          "year": 1986
+        },
+        {
+          "title": "Labyrinth",
+          "year": 1986
+        },
+        {
+          "title": "RoboCop",
+          "year": 1987
+        },
+        {
+          "title": "Wicked City",
+          "year": 1987
+        },
+        {
+          "title": "Akira",
+          "year": 1988
+        },
+        {
+          "title": "The Adventures of Baron Munchausen",
+          "year": 1988
+        },
+        {
+          "title": "The Navigator: A Medieval Odyssey",
+          "year": 1988
+        },
+        {
+          "title": "They Live",
+          "year": 1988
+        },
+        {
+          "title": "Prospero's Books",
+          "year": 1991
+        },
+        {
+          "title": "Ninja Scroll",
+          "year": 1993
+        },
+        {
+          "title": "Ghost in the Shell",
+          "year": 1995
+        },
+        {
+          "title": "Johnny Mnemonic",
+          "year": 1995
+        },
+        {
+          "title": "Strange Days",
+          "year": 1995
+        },
+        {
+          "title": "The City of Lost Children",
+          "year": 1995
+        },
+        {
+          "title": "Gattaca",
+          "year": 1997
+        },
+        {
+          "title": "Perfect Blue",
+          "year": 1997
+        },
+        {
+          "title": "Princess Mononoke",
+          "year": 1997
+        },
+        {
+          "title": "The Fifth Element",
+          "year": 1997
+        },
+        {
+          "title": "Dark City",
+          "year": 1998
+        },
+        {
+          "title": "Pi",
+          "year": 1998
+        },
+        {
+          "title": "eXistenZ",
+          "year": 1999
+        },
+        {
+          "title": "The Thirteenth Floor",
+          "year": 1999
+        },
+        {
+          "title": "The Cell",
+          "year": 2000
+        },
+        {
+          "title": "Donnie Darko",
+          "year": 2001
+        },
+        {
+          "title": "Equilibrium",
+          "year": 2002
+        },
+        {
+          "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+          "year": 2003
+        },
+        {
+          "title": "Primer",
+          "year": 2004
+        },
+        {
+          "title": "Serenity",
+          "year": 2005
+        },
+        {
+          "title": "Renaissance",
+          "year": 2006
+        },
+        {
+          "title": "Sunshine",
+          "year": 2007
+        },
+        {
+          "title": "District 9",
+          "year": 2009
+        },
+        {
+          "title": "Moon",
+          "year": 2009
+        },
+        {
+          "title": "Pandorum",
+          "year": 2009
+        }
+      ],
+      "subgenres": [
+        "International shock cinema",
+        "Festival breakout cult"
       ]
     },
     {
       "slug": "punk-counterculture",
       "name": "Punk & Counterculture Cinema",
       "titles": [
-        { "title": "Scarface", "year": 1983 },
-        { "title": "Pulp Fiction", "year": 1994 },
-        { "title": "The Harder They Come", "year": 1972 },
-        { "title": "The Holy Mountain", "year": 1973 },
-        { "title": "Female Trouble", "year": 1974 },
-        { "title": "The Decline of Western Civilization", "year": 1981 },
-        { "title": "Suburbia", "year": 1983 },
-        { "title": "Repo Man", "year": 1984 },
-        { "title": "Sid and Nancy", "year": 1986 },
-        { "title": "River's Edge", "year": 1986 },
-        { "title": "The Toxic Avenger", "year": 1984 },
-        { "title": "Liquid Sky", "year": 1982 },
-        { "title": "Wild Style", "year": 1983 },
-        { "title": "Paris Is Burning", "year": 1990 },
-        { "title": "Slacker", "year": 1990 },
-        { "title": "Poison", "year": 1991 },
-        { "title": "SLC Punk!", "year": 1998 },
-        { "title": "Kids", "year": 1995 },
-        { "title": "Trainspotting", "year": 1996 },
-        { "title": "The Doom Generation", "year": 1995 },
-        { "title": "Nowhere", "year": 1997 },
-        { "title": "Go", "year": 1999 },
-        { "title": "Ghost World", "year": 2001 },
-        { "title": "Donnie Darko", "year": 2001 },
-        { "title": "Brick", "year": 2005 },
-        { "title": "Southland Tales", "year": 2006 },
-        { "title": "Scott Pilgrim vs. the World", "year": 2010 },
-        { "title": "Beyond the Black Rainbow", "year": 2010 },
-        { "title": "Spring Breakers", "year": 2012 },
-        { "title": "Only Lovers Left Alive", "year": 2013 },
-        { "title": "Climax", "year": 2018 },
-        { "title": "Mandy", "year": 2018 }
+        {
+          "title": "D.O.A.",
+          "year": 1949
+        },
+        {
+          "title": "The Prowler",
+          "year": 1951
+        },
+        {
+          "title": "The Narrow Margin",
+          "year": 1952
+        },
+        {
+          "title": "Blackboard Jungle",
+          "year": 1955
+        },
+        {
+          "title": "The Big Combo",
+          "year": 1955
+        },
+        {
+          "title": "The Phenix City Story",
+          "year": 1955
+        },
+        {
+          "title": "A Man Escaped",
+          "year": 1956
+        },
+        {
+          "title": "High School Confidential!",
+          "year": 1958
+        },
+        {
+          "title": "Hush...Hush, Sweet Charlotte",
+          "year": 1964
+        },
+        {
+          "title": "The Naked Kiss",
+          "year": 1964
+        },
+        {
+          "title": "Tokyo Drifter",
+          "year": 1966
+        },
+        {
+          "title": "Le Samouraï",
+          "year": 1967
+        },
+        {
+          "title": "Cisco Pike",
+          "year": 1971
+        },
+        {
+          "title": "The Grissom Gang",
+          "year": 1971
+        },
+        {
+          "title": "The Harder They Come",
+          "year": 1972
+        },
+        {
+          "title": "Dillinger",
+          "year": 1973
+        },
+        {
+          "title": "The Holy Mountain",
+          "year": 1973
+        },
+        {
+          "title": "Female Trouble",
+          "year": 1974
+        },
+        {
+          "title": "The Day of the Locust",
+          "year": 1975
+        },
+        {
+          "title": "Twilight's Last Gleaming",
+          "year": 1977
+        },
+        {
+          "title": "Jubilee",
+          "year": 1978
+        },
+        {
+          "title": "The Long Riders",
+          "year": 1980
+        },
+        {
+          "title": "Christiane F.",
+          "year": 1981
+        },
+        {
+          "title": "Diva",
+          "year": 1981
+        },
+        {
+          "title": "The Decline of Western Civilization",
+          "year": 1981
+        },
+        {
+          "title": "The Postman Always Rings Twice",
+          "year": 1981
+        },
+        {
+          "title": "Smithereens",
+          "year": 1982
+        },
+        {
+          "title": "The Fabulous Stains",
+          "year": 1982
+        },
+        {
+          "title": "Scarface",
+          "year": 1983
+        },
+        {
+          "title": "Suburbia",
+          "year": 1983
+        },
+        {
+          "title": "The Hunger",
+          "year": 1983
+        },
+        {
+          "title": "Wild Style",
+          "year": 1983
+        },
+        {
+          "title": "The Toxic Avenger",
+          "year": 1984
+        },
+        {
+          "title": "Come and See",
+          "year": 1985
+        },
+        {
+          "title": "Subway",
+          "year": 1985
+        },
+        {
+          "title": "River's Edge",
+          "year": 1986
+        },
+        {
+          "title": "Sid and Nancy",
+          "year": 1986
+        },
+        {
+          "title": "Hairspray",
+          "year": 1988
+        },
+        {
+          "title": "Heathers",
+          "year": 1988
+        },
+        {
+          "title": "The Decline of Western Civilization Part II: The Metal Years",
+          "year": 1988
+        },
+        {
+          "title": "Paris Is Burning",
+          "year": 1990
+        },
+        {
+          "title": "Slacker",
+          "year": 1990
+        },
+        {
+          "title": "Poison",
+          "year": 1991
+        },
+        {
+          "title": "Man Bites Dog",
+          "year": 1992
+        },
+        {
+          "title": "Romper Stomper",
+          "year": 1992
+        },
+        {
+          "title": "Three Colors: Blue",
+          "year": 1993
+        },
+        {
+          "title": "Natural Born Killers",
+          "year": 1994
+        },
+        {
+          "title": "Pulp Fiction",
+          "year": 1994
+        },
+        {
+          "title": "Doom Generation",
+          "year": 1995
+        },
+        {
+          "title": "Kids",
+          "year": 1995
+        },
+        {
+          "title": "The Doom Generation",
+          "year": 1995
+        },
+        {
+          "title": "SubUrbia",
+          "year": 1996
+        },
+        {
+          "title": "The Craft",
+          "year": 1996
+        },
+        {
+          "title": "Trainspotting",
+          "year": 1996
+        },
+        {
+          "title": "Gummo",
+          "year": 1997
+        },
+        {
+          "title": "Nowhere",
+          "year": 1997
+        },
+        {
+          "title": "SLC Punk!",
+          "year": 1998
+        },
+        {
+          "title": "The Decline of Western Civilization Part III",
+          "year": 1998
+        },
+        {
+          "title": "Velvet Goldmine",
+          "year": 1998
+        },
+        {
+          "title": "Go",
+          "year": 1999
+        },
+        {
+          "title": "Bully",
+          "year": 2001
+        },
+        {
+          "title": "Ghost World",
+          "year": 2001
+        },
+        {
+          "title": "Hedwig and the Angry Inch",
+          "year": 2001
+        },
+        {
+          "title": "24 Hour Party People",
+          "year": 2002
+        },
+        {
+          "title": "Metallica: Some Kind of Monster",
+          "year": 2004
+        },
+        {
+          "title": "Brick",
+          "year": 2005
+        },
+        {
+          "title": "Southland Tales",
+          "year": 2006
+        },
+        {
+          "title": "Control",
+          "year": 2007
+        },
+        {
+          "title": "Beyond the Black Rainbow",
+          "year": 2010
+        },
+        {
+          "title": "Scott Pilgrim vs. the World",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "Punk/transgressive",
+        "Goth / alternative youth cult"
       ]
     },
     {
       "slug": "vhs-video-store-era",
       "name": "VHS & The Video Store Era",
       "titles": [
-        { "title": "The Gate", "year": 1987 },
-        { "title": "Night of the Comet", "year": 1984 },
-        { "title": "Re-Animator", "year": 1985 },
-        { "title": "From Beyond", "year": 1986 },
-        { "title": "The Hidden", "year": 1987 },
-        { "title": "Near Dark", "year": 1987 },
-        { "title": "Prince of Darkness", "year": 1987 },
-        { "title": "They Live", "year": 1988 },
-        { "title": "Chopping Mall", "year": 1986 },
-        { "title": "The Monster Squad", "year": 1987 },
-        { "title": "Pumpkinhead", "year": 1988 },
-        { "title": "Hellraiser", "year": 1987 },
-        { "title": "Brain Damage", "year": 1988 },
-        { "title": "Waxwork", "year": 1988 },
-        { "title": "Dead Heat", "year": 1988 },
-        { "title": "Society", "year": 1989 },
-        { "title": "Pet Sematary", "year": 1989 },
-        { "title": "Killer Klowns from Outer Space", "year": 1988 },
-        { "title": "The Lost Boys", "year": 1987 },
-        { "title": "Tremors", "year": 1990 },
-        { "title": "Nightbreed", "year": 1990 },
-        { "title": "Darkman", "year": 1990 },
-        { "title": "Hardware", "year": 1990 },
-        { "title": "The People Under the Stairs", "year": 1991 },
-        { "title": "Candyman", "year": 1992 },
-        { "title": "Army of Darkness", "year": 1992 },
-        { "title": "Demolition Man", "year": 1993 },
-        { "title": "Event Horizon", "year": 1997 },
-        { "title": "Cube", "year": 1997 },
-        { "title": "The Faculty", "year": 1998 }
+        {
+          "title": "Glen or Glenda",
+          "year": 1953
+        },
+        {
+          "title": "The Long Hair of Death",
+          "year": 1964
+        },
+        {
+          "title": "Mudhoney",
+          "year": 1965
+        },
+        {
+          "title": "Countess Dracula",
+          "year": 1971
+        },
+        {
+          "title": "Shock Waves",
+          "year": 1977
+        },
+        {
+          "title": "Escape from New York",
+          "year": 1981
+        },
+        {
+          "title": "The Howling",
+          "year": 1981
+        },
+        {
+          "title": "Poltergeist",
+          "year": 1982
+        },
+        {
+          "title": "The Thing",
+          "year": 1982
+        },
+        {
+          "title": "Sleepaway Camp",
+          "year": 1983
+        },
+        {
+          "title": "Night of the Comet",
+          "year": 1984
+        },
+        {
+          "title": "Clue",
+          "year": 1985
+        },
+        {
+          "title": "Fright Night",
+          "year": 1985
+        },
+        {
+          "title": "Re-Animator",
+          "year": 1985
+        },
+        {
+          "title": "The Last Dragon",
+          "year": 1985
+        },
+        {
+          "title": "The Stuff",
+          "year": 1985
+        },
+        {
+          "title": "Big Trouble in Little China",
+          "year": 1986
+        },
+        {
+          "title": "Chopping Mall",
+          "year": 1986
+        },
+        {
+          "title": "From Beyond",
+          "year": 1986
+        },
+        {
+          "title": "Gothic",
+          "year": 1986
+        },
+        {
+          "title": "Night of the Creeps",
+          "year": 1986
+        },
+        {
+          "title": "The Fly",
+          "year": 1986
+        },
+        {
+          "title": "Hellraiser",
+          "year": 1987
+        },
+        {
+          "title": "Near Dark",
+          "year": 1987
+        },
+        {
+          "title": "Prince of Darkness",
+          "year": 1987
+        },
+        {
+          "title": "The Gate",
+          "year": 1987
+        },
+        {
+          "title": "The Hidden",
+          "year": 1987
+        },
+        {
+          "title": "The Lost Boys",
+          "year": 1987
+        },
+        {
+          "title": "The Monster Squad",
+          "year": 1987
+        },
+        {
+          "title": "The Running Man",
+          "year": 1987
+        },
+        {
+          "title": "The Video Dead",
+          "year": 1987
+        },
+        {
+          "title": "976-EVIL",
+          "year": 1988
+        },
+        {
+          "title": "Brain Damage",
+          "year": 1988
+        },
+        {
+          "title": "Dead Heat",
+          "year": 1988
+        },
+        {
+          "title": "Hellbound: Hellraiser II",
+          "year": 1988
+        },
+        {
+          "title": "Killer Klowns from Outer Space",
+          "year": 1988
+        },
+        {
+          "title": "Phantasm II",
+          "year": 1988
+        },
+        {
+          "title": "Pumpkinhead",
+          "year": 1988
+        },
+        {
+          "title": "Return of the Killer Tomatoes!",
+          "year": 1988
+        },
+        {
+          "title": "Waxwork",
+          "year": 1988
+        },
+        {
+          "title": "Pet Sematary",
+          "year": 1989
+        },
+        {
+          "title": "Urotsukidoji: Legend of the Overfiend",
+          "year": 1989
+        },
+        {
+          "title": "Warlock",
+          "year": 1989
+        },
+        {
+          "title": "Darkman",
+          "year": 1990
+        },
+        {
+          "title": "Grim Prairie Tales",
+          "year": 1990
+        },
+        {
+          "title": "Hardware",
+          "year": 1990
+        },
+        {
+          "title": "Nightbreed",
+          "year": 1990
+        },
+        {
+          "title": "The Gate II: Trespassers",
+          "year": 1990
+        },
+        {
+          "title": "Tremors",
+          "year": 1990
+        },
+        {
+          "title": "The People Under the Stairs",
+          "year": 1991
+        },
+        {
+          "title": "Army of Darkness",
+          "year": 1992
+        },
+        {
+          "title": "Candyman",
+          "year": 1992
+        },
+        {
+          "title": "Demolition Man",
+          "year": 1993
+        },
+        {
+          "title": "Phantasm III: Lord of the Dead",
+          "year": 1994
+        },
+        {
+          "title": "The Crow",
+          "year": 1994
+        },
+        {
+          "title": "The Addiction",
+          "year": 1995
+        },
+        {
+          "title": "Cube",
+          "year": 1997
+        },
+        {
+          "title": "Event Horizon",
+          "year": 1997
+        },
+        {
+          "title": "The Relic",
+          "year": 1997
+        },
+        {
+          "title": "Deep Rising",
+          "year": 1998
+        },
+        {
+          "title": "The Faculty",
+          "year": 1998
+        },
+        {
+          "title": "House on Haunted Hill",
+          "year": 1999
+        }
+      ],
+      "subgenres": [
+        "VHS-era horror rentals",
+        "Midnight Movies (70s-80s theatrical)"
       ]
     },
     {
       "slug": "cult-comedy-absurdism",
       "name": "Cult Comedy & Absurdism",
       "titles": [
-        { "title": "Monty Python and the Holy Grail", "year": 1975 },
-        { "title": "The Big Lebowski", "year": 1998 },
-        { "title": "This Is Spinal Tap", "year": 1984 },
-        { "title": "Evil Dead II", "year": 1987 },
-        { "title": "Beetlejuice", "year": 1988 },
-        { "title": "Office Space", "year": 1999 },
-        { "title": "Napoleon Dynamite", "year": 2004 },
-        { "title": "Wet Hot American Summer", "year": 2001 },
-        { "title": "The Princess Bride", "year": 1987 },
-        { "title": "Harold and Kumar Go to White Castle", "year": 2004 },
-        { "title": "Shaun of the Dead", "year": 2004 },
-        { "title": "Hot Fuzz", "year": 2007 },
-        { "title": "What We Do in the Shadows", "year": 2014 },
-        { "title": "Rubber", "year": 2010 },
-        { "title": "Greener Grass", "year": 2019 },
-        { "title": "UHF", "year": 1989 },
-        { "title": "Mystery Science Theater 3000: The Movie", "year": 1996 },
-        { "title": "Death to Smoochy", "year": 2002 },
-        { "title": "Idiocracy", "year": 2006 },
-        { "title": "Galaxy Quest", "year": 1999 },
-        { "title": "Happiness", "year": 1998 },
-        { "title": "Swiss Army Man", "year": 2016 },
-        { "title": "Sorry to Bother You", "year": 2018 },
-        { "title": "Poultrygeist: Night of the Chicken Dead", "year": 2006 },
-        { "title": "The Greasy Strangler", "year": 2016 },
-        { "title": "Bubba Ho-Tep", "year": 2002 },
-        { "title": "The Happiness of the Katakuris", "year": 2001 },
-        { "title": "The Toxic Avenger", "year": 1984 },
-        { "title": "Clerks", "year": 1994 },
-        { "title": "Kung Pow: Enter the Fist", "year": 2002 }
+        {
+          "title": "Teaserama",
+          "year": 1955
+        },
+        {
+          "title": "The Loved One",
+          "year": 1965
+        },
+        {
+          "title": "Cul-de-sac",
+          "year": 1966
+        },
+        {
+          "title": "Weekend",
+          "year": 1967
+        },
+        {
+          "title": "They Might Be Giants",
+          "year": 1971
+        },
+        {
+          "title": "Going Places",
+          "year": 1974
+        },
+        {
+          "title": "Inserts",
+          "year": 1975
+        },
+        {
+          "title": "Monty Python and the Holy Grail",
+          "year": 1975
+        },
+        {
+          "title": "Up!",
+          "year": 1976
+        },
+        {
+          "title": "Hausu",
+          "year": 1977
+        },
+        {
+          "title": "The Kentucky Fried Movie",
+          "year": 1977
+        },
+        {
+          "title": "The End",
+          "year": 1978
+        },
+        {
+          "title": "The Jerk",
+          "year": 1979
+        },
+        {
+          "title": "Wise Blood",
+          "year": 1979
+        },
+        {
+          "title": "The Gods Must Be Crazy",
+          "year": 1980
+        },
+        {
+          "title": "Polyester",
+          "year": 1981
+        },
+        {
+          "title": "The Cannonball Run",
+          "year": 1981
+        },
+        {
+          "title": "The Draughtsman's Contract",
+          "year": 1982
+        },
+        {
+          "title": "Breakin'",
+          "year": 1984
+        },
+        {
+          "title": "Gremlins",
+          "year": 1984
+        },
+        {
+          "title": "The Adventures of Buckaroo Banzai Across the 8th Dimension",
+          "year": 1984
+        },
+        {
+          "title": "This Is Spinal Tap",
+          "year": 1984
+        },
+        {
+          "title": "Top Secret!",
+          "year": 1984
+        },
+        {
+          "title": "Evil Dead II",
+          "year": 1987
+        },
+        {
+          "title": "The Princess Bride",
+          "year": 1987
+        },
+        {
+          "title": "Withnail & I",
+          "year": 1987
+        },
+        {
+          "title": "Beetlejuice",
+          "year": 1988
+        },
+        {
+          "title": "UHF",
+          "year": 1989
+        },
+        {
+          "title": "Jamon Jamon",
+          "year": 1992
+        },
+        {
+          "title": "Sonatine",
+          "year": 1993
+        },
+        {
+          "title": "Clerks",
+          "year": 1994
+        },
+        {
+          "title": "Spanking the Monkey",
+          "year": 1994
+        },
+        {
+          "title": "The Adventures of Priscilla, Queen of the Desert",
+          "year": 1994
+        },
+        {
+          "title": "Three Colors: White",
+          "year": 1994
+        },
+        {
+          "title": "Mystery Science Theater 3000: The Movie",
+          "year": 1996
+        },
+        {
+          "title": "The Cable Guy",
+          "year": 1996
+        },
+        {
+          "title": "In the Company of Men",
+          "year": 1997
+        },
+        {
+          "title": "Happiness",
+          "year": 1998
+        },
+        {
+          "title": "Taxi",
+          "year": 1998
+        },
+        {
+          "title": "The Big Lebowski",
+          "year": 1998
+        },
+        {
+          "title": "The Idiots",
+          "year": 1998
+        },
+        {
+          "title": "Drop Dead Gorgeous",
+          "year": 1999
+        },
+        {
+          "title": "Galaxy Quest",
+          "year": 1999
+        },
+        {
+          "title": "Mystery Men",
+          "year": 1999
+        },
+        {
+          "title": "Office Space",
+          "year": 1999
+        },
+        {
+          "title": "South Park: Bigger, Longer & Uncut",
+          "year": 1999
+        },
+        {
+          "title": "Best in Show",
+          "year": 2000
+        },
+        {
+          "title": "Together",
+          "year": 2000
+        },
+        {
+          "title": "Super Troopers",
+          "year": 2001
+        },
+        {
+          "title": "The Happiness of the Katakuris",
+          "year": 2001
+        },
+        {
+          "title": "Wet Hot American Summer",
+          "year": 2001
+        },
+        {
+          "title": "Bubba Ho-Tep",
+          "year": 2002
+        },
+        {
+          "title": "Death to Smoochy",
+          "year": 2002
+        },
+        {
+          "title": "Funny Ha Ha",
+          "year": 2002
+        },
+        {
+          "title": "Kung Pow: Enter the Fist",
+          "year": 2002
+        },
+        {
+          "title": "Harold & Kumar Go to White Castle",
+          "year": 2004
+        },
+        {
+          "title": "Harold and Kumar Go to White Castle",
+          "year": 2004
+        },
+        {
+          "title": "Kung Fu Hustle",
+          "year": 2004
+        },
+        {
+          "title": "Napoleon Dynamite",
+          "year": 2004
+        },
+        {
+          "title": "Shaun of the Dead",
+          "year": 2004
+        },
+        {
+          "title": "Team America: World Police",
+          "year": 2004
+        },
+        {
+          "title": "Grandma's Boy",
+          "year": 2006
+        },
+        {
+          "title": "Idiocracy",
+          "year": 2006
+        },
+        {
+          "title": "Poultrygeist: Night of the Chicken Dead",
+          "year": 2006
+        },
+        {
+          "title": "The Foot Fist Way",
+          "year": 2006
+        },
+        {
+          "title": "Hot Fuzz",
+          "year": 2007
+        },
+        {
+          "title": "Hot Rod",
+          "year": 2007
+        },
+        {
+          "title": "Walk Hard: The Dewey Cox Story",
+          "year": 2007
+        },
+        {
+          "title": "Repo! The Genetic Opera",
+          "year": 2008
+        },
+        {
+          "title": "Black Dynamite",
+          "year": 2009
+        },
+        {
+          "title": "MacGruber",
+          "year": 2010
+        },
+        {
+          "title": "Rubber",
+          "year": 2010
+        },
+        {
+          "title": "Tucker and Dale vs. Evil",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "Dorm-room 90s male cult",
+        "Meme-era cult"
       ]
     },
     {
       "slug": "modern-cult-phenomena",
       "name": "Modern Cult Phenomena",
       "titles": [
-        { "title": "Oldboy", "year": 2003 },
-        { "title": "Battle Royale", "year": 2000 },
-        { "title": "The Descent", "year": 2005 },
-        { "title": "Pan's Labyrinth", "year": 2006 },
-        { "title": "The Fall", "year": 2006 },
-        { "title": "Let the Right One In", "year": 2008 },
-        { "title": "Martyrs", "year": 2008 },
-        { "title": "Trick 'r Treat", "year": 2007 },
-        { "title": "Jennifer's Body", "year": 2009 },
-        { "title": "Black Swan", "year": 2010 },
-        { "title": "Cabin in the Woods", "altTitle": "The Cabin in the Woods", "year": 2011 },
-        { "title": "Drive", "year": 2011 },
-        { "title": "Only God Forgives", "year": 2013 },
-        { "title": "It Follows", "year": 2014 },
-        { "title": "The Witch", "year": 2015 },
-        { "title": "The Invitation", "year": 2015 },
-        { "title": "The Neon Demon", "year": 2016 },
-        { "title": "Raw", "year": 2016 },
-        { "title": "Train to Busan", "year": 2016 },
-        { "title": "Get Out", "year": 2017 },
-        { "title": "Hereditary", "year": 2018 },
-        { "title": "Mandy", "year": 2018 },
-        { "title": "Suspiria", "year": 2018 },
-        { "title": "Climax", "year": 2018 },
-        { "title": "One Cut of the Dead", "year": 2017 },
-        { "title": "Titane", "year": 2021 },
-        { "title": "Malignant", "year": 2021 },
-        { "title": "Nope", "year": 2022 },
-        { "title": "Talk to Me", "year": 2022 },
-        { "title": "Late Night with the Devil", "year": 2023 }
+        {
+          "title": "Gimme Shelter",
+          "year": 1970
+        },
+        {
+          "title": "Grey Gardens",
+          "year": 1975
+        },
+        {
+          "title": "The Loveless",
+          "year": 1981
+        },
+        {
+          "title": "Mishima: A Life in Four Chapters",
+          "year": 1985
+        },
+        {
+          "title": "Betty Blue",
+          "year": 1986
+        },
+        {
+          "title": "House of Games",
+          "year": 1987
+        },
+        {
+          "title": "Apartment Zero",
+          "year": 1988
+        },
+        {
+          "title": "Ghosts... of the Civil Dead",
+          "year": 1988
+        },
+        {
+          "title": "84C MoPic",
+          "year": 1989
+        },
+        {
+          "title": "Naked Tango",
+          "year": 1990
+        },
+        {
+          "title": "Light Sleeper",
+          "year": 1992
+        },
+        {
+          "title": "Reservoir Dogs",
+          "year": 1992
+        },
+        {
+          "title": "Crumb",
+          "year": 1994
+        },
+        {
+          "title": "The Last Seduction",
+          "year": 1994
+        },
+        {
+          "title": "Three Colors: Red",
+          "year": 1994
+        },
+        {
+          "title": "La haine",
+          "year": 1995
+        },
+        {
+          "title": "When We Were Kings",
+          "year": 1996
+        },
+        {
+          "title": "Fear and Loathing in Las Vegas",
+          "year": 1998
+        },
+        {
+          "title": "The Celebration",
+          "year": 1998
+        },
+        {
+          "title": "American Movie",
+          "year": 1999
+        },
+        {
+          "title": "Fight Club",
+          "year": 1999
+        },
+        {
+          "title": "The Blair Witch Project",
+          "year": 1999
+        },
+        {
+          "title": "The Boondock Saints",
+          "year": 1999
+        },
+        {
+          "title": "The Virgin Suicides",
+          "year": 1999
+        },
+        {
+          "title": "American Psycho",
+          "year": 2000
+        },
+        {
+          "title": "Baise-moi",
+          "year": 2000
+        },
+        {
+          "title": "Chopper",
+          "year": 2000
+        },
+        {
+          "title": "Memento",
+          "year": 2000
+        },
+        {
+          "title": "Requiem for a Dream",
+          "year": 2000
+        },
+        {
+          "title": "Snatch",
+          "year": 2000
+        },
+        {
+          "title": "Dogtown and Z-Boys",
+          "year": 2001
+        },
+        {
+          "title": "Mulholland Drive",
+          "year": 2001
+        },
+        {
+          "title": "The Experiment",
+          "year": 2001
+        },
+        {
+          "title": "The Royal Tenenbaums",
+          "year": 2001
+        },
+        {
+          "title": "Infernal Affairs",
+          "year": 2002
+        },
+        {
+          "title": "Irreversible",
+          "year": 2002
+        },
+        {
+          "title": "Oldboy",
+          "year": 2003
+        },
+        {
+          "title": "Touching the Void",
+          "year": 2003
+        },
+        {
+          "title": "Eternal Sunshine of the Spotless Mind",
+          "year": 2004
+        },
+        {
+          "title": "Garden State",
+          "year": 2004
+        },
+        {
+          "title": "Caché",
+          "year": 2005
+        },
+        {
+          "title": "Sin City",
+          "year": 2005
+        },
+        {
+          "title": "The Descent",
+          "year": 2005
+        },
+        {
+          "title": "V for Vendetta",
+          "year": 2005
+        },
+        {
+          "title": "Children of Men",
+          "year": 2006
+        },
+        {
+          "title": "Pan's Labyrinth",
+          "year": 2006
+        },
+        {
+          "title": "The Fall",
+          "year": 2006
+        },
+        {
+          "title": "The Fountain",
+          "year": 2006
+        },
+        {
+          "title": "Funny Games",
+          "year": 2007
+        },
+        {
+          "title": "Paranormal Activity",
+          "year": 2007
+        },
+        {
+          "title": "The Mist",
+          "year": 2007
+        },
+        {
+          "title": "Trick 'r Treat",
+          "year": 2007
+        },
+        {
+          "title": "Zodiac",
+          "year": 2007
+        },
+        {
+          "title": "In Bruges",
+          "year": 2008
+        },
+        {
+          "title": "Let the Right One In",
+          "year": 2008
+        },
+        {
+          "title": "Martyrs",
+          "year": 2008
+        },
+        {
+          "title": "Pontypool",
+          "year": 2008
+        },
+        {
+          "title": "Synecdoche, New York",
+          "year": 2008
+        },
+        {
+          "title": "A Serious Man",
+          "year": 2009
+        },
+        {
+          "title": "Antichrist",
+          "year": 2009
+        },
+        {
+          "title": "Enter the Void",
+          "year": 2009
+        },
+        {
+          "title": "Exam",
+          "year": 2009
+        },
+        {
+          "title": "Jennifer's Body",
+          "year": 2009
+        },
+        {
+          "title": "Triangle",
+          "year": 2009
+        },
+        {
+          "title": "Black Swan",
+          "year": 2010
+        },
+        {
+          "title": "Inception",
+          "year": 2010
+        },
+        {
+          "title": "Kick-Ass",
+          "year": 2010
+        },
+        {
+          "title": "Monsters",
+          "year": 2010
+        },
+        {
+          "title": "Rare Exports",
+          "year": 2010
+        },
+        {
+          "title": "The Crazies",
+          "year": 2010
+        },
+        {
+          "title": "The Social Network",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "Festival breakout cult",
+        "Dorm-room 90s male cult",
+        "Goth / alternative youth cult"
       ]
     }
+  ],
+  "trackedCultSubgenres": [
+    "Midnight Movies (70s-80s theatrical)",
+    "VHS-era horror rentals",
+    "So-bad-it's-good",
+    "Punk/transgressive",
+    "Arthouse reappraisal cult",
+    "International shock cinema",
+    "Dorm-room 90s male cult",
+    "Goth / alternative youth cult",
+    "Festival breakout cult",
+    "Meme-era cult"
   ]
 }
