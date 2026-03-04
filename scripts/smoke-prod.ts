@@ -4,6 +4,7 @@ type RequestOptions = {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
   cookie?: string | null;
+  smokeBypassKey?: string | null;
 };
 
 function env(name: string): string {
@@ -25,6 +26,7 @@ async function requestJson<T>(baseUrl: string, path: string, options: RequestOpt
     headers: {
       'content-type': 'application/json',
       ...(options.cookie ? { cookie: options.cookie } : {}),
+      ...(options.smokeBypassKey ? { 'x-cinemacodex-smoke-key': options.smokeBypassKey } : {}),
     },
     ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
   });
@@ -40,6 +42,7 @@ async function main(): Promise<void> {
   const password = env('SMOKE_PASSWORD');
   const displayName = optionalEnv('SMOKE_DISPLAY_NAME') ?? 'Smoke User';
   const captchaToken = optionalEnv('SMOKE_CAPTCHA_TOKEN');
+  const smokeBypassKey = optionalEnv('SMOKE_BYPASS_API_KEY');
 
   let cookie = optionalEnv('SMOKE_COOKIE_HEADER');
 
@@ -47,6 +50,7 @@ async function main(): Promise<void> {
     const signup = await requestJson<{ user: { id: string } }>(baseUrl, '/api/auth/signup', {
       method: 'POST',
       body: { email, password, displayName, ...(captchaToken ? { captchaToken } : {}) },
+      smokeBypassKey,
     });
 
     if (signup.status === 200) {
@@ -55,6 +59,7 @@ async function main(): Promise<void> {
       const login = await requestJson<{ user: { id: string } }>(baseUrl, '/api/auth/login', {
         method: 'POST',
         body: { email, password, ...(captchaToken ? { captchaToken } : {}) },
+        smokeBypassKey,
       });
       if (login.status !== 200) {
         throw new Error(`Auth failed: ${login.status} ${JSON.stringify(login.body.error)}`);
@@ -69,6 +74,7 @@ async function main(): Promise<void> {
 
   const experience = await requestJson<{ state: string; packSelection?: { packs: Array<{ slug: string; isEnabled: boolean }> } }>(baseUrl, '/api/experience', {
     cookie,
+    smokeBypassKey,
   });
   if (experience.status !== 200 || !experience.body.data) {
     throw new Error(`Experience failed: ${experience.status}`);
@@ -80,6 +86,7 @@ async function main(): Promise<void> {
       method: 'POST',
       cookie,
       body: { packSlug: enabledPack },
+      smokeBypassKey,
     });
     if (selectPack.status !== 200) {
       throw new Error(`Pack selection failed: ${selectPack.status}`);
@@ -90,6 +97,7 @@ async function main(): Promise<void> {
     method: 'POST',
     cookie,
     body: { tolerance: 3, pacePreference: 'balanced' },
+    smokeBypassKey,
   });
   if (onboarding.status !== 200 && onboarding.status !== 400) {
     throw new Error(`Onboarding unexpected status: ${onboarding.status}`);
@@ -98,7 +106,7 @@ async function main(): Promise<void> {
   const recommendations = await requestJson<{ batchId: string; cards: Array<{ movie: { tmdbId: number } }>; interactionContext?: Array<{ tmdbId: number; recommendationItemId: string }> }>(
     baseUrl,
     '/api/recommendations/next',
-    { method: 'POST', cookie },
+    { method: 'POST', cookie, smokeBypassKey },
   );
   if (recommendations.status !== 200 || !recommendations.body.data || recommendations.body.data.cards.length === 0) {
     throw new Error(`Recommendations failed: ${recommendations.status}`);
@@ -109,6 +117,7 @@ async function main(): Promise<void> {
   const interaction = await requestJson<{ interaction: { id: string } }>(baseUrl, '/api/interactions', {
     method: 'POST',
     cookie,
+    smokeBypassKey,
     body: {
       tmdbId: card.movie.tmdbId,
       status: 'WATCHED',
@@ -120,7 +129,7 @@ async function main(): Promise<void> {
     throw new Error(`Interaction failed: ${interaction.status}`);
   }
 
-  const history = await requestJson<{ items: Array<{ interactionId: string }> }>(baseUrl, '/api/history', { cookie });
+  const history = await requestJson<{ items: Array<{ interactionId: string }> }>(baseUrl, '/api/history', { cookie, smokeBypassKey });
   if (history.status !== 200 || !history.body.data || history.body.data.items.length === 0) {
     throw new Error(`History failed: ${history.status}`);
   }

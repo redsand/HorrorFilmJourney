@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
-import { JourneyMap, JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
+import { JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
 import { CinematicContextCard } from '@/components/context/CinematicContextCard';
 import { ReasonPanel } from '@/components/context/ReasonPanel';
 import { BottomNav, Button, Card } from '@/components/ui';
@@ -98,12 +98,6 @@ type NodeMoviesResponse = {
   nodeSlug: string;
   core: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
   extended: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
-};
-type JourneyMapResponse = {
-  seasonSlug: string;
-  packSlug: string;
-  nodes: Array<{ slug: string; name: string; order: number; coreCount?: number; extendedCount?: number }>;
-  progress?: { completedNodeSlugs: string[]; currentNodeSlug?: string };
 };
 
 function toWatchForTuple(watchFor: unknown): [string, string, string] {
@@ -251,6 +245,17 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   const tolerance = Number(formData.get('tolerance'));
   const pacePreference = String(formData.get('pacePreference') ?? 'balanced');
   const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
+  const minimumYearRaw = Number(formData.get('minimumYear'));
+  const minimumYear = (
+    minimumYearRaw === 1920
+    || minimumYearRaw === 1930
+    || minimumYearRaw === 1940
+    || minimumYearRaw === 1950
+    || minimumYearRaw === 1960
+    || minimumYearRaw === 1970
+  )
+    ? minimumYearRaw
+    : null;
   const selectedSubgenres = formData.getAll('selectedSubgenres')
     .map((entry) => String(entry).trim().toLowerCase())
     .filter((entry) => entry.length > 0)
@@ -259,7 +264,7 @@ async function submitOnboarding(formData: FormData): Promise<void> {
   const onboardingResponse = await apiJson('/api/onboarding', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, selectedSubgenres, horrorDNA: {} }),
+    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, selectedSubgenres, minimumYear, horrorDNA: {} }),
   });
   if (onboardingResponse.status === 200) {
     await apiJson('/api/recommendations/next', {
@@ -303,9 +308,6 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
   ).toLowerCase();
   const nodeMovies = (!unauthenticated && activeJourneyNodeSlug)
     ? (await apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(activeJourneyNodeSlug)}&limit=12`, { method: 'GET' })).data
-    : null;
-  const journeyMap = !unauthenticated
-    ? (await apiJson<JourneyMapResponse>('/api/journey/map', { method: 'GET' })).data
     : null;
   const selectedPackSlug = watchlist?.packSlug
     ?? packs?.packs.find((pack) => pack.isEnabled)?.slug
@@ -436,15 +438,15 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
-      {journeyMap && experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' ? (
+      {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' ? (
         <Card>
-          <JourneyMap
-            baseHref="/journey"
-            currentNodeSlug={activeJourneyNodeSlug}
-            data={journeyMap}
-            packSlug={journeyMap.packSlug ?? selectedPackSlug}
-            seasonSlug={journeyMap.seasonSlug ?? selectedSeasonSlug}
-          />
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">Open the full timeline view from your profile.</p>
+            </div>
+            <Link href="/profile/journey-map"><Button variant="secondary">Open Map</Button></Link>
+          </div>
         </Card>
       ) : null}
 
@@ -545,6 +547,28 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
                     </span>
                   </label>
                 ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Minimum release decade</p>
+              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
+                Recommend films released in or after this decade.
+              </p>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+                {([1920, 1930, 1940, 1950, 1960, 1970] as const).map((decade) => (
+                  <label key={decade} className="cursor-pointer">
+                    <input className="peer sr-only" type="radio" name="minimumYear" value={decade} />
+                    <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-xs peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
+                      {decade}s
+                    </span>
+                  </label>
+                ))}
+                <label className="cursor-pointer">
+                  <input className="peer sr-only" defaultChecked type="radio" name="minimumYear" value="" />
+                  <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-xs peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
+                    Any
+                  </span>
+                </label>
               </div>
             </div>
             <div>

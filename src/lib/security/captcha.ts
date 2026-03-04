@@ -1,4 +1,5 @@
 import type { ApiError } from '@/lib/api-envelope';
+import { timingSafeEqual } from 'node:crypto';
 
 type CaptchaValidationResult =
   | { ok: true }
@@ -20,6 +21,32 @@ function captchaEnabled(): boolean {
   return process.env.CAPTCHA_ENABLED === 'true';
 }
 
+function smokeBypassKey(): string | null {
+  const key = process.env.CAPTCHA_SMOKE_BYPASS_KEY?.trim();
+  return key && key.length > 0 ? key : null;
+}
+
+function safeEquals(a: string, b: string): boolean {
+  const aBuffer = Buffer.from(a, 'utf8');
+  const bBuffer = Buffer.from(b, 'utf8');
+  if (aBuffer.length !== bBuffer.length) {
+    return false;
+  }
+  return timingSafeEqual(aBuffer, bBuffer);
+}
+
+function hasValidSmokeBypass(request: Request): boolean {
+  const expected = smokeBypassKey();
+  if (!expected) {
+    return false;
+  }
+  const provided = request.headers.get('x-cinemacodex-smoke-key')?.trim();
+  if (!provided) {
+    return false;
+  }
+  return safeEquals(provided, expected);
+}
+
 function minimumScore(): number {
   const configured = Number(process.env.RECAPTCHA_MIN_SCORE ?? '0.5');
   if (!Number.isFinite(configured)) {
@@ -39,6 +66,10 @@ function resolveClientIp(request: Request): string | null {
 
 export async function verifyCaptchaToken(input: VerifyCaptchaInput): Promise<CaptchaValidationResult> {
   if (!captchaEnabled()) {
+    return { ok: true };
+  }
+
+  if (hasValidSmokeBypass(input.request)) {
     return { ok: true };
   }
 

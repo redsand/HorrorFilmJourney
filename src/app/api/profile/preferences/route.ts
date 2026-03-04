@@ -12,7 +12,8 @@ const preferenceSchema = z.object({
   recommendationStyle: z.enum(['diversity', 'popularity']).optional(),
   selectedPackSlug: z.string().trim().min(1).optional(),
   selectedSubgenres: z.array(z.string().trim().min(1).max(32)).max(MAX_SELECTED_SUBGENRES).optional(),
-}).refine((value) => value.recommendationStyle !== undefined || value.selectedPackSlug !== undefined || value.selectedSubgenres !== undefined, {
+  minimumYear: z.union([z.literal(1920), z.literal(1930), z.literal(1940), z.literal(1950), z.literal(1960), z.literal(1970)]).nullable().optional(),
+}).refine((value) => value.recommendationStyle !== undefined || value.selectedPackSlug !== undefined || value.selectedSubgenres !== undefined || value.minimumYear !== undefined, {
   message: 'At least one preference field is required',
 });
 
@@ -46,6 +47,25 @@ function resolvePackSubgenres(horrorDNA: unknown, packId: string | null | undefi
     .filter((entry) => entry.length > 0))].slice(0, MAX_SELECTED_SUBGENRES);
 }
 
+function resolvePackMinimumYear(horrorDNA: unknown, packId: string | null | undefined): 1920 | 1930 | 1940 | 1950 | 1960 | 1970 | null {
+  if (!horrorDNA || typeof horrorDNA !== 'object' || !packId) {
+    return null;
+  }
+  const packPreferences = (horrorDNA as Record<string, unknown>).packPreferences;
+  if (!packPreferences || typeof packPreferences !== 'object') {
+    return null;
+  }
+  const preference = (packPreferences as Record<string, unknown>)[packId];
+  if (!preference || typeof preference !== 'object') {
+    return null;
+  }
+  const minimumYear = (preference as Record<string, unknown>).minimumYear;
+  if (minimumYear === 1920 || minimumYear === 1930 || minimumYear === 1940 || minimumYear === 1950 || minimumYear === 1960 || minimumYear === 1970) {
+    return minimumYear;
+  }
+  return null;
+}
+
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAuth(request, prisma);
   if (!auth.ok) {
@@ -70,6 +90,7 @@ export async function GET(request: Request): Promise<Response> {
     tolerance: profile?.tolerance ?? 3,
     pacePreference: profile?.pacePreference ?? 'balanced',
     selectedSubgenres: resolvePackSubgenres(profile?.horrorDNA, effectivePack?.packId),
+    minimumYear: resolvePackMinimumYear(profile?.horrorDNA, effectivePack?.packId),
     availableSubgenres: getPackSubgenreOptions(effectivePack?.packSlug ?? DEFAULT_PACK_SLUG),
     ...(effectivePack ? { selectedPackSlug: effectivePack.packSlug } : {}),
   });
@@ -145,7 +166,7 @@ export async function PATCH(request: Request): Promise<Response> {
   }
 
   const nextPackPreferences = (() => {
-    if (!normalizedSelectedSubgenres || !selectedPackId) {
+    if (!selectedPackId || (normalizedSelectedSubgenres === undefined && parsed.data.minimumYear === undefined)) {
       return undefined;
     }
     const existingPackPreferences = existing?.horrorDNA && typeof existing.horrorDNA === 'object' && (existing.horrorDNA as Record<string, unknown>).packPreferences
@@ -160,7 +181,10 @@ export async function PATCH(request: Request): Promise<Response> {
       ...existingPackPreferences,
       [selectedPackId]: {
         ...nextPackPreference,
-        subgenres: normalizedSelectedSubgenres,
+        ...(normalizedSelectedSubgenres === undefined ? {} : { subgenres: normalizedSelectedSubgenres }),
+        ...(parsed.data.minimumYear === undefined
+          ? {}
+          : { minimumYear: parsed.data.minimumYear }),
       },
     };
   })();

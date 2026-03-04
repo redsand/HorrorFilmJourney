@@ -13,6 +13,7 @@ const onboardingSchema = z.object({
   pacePreference: z.enum(['slowburn', 'balanced', 'shock']),
   selectedPackSlug: z.string().trim().min(1).optional(),
   selectedSubgenres: z.array(z.string().trim().min(1).max(32)).max(MAX_SELECTED_SUBGENRES).optional(),
+  minimumYear: z.union([z.literal(1920), z.literal(1930), z.literal(1940), z.literal(1950), z.literal(1960), z.literal(1970)]).nullable().optional(),
   horrorDNA: z.unknown().optional(),
 });
 
@@ -31,8 +32,9 @@ function applyPackSubgenres(
   horrorDNA: Record<string, unknown>,
   packId: string | undefined,
   selectedSubgenres: string[],
+  minimumYear: 1920 | 1930 | 1940 | 1950 | 1960 | 1970 | null | undefined,
 ): Record<string, unknown> {
-  if (!packId || selectedSubgenres.length === 0) {
+  if (!packId || (selectedSubgenres.length === 0 && minimumYear === undefined)) {
     return horrorDNA;
   }
   const basePackPreferences = horrorDNA.packPreferences && typeof horrorDNA.packPreferences === 'object'
@@ -49,7 +51,8 @@ function applyPackSubgenres(
       ...basePackPreferences,
       [packId]: {
         ...nextPackPreference,
-        subgenres: selectedSubgenres,
+        ...(selectedSubgenres.length > 0 ? { subgenres: selectedSubgenres } : {}),
+        ...(minimumYear === undefined ? {} : { minimumYear }),
       },
     },
   };
@@ -115,7 +118,12 @@ export async function POST(request: Request): Promise<Response> {
       400,
     );
   }
-  normalizedHorrorDna = applyPackSubgenres(normalizedHorrorDna, selectedPackId, selectedSubgenres);
+  normalizedHorrorDna = applyPackSubgenres(
+    normalizedHorrorDna,
+    selectedPackId,
+    selectedSubgenres,
+    parsed.data.minimumYear,
+  );
 
   await prisma.userProfile.upsert({
     where: { userId: auth.userId },

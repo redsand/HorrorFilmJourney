@@ -75,4 +75,59 @@ describe('auth routes captcha enforcement', () => {
       error: { code: 'CAPTCHA_REQUIRED', message: 'Captcha verification is required' },
     });
   });
+
+  it('allows signup without captcha token when valid smoke bypass header is present', async () => {
+    process.env.CAPTCHA_SMOKE_BYPASS_KEY = 'smoke-key-123';
+    userCredentialFindUniqueMock.mockResolvedValue({
+      id: 'existing-credential',
+      userId: 'user-1',
+      email: 'user@example.com',
+    });
+
+    const response = await SIGNUP_POST(
+      new Request('http://localhost/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-cinemacodex-smoke-key': 'smoke-key-123',
+        },
+        body: JSON.stringify({
+          email: 'user@example.com',
+          password: 'password123',
+          displayName: 'User',
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(409);
+    await expect(response.json()).resolves.toEqual({
+      data: null,
+      error: { code: 'CONFLICT', message: 'Email already in use' },
+    });
+  });
+
+  it('allows login without captcha token when valid smoke bypass header is present', async () => {
+    process.env.CAPTCHA_SMOKE_BYPASS_KEY = 'smoke-key-123';
+    userCredentialFindUniqueMock.mockResolvedValue(null);
+
+    const response = await LOGIN_POST(
+      new Request('http://localhost/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-cinemacodex-smoke-key': 'smoke-key-123',
+        },
+        body: JSON.stringify({
+          email: 'user@example.com',
+          password: 'password123',
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      data: null,
+      error: { code: 'UNAUTHORIZED', message: 'Invalid credentials' },
+    });
+  });
 });

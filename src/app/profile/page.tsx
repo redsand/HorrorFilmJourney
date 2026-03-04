@@ -46,6 +46,7 @@ type ProfilePreferencesResponse = {
   selectedPackSlug?: string;
   selectedSubgenres?: string[];
   availableSubgenres?: string[];
+  minimumYear?: 1920 | 1930 | 1940 | 1950 | 1960 | 1970 | null;
 };
 
 export default function ProfilePage() {
@@ -66,6 +67,7 @@ export default function ProfilePage() {
   const [selectedPackSlug, setSelectedPackSlug] = useState<string>('horror');
   const [selectedSubgenres, setSelectedSubgenres] = useState<string[]>([]);
   const [availableSubgenres, setAvailableSubgenres] = useState<string[]>([]);
+  const [minimumYear, setMinimumYear] = useState<1920 | 1930 | 1940 | 1950 | 1960 | 1970 | null>(null);
 
   const loadPreferences = async (): Promise<void> => {
     const preferenceResponse = await fetch('/api/profile/preferences', {
@@ -103,8 +105,15 @@ export default function ProfilePage() {
         .map((value) => value.trim().toLowerCase())
         .filter((value) => value.length > 0))]
       : [];
+    const nextMinimumYear = preferenceData.minimumYear;
     setSelectedSubgenres(nextSelectedSubgenres.slice(0, MAX_SELECTED_SUBGENRES));
     setAvailableSubgenres(nextAvailableSubgenres);
+    setMinimumYear(
+      nextMinimumYear === 1920 || nextMinimumYear === 1930 || nextMinimumYear === 1940
+      || nextMinimumYear === 1950 || nextMinimumYear === 1960 || nextMinimumYear === 1970
+        ? nextMinimumYear
+        : null,
+    );
   };
 
   useEffect(() => {
@@ -351,6 +360,41 @@ export default function ProfilePage() {
               </div>
             </div>
             <div>
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Minimum release decade</p>
+              <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
+                Filter recommendations to films released in or after this decade.
+              </p>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+                {([1920, 1930, 1940, 1950, 1960, 1970] as const).map((decade) => (
+                  <button
+                    className={`rounded-lg border px-2 py-2 text-center text-xs ${
+                      minimumYear === decade
+                        ? 'border-[rgba(193,18,31,0.7)] bg-[rgba(155,17,30,0.22)] text-[var(--text)]'
+                        : 'border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text-muted)]'
+                    }`}
+                    disabled={savingOnboarding}
+                    key={decade}
+                    onClick={() => setMinimumYear(decade)}
+                    type="button"
+                  >
+                    {decade}s
+                  </button>
+                ))}
+                <button
+                  className={`rounded-lg border px-2 py-2 text-center text-xs ${
+                    minimumYear === null
+                      ? 'border-[rgba(193,18,31,0.7)] bg-[rgba(155,17,30,0.22)] text-[var(--text)]'
+                      : 'border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--text-muted)]'
+                  }`}
+                  disabled={savingOnboarding}
+                  onClick={() => setMinimumYear(null)}
+                  type="button"
+                >
+                  Any
+                </button>
+              </div>
+            </div>
+            <div>
               <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">
                 {packCopy.onboardingSubgenreLabel} (up to {MAX_SELECTED_SUBGENRES})
               </p>
@@ -400,6 +444,7 @@ export default function ProfilePage() {
                         pacePreference,
                         selectedPackSlug,
                         selectedSubgenres,
+                        minimumYear,
                       }),
                     });
                     if (response.ok) {
@@ -436,12 +481,13 @@ export default function ProfilePage() {
                 Change Password
               </Button>
             </Link>
-            <Link className="mb-2 inline-flex w-full" href="/profile/progression">
+            <Link className="mb-2 inline-flex w-full" href="/profile/journey-map">
               <Button className="w-full" variant="secondary">
                 <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                  <path d="M4 18V9m5 9V6m5 12v-7m5 7V4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                  <path d="M4 20V8m8 12V4m8 16v-9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                  <path d="M4 12h8m0 0h8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
                 </svg>
-                View Journey Progression
+                Open Journey Map
               </Button>
             </Link>
             <Link className="inline-flex w-full" href="/profile/dna">

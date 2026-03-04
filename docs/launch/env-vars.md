@@ -22,6 +22,10 @@ This file is the source of truth for `cinemacodex.com` runtime configuration.
 ## Strongly recommended
 
 - `RECAPTCHA_MIN_SCORE=0.5`
+- `CAPTCHA_SMOKE_BYPASS_KEY`
+  - Optional dedicated key for production smoke tests to bypass CAPTCHA.
+  - Sent via `x-cinemacodex-smoke-key` header.
+  - Keep secret, rotate periodically, and only use in automated smoke contexts.
 - `AUTH_RATE_LIMIT_WINDOW_MS=60000`
 - `AUTH_RATE_LIMIT_MAX_ATTEMPTS=10`
 - `CSRF_ENABLED=true`
@@ -71,6 +75,7 @@ CAPTCHA_ENABLED="true"
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY="replace"
 RECAPTCHA_SECRET_KEY="replace"
 RECAPTCHA_MIN_SCORE="0.5"
+CAPTCHA_SMOKE_BYPASS_KEY="replace-with-random-smoke-key"
 CSRF_ENABLED="true"
 AUTH_RATE_LIMIT_WINDOW_MS="60000"
 AUTH_RATE_LIMIT_MAX_ATTEMPTS="10"

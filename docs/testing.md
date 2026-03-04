@@ -16,6 +16,13 @@
 - Helpers call `/api/auth/signup` and `/api/auth/login`, parse `Set-Cookie`, and return a `cookieHeader` you pass to subsequent requests as `Cookie`.
 - For route-unit tests that do not dispatch auth routes, use `tests/helpers/session-cookie.ts` to generate a signed test session cookie.
 
+## Production smoke auth (captcha bypass)
+
+- `scripts/smoke-prod.ts` supports `SMOKE_BYPASS_API_KEY`.
+- When set, the script sends `x-cinemacodex-smoke-key` on auth and follow-up API calls.
+- Server-side bypass is enabled only when `CAPTCHA_SMOKE_BYPASS_KEY` is configured and matches exactly.
+- Keep this key outside source control and rotate it like any credential.
+
 ## Vitest mock hoisting rule
 
 - Use `vi.hoisted(() => ({ ... }))` for mock fns consumed by `vi.mock` factories.

@@ -7,6 +7,54 @@ function normalizeNodeSlug(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '');
 }
 
+async function resolveNodeSlugForPack(input: {
+  requestedNodeSlug: string;
+  userId: string;
+  selectedPackId: string;
+}): Promise<string | null> {
+  const direct = await prisma.journeyNode.findFirst({
+    where: {
+      packId: input.selectedPackId,
+      slug: input.requestedNodeSlug,
+    },
+    select: { slug: true },
+  });
+  if (direct) {
+    return direct.slug;
+  }
+
+  const progress = await prisma.journeyProgress.findFirst({
+    where: {
+      userId: input.userId,
+      packId: input.selectedPackId,
+    },
+    orderBy: { lastUpdatedAt: 'desc' },
+    select: { journeyNode: true },
+  });
+  const progressSlug = progress?.journeyNode ? normalizeNodeSlug(progress.journeyNode.split('#')[0] ?? progress.journeyNode) : null;
+  if (progressSlug) {
+    const progressNode = await prisma.journeyNode.findFirst({
+      where: {
+        packId: input.selectedPackId,
+        slug: progressSlug,
+      },
+      select: { slug: true },
+    });
+    if (progressNode) {
+      return progressNode.slug;
+    }
+  }
+
+  const firstNode = await prisma.journeyNode.findFirst({
+    where: {
+      packId: input.selectedPackId,
+    },
+    orderBy: { orderIndex: 'asc' },
+    select: { slug: true },
+  });
+  return firstNode?.slug ?? null;
+}
+
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAuth(request, prisma);
   if (!auth.ok) {
@@ -37,11 +85,20 @@ export async function GET(request: Request): Promise<Response> {
     return fail({ code: 'NOT_FOUND', message: 'No selected pack' }, 404);
   }
 
+  const resolvedNodeSlug = await resolveNodeSlugForPack({
+    requestedNodeSlug: nodeSlug,
+    userId: auth.userId,
+    selectedPackId: profile.selectedPackId,
+  });
+  if (!resolvedNodeSlug) {
+    return fail({ code: 'NOT_FOUND', message: 'No journey nodes found for selected pack' }, 404);
+  }
+
   const assignments = await prisma.nodeMovie.findMany({
     where: {
       node: {
         packId: profile.selectedPackId,
-        slug: nodeSlug,
+        slug: resolvedNodeSlug,
       },
     },
     orderBy: [{ tier: 'asc' }, { coreRank: 'asc' }, { rank: 'asc' }],
@@ -153,7 +210,7 @@ export async function GET(request: Request): Promise<Response> {
     }));
 
   return ok({
-    nodeSlug,
+    nodeSlug: resolvedNodeSlug,
     core,
     extended,
   });

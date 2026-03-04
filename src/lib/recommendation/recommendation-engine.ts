@@ -81,6 +81,7 @@ export type CandidateConstraints = {
   packPrimaryGenre: string;
   packId?: string | null;
   journeyNodeSlug?: string;
+  minimumYear?: number | null;
 };
 
 export type RecommendationContext = {
@@ -445,6 +446,25 @@ function resolvePackSubgenrePreferences(horrorDna: unknown, packId: string | nul
     .filter((value): value is string => typeof value === 'string')
     .map((value) => value.trim().toLowerCase())
     .filter((value) => value.length > 0))];
+}
+
+function resolvePackMinimumYearPreference(horrorDna: unknown, packId: string | null | undefined): number | null {
+  if (!horrorDna || typeof horrorDna !== 'object' || !packId) {
+    return null;
+  }
+  const packPreferences = (horrorDna as Record<string, unknown>).packPreferences;
+  if (!packPreferences || typeof packPreferences !== 'object') {
+    return null;
+  }
+  const packPreference = (packPreferences as Record<string, unknown>)[packId];
+  if (!packPreference || typeof packPreference !== 'object') {
+    return null;
+  }
+  const minimumYear = (packPreference as Record<string, unknown>).minimumYear;
+  if (minimumYear === 1920 || minimumYear === 1930 || minimumYear === 1940 || minimumYear === 1950 || minimumYear === 1960 || minimumYear === 1970) {
+    return minimumYear;
+  }
+  return null;
 }
 
 const HORROR_SUBGENRE_PREFERENCE_ALIASES: Record<string, string[]> = {
@@ -900,10 +920,11 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
           : undefined
         : undefined,
       orderBy: { tmdbId: 'asc' },
-      select: { id: true, tmdbId: true, posterUrl: true, genres: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
+      select: { id: true, tmdbId: true, year: true, posterUrl: true, genres: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
     });
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
+      .filter((movie) => constraints.minimumYear === null || constraints.minimumYear === undefined || (movie.year !== null && movie.year >= constraints.minimumYear))
       .filter((movie) => (
         constraints.packId && usePackScopedPool
           ? true
@@ -1287,6 +1308,7 @@ async function resolveJourneyNodeWithCapacity(input: {
   targetCount: number;
   excludeRecentSkippedDays: number;
   packPrimaryGenre: string;
+  minimumYear: number | null;
 }): Promise<string> {
   if (!input.packId) {
     return input.preferredJourneyNode;
@@ -1353,6 +1375,7 @@ async function resolveJourneyNodeWithCapacity(input: {
           movie: {
             select: {
               id: true,
+              year: true,
               genres: true,
               posterUrl: true,
               posterLastValidatedAt: true,
@@ -1368,6 +1391,7 @@ async function resolveJourneyNodeWithCapacity(input: {
           movie: {
             select: {
               id: true,
+              year: true,
               genres: true,
               posterUrl: true,
               posterLastValidatedAt: true,
@@ -1379,6 +1403,7 @@ async function resolveJourneyNodeWithCapacity(input: {
     const availableCount = nodeAssignments
       .map((entry) => entry.movie)
       .filter((movie) => !excludedMovieIds.has(movie.id))
+      .filter((movie) => input.minimumYear === null || (movie.year !== null && movie.year >= input.minimumYear))
       .filter((movie) => normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(input.packPrimaryGenre.toLowerCase()))
       .filter((movie) => isRecommendationEligibleMovie({
         posterUrl: movie.posterUrl,
@@ -1398,6 +1423,17 @@ async function resolveJourneyNodeWithCapacity(input: {
       }
       return nodeSlug;
     }
+  }
+
+  const fallback = orderedSlugs[0];
+  if (fallback) {
+    console.info('[recommendations.engine] journey node fallback to first node', {
+      from: input.preferredJourneyNode,
+      to: fallback,
+      reason: 'no-node-met-target-capacity',
+      targetCount: input.targetCount,
+    });
+    return fallback;
   }
 
   return input.preferredJourneyNode;
@@ -1451,6 +1487,7 @@ export async function generateRecommendationBatchModern(
     targetCount,
     excludeRecentSkippedDays,
     packPrimaryGenre,
+    minimumYear: resolvePackMinimumYearPreference(userProfile?.horrorDNA, options.packId ?? null),
   });
 
   const countersStartedAt = nowMs();
@@ -1479,6 +1516,7 @@ export async function generateRecommendationBatchModern(
     packPrimaryGenre,
     packId: options.packId,
     journeyNodeSlug: resolvedJourneyNode,
+    minimumYear: resolvePackMinimumYearPreference(userProfile?.horrorDNA, options.packId ?? null),
   });
   console.info('[recommendations.engine] modern candidates generated', {
     durationMs: elapsedMs(candidateStartedAt),

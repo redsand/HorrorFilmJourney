@@ -4,7 +4,7 @@ import { CompanionActions } from '@/components/companion/CompanionActions';
 import { FurtherReadingSection } from '@/components/companion/FurtherReadingSection';
 import { CinematicContextCard } from '@/components/context/CinematicContextCard';
 import { ReasonPanel } from '@/components/context/ReasonPanel';
-import { JourneyMap, NextInJourney } from '@/components/journey';
+import { NextInJourney } from '@/components/journey';
 import { BottomNav, Card, Chip, LogoutIconButton, PosterImage, RatingBadges } from '@/components/ui';
 import type { ExternalReading } from '@/lib/contracts/companion-contract';
 import type { FilmContextExplanation } from '@/lib/context/build-film-context-explanation';
@@ -75,12 +75,6 @@ type NodeMoviesResponse = {
 type FilmContextApiPayload = {
   context: FilmContextExplanation | null;
   reasonPanel: SeasonReasonPanel | null;
-};
-type JourneyMapResponse = {
-  seasonSlug: string;
-  packSlug: string;
-  nodes: Array<{ slug: string; name: string; order: number; coreCount?: number; extendedCount?: number }>;
-  progress?: { completedNodeSlugs: string[]; currentNodeSlug?: string };
 };
 type NextInJourneyResponse = {
   nextCore: Array<{ tmdbId: number; title: string; year: number | null }>;
@@ -173,7 +167,7 @@ export default async function CompanionPage({
     payload = response.status === 200 ? response.data : null;
   }
   const primaryNodeSlug = payload?.metadata.nodes?.[0]?.slug ?? '';
-  const [nodeMovies, filmContext, journeyMap, nextInJourney] = payload
+  const [nodeMovies, filmContext, nextInJourney] = payload
     ? await Promise.all([
       primaryNodeSlug
         ? apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(primaryNodeSlug)}&limit=10`, { method: 'GET' })
@@ -182,11 +176,9 @@ export default async function CompanionPage({
         `/api/films/context?tmdbId=${payload.movie.tmdbId}${primaryNodeSlug ? `&nodeSlug=${encodeURIComponent(primaryNodeSlug)}` : ''}`,
         { method: 'GET' },
       ),
-      apiJson<JourneyMapResponse>('/api/journey/map', { method: 'GET' }),
       apiJson<NextInJourneyResponse>(`/api/journey/next-steps?tmdbId=${payload.movie.tmdbId}`, { method: 'GET' }),
     ])
     : [
-      { data: null, error: null, status: 200 },
       { data: null, error: null, status: 200 },
       { data: null, error: null, status: 200 },
       { data: null, error: null, status: 200 },
@@ -359,15 +351,13 @@ export default async function CompanionPage({
               {filmContext.data?.reasonPanel ? (
                 <ReasonPanel {...filmContext.data.reasonPanel} />
               ) : null}
-              {journeyMap.data && filmContext.data?.context ? (
-                <JourneyMap
-                  baseHref="/journey"
-                  currentNodeSlug={primaryNodeSlug}
-                  data={journeyMap.data}
-                  packSlug={journeyMap.data.packSlug}
-                  seasonSlug={journeyMap.data.seasonSlug}
-                />
-              ) : null}
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">See the full timeline and movement progression from your profile.</p>
+                <Link className="mt-2 inline-flex text-xs text-[var(--text)] underline-offset-2 hover:underline" href="/profile/journey-map">
+                  Open Journey Map
+                </Link>
+              </div>
               <NextInJourney data={nextInJourney.data} />
 
               {nodeMovies.data ? (

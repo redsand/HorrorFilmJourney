@@ -40,6 +40,40 @@ describe('captcha verification', () => {
     });
   });
 
+  it('passes when smoke bypass header matches configured key', async () => {
+    process.env.CAPTCHA_ENABLED = 'true';
+    process.env.RECAPTCHA_SECRET_KEY = 'secret';
+    process.env.CAPTCHA_SMOKE_BYPASS_KEY = 'smoke-key-123';
+    const result = await verifyCaptchaToken({
+      token: '',
+      request: new Request('http://localhost', {
+        headers: { 'x-cinemacodex-smoke-key': 'smoke-key-123' },
+      }),
+      expectedAction: 'login',
+    });
+
+    expect(result).toEqual({ ok: true });
+  });
+
+  it('fails when smoke bypass header is wrong and token is missing', async () => {
+    process.env.CAPTCHA_ENABLED = 'true';
+    process.env.RECAPTCHA_SECRET_KEY = 'secret';
+    process.env.CAPTCHA_SMOKE_BYPASS_KEY = 'smoke-key-123';
+    const result = await verifyCaptchaToken({
+      token: '',
+      request: new Request('http://localhost', {
+        headers: { 'x-cinemacodex-smoke-key': 'wrong-key' },
+      }),
+      expectedAction: 'login',
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      error: { code: 'CAPTCHA_REQUIRED', message: 'Captcha verification is required' },
+    });
+  });
+
   it('fails when score is below threshold', async () => {
     process.env.CAPTCHA_ENABLED = 'true';
     process.env.RECAPTCHA_SECRET_KEY = 'secret';
