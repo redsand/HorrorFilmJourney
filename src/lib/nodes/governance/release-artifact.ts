@@ -1,4 +1,5 @@
-import type { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 export type CreateSeasonNodeReleaseInput = {
   seasonId: string;
@@ -73,7 +74,9 @@ export async function createSeasonNodeReleaseFromNodeMovie(prisma: PrismaClient,
           rank: assignment.rank,
           source: assignment.source,
           score: assignment.score,
-          evidence: assignment.evidence,
+          evidence: assignment.evidence === null
+            ? Prisma.JsonNull
+            : assignment.evidence as Prisma.InputJsonValue,
         })),
         skipDuplicates: true,
       });

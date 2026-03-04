@@ -38,7 +38,7 @@ beforeEach(async () => {
   await resetDb();
   await seedStarterHorrorCatalog(prisma);
 
-  execSync('node --experimental-strip-types scripts/seed-season1-horror-subgenres.ts', {
+  execSync('tsx scripts/seed-season1-horror-subgenres.ts', {
     stdio: 'pipe',
     env: {
       ...process.env,

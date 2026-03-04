@@ -1,5 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { readFile } from 'node:fs/promises';
+import {
+  parseCastTop,
+  parseCountry,
+  parseDirector,
+  parseKeywords,
+  toGenreIds,
+  toGenreNames,
+} from '../src/lib/tmdb/tmdb-normalization.ts';
 
 type TmdbMovieDetails = {
   id?: number;
@@ -13,25 +21,16 @@ type TmdbMovieDetails = {
   overview?: string;
   production_countries?: Array<{ name?: string }>;
   keywords?: { keywords?: Array<{ name?: string }> };
+  credits?: {
+    cast?: Array<{ name?: string; character?: string }>;
+    crew?: Array<{ name?: string; job?: string }>;
+  };
 };
 
 const DEFAULT_GENRES = [27, 53, 9648, 878, 14, 18, 35, 12]; // broaden horror-adjacent discovery
 const DEFAULT_CONCURRENCY = 8;
 const DEFAULT_MAX_SCAN_IDS = 5000;
 const FETCH_TIMEOUT_MS = 12_000;
-
-const GENRE_NAME_BY_ID: Record<number, string> = {
-  27: 'horror',
-  53: 'thriller',
-  9648: 'mystery',
-  14: 'fantasy',
-  878: 'sci-fi',
-  80: 'crime',
-  18: 'drama',
-  35: 'comedy',
-  12: 'adventure',
-  16: 'animation',
-};
 
 function parseIntEnv(name: string, fallback: number): number {
   const parsed = Number.parseInt(process.env[name] ?? '', 10);
@@ -104,39 +103,8 @@ function tmdbPopularityScore(popularity?: number): { value: number; rawValue: st
   return { value: normalized, rawValue: `${normalized}/100` };
 }
 
-function toGenreIds(movie: TmdbMovieDetails): number[] {
-  if (Array.isArray(movie.genre_ids) && movie.genre_ids.length > 0) {
-    return movie.genre_ids.filter((id): id is number => Number.isInteger(id));
-  }
-  if (Array.isArray(movie.genres) && movie.genres.length > 0) {
-    return movie.genres
-      .map((genre) => genre.id)
-      .filter((id): id is number => Number.isInteger(id));
-  }
-  return [];
-}
-
 function toGenres(genreIds: number[]): string[] {
-  const mapped = genreIds
-    .map((id) => GENRE_NAME_BY_ID[id])
-    .filter((value): value is string => typeof value === 'string');
-  const derived = new Set(mapped.length > 0 ? mapped : ['horror']);
-  if (genreIds.includes(878)) {
-    derived.add('sci-fi-horror');
-  }
-  return [...derived];
-}
-
-function parseKeywords(movie: TmdbMovieDetails): string[] {
-  return (movie.keywords?.keywords ?? [])
-    .map((entry) => (typeof entry?.name === 'string' ? entry.name.trim().toLowerCase() : ''))
-    .filter((entry) => entry.length > 0)
-    .slice(0, 24);
-}
-
-function parseCountry(movie: TmdbMovieDetails): string | null {
-  const first = (movie.production_countries ?? []).find((entry) => typeof entry?.name === 'string' && entry.name.trim().length > 0);
-  return first?.name?.trim() ?? null;
+  return toGenreNames(genreIds);
 }
 
 function parseJsonStringArray(value: unknown): string[] {
@@ -170,7 +138,7 @@ async function fetchLatestTmdbId(apiKey: string): Promise<number> {
 }
 
 async function fetchMovieDetails(apiKey: string, tmdbId: number): Promise<TmdbMovieDetails | null> {
-  const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}&language=en-US&append_to_response=keywords`;
+  const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}&language=en-US&append_to_response=keywords,credits`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -292,6 +260,8 @@ async function main(): Promise<void> {
             genres: mergedGenres,
             keywords: parseKeywords(movie),
             country: parseCountry(movie),
+            director: parseDirector(movie.credits),
+            castTop: parseCastTop(movie.credits, 8),
           },
           update: {
             title: movie.title.trim(),
@@ -302,6 +272,8 @@ async function main(): Promise<void> {
             genres: mergedGenres,
             keywords: parseKeywords(movie),
             country: parseCountry(movie),
+            director: parseDirector(movie.credits),
+            castTop: parseCastTop(movie.credits, 8),
           },
           select: { id: true },
         });

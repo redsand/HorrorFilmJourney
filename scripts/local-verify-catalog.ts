@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { ensureLocalDatabaseOrThrow, runCommand, writeVerificationStamp } from './catalog-release-utils.ts';
-import { loadSeason1NodeGovernanceConfig, toPairKey } from '../src/lib/nodes/governance/index.ts';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
+
+function toPairKey(a: string, b: string): string {
+  return a < b ? `${a}||${b}` : `${b}||${a}`;
+}
 
 type CheckResult = {
   name: string;
@@ -53,7 +57,7 @@ async function main(): Promise<void> {
       throw new Error('Season 1 horror pack not found');
     }
     const pack = season.packs[0]!;
-    const governance = await loadSeason1NodeGovernanceConfig();
+    const governance = SEASON1_NODE_GOVERNANCE_CONFIG;
 
     checks.push({
       name: 'exactly-16-season1-nodes',

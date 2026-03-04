@@ -1,11 +1,11 @@
 # Season 1 Horror Required Subgenre Readiness
 
-Generated: 2026-03-04T03:10:11.580Z
-Run ID: season1-published-snapshot-test-run
+Generated: 2026-03-04T03:38:11.974Z
+Run ID: season1-governance-test-run
 Taxonomy version: season-1-horror-test-v3.5
 Max nodes per movie: 3
 Classifier assist: disabled
-Snapshot release: cmmbgl6jy00229kbe4zgejs98 (published)
+Snapshot release: cmmbhl7570022dpq3usrn6gnk (published)
 
 Requested curated titles: 320
 Assigned titles: 37

@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import type { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
 
 type SeedMovie = {
@@ -382,37 +383,28 @@ async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Prom
     });
 
     await prisma.nodeMovie.deleteMany({ where: { nodeId: upsertedNode.id } });
+    const rows: Prisma.NodeMovieCreateManyInput[] = [];
+    node.tmdbIds.forEach((tmdbId, rank) => {
+      const movieId = movieByTmdbId.get(tmdbId);
+      if (!movieId) {
+        return;
+      }
+      rows.push({
+        nodeId: upsertedNode.id,
+        movieId,
+        rank: rank + 1,
+        source: 'curated',
+        score: 1,
+        evidence: {
+          seed: 'seedStarterHorrorCatalog',
+          nodeSlug: node.slug,
+        },
+        runId: 'seed-starter-horror-catalog',
+        taxonomyVersion: 'season-1-foundational-v1',
+      });
+    });
     await prisma.nodeMovie.createMany({
-      data: node.tmdbIds
-        .map((tmdbId, rank) => {
-          const movieId = movieByTmdbId.get(tmdbId);
-          if (!movieId) {
-            return null;
-          }
-          return {
-            nodeId: upsertedNode.id,
-            movieId,
-            rank: rank + 1,
-            source: 'curated',
-            score: 1,
-            evidence: {
-              seed: 'seedStarterHorrorCatalog',
-              nodeSlug: node.slug,
-            },
-            runId: 'seed-starter-horror-catalog',
-            taxonomyVersion: 'season-1-foundational-v1',
-          };
-        })
-        .filter((item): item is {
-          nodeId: string;
-          movieId: string;
-          rank: number;
-          source: string;
-          score: number;
-          evidence: Record<string, unknown>;
-          runId: string;
-          taxonomyVersion: string;
-        } => Boolean(item)),
+      data: rows,
       skipDuplicates: true,
     });
   }
