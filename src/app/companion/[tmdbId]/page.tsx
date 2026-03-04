@@ -62,6 +62,12 @@ type CompanionResponse = {
   externalReadings?: ExternalReading[];
 };
 
+type NodeMoviesResponse = {
+  nodeSlug: string;
+  core: Array<{ tmdbId: number; title: string; year: number | null }>;
+  extended: Array<{ tmdbId: number; title: string; year: number | null }>;
+};
+
 const spoilerPolicyLabel: Record<SpoilerPolicy, string> = {
   NO_SPOILERS: 'No Spoilers!',
   LIGHT: 'Light Spoilers',
@@ -146,6 +152,10 @@ export default async function CompanionPage({
     isAdmin = meResponse.status === 200 && meResponse.data?.role === 'ADMIN';
     payload = response.status === 200 ? response.data : null;
   }
+  const primaryNodeSlug = payload?.metadata.nodes?.[0]?.slug ?? '';
+  const nodeMovies = primaryNodeSlug
+    ? (await apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(primaryNodeSlug)}&limit=10`, { method: 'GET' })).data
+    : null;
 
   const spoilerTabs: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
   const summaryLine = payload ? extractSummaryLine(payload.sections.productionNotes) : null;
@@ -310,6 +320,33 @@ export default async function CompanionPage({
               </div>
 
               <FurtherReadingSection externalReadings={payload.externalReadings} />
+
+              {nodeMovies ? (
+                <div className="space-y-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
+                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Core Journey</p>
+                  {nodeMovies.core.length > 0 ? (
+                    <ul className="space-y-1 text-sm">
+                      {nodeMovies.core.slice(0, 6).map((movie) => (
+                        <li key={`core-${movie.tmdbId}`}>{movie.title} {movie.year ? `(${movie.year})` : ''}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-[var(--text-muted)]">No core titles available.</p>
+                  )}
+                  {nodeMovies.extended.length > 0 ? (
+                    <details className="rounded border border-[var(--border)] px-2 py-1">
+                      <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                        Deep Cuts ({nodeMovies.extended.length})
+                      </summary>
+                      <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
+                        {nodeMovies.extended.slice(0, 6).map((movie) => (
+                          <li key={`extended-${movie.tmdbId}`}>{movie.title} {movie.year ? `(${movie.year})` : ''}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </Card>
 

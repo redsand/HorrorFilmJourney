@@ -34,7 +34,7 @@ export async function GET(request: Request): Promise<Response> {
               slug: true,
               name: true,
               movies: {
-                select: { movieId: true },
+                select: { movieId: true, tier: true, finalScore: true },
               },
             },
           },
@@ -49,15 +49,21 @@ export async function GET(request: Request): Promise<Response> {
   const pack = season.packs[0]!;
   const assignmentByMovie = new Map<string, string[]>();
   const nodeStats = pack.nodes.map((node) => {
-    for (const item of node.movies) {
+    const coreMovies = node.movies.filter((item) => item.tier === 'CORE');
+    const extendedMovies = node.movies.filter((item) => item.tier === 'EXTENDED');
+    for (const item of coreMovies) {
       const list = assignmentByMovie.get(item.movieId) ?? [];
       list.push(node.slug);
       assignmentByMovie.set(item.movieId, list);
     }
+    const coreThreshold = governance.nodes[node.slug]?.coreThreshold ?? governance.defaults.coreThreshold;
     return {
       slug: node.slug,
       name: node.name,
-      size: node.movies.length,
+      size: coreMovies.length,
+      coreCount: coreMovies.length,
+      extendedCount: extendedMovies.length,
+      capPressure: extendedMovies.filter((item) => item.finalScore >= coreThreshold).length - coreMovies.length,
       minEligible: resolvePerNodeMinEligible(governance, node.slug),
       targetSize: resolvePerNodeTargetSize(governance, node.slug),
     };

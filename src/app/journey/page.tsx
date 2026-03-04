@@ -87,6 +87,12 @@ type WatchlistResponse = {
   packSlug: string;
 };
 
+type NodeMoviesResponse = {
+  nodeSlug: string;
+  core: Array<{ tmdbId: number; title: string; year: number | null }>;
+  extended: Array<{ tmdbId: number; title: string; year: number | null }>;
+};
+
 function toWatchForTuple(watchFor: unknown): [string, string, string] {
   const entries = Array.isArray(watchFor)
     ? watchFor.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
@@ -275,6 +281,10 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
     : null;
   const watchlist = !unauthenticated
     ? (await apiJson<WatchlistResponse>(`/api/watchlist?page=${watchlistPage}&pageSize=6`, { method: 'GET' })).data
+    : null;
+  const activeJourneyNodeSlug = (experience?.bundle?.journeyNode ?? '').split('#')[0] ?? '';
+  const nodeMovies = (!unauthenticated && activeJourneyNodeSlug)
+    ? (await apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(activeJourneyNodeSlug)}&limit=12`, { method: 'GET' })).data
     : null;
   const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
   const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
@@ -513,6 +523,37 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
           <RefreshRecommendationsButton
             label={experience.bundle ? 'Refresh Recommendations' : 'Generate Recommendations'}
           />
+          {nodeMovies ? (
+            <Card>
+              <h2 className="text-lg font-semibold">Core Journey Picks</h2>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">{nodeMovies.nodeSlug}</p>
+              {nodeMovies.core.length > 0 ? (
+                <ul className="mt-3 space-y-2">
+                  {nodeMovies.core.slice(0, 8).map((movie) => (
+                    <li className="text-sm text-[var(--text)]" key={`core-${movie.tmdbId}`}>
+                      {movie.title} {movie.year ? `(${movie.year})` : ''}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 text-sm text-[var(--text-muted)]">No core titles available for this node.</p>
+              )}
+              {nodeMovies.extended.length > 0 ? (
+                <details className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
+                  <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                    Deep Cuts ({nodeMovies.extended.length})
+                  </summary>
+                  <ul className="mt-2 space-y-2">
+                    {nodeMovies.extended.slice(0, 8).map((movie) => (
+                      <li className="text-sm text-[var(--text-muted)]" key={`extended-${movie.tmdbId}`}>
+                        {movie.title} {movie.year ? `(${movie.year})` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+            </Card>
+          ) : null}
           <Card>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Watchlist</h2>

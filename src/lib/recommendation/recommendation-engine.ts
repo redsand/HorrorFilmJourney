@@ -22,6 +22,7 @@ import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 import { TasteComputationService } from '@/lib/taste/taste-computation-service';
 import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
 import { getPublishedSeasonNodeReleaseId } from '@/lib/nodes/governance';
+import { prioritizeCoreThenExtended } from '@/lib/recommendation/core-tier';
 import {
   computeEvidenceHashes,
   computeNarrativeHash,
@@ -977,9 +978,9 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         minConfidence,
       });
       if (curatedIds.length >= constraints.targetCount) {
-        return curatedIds;
+        return curatedIds.slice(0, constraints.targetCount);
       }
-      return [...curatedIds, ...fallbackLowConfidenceIds, ...fallbackIds];
+      return prioritizeCoreThenExtended(curatedIds, [...fallbackLowConfidenceIds, ...fallbackIds], constraints.targetCount);
     }
     console.info('[recommendations.engine] candidate poster quality', {
       totalMovies: allMovies.length,

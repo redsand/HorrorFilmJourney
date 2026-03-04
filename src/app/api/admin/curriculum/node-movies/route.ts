@@ -198,8 +198,12 @@ export async function POST(request: Request): Promise<Response> {
         nodeId: node.id,
         movieId: movie.id,
         rank,
+        tier: 'CORE',
+        coreRank: rank,
         source: 'override',
         score: 1,
+        finalScore: 1,
+        journeyScore: 1,
         evidence: {
           action: 'admin_node_movie_add',
           tmdbId: parsed.data.tmdbId,

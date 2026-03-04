@@ -59,6 +59,7 @@ type ScenarioResult = {
 };
 
 type TieredNodeRow = {
+  movieId: string;
   nodeSlug: string;
   tier: 'CORE' | 'EXTENDED';
   finalScore: number;
@@ -405,12 +406,14 @@ async function main(): Promise<void> {
         },
       },
       select: {
+        movieId: true,
         tier: true,
         finalScore: true,
         node: { select: { slug: true } },
       },
     });
     const tieredRows: TieredNodeRow[] = tieredRowsRaw.map((row) => ({
+      movieId: row.movieId,
       nodeSlug: row.node.slug,
       tier: row.tier,
       finalScore: row.finalScore,
@@ -622,6 +625,22 @@ async function main(): Promise<void> {
         const extendedRows = rows.filter((row) => row.tier === 'EXTENDED');
         const targetSize = resolvePerNodeTargetSize(governance, node.slug);
         const coreThreshold = governance.nodes[node.slug]?.coreThreshold ?? governance.defaults.coreThreshold;
+        const overlapExcludedOnly = extendedRows.filter((row) => {
+          if (row.finalScore < coreThreshold) {
+            return false;
+          }
+          const coreNodesForMovie = new Set(
+            tieredRows
+              .filter((entry) => entry.movieId === row.movieId && entry.tier === 'CORE')
+              .map((entry) => entry.nodeSlug),
+          );
+          if (coreNodesForMovie.size === 0) {
+            return false;
+          }
+          return governance.overlapConstraints.disallowedPairs.some(([a, b]) =>
+            (node.slug === a && coreNodesForMovie.has(b))
+            || (node.slug === b && coreNodesForMovie.has(a)));
+        }).length;
         return [node.slug, {
           coreCount: coreRows.length,
           extendedCount: extendedRows.length,
@@ -629,7 +648,7 @@ async function main(): Promise<void> {
             atTargetSize: rows[targetSize - 1]?.finalScore ?? null,
             atTargetSizePlusOne: rows[targetSize]?.finalScore ?? null,
           },
-          excludedOnlyDueToOverlapConstraints: 0,
+          excludedOnlyDueToOverlapConstraints: overlapExcludedOnly,
           capPressure: extendedRows.filter((row) => row.finalScore >= coreThreshold).length - coreRows.length,
         }];
       })),

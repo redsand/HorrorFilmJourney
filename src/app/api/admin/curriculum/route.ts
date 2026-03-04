@@ -96,6 +96,10 @@ export async function GET(request: Request): Promise<Response> {
       eraSubgenreFocus: string;
       movies: Array<{
         rank: number;
+        tier: 'CORE' | 'EXTENDED';
+        coreRank: number | null;
+        finalScore: number;
+        journeyScore: number;
         movie: {
           id: string;
           tmdbId: number;
