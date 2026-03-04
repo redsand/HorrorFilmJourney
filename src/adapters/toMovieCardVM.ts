@@ -4,6 +4,7 @@ import type { generateRecommendationBatch } from '@/lib/recommendation/recommend
 export type RecommendationBatchPayload = Awaited<ReturnType<typeof generateRecommendationBatch>>;
 
 const RECEPTION_FALLBACK_SUMMARY = 'Reception data currently unavailable.';
+const ALLOWED_SCORE_SCALES = new Set(['10', '100']);
 
 function toWatchFor(watchFor: unknown): [string, string, string] {
   const entries = Array.isArray(watchFor)
@@ -21,6 +22,16 @@ function toWatchFor(watchFor: unknown): [string, string, string] {
 
 export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] {
   const cards = batch.cards.map((card) => {
+    const sanitizedAdditional = Array.isArray(card.ratings?.additional)
+      ? card.ratings.additional
+        .filter((rating) =>
+          rating
+          && typeof rating.source === 'string'
+          && typeof rating.value === 'number'
+          && ALLOWED_SCORE_SCALES.has(rating.scale))
+        .slice(0, 3)
+      : [];
+
     const criticsScore =
       card.narrative.reception && typeof card.narrative.reception.critics === 'number'
         ? {
@@ -40,6 +51,10 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
         : undefined;
 
     const hasAggregates = Boolean(criticsScore || audienceScore);
+    const fallbackAdditional = criticsScore ?? audienceScore;
+    const normalizedAdditional = sanitizedAdditional.length > 0
+      ? sanitizedAdditional
+      : (fallbackAdditional ? [fallbackAdditional] : []);
 
     return {
       movie: {
@@ -48,7 +63,10 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
         ...(card.movie.year ? { year: card.movie.year } : {}),
         posterUrl: card.movie.posterUrl,
       },
-      ratings: card.ratings,
+      ratings: {
+        imdb: card.ratings.imdb,
+        additional: normalizedAdditional,
+      },
       reception: {
         ...(criticsScore ? { critics: criticsScore } : {}),
         ...(audienceScore ? { audience: audienceScore } : {}),

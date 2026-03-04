@@ -127,6 +127,40 @@ describe('provider request building and schema errors', () => {
     expect(result).toEqual({ answer: 'ok-multi-part' });
   });
 
+  it('retries Gemini once with higher max tokens when first response is truncated', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({
+          candidates: [{ finishReason: 'MAX_TOKENS', content: { parts: [{ text: '{"answer":"truncated' }] } }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({
+          candidates: [{ finishReason: 'STOP', content: { parts: [{ text: '{"answer":"ok-after-retry"}' }] } }],
+        }),
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new GeminiProvider('gem-key', 'gemini-test');
+    const result = await provider.generateJson<{ answer: string }>({
+      system: 'system',
+      user: 'user',
+      schemaName: 'TestSchema',
+      jsonSchema: { type: 'object', required: ['answer'] },
+      maxTokens: 256,
+    });
+
+    expect(result).toEqual({ answer: 'ok-after-retry' });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const firstPayload = JSON.parse(String((fetchMock.mock.calls[0] as [string, RequestInit])[1].body));
+    const secondPayload = JSON.parse(String((fetchMock.mock.calls[1] as [string, RequestInit])[1].body));
+    expect(firstPayload.generationConfig.maxOutputTokens).toBe(256);
+    expect(secondPayload.generationConfig.maxOutputTokens).toBeGreaterThan(256);
+  });
+
   it('builds Ollama fetch URL and payload', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

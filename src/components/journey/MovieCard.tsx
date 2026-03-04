@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
+import { JOURNEY_INTERACTION_SAVED_EVENT } from '@/components/journey/JourneyMasteryCard';
 import { Button, Card, Chip, PosterImage, RatingBadges } from '@/components/ui';
 import { QuickPoll } from '@/components/journey/QuickPoll';
 
@@ -10,7 +11,6 @@ type MovieCardProps = {
   card: MovieCardVM;
   recommendationItemId?: string;
   onInteractionSaved?: (tmdbId: number) => void;
-  onRegenerated?: () => void;
   isRefreshing?: boolean;
 };
 
@@ -42,7 +42,6 @@ export function MovieCard({
   card,
   recommendationItemId,
   onInteractionSaved,
-  onRegenerated,
   isRefreshing = false,
 }: MovieCardProps) {
   const [pollStatus, setPollStatus] = useState<PollStatus | null>(null);
@@ -228,6 +227,7 @@ export function MovieCard({
                     status: 'SKIPPED',
                     ...(recommendationItemId ? { recommendationItemId } : {}),
                   });
+                  window.dispatchEvent(new Event(JOURNEY_INTERACTION_SAVED_EVENT));
                   onInteractionSaved?.(card.movie.tmdbId);
                 } finally {
                   setSkipPending(false);
@@ -260,17 +260,14 @@ export function MovieCard({
           if (!pollStatus) {
             return;
           }
-          const response = await postInteraction({
+          await postInteraction({
             tmdbId: card.movie.tmdbId,
             status: pollStatus,
             ...(recommendationItemId ? { recommendationItemId } : {}),
             ...payload,
           });
-          if (response.data?.nextBatch?.batchId) {
-            onRegenerated?.();
-          } else {
-            onInteractionSaved?.(card.movie.tmdbId);
-          }
+          window.dispatchEvent(new Event(JOURNEY_INTERACTION_SAVED_EVENT));
+          onInteractionSaved?.(card.movie.tmdbId);
         }}
         open={pollStatus !== null}
         status={pollStatus ?? 'WATCHED'}

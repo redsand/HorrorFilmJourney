@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { MovieCard } from '@/components/journey/MovieCard';
+import { JOURNEY_INTERACTION_SAVED_EVENT } from '@/components/journey/JourneyMasteryCard';
 import { Card } from '@/components/ui';
 
 type RecommendationBundleProps = {
@@ -23,7 +23,6 @@ export function RecommendationBundle({
   batchId,
   interactionContext = [],
 }: RecommendationBundleProps) {
-  const router = useRouter();
   const [visibleCards, setVisibleCards] = useState(cards);
   const [visibleBatchId, setVisibleBatchId] = useState(batchId);
   const [refreshingTmdbIds, setRefreshingTmdbIds] = useState<Set<number>>(new Set());
@@ -50,14 +49,12 @@ export function RecommendationBundle({
         credentials: 'include',
       });
       if (!response.ok) {
-        router.refresh();
         return;
       }
 
       const payload = (await response.json().catch(() => null)) as { data?: RecommendationApiPayload } | null;
       const nextBatch = payload?.data;
       if (!nextBatch || !Array.isArray(nextBatch.cards)) {
-        router.refresh();
         return;
       }
 
@@ -69,7 +66,6 @@ export function RecommendationBundle({
       });
 
       if (!replacement) {
-        router.refresh();
         return;
       }
 
@@ -93,6 +89,7 @@ export function RecommendationBundle({
         }
         return next;
       });
+      window.dispatchEvent(new Event(JOURNEY_INTERACTION_SAVED_EVENT));
     } finally {
       setRefreshingTmdbIds((current) => {
         const next = new Set(current);
@@ -123,7 +120,6 @@ export function RecommendationBundle({
           card={card}
           isRefreshing={refreshingTmdbIds.has(card.movie.tmdbId)}
           key={card.movie.tmdbId}
-          onRegenerated={() => router.refresh()}
           onInteractionSaved={replaceSingleCard}
           recommendationItemId={contextMap.get(card.movie.tmdbId)}
         />

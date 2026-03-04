@@ -42,12 +42,13 @@ function elapsedMs(startedAt: number): number {
 function toRatings(
   ratings: Array<{ source: string; value: number; scale: string; rawValue: string | null }>,
 ): RatingBundle | null {
-  const imdb = ratings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || ratings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
+  const validScaleRatings = ratings.filter((rating) => rating.scale === '10' || rating.scale === '100');
+  const imdb = validScaleRatings.find((rating) => rating.source === 'IMDB');
+  if (!imdb || validScaleRatings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
     return null;
   }
 
-  const additional = ratings
+  const additional = validScaleRatings
     .filter((rating) => rating.source !== 'IMDB')
     .slice(0, 3)
     .map((rating) => ({
@@ -761,7 +762,7 @@ export async function composeCardNarrative(input: {
         evidence: evidenceSummary.map((e, index) => ({ id: `E${index + 1}`, ...e })),
       }),
       temperature: 0.2,
-      maxTokens: 900,
+      maxTokens: 1600,
     });
 
     const parsed = recommendationCardNarrativeSchema.safeParse(generated);

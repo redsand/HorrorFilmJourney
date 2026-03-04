@@ -44,6 +44,10 @@ function printResult(item: CheckResult): void {
   console.log(`[local.verify-catalog] ${status} ${item.name} :: ${item.details}`);
 }
 
+function printWarning(name: string, details: string): void {
+  console.warn(`[local.verify-catalog] WARN ${name} :: ${details}`);
+}
+
 function parseGenres(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
@@ -388,6 +392,18 @@ async function main(): Promise<void> {
     });
     const coverageMetrics = computeCoverageGateMetrics(coverageMovies, COVERAGE_THRESHOLDS.sampleSize);
     const coverageGate = evaluateCoverageGate(coverageMetrics, COVERAGE_THRESHOLDS);
+    if (coverageMetrics.directorAndCastTopCoverage < 0.9) {
+      printWarning(
+        'credits-coverage-recommended-threshold',
+        `directorAndCastTopCoverage ${(coverageMetrics.directorAndCastTopCoverage * 100).toFixed(2)}% < 90.00% sampleTmdbIds=[${coverageMetrics.sampleIds.missingDirectorOrCast.join(',')}]`,
+      );
+    }
+    if (coverageMetrics.runtimeCoverage < 0.95) {
+      printWarning(
+        'runtime-coverage-recommended-threshold',
+        `runtimeCoverage ${(coverageMetrics.runtimeCoverage * 100).toFixed(2)}% < 95.00% sampleTmdbIds=[${coverageMetrics.sampleIds.missingRuntime.join(',')}]`,
+      );
+    }
     const creditsCoveragePass = coverageMetrics.directorAndCastTopCoverage >= COVERAGE_THRESHOLDS.directorAndCastTopCoverageMin;
     const creditsCoverageDetails = creditsCoveragePass
       ? `directorAndCastTopCoverage ${(coverageMetrics.directorAndCastTopCoverage * 100).toFixed(2)}% >= ${(COVERAGE_THRESHOLDS.directorAndCastTopCoverageMin * 100).toFixed(2)}%`

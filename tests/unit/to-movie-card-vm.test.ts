@@ -104,4 +104,20 @@ describe('toMovieCardVM adapter', () => {
     expect(result[0]?.evidence).toHaveLength(1);
     expect(result[0]?.evidence[0]?.sourceName).toBe('Wikipedia');
   });
+
+  it('filters non-score additional ratings and falls back to reception aggregate', () => {
+    const batch = buildBatch({
+      reception: {
+        critics: 91,
+      },
+    });
+    batch.cards[0]!.ratings.additional = [
+      { source: 'TMDB_RUNTIME', value: 122, scale: 'MINUTES' },
+    ];
+
+    const result = toMovieCardVM(batch);
+    expect(result[0]?.ratings.additional).toEqual([
+      { source: 'Critics Aggregate', value: 91, scale: '100' },
+    ]);
+  });
 });

@@ -14,6 +14,7 @@
   --cc-shadow: rgba(0, 0, 0, 0.5);
   --cc-focus: #f07922;
   --cc-link: #ff5a45;
+  --cc-link-muted: var(--cc-text-muted);
   --cc-success: #3fa576;
   --cc-warning: #e0a43b;
   --cc-mist: #5b8f78;
@@ -44,6 +45,7 @@
   --cc-shadow: rgba(0, 0, 0, 0.5);
   --cc-focus: #f07922;
   --cc-link: #ff5a45;
+  --cc-link-muted: var(--cc-text-muted);
   --cc-success: #3fa576;
   --cc-warning: #e0a43b;
   --cc-mist: #5b8f78;
@@ -74,6 +76,13 @@ body {
 
 a {
   color: var(--cc-link);
+}
+
+a.cc-link-muted,
+a.cc-link-muted:visited,
+a.cc-link-muted:hover,
+a.cc-link-muted:active {
+  color: var(--cc-link-muted);
 }
 
 :focus-visible {

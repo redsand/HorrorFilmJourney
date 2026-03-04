@@ -1,5 +1,6 @@
 import { loadSeasonOntology } from '@/lib/ontology/loadSeasonOntology';
 import { loadSeasonPrototypePack } from '@/lib/ontology/loadSeasonPrototypePack';
+import { computeLocalTextEmbedding } from '@/lib/movie/local-embedding';
 
 export type PrototypeNodeScore = {
   nodeSlug: string;
@@ -57,6 +58,15 @@ function averageVectors(vectors: number[][]): number[] {
   return out.map((value) => value / vectors.length);
 }
 
+function buildTitlePrototypeVectors(titles: string[] | undefined, dim: number): number[][] {
+  if (!Array.isArray(titles) || titles.length === 0) {
+    return [];
+  }
+  return titles
+    .map((title) => computeLocalTextEmbedding(title, dim))
+    .filter((vector) => vector.length === dim);
+}
+
 export function scorePrototypeSimilarityForSeasonNodes(input: ScorePrototypeSimilarityInput): PrototypeNodeScore[] {
   if (!Array.isArray(input.movieEmbedding) || input.movieEmbedding.length === 0) {
     throw new Error('movieEmbedding must be a non-empty numeric vector');
@@ -75,14 +85,18 @@ export function scorePrototypeSimilarityForSeasonNodes(input: ScorePrototypeSimi
   const prototypePack = loadSeasonPrototypePack(input.seasonId, taxonomyVersion);
   const allowed = input.nodeSlugs ? new Set(input.nodeSlugs) : null;
   const prototypesByNode = new Map(
-    prototypePack.nodes.map((node) => [node.nodeSlug, node.positivePrototypes] as const),
+    prototypePack.nodes.map((node) => [node.nodeSlug, node] as const),
   );
 
   return ontology.nodes
     .filter((node) => (allowed ? allowed.has(node.slug) : true))
     .map((node) => {
-      const prototypes = prototypesByNode.get(node.slug) ?? [];
-      const compatible = prototypes.filter((vector) => vector.length === input.movieEmbedding.length);
+      const nodePrototype = prototypesByNode.get(node.slug);
+      const vectorDim = input.movieEmbedding.length;
+      const numericPrototypes = (nodePrototype?.positivePrototypes ?? [])
+        .filter((vector) => vector.length === vectorDim);
+      const titlePrototypes = buildTitlePrototypeVectors(nodePrototype?.positiveTitles, vectorDim);
+      const compatible = [...numericPrototypes, ...titlePrototypes];
       if (compatible.length === 0) {
         return {
           nodeSlug: node.slug,
@@ -107,4 +121,3 @@ export function scorePrototypeSimilarityForSeasonNodes(input: ScorePrototypeSimi
     })
     .sort((a, b) => (b.prototypeScore - a.prototypeScore) || a.nodeSlug.localeCompare(b.nodeSlug));
 }
-

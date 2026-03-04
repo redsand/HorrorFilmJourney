@@ -351,36 +351,38 @@ export class GeminiProvider implements LlmProvider {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
     const startedAt = Date.now();
     const geminiSchema = normalizeSchemaForGemini(args.jsonSchema);
-    const primaryPayload = {
-      generationConfig: {
-        temperature: args.temperature ?? 0.2,
-        maxOutputTokens: args.maxTokens ?? 1024,
-        responseMimeType: 'application/json',
-        responseSchema: geminiSchema,
-        // Compatibility aliases used by some gateways.
-        response_mime_type: 'application/json',
-        response_schema: geminiSchema,
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: buildInstruction(args) }],
+    const buildPayloads = (maxOutputTokens: number): { primaryPayload: object; compatPayload: object } => ({
+      primaryPayload: {
+        generationConfig: {
+          temperature: args.temperature ?? 0.2,
+          maxOutputTokens,
+          responseMimeType: 'application/json',
+          responseSchema: geminiSchema,
+          // Compatibility aliases used by some gateways.
+          response_mime_type: 'application/json',
+          response_schema: geminiSchema,
         },
-      ],
-    };
-    const compatPayload = {
-      generationConfig: {
-        temperature: args.temperature ?? 0.2,
-        maxOutputTokens: args.maxTokens ?? 1024,
-        responseMimeType: 'application/json',
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: buildInstruction(args) }],
+          },
+        ],
       },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: buildInstruction(args) }],
+      compatPayload: {
+        generationConfig: {
+          temperature: args.temperature ?? 0.2,
+          maxOutputTokens,
+          responseMimeType: 'application/json',
         },
-      ],
-    };
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: buildInstruction(args) }],
+          },
+        ],
+      },
+    });
 
     async function postGemini(payload: unknown): Promise<{
       ok: boolean;
@@ -416,50 +418,73 @@ export class GeminiProvider implements LlmProvider {
       return { ok: response.ok, status: response.status, body, text };
     }
 
-    let attempt = await postGemini(primaryPayload);
-    if (!attempt.ok && attempt.status === 400) {
-      console.warn('[llm.gemini] primary payload rejected, retrying compat payload', {
-        status: attempt.status,
-        errorPreview: attempt.text.slice(0, 300),
-      });
-      attempt = await postGemini(compatPayload);
-    }
-    if (!attempt.ok) {
-      throw new Error(`Gemini request failed with status ${attempt.status}: ${attempt.text.slice(0, 300)}`);
-    }
+    const baseMaxTokens = args.maxTokens ?? 1024;
 
-    const body = attempt.body as {
-      promptFeedback?: unknown;
-      usageMetadata?: unknown;
+    const executeGeminiAttempt = async (maxOutputTokens: number): Promise<{
+      parsed: unknown;
+      finishReason: string | null;
+    }> => {
+      const { primaryPayload, compatPayload } = buildPayloads(maxOutputTokens);
+      let attempt = await postGemini(primaryPayload);
+      if (!attempt.ok && attempt.status === 400) {
+        console.warn('[llm.gemini] primary payload rejected, retrying compat payload', {
+          status: attempt.status,
+          errorPreview: attempt.text.slice(0, 300),
+        });
+        attempt = await postGemini(compatPayload);
+      }
+      if (!attempt.ok) {
+        throw new Error(`Gemini request failed with status ${attempt.status}: ${attempt.text.slice(0, 300)}`);
+      }
+
+      const body = attempt.body as {
+        promptFeedback?: unknown;
+        usageMetadata?: unknown;
+      };
+      const collected = collectGeminiText(attempt.body);
+      if (geminiDebugEnabled()) {
+        console.info('[llm.gemini] shape', {
+          topLevelKeys: Object.keys(body ?? {}).slice(0, 20),
+          candidateCount: collected.candidateCount,
+          partCount: collected.partCount,
+          finishReason: collected.finishReason,
+          hasPromptFeedback: Boolean(body?.promptFeedback),
+          maxOutputTokens,
+        });
+      }
+
+      const text = collected.text;
+      if (typeof text !== 'string') {
+        throw new LlmSchemaError('Gemini response did not include text content');
+      }
+
+      try {
+        const parsed = extractJsonObject(text);
+        return {
+          parsed,
+          finishReason: collected.finishReason,
+        };
+      } catch (error) {
+        console.warn('[llm.gemini] parse failed', {
+          error: error instanceof Error ? error.message : 'unknown',
+          finishReason: collected.finishReason,
+          maxOutputTokens,
+          textPreview: text.slice(0, 320),
+          textTail: text.slice(-180),
+        });
+        if (collected.finishReason === 'MAX_TOKENS' && maxOutputTokens <= baseMaxTokens) {
+          const retryMaxTokens = Math.max(baseMaxTokens * 2, 1536);
+          console.warn('[llm.gemini] retrying after MAX_TOKENS parse failure', {
+            previousMaxTokens: maxOutputTokens,
+            retryMaxTokens,
+          });
+          return executeGeminiAttempt(retryMaxTokens);
+        }
+        throw error;
+      }
     };
-    const collected = collectGeminiText(attempt.body);
-    if (geminiDebugEnabled()) {
-      console.info('[llm.gemini] shape', {
-        topLevelKeys: Object.keys(body ?? {}).slice(0, 20),
-        candidateCount: collected.candidateCount,
-        partCount: collected.partCount,
-        finishReason: collected.finishReason,
-        hasPromptFeedback: Boolean(body?.promptFeedback),
-      });
-    }
 
-    const text = collected.text;
-    if (typeof text !== 'string') {
-      throw new LlmSchemaError('Gemini response did not include text content');
-    }
-
-    let parsed: unknown;
-    try {
-      parsed = extractJsonObject(text);
-    } catch (error) {
-      console.warn('[llm.gemini] parse failed', {
-        error: error instanceof Error ? error.message : 'unknown',
-        finishReason: collected.finishReason,
-        textPreview: text.slice(0, 320),
-        textTail: text.slice(-180),
-      });
-      throw error;
-    }
+    const { parsed } = await executeGeminiAttempt(baseMaxTokens);
     validateBySchemaShape(parsed, args.jsonSchema);
     console.info('[llm.gemini] completed', { durationMs: Date.now() - startedAt });
     return parsed as T;

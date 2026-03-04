@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
-import { RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
-import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
+import { JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
+import { BottomNav, Button, Card } from '@/components/ui';
 import { getPackSubgenreOptions, MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 import { getPackCopy } from '@/lib/packs/pack-copy';
 
@@ -289,6 +289,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
   const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
   const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
   const onboardingPackCopy = getPackCopy(onboardingPackSlug);
+  const hasWatchedAtLeastOne = (progression?.completedCount ?? 0) > 0;
 
   let recommendations: RecommendationResponse | null = null;
   if (!unauthenticated && (experience?.state === 'SHOW_RECOMMENDATION_BUNDLE' || experience?.state === 'SHOW_QUICK_POLL')) {
@@ -497,13 +498,19 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
       )}
 
       {(experience?.state === 'SHOW_RECOMMENDATION_BUNDLE' || experience?.state === 'SHOW_QUICK_POLL') && (
-        <>
-          {experience.state === 'SHOW_QUICK_POLL' && (
+        <section className="space-y-4" id="recommendations-panel">
+          {experience.state === 'SHOW_QUICK_POLL' && hasWatchedAtLeastOne && (
             <Card>
               <h2 className="text-lg font-semibold">Quick poll ready</h2>
               <p className="mt-2 text-sm text-[var(--text-muted)]">
                 {experience.quickPoll?.prompt ?? 'Give quick feedback on your latest choice, then continue your journey.'}
               </p>
+              <Link
+                className="mt-3 inline-flex text-sm text-[var(--text)] underline-offset-2 hover:underline"
+                href="#recommendations-panel"
+              >
+                Go to recommendations
+              </Link>
             </Card>
           )}
           {recommendations?.cards?.length ? (
@@ -530,8 +537,17 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
               {nodeMovies.core.length > 0 ? (
                 <ul className="mt-3 space-y-2">
                   {nodeMovies.core.slice(0, 8).map((movie) => (
-                    <li className="text-sm text-[var(--text)]" key={`core-${movie.tmdbId}`}>
-                      {movie.title} {movie.year ? `(${movie.year})` : ''}
+                    <li className="text-sm" key={`core-${movie.tmdbId}`}>
+                      <Link
+                        className="cc-link-muted inline-flex items-center gap-1.5 no-underline underline-offset-2 hover:underline"
+                        href={`/companion/${movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+                      >
+                        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+                          <path d="M12 3 4 7v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                          <path d="M9.5 12.5 11 14l3.5-3.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                        </svg>
+                        {movie.title} {movie.year ? `(${movie.year})` : ''}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -545,8 +561,16 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
                   </summary>
                   <ul className="mt-2 space-y-2">
                     {nodeMovies.extended.slice(0, 8).map((movie) => (
-                      <li className="text-sm text-[var(--text-muted)]" key={`extended-${movie.tmdbId}`}>
-                        {movie.title} {movie.year ? `(${movie.year})` : ''}
+                      <li
+                        className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[rgba(18,18,22,0.7)] px-2 py-1.5 text-sm text-[var(--text-muted)]"
+                        key={`extended-${movie.tmdbId}`}
+                      >
+                        <Link
+                          className="min-w-0 truncate text-[var(--text)] underline-offset-2 hover:underline"
+                          href={`/companion/${movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+                        >
+                          {movie.title} {movie.year ? `(${movie.year})` : ''}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -610,7 +634,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
               </p>
             )}
           </Card>
-        </>
+        </section>
       )}
 
       {experience?.state === 'SHOW_HISTORY' && (
@@ -630,28 +654,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
       )}
 
       {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' && (
-        <Card className="mt-2">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              {progression ? (
-                <div className="w-[220px]">
-                  <p className="mb-1 text-[11px] text-[var(--text-muted)]">
-                    Mastery {progression.completedCount}/{progression.nextMilestone}
-                  </p>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
-                    <div
-                      className="h-full rounded-full bg-[linear-gradient(90deg,rgba(127,29,29,0.95),rgba(220,38,38,0.95))]"
-                      style={{
-                        width: `${Math.max(5, Math.min(100, Math.round((progression.completedCount / Math.max(1, progression.nextMilestone)) * 100)))}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ) : <p className="text-xs text-[var(--text-muted)]">Mastery progress will appear after your first logged watch.</p>}
-            </div>
-            <LogoutIconButton />
-          </div>
-        </Card>
+        <JourneyMasteryCard initialProgression={progression} />
       )}
 
       {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' && (

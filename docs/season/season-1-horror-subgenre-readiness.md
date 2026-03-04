@@ -1,36 +1,36 @@
 # Season 1 Horror Required Subgenre Readiness
 
-Generated: 2026-03-04T15:44:22.208Z
-Run ID: season1-node-calibrated-rebuild-2026-03-04
+Generated: 2026-03-04T17:39:57.674Z
+Run ID: season1-weak-supervision-2026-03-04T17:38:36.999Z
 Taxonomy version: season-1-horror-v3.5
 Max nodes per movie: 3
 Classifier assist: disabled
-Snapshot release: cmmc7j23x017ib69ep34fne0o (published)
+Snapshot release: cmmcbnpjx0zr0onfgt99b6xdb (published)
 
 Requested curated titles: 371
-Assigned titles: 1529
-Unresolved curated titles: 38
+Assigned titles: 1203
+Unresolved curated titles: 39
 
 ## Per-node
 
 | Node | Requested | Curated Core | Weak Core | Extended | Assigned | Target Core | Min Core | Quality Floor | Core Threshold | Core Min Used | Picked % | Eligible Extended | Overlap Excl. | Below min | Unresolved |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |
-| supernatural-horror | 30 | 30 | 1 | 43 | 74 | 120 | 80 | 0.70 | 0.78 | 0.78 | 33.3% | 44 | 0 | YES | 0 |
-| psychological-horror | 23 | 18 | 2 | 1 | 21 | 120 | 80 | 0.70 | 0.78 | 0.74 | 100.0% | 3 | 0 | YES | 5 |
-| slasher-serial-killer | 29 | 28 | 4 | 153 | 185 | 120 | 80 | 0.70 | 0.78 | 0.78 | 33.3% | 157 | 0 | YES | 1 |
-| creature-monster | 22 | 22 | 15 | 138 | 175 | 120 | 80 | 0.70 | 0.78 | 0.75 | 93.8% | 153 | 0 | YES | 0 |
-| body-horror | 21 | 19 | 1 | 81 | 101 | 120 | 80 | 0.70 | 0.78 | 0.72 | 16.7% | 82 | 0 | YES | 2 |
-| cosmic-horror | 21 | 16 | 1 | 14 | 31 | 120 | 80 | 0.68 | 0.76 | 0.72 | 20.0% | 15 | 0 | YES | 5 |
-| folk-horror | 21 | 19 | 1 | 50 | 70 | 120 | 80 | 0.70 | 0.78 | 0.72 | 25.0% | 51 | 0 | YES | 2 |
-| sci-fi-horror | 25 | 23 | 3 | 21 | 47 | 120 | 80 | 0.68 | 0.76 | 0.78 | 60.0% | 24 | 0 | YES | 2 |
-| found-footage | 20 | 18 | 1 | 58 | 77 | 120 | 80 | 0.70 | 0.78 | 0.75 | 50.0% | 59 | 0 | YES | 2 |
-| survival-horror | 25 | 22 | 0 | 109 | 131 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 109 | 0 | YES | 3 |
-| apocalyptic-horror | 24 | 23 | 1 | 27 | 51 | 120 | 80 | 0.68 | 0.76 | 0.73 | 33.3% | 28 | 0 | YES | 1 |
-| gothic-horror | 22 | 20 | 0 | 98 | 118 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 98 | 0 | YES | 2 |
-| horror-comedy | 21 | 20 | 6 | 111 | 137 | 120 | 80 | 0.68 | 0.75 | 0.72 | 100.0% | 117 | 0 | YES | 1 |
-| splatter-extreme | 23 | 16 | 1 | 113 | 130 | 120 | 80 | 0.70 | 0.78 | 0.72 | 16.7% | 114 | 0 | YES | 7 |
-| social-domestic-horror | 22 | 20 | 10 | 125 | 155 | 120 | 80 | 0.70 | 0.78 | 0.76 | 90.9% | 135 | 0 | YES | 2 |
-| experimental-horror | 22 | 19 | 1 | 6 | 26 | 120 | 80 | 0.68 | 0.75 | 0.73 | 100.0% | 7 | 0 | YES | 3 |
+| supernatural-horror | 30 | 30 | 2 | 89 | 121 | 120 | 80 | 0.70 | 0.78 | 0.76 | 33.3% | 91 | 0 | YES | 0 |
+| psychological-horror | 23 | 18 | 1 | 15 | 34 | 120 | 80 | 0.70 | 0.78 | 0.75 | 100.0% | 16 | 0 | YES | 5 |
+| slasher-serial-killer | 29 | 28 | 0 | 39 | 67 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 39 | 0 | YES | 1 |
+| creature-monster | 22 | 22 | 2 | 70 | 94 | 120 | 80 | 0.70 | 0.78 | 0.76 | 50.0% | 72 | 0 | YES | 0 |
+| body-horror | 21 | 19 | 0 | 30 | 49 | 120 | 80 | 0.70 | 0.78 | 1.00 | 0.0% | 30 | 0 | YES | 2 |
+| cosmic-horror | 21 | 15 | 2 | 13 | 30 | 120 | 80 | 0.68 | 0.76 | 0.70 | 66.7% | 15 | 0 | YES | 6 |
+| folk-horror | 21 | 19 | 1 | 39 | 59 | 120 | 80 | 0.70 | 0.78 | 0.79 | 100.0% | 40 | 0 | YES | 2 |
+| sci-fi-horror | 25 | 23 | 8 | 92 | 123 | 120 | 80 | 0.68 | 0.76 | 0.69 | 88.9% | 100 | 0 | YES | 2 |
+| found-footage | 20 | 18 | 0 | 5 | 23 | 120 | 80 | 0.70 | 0.78 | 1.00 | 0.0% | 5 | 0 | YES | 2 |
+| survival-horror | 25 | 22 | 2 | 50 | 74 | 120 | 80 | 0.70 | 0.78 | 0.77 | 66.7% | 52 | 0 | YES | 3 |
+| apocalyptic-horror | 24 | 23 | 3 | 59 | 85 | 120 | 80 | 0.68 | 0.76 | 0.76 | 75.0% | 62 | 0 | YES | 1 |
+| gothic-horror | 22 | 20 | 1 | 19 | 40 | 120 | 80 | 0.70 | 0.78 | 0.72 | 100.0% | 20 | 0 | YES | 2 |
+| horror-comedy | 21 | 20 | 2 | 151 | 173 | 120 | 80 | 0.68 | 0.75 | 0.73 | 40.0% | 153 | 0 | YES | 1 |
+| splatter-extreme | 23 | 16 | 5 | 59 | 80 | 120 | 80 | 0.70 | 0.78 | 0.70 | 83.3% | 64 | 0 | YES | 7 |
+| social-domestic-horror | 22 | 20 | 1 | 102 | 123 | 120 | 80 | 0.70 | 0.78 | 0.74 | 33.3% | 103 | 0 | YES | 2 |
+| experimental-horror | 22 | 19 | 2 | 7 | 28 | 120 | 80 | 0.68 | 0.75 | 0.74 | 100.0% | 9 | 0 | YES | 3 |
 
 ## Unresolved curated titles
 
@@ -47,6 +47,7 @@ Unresolved curated titles: 38
 - cosmic-horror: Resolution (2012) - not found in local catalog
 - cosmic-horror: The Call of Cthulhu (2005) - not found in local catalog
 - cosmic-horror: The Borderlands (2013) - not found in local catalog
+- cosmic-horror: Coherence (2013) - not found in local catalog
 - folk-horror: Wake Wood (2009) - not found in local catalog
 - folk-horror: Hagazussa (2017) - not found in local catalog
 - sci-fi-horror: Cube (1997) - not found in local catalog

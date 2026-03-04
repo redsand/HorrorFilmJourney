@@ -27,6 +27,11 @@ import {
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
 import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
 import { computeJourneyWorthiness, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
+import {
+  LOCAL_MOVIE_EMBEDDING_DIM,
+  LOCAL_MOVIE_EMBEDDING_MODEL,
+  computeLocalMovieEmbedding,
+} from '../src/lib/movie/local-embedding.ts';
 import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
 import { getSeason1MustIncludeForNode } from '../src/config/seasons/season1-must-include.ts';
 import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
@@ -523,8 +528,31 @@ async function main(): Promise<void> {
       },
     });
 
+    const embeddingUpserts: Array<{ movieId: string; vector: number[] }> = [];
     const allMovies: CatalogMovie[] = allMoviesRaw.map((movie) => {
       const genres = parseJsonStringArray(movie.genres);
+      const keywords = parseJsonStringArray(movie.keywords);
+      const cast = parseCastNames(movie.castTop);
+      const persistedEmbedding = Array.isArray(movie.embedding?.vectorJson)
+        ? movie.embedding.vectorJson.filter((entry): entry is number => typeof entry === 'number' && Number.isFinite(entry))
+        : [];
+      const embeddingVector = persistedEmbedding.length === LOCAL_MOVIE_EMBEDDING_DIM
+        ? persistedEmbedding
+        : computeLocalMovieEmbedding({
+          title: movie.title,
+          year: movie.year,
+          synopsis: movie.synopsis,
+          genres,
+          keywords,
+          director: movie.director,
+          castTop: cast,
+        }, LOCAL_MOVIE_EMBEDDING_DIM);
+      if (persistedEmbedding.length !== LOCAL_MOVIE_EMBEDDING_DIM) {
+        embeddingUpserts.push({
+          movieId: movie.id,
+          vector: embeddingVector,
+        });
+      }
       const eligibility = evaluateCurriculumEligibility({
         posterUrl: movie.posterUrl ?? '',
         director: movie.director,
@@ -549,13 +577,11 @@ async function main(): Promise<void> {
         year: movie.year,
         synopsis: movie.synopsis,
         genres,
-        keywords: parseJsonStringArray(movie.keywords),
+        keywords,
         country: movie.country,
         director: movie.director,
-        cast: parseCastNames(movie.castTop),
-        embeddingVector: Array.isArray(movie.embedding?.vectorJson)
-          ? movie.embedding!.vectorJson.filter((entry): entry is number => typeof entry === 'number')
-          : undefined,
+        cast,
+        embeddingVector,
         popularity,
         ratings: movie.ratings.map((rating) => ({
           source: rating.source,
@@ -565,6 +591,23 @@ async function main(): Promise<void> {
         eligible: eligibility.isEligible,
       };
     });
+
+    for (const upsert of embeddingUpserts) {
+      await prisma.movieEmbedding.upsert({
+        where: { movieId: upsert.movieId },
+        create: {
+          movieId: upsert.movieId,
+          model: LOCAL_MOVIE_EMBEDDING_MODEL,
+          dim: LOCAL_MOVIE_EMBEDDING_DIM,
+          vectorJson: upsert.vector,
+        },
+        update: {
+          model: LOCAL_MOVIE_EMBEDDING_MODEL,
+          dim: LOCAL_MOVIE_EMBEDDING_DIM,
+          vectorJson: upsert.vector,
+        },
+      });
+    }
 
     const eligibleHorrorPool = allMovies.filter((movie) => movie.eligible && movie.genres.includes('horror'));
     const movieByLookup = new Map(allMovies.map((movie) => [makeLookupKey(movie.title, movie.year), movie] as const));

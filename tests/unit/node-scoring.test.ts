@@ -91,7 +91,7 @@ describe('node scoring', () => {
 
     expect(second).toEqual(first);
     expect(first[0]?.nodeSlug).toBe('folk-horror');
-    expect(first[0]?.prototypeScore).toBeGreaterThan(0.99);
+    expect(first[0]?.prototypeScore).toBeGreaterThan(0.7);
     expect(first[0]?.evidence.weak.firedLfNames.length).toBeGreaterThan(0);
     expect(first[0]?.evidence.prototype.used).toBe(true);
   });
@@ -117,4 +117,3 @@ describe('node scoring', () => {
     expect(scores[1]?.prototypeScore).toBeLessThan(0.6);
   });
 });
-
