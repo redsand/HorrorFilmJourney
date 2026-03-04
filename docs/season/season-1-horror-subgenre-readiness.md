@@ -1,14 +1,14 @@
 # Season 1 Horror Required Subgenre Readiness
 
-Generated: 2026-03-04T17:42:59.839Z
-Run ID: season1-weak-supervision-2026-03-04T17:41:54.710Z
+Generated: 2026-03-04T17:55:38.443Z
+Run ID: season1-weak-supervision-2026-03-04T17:54:45.229Z
 Taxonomy version: season-1-horror-v3.5
 Max nodes per movie: 3
 Classifier assist: disabled
-Snapshot release: cmmcbrm4e00ygvy2i9ry075sl (draft)
+Snapshot release: cmmcc7vgo00yjq4d329eomxo8 (published)
 
 Requested curated titles: 371
-Assigned titles: 1203
+Assigned titles: 1206
 Unresolved curated titles: 39
 
 ## Per-node
@@ -22,10 +22,10 @@ Unresolved curated titles: 39
 | body-horror | 21 | 19 | 0 | 30 | 49 | 120 | 80 | 0.70 | 0.78 | 1.00 | 0.0% | 30 | 0 | YES | 2 |
 | cosmic-horror | 21 | 15 | 2 | 13 | 30 | 120 | 80 | 0.68 | 0.76 | 0.70 | 66.7% | 15 | 0 | YES | 6 |
 | folk-horror | 21 | 19 | 1 | 39 | 59 | 120 | 80 | 0.70 | 0.78 | 0.79 | 100.0% | 40 | 0 | YES | 2 |
-| sci-fi-horror | 25 | 23 | 8 | 92 | 123 | 120 | 80 | 0.68 | 0.76 | 0.69 | 88.9% | 100 | 0 | YES | 2 |
+| sci-fi-horror | 25 | 23 | 9 | 92 | 124 | 120 | 80 | 0.68 | 0.76 | 0.69 | 90.0% | 101 | 0 | YES | 2 |
 | found-footage | 20 | 18 | 0 | 5 | 23 | 120 | 80 | 0.70 | 0.78 | 1.00 | 0.0% | 5 | 0 | YES | 2 |
-| survival-horror | 25 | 22 | 2 | 50 | 74 | 120 | 80 | 0.70 | 0.78 | 0.77 | 66.7% | 52 | 0 | YES | 3 |
-| apocalyptic-horror | 24 | 23 | 3 | 59 | 85 | 120 | 80 | 0.68 | 0.76 | 0.76 | 75.0% | 62 | 0 | YES | 1 |
+| survival-horror | 25 | 22 | 2 | 51 | 75 | 120 | 80 | 0.70 | 0.78 | 0.77 | 50.0% | 53 | 0 | YES | 3 |
+| apocalyptic-horror | 24 | 23 | 4 | 59 | 86 | 120 | 80 | 0.68 | 0.76 | 0.76 | 80.0% | 63 | 0 | YES | 1 |
 | gothic-horror | 22 | 20 | 1 | 19 | 40 | 120 | 80 | 0.70 | 0.78 | 0.72 | 100.0% | 20 | 0 | YES | 2 |
 | horror-comedy | 21 | 20 | 2 | 151 | 173 | 120 | 80 | 0.68 | 0.75 | 0.73 | 40.0% | 153 | 0 | YES | 1 |
 | splatter-extreme | 23 | 16 | 5 | 59 | 80 | 120 | 80 | 0.70 | 0.78 | 0.70 | 83.3% | 64 | 0 | YES | 7 |

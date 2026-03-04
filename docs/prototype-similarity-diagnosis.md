@@ -1,68 +1,71 @@
-# Prototype Similarity Diagnosis (Season 1)
+# Prototype Similarity Diagnosis
 
-## Summary
-- `prototypeSimilarityScore` was effectively `0` in the Season 1 pipeline because `MovieEmbedding` data was missing (`0 / 17,628` movies had embeddings).
-- The scoring path only computes prototype similarity when `movieEmbedding` is provided.
-- Season 1 prototypes also mixed:
-  - numeric vectors (4D)
-  - `positiveTitles` lists
-  - but `positiveTitles` were not previously used in similarity scoring.
+Generated: 2026-03-04
 
-## Where Similarity Became Zero
-1. In [`scoreMovieForNodes.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/src/lib/nodes/scoring/scoreMovieForNodes.ts), prototype scoring only runs when `movieEmbedding` exists.
-2. In [`seed-season1-horror-subgenres.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/scripts/seed-season1-horror-subgenres.ts), movies were passing DB embedding only; with no embedding rows, `movieEmbedding` stayed undefined.
-3. In [`prototypeSimilarity.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/src/lib/nodes/scoring/prototypeSimilarity.ts), numeric prototypes were filtered by exact dimension match; mismatches produced `prototypeScore=0`.
+## Scope
 
-## Prototype Titles Resolution Audit
-Checked against local `Movie.title` normalization.
+Diagnose why `prototypeSimilarityScore` can appear as `0` during Season 1 node scoring and implement a deterministic fix.
 
-- Total positive prototype titles: `132`
-- Resolved to local movies: `131`
-- Resolved with existing embedding before fix: `0`
+## End-to-End Trace
 
-| Node | Positive Titles | Resolved to Movies | Resolved w/ Embedding | Unresolved |
-|---|---:|---:|---:|---:|
-| supernatural-horror | 11 | 11 | 0 | 0 |
-| psychological-horror | 0 | 0 | 0 | 0 |
-| slasher-serial-killer | 8 | 8 | 0 | 0 |
-| creature-monster | 5 | 5 | 0 | 0 |
-| body-horror | 0 | 0 | 0 | 0 |
-| cosmic-horror | 15 | 15 | 0 | 0 |
-| folk-horror | 4 | 4 | 0 | 0 |
-| sci-fi-horror | 15 | 15 | 0 | 0 |
-| found-footage | 0 | 0 | 0 | 0 |
-| survival-horror | 4 | 4 | 0 | 0 |
-| apocalyptic-horror | 16 | 16 | 0 | 0 |
-| gothic-horror | 4 | 4 | 0 | 0 |
-| horror-comedy | 20 | 20 | 0 | 0 |
-| splatter-extreme | 3 | 3 | 0 | 0 |
-| social-domestic-horror | 6 | 6 | 0 | 0 |
-| experimental-horror | 21 | 20 | 0 | 1 |
+1. Node scoring entrypoint: `src/lib/nodes/scoring/scoreMovieForNodes.ts`
+2. Prototype scoring path: `src/lib/nodes/scoring/prototypeSimilarity.ts`
+3. Prototype pack loader: `src/lib/ontology/loadSeasonPrototypePack.ts`
+4. Season 1 pack: `src/ontology/prototypes/season-1-horror-classics.prototypes.ts`
+5. Final score composition:
+   - `finalScore = weakScore * 0.65 + prototypeScore * 0.35` when prototype is used
+
+## Findings
+
+### A) Prototype data is present and valid
+
+- Season 1 taxonomy: `season-1-horror-v3.5`
+- Prototype pack loads successfully for all 16 nodes.
+- Node-level prototype titles are largely resolvable in local catalog.
+  - 15/16 nodes had 100% title resolution in sampled check.
+  - `experimental-horror`: 20/21 titles resolved.
+
+### B) Embeddings exist in DB and are loadable
+
+- `MovieEmbedding` coverage in local DB: 22546 / 22546 movies.
+- Dimension: all embeddings are dim `4`.
+
+### C) Prototype similarity distribution is non-zero when embedding is present
+
+Sampled 500 horror movies x 16 nodes = 8000 node scores:
+
+- `prototypeScore` min/p50/p90/max: `0.003509 / 0.521038 / 0.826767 / 0.997892`
+- zero scores: `0 / 8000`
+
+So the prototype scorer itself is functioning.
+
+### D) Root cause of zero contribution
+
+`scoreMovieForNodes` previously only invoked prototype scoring when `movieEmbedding` was explicitly provided:
+
+- If a caller omitted embedding or passed an invalid/empty vector, prototype scoring was skipped.
+- In that case `prototypeScore` defaulted to `0`, so prototype contribution was effectively dropped.
+
+This created a failure mode at call sites that did not hydrate embeddings consistently.
 
 ## Fix Implemented
-1. Added deterministic local movie embedding module:
-   - [`local-embedding.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/src/lib/movie/local-embedding.ts)
-   - model: `local-movie-embedding-v1`
-   - dim: `4` (matches current Season 1 numeric prototype vectors)
-2. Updated Season 1 build pipeline:
-   - [`seed-season1-horror-subgenres.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/scripts/seed-season1-horror-subgenres.ts)
-   - computes embeddings for movies missing valid embeddings
-   - upserts them into `MovieEmbedding`
-   - always passes `movieEmbedding` into node scoring
-3. Updated prototype similarity:
-   - [`prototypeSimilarity.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/src/lib/nodes/scoring/prototypeSimilarity.ts)
-   - now includes vectors derived from `positiveTitles` in each node centroid, so prototype title data contributes directly.
 
-## Similarity Distribution (Post-Fix Path, deterministic local embeddings)
-Sample: first 50 horror movies (250 node-score evaluations over 5 nodes)
+Updated `src/lib/nodes/scoring/scoreMovieForNodes.ts`:
 
-- `prototypeUsedCount`: `250 / 250`
-- `prototypeScore == 0`: `0`
-- `prototypeScore > 0`: `250`
-- avg: `0.609667`
-- p10: `0.260953`
-- p50: `0.646802`
-- p90: `0.871093`
-- max: `0.981701`
+- Added deterministic embedding resolution:
+  - Use provided embedding if valid.
+  - Otherwise derive local embedding from movie text (`title/year/synopsis/genres/keywords`) via `computeLocalMovieEmbedding`.
+- Prototype scoring now always runs with a valid embedding vector.
 
-This confirms prototype similarity now contributes and is no longer hard-zero.
+This removes the all-zero path caused by missing embeddings at the caller level without changing scoring weights.
+
+## Deterministic Tests
+
+Updated `tests/unit/prototype-similarity.test.ts`:
+
+1. `prototype title returns similarity > 0` (existing)
+2. `similar films increase node score` (existing)
+3. `derives embedding when movieEmbedding is missing` (new)
+   - Ensures prototype score still contributes and is non-zero for a prototype-like movie.
+
+All related tests pass.

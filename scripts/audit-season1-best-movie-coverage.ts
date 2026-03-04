@@ -13,6 +13,7 @@ import {
   computeCanonicalRuntimeVoteCoverage,
   resolveCanonicalMovieSignals,
 } from '../src/lib/movie/canonical-metrics';
+import { isSeason1HorrorScope, scopeReasons } from '../src/lib/seasons/season1/scope';
 import {
   resolvePerNodeCoreThreshold,
   resolvePerNodeQualityFloor,
@@ -48,6 +49,8 @@ type ParsedMovie = {
 type ScoredMovie = {
   movie: ParsedMovie;
   horrorTagged: boolean;
+  scopeReasons: string[];
+  bestNodeMaxScore: number;
   eligibility: ReturnType<typeof evaluateCurriculumEligibility>;
   journey: ReturnType<typeof evaluateJourneyWorthinessSelectionGate>;
   metrics: {
@@ -59,6 +62,11 @@ type ScoredMovie = {
     journeyScore: number;
     hybridScore: number;
   };
+};
+
+type ScopedSeason1Movie = {
+  row: ScoredMovie;
+  reasons: string[];
 };
 
 type TopListEntry = {
@@ -136,21 +144,25 @@ function getPopularity(ratings: ParsedMovie['ratings']): number {
   return resolveCanonicalMovieSignals({ ratings }).popularity ?? 0;
 }
 
-function hasHorrorAdjacentSignals(movie: ParsedMovie): boolean {
-  const genreSet = new Set(movie.genres);
-  if (genreSet.has('horror')) return true;
-  const adjacentGenre = genreSet.has('thriller') || genreSet.has('mystery') || genreSet.has('sci-fi') || genreSet.has('fantasy');
-  if (!adjacentGenre) return false;
-  const keywordText = movie.keywords.join(' ');
-  return /\bhorror\b|\boccult\b|\bhaunt|\bghost\b|\bdemon\b|\bzombie\b|\bslasher\b|\bmonster\b|\bsupernatural\b|\bcreepy\b/i.test(keywordText);
-}
-
 function hasStrictHorrorSignals(movie: ParsedMovie): boolean {
   if (movie.genres.some((genre) => genre === 'horror' || genre.includes('horror'))) {
     return true;
   }
   const keywordText = movie.keywords.join(' ');
   return /\bhorror\b|\bslasher\b|\bzombie\b|\bghost\b|\bhaunt|\bdemon\b|\boccult\b|\bmonster\b|\bsupernatural\b/i.test(keywordText);
+}
+
+function getSeason1CandidatePool(rows: ScoredMovie[], scopeNodeMin: number): ScopedSeason1Movie[] {
+  return rows
+    .map((row) => ({ row, reasons: row.scopeReasons }))
+    .filter((entry) => isSeason1HorrorScope({
+      genres: entry.row.movie.genres,
+      keywords: entry.row.movie.keywords,
+      maxNodeScore: entry.row.bestNodeMaxScore,
+      isCuratedAnchor: false,
+      scopeNodeMin,
+    }))
+    .sort((a, b) => (a.row.movie.tmdbId - b.row.movie.tmdbId) || a.row.movie.id.localeCompare(b.row.movie.id));
 }
 
 function toJourneyInput(movie: ParsedMovie): JourneyWorthinessMovieInput {
@@ -222,6 +234,7 @@ function hasMissingCreditsOrMetadata(row: ScoredMovie): boolean {
 
 async function main(): Promise<void> {
   const cli = parseCli(process.argv.slice(2));
+  const scopeNodeMin = Number(process.env.SEASON1_SCOPE_NODE_MIN ?? '0.70');
   await mkdir(cli.outputDir, { recursive: true });
   await mkdir(resolve('docs'), { recursive: true });
 
@@ -356,9 +369,39 @@ async function main(): Promise<void> {
       const tmdbVoteAverage = getTmdbVoteAverage(movie.ratings);
       const popularity = getPopularity(movie.ratings);
       const hybridScore = computeHybridScore({ rating, voteCount, popularity, journeyScore: journey.result.score });
+      const allNodeScores = scoreMovieForNodes({
+        seasonId: cli.seasonSlug,
+        taxonomyVersion: latestRelease.taxonomyVersion,
+        movie: {
+          id: movie.id,
+          tmdbId: movie.tmdbId,
+          title: movie.title,
+          year: movie.year,
+          genres: movie.genres,
+          keywords: movie.keywords,
+          synopsis: movie.synopsis,
+        },
+        movieEmbedding: movie.embedding ?? undefined,
+        nodeSlugs,
+      });
+      const bestNodeMaxScore = allNodeScores[0]?.finalScore ?? 0;
+      const reasons = scopeReasons({
+        genres: movie.genres,
+        keywords: movie.keywords,
+        maxNodeScore: bestNodeMaxScore,
+        scopeNodeMin,
+      });
+
       return {
         movie,
-        horrorTagged: hasHorrorAdjacentSignals(movie),
+        horrorTagged: isSeason1HorrorScope({
+          genres: movie.genres,
+          keywords: movie.keywords,
+          maxNodeScore: bestNodeMaxScore,
+          scopeNodeMin,
+        }),
+        scopeReasons: reasons,
+        bestNodeMaxScore: round6(bestNodeMaxScore),
         eligibility,
         journey,
         metrics: {
@@ -376,6 +419,9 @@ async function main(): Promise<void> {
       };
     });
     const scoredByMovieId = new Map(scoredMovies.map((row) => [row.movie.id, row] as const));
+
+    const season1CandidatePoolRows = getSeason1CandidatePool(scoredMovies, scopeNodeMin);
+    const season1CandidatePoolIds = new Set(season1CandidatePoolRows.map((entry) => entry.row.movie.id));
 
     const snapshotSummary = {
       seasonSlug: season.slug,
@@ -428,27 +474,26 @@ async function main(): Promise<void> {
       })),
     };
 
-    const horrorPool = scoredMovies.filter((row) => row.horrorTagged);
-    const topByVotes: TopListEntry[] = horrorPool
+    const topByVotes: TopListEntry[] = season1CandidatePoolRows
       .filter((row) => row.metrics.rating >= 6.5)
       .sort((a, b) => (b.metrics.voteCount - a.metrics.voteCount)
         || (b.metrics.rating - a.metrics.rating)
-        || stableTieBreak(cli.seed, a.movie.id).localeCompare(stableTieBreak(cli.seed, b.movie.id)))
+        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.movie.id, rank: idx + 1, score: row.metrics.voteCount }));
-    const topByRating: TopListEntry[] = horrorPool
+      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.voteCount }));
+    const topByRating: TopListEntry[] = season1CandidatePoolRows
       .filter((row) => row.metrics.voteCount >= 10_000)
       .sort((a, b) => (b.metrics.rating - a.metrics.rating)
         || (b.metrics.voteCount - a.metrics.voteCount)
-        || stableTieBreak(cli.seed, a.movie.id).localeCompare(stableTieBreak(cli.seed, b.movie.id)))
+        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.movie.id, rank: idx + 1, score: row.metrics.rating }));
-    const topByHybrid: TopListEntry[] = horrorPool
+      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.rating }));
+    const topByHybrid: TopListEntry[] = season1CandidatePoolRows
       .sort((a, b) => (b.metrics.hybridScore - a.metrics.hybridScore)
         || (b.metrics.voteCount - a.metrics.voteCount)
-        || stableTieBreak(cli.seed, a.movie.id).localeCompare(stableTieBreak(cli.seed, b.movie.id)))
+        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.movie.id, rank: idx + 1, score: row.metrics.hybridScore }));
+      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.hybridScore }));
 
     const coverageForList = (name: string, list: TopListEntry[]) => {
       const inCore = list.filter((entry) => coreMovieIds.has(entry.movieId)).length;
@@ -471,7 +516,7 @@ async function main(): Promise<void> {
       coverageForList('TopByHybrid', topByHybrid),
     ];
 
-    const candidatePoolForScoring = horrorPool.filter((row) => row.eligibility.isEligible && row.journey.pass);
+    const candidatePoolForScoring = scoredMovies.filter((row) => season1CandidatePoolIds.has(row.movie.id) && row.eligibility.isEligible && row.journey.pass);
     const scoreCache = new Map<string, NodeScore[]>();
     for (const row of candidatePoolForScoring) {
       scoreCache.set(row.movie.id, scoreMovieForNodes({
@@ -699,13 +744,14 @@ async function main(): Promise<void> {
       })),
     };
 
+    const scopedRows = scoredMovies.filter((row) => season1CandidatePoolIds.has(row.movie.id));
     const canonicalCoverage = computeCanonicalRuntimeVoteCoverage(
-      horrorPool.map((row) => ({ tmdbId: row.movie.tmdbId, ratings: row.movie.ratings })),
+      scopedRows.map((row) => ({ tmdbId: row.movie.tmdbId, ratings: row.movie.ratings })),
     );
     const runtimePresent = canonicalCoverage.runtimePresent;
     const votePresent = canonicalCoverage.voteCountPresent;
-    const ratingPresent = horrorPool.filter((row) => row.metrics.rating > 0).length;
-    const creditsPresent = horrorPool.filter((row) => {
+    const ratingPresent = scoredMovies.filter((row) => season1CandidatePoolIds.has(row.movie.id) && row.metrics.rating > 0).length;
+    const creditsPresent = scoredMovies.filter((row) => season1CandidatePoolIds.has(row.movie.id)).filter((row) => {
       const hasDirector = typeof row.movie.director === 'string' && row.movie.director.trim().length > 0;
       const cast = Array.isArray(row.movie.castTop) ? row.movie.castTop : [];
       const hasCast = cast.some((entry) => {
@@ -714,23 +760,59 @@ async function main(): Promise<void> {
       });
       return hasDirector && hasCast;
     }).length;
-    const receptionPresent = horrorPool.filter((row) => row.metrics.receptionCount > 0).length;
+    const receptionPresent = scoredMovies.filter((row) => season1CandidatePoolIds.has(row.movie.id) && row.metrics.receptionCount > 0).length;
     const scoreDistribution = {
       snapshot: snapshotSummary,
-      horrorPoolSize: horrorPool.length,
+      horrorPoolSize: scopedRows.length,
       fieldCoverage: {
-        runtime: { count: runtimePresent, pct: toPct(runtimePresent, horrorPool.length), safeForHardGating: toPct(runtimePresent, horrorPool.length) >= 80 },
-        voteCount: { count: votePresent, pct: toPct(votePresent, horrorPool.length), safeForHardGating: toPct(votePresent, horrorPool.length) >= 90 },
-        rating: { count: ratingPresent, pct: toPct(ratingPresent, horrorPool.length), safeForHardGating: toPct(ratingPresent, horrorPool.length) >= 90 },
-        directorAndCastTop: { count: creditsPresent, pct: toPct(creditsPresent, horrorPool.length), safeForHardGating: toPct(creditsPresent, horrorPool.length) >= 85 },
-        receptionCount: { count: receptionPresent, pct: toPct(receptionPresent, horrorPool.length), safeForHardGating: toPct(receptionPresent, horrorPool.length) >= 70 },
+        runtime: { count: runtimePresent, pct: toPct(runtimePresent, scopedRows.length), safeForHardGating: toPct(runtimePresent, scopedRows.length) >= 80 },
+        voteCount: { count: votePresent, pct: toPct(votePresent, scopedRows.length), safeForHardGating: toPct(votePresent, scopedRows.length) >= 90 },
+        rating: { count: ratingPresent, pct: toPct(ratingPresent, scopedRows.length), safeForHardGating: toPct(ratingPresent, scopedRows.length) >= 90 },
+        directorAndCastTop: { count: creditsPresent, pct: toPct(creditsPresent, scopedRows.length), safeForHardGating: toPct(creditsPresent, scopedRows.length) >= 85 },
+        receptionCount: { count: receptionPresent, pct: toPct(receptionPresent, scopedRows.length), safeForHardGating: toPct(receptionPresent, scopedRows.length) >= 70 },
       },
       distributions: {
-        journeyScore: quantiles(horrorPool.map((row) => row.metrics.journeyScore)),
-        hybridScore: quantiles(horrorPool.map((row) => row.metrics.hybridScore)),
-        voteCount: quantiles(horrorPool.map((row) => row.metrics.voteCount)),
-        rating: quantiles(horrorPool.map((row) => row.metrics.rating)),
+        journeyScore: quantiles(scopedRows.map((row) => row.metrics.journeyScore)),
+        hybridScore: quantiles(scopedRows.map((row) => row.metrics.hybridScore)),
+        voteCount: quantiles(scopedRows.map((row) => row.metrics.voteCount)),
+        rating: quantiles(scopedRows.map((row) => row.metrics.rating)),
       },
+    };
+
+    const toplistCandidatePoolSize = {
+      snapshot: snapshotSummary,
+      counts: {
+        catalogRows: scoredMovies.length,
+        season1ScopeRows: season1CandidatePoolRows.length,
+        excludedOutOfScopeRows: scoredMovies.length - season1CandidatePoolRows.length,
+      },
+    };
+    const toplistCandidatePoolExamples = {
+      snapshot: snapshotSummary,
+      top50ByVotes: [...season1CandidatePoolRows]
+        .sort((a, b) => (b.metrics.voteCount - a.metrics.voteCount) || (b.metrics.hybridScore - a.metrics.hybridScore) || (a.tmdbId - b.tmdbId))
+        .slice(0, 50)
+        .map((row) => ({
+          tmdbId: row.tmdbId,
+          title: row.title,
+          year: row.year,
+          genres: row.genres.slice(0, 6),
+          scopeReasons: row.scope.reasons,
+          voteCount: row.metrics.voteCount,
+          hybridScore: row.metrics.hybridScore,
+        })),
+      top50ByHybrid: [...season1CandidatePoolRows]
+        .sort((a, b) => (b.metrics.hybridScore - a.metrics.hybridScore) || (b.metrics.voteCount - a.metrics.voteCount) || (a.tmdbId - b.tmdbId))
+        .slice(0, 50)
+        .map((row) => ({
+          tmdbId: row.tmdbId,
+          title: row.title,
+          year: row.year,
+          genres: row.genres.slice(0, 6),
+          scopeReasons: row.scope.reasons,
+          voteCount: row.metrics.voteCount,
+          hybridScore: row.metrics.hybridScore,
+        })),
     };
 
     const cliffPressureNodes = Object.entries(nodeCoreBoundaries.nodes)
@@ -765,6 +847,8 @@ async function main(): Promise<void> {
 
     const artifacts = [
       ['snapshot-summary.json', snapshotSummary],
+      ['toplistCandidatePoolSize.json', toplistCandidatePoolSize],
+      ['toplistCandidatePoolExamples.json', toplistCandidatePoolExamples],
       ['node-core-boundaries.json', nodeCoreBoundaries],
       ['omissions-toplists.json', omissionsToplists],
       ['omission-triage.json', omissionTriagePayload],
@@ -825,6 +909,8 @@ async function main(): Promise<void> {
       '## Artifact Files',
       '',
       '- `snapshot-summary.json`',
+      '- `toplistCandidatePoolSize.json`',
+      '- `toplistCandidatePoolExamples.json`',
       '- `node-core-boundaries.json`',
       '- `omissions-toplists.json`',
       '- `omission-triage.json`',

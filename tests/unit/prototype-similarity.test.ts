@@ -122,4 +122,28 @@ describe('prototype similarity scoring', () => {
     expect(similarCosmic?.prototypeScore ?? 0).toBeGreaterThan(dissimilarCosmic?.prototypeScore ?? 0);
     expect(similarCosmic?.finalScore ?? 0).toBeGreaterThan(dissimilarCosmic?.finalScore ?? 0);
   });
+
+  it('derives embedding when movieEmbedding is missing so prototype score still contributes', () => {
+    const scores = scoreMovieForNodes({
+      seasonId,
+      taxonomyVersion,
+      movie: {
+        id: 'm3',
+        title: 'Alien',
+        year: 1979,
+        genres: ['horror', 'sci-fi'],
+        keywords: ['space', 'xenomorph'],
+        synopsis: 'Crew encounters unknown organism in deep space.',
+      },
+      nodeSlugs: ['cosmic-horror', 'folk-horror'],
+      lfs: [],
+    });
+
+    const cosmic = scores.find((entry) => entry.nodeSlug === 'cosmic-horror');
+    const folk = scores.find((entry) => entry.nodeSlug === 'folk-horror');
+    expect(cosmic).toBeDefined();
+    expect((cosmic?.prototypeScore ?? 0) > 0).toBe(true);
+    expect((cosmic?.prototypeScore ?? 0)).toBeGreaterThan(folk?.prototypeScore ?? 0);
+    expect(cosmic?.evidence.prototype.used).toBe(true);
+  });
 });

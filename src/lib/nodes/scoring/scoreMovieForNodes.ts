@@ -2,6 +2,7 @@ import { loadSeasonOntology } from '@/lib/ontology/loadSeasonOntology';
 import { buildSeasonLabelingFunctions } from '@/lib/nodes/weak-supervision/lfs';
 import { inferNodeProbabilities } from '@/lib/nodes/weak-supervision/label-model';
 import type { LabelingFunction, WeakSupervisionMovie } from '@/lib/nodes/weak-supervision/types';
+import { computeLocalMovieEmbedding, LOCAL_MOVIE_EMBEDDING_DIM } from '@/lib/movie/local-embedding';
 import { scorePrototypeSimilarityForSeasonNodes } from './prototypeSimilarity';
 
 export type NodeScoreEvidence = {
@@ -43,6 +44,25 @@ function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
+function isFiniteEmbedding(value: unknown): value is number[] {
+  return Array.isArray(value)
+    && value.length > 0
+    && value.every((entry) => typeof entry === 'number' && Number.isFinite(entry));
+}
+
+function resolveMovieEmbedding(input: ScoreMovieForNodesInput): number[] {
+  if (isFiniteEmbedding(input.movieEmbedding)) {
+    return input.movieEmbedding;
+  }
+  return computeLocalMovieEmbedding({
+    title: input.movie.title,
+    year: input.movie.year,
+    synopsis: input.movie.synopsis,
+    genres: input.movie.genres,
+    keywords: input.movie.keywords,
+  }, LOCAL_MOVIE_EMBEDDING_DIM);
+}
+
 export function scoreMovieForNodes(input: ScoreMovieForNodesInput): NodeScore[] {
   const ontology = loadSeasonOntology(input.seasonId);
   const taxonomyVersion = input.taxonomyVersion ?? ontology.taxonomyVersion;
@@ -60,14 +80,13 @@ export function scoreMovieForNodes(input: ScoreMovieForNodesInput): NodeScore[] 
   });
   const weakScores = inferNodeProbabilities(input.movie, nodeSlugs, lfs);
   const weakByNode = new Map(weakScores.map((entry) => [entry.nodeSlug, entry] as const));
-  const prototypeScores = input.movieEmbedding
-    ? scorePrototypeSimilarityForSeasonNodes({
-      seasonId: input.seasonId,
-      taxonomyVersion,
-      movieEmbedding: input.movieEmbedding,
-      nodeSlugs,
-    })
-    : [];
+  const movieEmbedding = resolveMovieEmbedding(input);
+  const prototypeScores = scorePrototypeSimilarityForSeasonNodes({
+    seasonId: input.seasonId,
+    taxonomyVersion,
+    movieEmbedding,
+    nodeSlugs,
+  });
   const prototypeByNode = new Map(prototypeScores.map((entry) => [entry.nodeSlug, entry] as const));
 
   return nodeSlugs.map((nodeSlug) => {
@@ -102,4 +121,3 @@ export function scoreMovieForNodes(input: ScoreMovieForNodesInput): NodeScore[] 
     };
   }).sort((a, b) => (b.finalScore - a.finalScore) || a.nodeSlug.localeCompare(b.nodeSlug));
 }
-
