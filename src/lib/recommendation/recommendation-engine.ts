@@ -21,6 +21,7 @@ import { syncTmdbHorrorCandidates } from '@/lib/tmdb/live-candidate-sync';
 import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 import { TasteComputationService } from '@/lib/taste/taste-computation-service';
 import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
+import { getPublishedSeasonNodeReleaseId } from '@/lib/nodes/governance';
 import {
   computeEvidenceHashes,
   computeNarrativeHash,
@@ -828,14 +829,21 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
       },
     });
     latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
+    const publishedReleaseId = constraints.packId
+      ? await getPublishedSeasonNodeReleaseId(this.prisma, { packId: constraints.packId, seasonSlug: 'season-1' })
+      : null;
     const hasPackCatalog = constraints.packId
-      ? (await this.prisma.nodeMovie.count({
-        where: {
-          node: {
-            packId: constraints.packId,
-          },
-        },
-      })) > 0
+      ? (
+        publishedReleaseId
+          ? (await this.prisma.seasonNodeReleaseItem.count({ where: { releaseId: publishedReleaseId } })) > 0
+          : (await this.prisma.nodeMovie.count({
+            where: {
+              node: {
+                packId: constraints.packId,
+              },
+            },
+          })) > 0
+      )
       : false;
     const usePackScopedPool = hasPackCatalog && constraints.packPrimaryGenre.toLowerCase() !== 'horror';
 
@@ -843,13 +851,23 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
       where: constraints.packId
         ? usePackScopedPool
           ? {
-            nodeAssignments: {
-              some: {
-                node: {
-                  packId: constraints.packId,
+            ...(publishedReleaseId
+              ? {
+                releaseAssignments: {
+                  some: {
+                    releaseId: publishedReleaseId,
+                  },
                 },
-              },
-            },
+              }
+              : {
+                nodeAssignments: {
+                  some: {
+                    node: {
+                      packId: constraints.packId,
+                    },
+                  },
+                },
+              }),
           }
           : undefined
         : undefined,
@@ -870,16 +888,25 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
       }));
     let curatedIds: string[] = [];
     if (constraints.packId && constraints.journeyNodeSlug) {
-      const curatedAssignments = await this.prisma.nodeMovie.findMany({
-        where: {
-          node: {
-            packId: constraints.packId,
-            slug: constraints.journeyNodeSlug,
+      const curatedAssignments = publishedReleaseId
+        ? await this.prisma.seasonNodeReleaseItem.findMany({
+          where: {
+            releaseId: publishedReleaseId,
+            nodeSlug: constraints.journeyNodeSlug,
           },
-        },
-        orderBy: { rank: 'asc' },
-        select: { movieId: true },
-      });
+          orderBy: { rank: 'asc' },
+          select: { movieId: true },
+        })
+        : await this.prisma.nodeMovie.findMany({
+          where: {
+            node: {
+              packId: constraints.packId,
+              slug: constraints.journeyNodeSlug,
+            },
+          },
+          orderBy: { rank: 'asc' },
+          select: { movieId: true },
+        });
       const curatedSet = new Set(curatedAssignments.map((item) => item.movieId));
       const eligibleSet = new Set(eligible.map((movie) => movie.id));
       curatedIds = curatedAssignments
@@ -1239,23 +1266,46 @@ async function resolveJourneyNodeWithCapacity(input: {
     ...nodes.slice(preferredIndex).map((node) => node.slug),
     ...nodes.slice(0, preferredIndex).map((node) => node.slug),
   ];
+  const publishedReleaseId = await getPublishedSeasonNodeReleaseId(input.prisma, {
+    packId: input.packId,
+    seasonSlug: 'season-1',
+  });
 
   for (const nodeSlug of orderedSlugs) {
-    // eslint-disable-next-line no-await-in-loop
-    const nodeAssignments = await input.prisma.nodeMovie.findMany({
-      where: { node: { packId: input.packId, slug: nodeSlug } },
-      select: {
-        movie: {
-          select: {
-            id: true,
-            genres: true,
-            posterUrl: true,
-            posterLastValidatedAt: true,
-            ratings: { select: { source: true } },
+    const nodeAssignments = publishedReleaseId
+      // eslint-disable-next-line no-await-in-loop
+      ? await input.prisma.seasonNodeReleaseItem.findMany({
+        where: {
+          releaseId: publishedReleaseId,
+          nodeSlug,
+        },
+        select: {
+          movie: {
+            select: {
+              id: true,
+              genres: true,
+              posterUrl: true,
+              posterLastValidatedAt: true,
+              ratings: { select: { source: true } },
+            },
           },
         },
-      },
-    });
+      })
+      // eslint-disable-next-line no-await-in-loop
+      : await input.prisma.nodeMovie.findMany({
+        where: { node: { packId: input.packId, slug: nodeSlug } },
+        select: {
+          movie: {
+            select: {
+              id: true,
+              genres: true,
+              posterUrl: true,
+              posterLastValidatedAt: true,
+              ratings: { select: { source: true } },
+            },
+          },
+        },
+      });
     const availableCount = nodeAssignments
       .map((entry) => entry.movie)
       .filter((movie) => !excludedMovieIds.has(movie.id))

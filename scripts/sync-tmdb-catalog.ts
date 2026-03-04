@@ -15,6 +15,12 @@ type TmdbDiscoverResponse = {
   total_pages?: number;
 };
 
+type TmdbMovieDetails = {
+  overview?: string;
+  production_countries?: Array<{ name?: string }>;
+  keywords?: { keywords?: Array<{ name?: string }> };
+};
+
 type SyncCounters = {
   processed: number;
   withPoster: number;
@@ -109,6 +115,43 @@ function toGenres(genreIds?: number[]): string[] {
   return [...derived];
 }
 
+function parseKeywords(details: TmdbMovieDetails | null): string[] {
+  if (!details || !Array.isArray(details.keywords?.keywords)) {
+    return [];
+  }
+  return details.keywords.keywords
+    .map((item) => (typeof item?.name === 'string' ? item.name.trim().toLowerCase() : ''))
+    .filter((value) => value.length > 0)
+    .slice(0, 24);
+}
+
+function parseCountry(details: TmdbMovieDetails | null): string | null {
+  if (!details || !Array.isArray(details.production_countries)) {
+    return null;
+  }
+  const first = details.production_countries.find((item) => typeof item?.name === 'string' && item.name.trim().length > 0);
+  return first?.name?.trim() ?? null;
+}
+
+async function fetchMovieDetails(apiKey: string, tmdbId: number): Promise<TmdbMovieDetails | null> {
+  const url = new URL(`https://api.themoviedb.org/3/movie/${tmdbId}`);
+  url.searchParams.set('api_key', apiKey);
+  url.searchParams.set('language', 'en-US');
+  url.searchParams.set('append_to_response', 'keywords');
+  try {
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!response.ok) {
+      return null;
+    }
+    return await response.json() as TmdbMovieDetails;
+  } catch {
+    return null;
+  }
+}
+
 function parseJsonStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
@@ -145,6 +188,7 @@ async function fetchDiscoverPage(apiKey: string, page: number, startYear: number
 
 async function upsertMovie(
   prisma: PrismaClient,
+  apiKey: string,
   movie: TmdbDiscoverMovie,
   seenTmdbIds: Set<number>,
   counters: SyncCounters,
@@ -170,22 +214,34 @@ async function upsertMovie(
   });
   const existingGenres = parseJsonStringArray(existing?.genres);
   const mergedGenres = [...new Set([...existingGenres, ...toGenres(movie.genre_ids)])];
+  const details = await fetchMovieDetails(apiKey, tmdbId);
+  const keywords = parseKeywords(details);
+  const country = parseCountry(details);
+  const synopsis = typeof details?.overview === 'string' && details.overview.trim().length > 0
+    ? details.overview.trim()
+    : `${title} (${toYear(movie.release_date) ?? 'n/a'})`;
   const persisted = await prisma.movie.upsert({
     where: { tmdbId },
     create: {
       tmdbId,
       title,
       year: toYear(movie.release_date),
+      synopsis,
       posterUrl,
       posterLastValidatedAt: new Date(),
       genres: mergedGenres,
+      keywords,
+      country,
     },
     update: {
       title,
       year: toYear(movie.release_date),
+      synopsis,
       posterUrl,
       posterLastValidatedAt: new Date(),
       genres: mergedGenres,
+      keywords,
+      country,
     },
     select: { id: true },
   });
@@ -255,7 +311,7 @@ async function syncPartition(
   const page1Results = Array.isArray(page1.results) ? page1.results : [];
   for (const movie of page1Results) {
     // eslint-disable-next-line no-await-in-loop
-    await upsertMovie(prisma, movie, seenTmdbIds, counters);
+    await upsertMovie(prisma, apiKey, movie, seenTmdbIds, counters);
   }
 
   for (let page = 2; page <= effectivePages; page += 1) {
@@ -265,7 +321,7 @@ async function syncPartition(
     // eslint-disable-next-line no-restricted-syntax
     for (const movie of results) {
       // eslint-disable-next-line no-await-in-loop
-      await upsertMovie(prisma, movie, seenTmdbIds, counters);
+      await upsertMovie(prisma, apiKey, movie, seenTmdbIds, counters);
     }
   }
 

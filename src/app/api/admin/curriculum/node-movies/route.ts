@@ -13,9 +13,12 @@ const addNodeMovieSchema = z.object({
 type TmdbMovieDetailsPayload = {
   id?: number;
   title?: string;
+  overview?: string;
   poster_path?: string | null;
   release_date?: string;
   genres?: Array<{ name?: string }>;
+  production_countries?: Array<{ name?: string }>;
+  keywords?: { keywords?: Array<{ name?: string }> };
   vote_average?: number;
   credits?: {
     cast?: Array<{ name?: string; character?: string }>;
@@ -35,6 +38,22 @@ function normalizeGenres(genres: TmdbMovieDetailsPayload['genres']): string[] {
   return (genres ?? [])
     .map((entry) => (typeof entry?.name === 'string' ? entry.name.trim().toLowerCase() : ''))
     .filter((entry) => entry.length > 0);
+}
+
+function normalizeKeywords(payload: TmdbMovieDetailsPayload['keywords']): string[] {
+  return (payload?.keywords ?? [])
+    .map((entry) => (typeof entry?.name === 'string' ? entry.name.trim().toLowerCase() : ''))
+    .filter((entry) => entry.length > 0)
+    .slice(0, 24);
+}
+
+function resolveCountry(countries: TmdbMovieDetailsPayload['production_countries']): string | null {
+  for (const entry of countries ?? []) {
+    if (typeof entry?.name === 'string' && entry.name.trim().length > 0) {
+      return entry.name.trim();
+    }
+  }
+  return null;
 }
 
 function buildCastTop(credits: TmdbMovieDetailsPayload['credits']): Array<{ name: string; role: string }> {
@@ -68,7 +87,7 @@ async function fetchTmdbMovieDetails(tmdbId: number): Promise<TmdbMovieDetailsPa
   const detailsUrl = new URL(`https://api.themoviedb.org/3/movie/${tmdbId}`);
   detailsUrl.searchParams.set('api_key', tmdbApiKey);
   detailsUrl.searchParams.set('language', 'en-US');
-  detailsUrl.searchParams.set('append_to_response', 'credits');
+  detailsUrl.searchParams.set('append_to_response', 'credits,keywords');
 
   const response = await fetch(detailsUrl.toString(), { method: 'GET' });
   if (!response.ok) {
@@ -93,6 +112,7 @@ export async function POST(request: Request): Promise<Response> {
     where: { id: parsed.data.nodeId },
     select: {
       id: true,
+      taxonomyVersion: true,
       movies: {
         orderBy: { rank: 'desc' },
         take: 1,
@@ -122,20 +142,26 @@ export async function POST(request: Request): Promise<Response> {
         tmdbId: parsed.data.tmdbId,
         title: tmdbDetails.title.trim(),
         year: parseYear(tmdbDetails.release_date),
+        synopsis: typeof tmdbDetails.overview === 'string' ? tmdbDetails.overview.trim() : null,
         posterUrl: tmdbDetails.poster_path
           ? `https://image.tmdb.org/t/p/w500${tmdbDetails.poster_path}`
           : `/api/posters/${parsed.data.tmdbId}`,
         genres: normalizeGenres(tmdbDetails.genres),
+        keywords: normalizeKeywords(tmdbDetails.keywords),
+        country: resolveCountry(tmdbDetails.production_countries),
         director: resolveDirector(tmdbDetails.credits),
         castTop: buildCastTop(tmdbDetails.credits),
       },
       update: {
         title: tmdbDetails.title.trim(),
         year: parseYear(tmdbDetails.release_date),
+        synopsis: typeof tmdbDetails.overview === 'string' ? tmdbDetails.overview.trim() : null,
         posterUrl: tmdbDetails.poster_path
           ? `https://image.tmdb.org/t/p/w500${tmdbDetails.poster_path}`
           : `/api/posters/${parsed.data.tmdbId}`,
         genres: normalizeGenres(tmdbDetails.genres),
+        keywords: normalizeKeywords(tmdbDetails.keywords),
+        country: resolveCountry(tmdbDetails.production_countries),
         director: resolveDirector(tmdbDetails.credits),
         castTop: buildCastTop(tmdbDetails.credits),
       },
@@ -164,6 +190,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const rank = parsed.data.rank ?? ((node.movies[0]?.rank ?? 0) + 1);
+  const runId = `admin-override-${new Date().toISOString()}`;
 
   try {
     const assignment = await prisma.nodeMovie.create({
@@ -171,6 +198,14 @@ export async function POST(request: Request): Promise<Response> {
         nodeId: node.id,
         movieId: movie.id,
         rank,
+        source: 'override',
+        score: 1,
+        evidence: {
+          action: 'admin_node_movie_add',
+          tmdbId: parsed.data.tmdbId,
+        },
+        runId,
+        taxonomyVersion: node.taxonomyVersion,
       },
       select: {
         id: true,
@@ -197,4 +232,3 @@ export async function POST(request: Request): Promise<Response> {
     throw error;
   }
 }
-

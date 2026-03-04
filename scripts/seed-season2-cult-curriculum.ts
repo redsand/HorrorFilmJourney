@@ -99,6 +99,79 @@ function parseBoolEnv(name: string, fallback: boolean): boolean {
   return raw.toLowerCase() === 'true';
 }
 
+function parseJsonStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => (typeof entry === 'string' ? entry.trim().toLowerCase() : ''))
+    .filter((entry) => entry.length > 0);
+}
+
+function tokenizeTitle(value: string): string[] {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(' ')
+    .map((part) => part.trim())
+    .filter((part) => part.length >= 3)
+    .slice(0, 6);
+}
+
+function synthesizedSynopsis(input: { title: string; year: number | null; genres: string[] }): string {
+  const genreText = input.genres.length > 0 ? input.genres.slice(0, 4).join(', ') : 'cult cinema';
+  return `${input.title}${input.year ? ` (${input.year})` : ''} is a catalog title classified under ${genreText}.`;
+}
+
+function synthesizedKeywords(input: { title: string; genres: string[]; year: number | null }): string[] {
+  const merged = [
+    ...input.genres.map((genre) => genre.toLowerCase()),
+    ...tokenizeTitle(input.title),
+    ...(input.year ? [String(input.year)] : []),
+  ];
+  return [...new Set(merged)].slice(0, 24);
+}
+
+async function backfillCoreMovieMetadataForPack(prisma: PrismaClient, packId: string): Promise<void> {
+  const movies = await prisma.movie.findMany({
+    where: {
+      nodeAssignments: {
+        some: {
+          node: { packId },
+        },
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      year: true,
+      synopsis: true,
+      keywords: true,
+      country: true,
+      genres: true,
+    },
+  });
+
+  for (const movie of movies) {
+    const genres = parseJsonStringArray(movie.genres);
+    const hasSynopsis = typeof movie.synopsis === 'string' && movie.synopsis.trim().length > 0;
+    const hasKeywords = Array.isArray(movie.keywords) && movie.keywords.length > 0;
+    const hasCountry = typeof movie.country === 'string' && movie.country.trim().length > 0;
+    if (hasSynopsis && hasKeywords && hasCountry) {
+      continue;
+    }
+
+    await prisma.movie.update({
+      where: { id: movie.id },
+      data: {
+        ...(hasSynopsis ? {} : { synopsis: synthesizedSynopsis({ title: movie.title, year: movie.year, genres }) }),
+        ...(hasKeywords ? {} : { keywords: synthesizedKeywords({ title: movie.title, genres, year: movie.year }) }),
+        ...(hasCountry ? {} : { country: 'Unknown' }),
+      },
+    });
+  }
+}
+
 function parseDiscoverPagesEnv(): number | 'all' {
   const raw = process.env.SEASON2_DISCOVER_PAGES?.trim().toLowerCase();
   if (!raw) {
@@ -382,6 +455,8 @@ async function resolveViaTmdb(input: { title: string; year: number }): Promise<{
   castTop: Array<{ name: string; role?: string }>;
   genreIds: number[];
   keywordNames: string[];
+  synopsis: string | null;
+  country: string | null;
   tmdbRating: number | null;
   voteCount: number | null;
   popularity: number | null;
@@ -452,6 +527,8 @@ async function resolveViaTmdb(input: { title: string; year: number }): Promise<{
       cast?: Array<{ name?: string; character?: string }>;
     };
     keywords?: { keywords?: Array<{ name?: string }> } | Array<{ name?: string }>;
+    overview?: string;
+    production_countries?: Array<{ name?: string }>;
   };
 
   const director = details.credits?.crew?.find((entry) => entry.job === 'Director')?.name?.trim() ?? null;
@@ -490,6 +567,12 @@ async function resolveViaTmdb(input: { title: string; year: number }): Promise<{
           .map((item) => item.name?.trim().toLowerCase() ?? '')
           .filter((value) => value.length > 0)
         : [],
+    synopsis: typeof details.overview === 'string' && details.overview.trim().length > 0
+      ? details.overview.trim()
+      : null,
+    country: (details.production_countries ?? [])
+      .map((item) => item.name?.trim() ?? '')
+      .find((value) => value.length > 0) ?? null,
     tmdbRating: typeof details.vote_average === 'number' ? details.vote_average : null,
     voteCount: typeof details.vote_count === 'number' ? details.vote_count : null,
     popularity: typeof details.popularity === 'number' ? details.popularity : null,
@@ -506,6 +589,8 @@ async function fetchTmdbDetailsById(tmdbId: number): Promise<{
   castTop: Array<{ name: string; role?: string }>;
   genreIds: number[];
   keywordNames: string[];
+  synopsis: string | null;
+  country: string | null;
   tmdbRating: number | null;
   voteCount: number | null;
   popularity: number | null;
@@ -537,6 +622,8 @@ async function fetchTmdbDetailsById(tmdbId: number): Promise<{
       cast?: Array<{ name?: string; character?: string }>;
     };
     keywords?: { keywords?: Array<{ name?: string }> } | Array<{ name?: string }>;
+    overview?: string;
+    production_countries?: Array<{ name?: string }>;
   };
 
   const director = details.credits?.crew?.find((entry) => entry.job === 'Director')?.name?.trim() ?? null;
@@ -575,6 +662,12 @@ async function fetchTmdbDetailsById(tmdbId: number): Promise<{
           .map((item) => item.name?.trim().toLowerCase() ?? '')
           .filter((value) => value.length > 0)
         : [],
+    synopsis: typeof details.overview === 'string' && details.overview.trim().length > 0
+      ? details.overview.trim()
+      : null,
+    country: (details.production_countries ?? [])
+      .map((item) => item.name?.trim() ?? '')
+      .find((value) => value.length > 0) ?? null,
     tmdbRating: typeof details.vote_average === 'number' ? details.vote_average : null,
     voteCount: typeof details.vote_count === 'number' ? details.vote_count : null,
     popularity: typeof details.popularity === 'number' ? details.popularity : null,
@@ -592,8 +685,11 @@ async function enrichMovieFromTmdb(prisma: PrismaClient, movieId: string, tmdbId
     data: {
       title: details.title,
       year: details.year,
+      synopsis: details.synopsis,
       ...(details.posterUrl ? { posterUrl: details.posterUrl } : {}),
       genres: details.genres,
+      keywords: details.keywordNames,
+      country: details.country,
       director: details.director,
       castTop: details.castTop,
       ...(details.posterUrl ? { posterLastValidatedAt: new Date() } : {}),
@@ -689,8 +785,11 @@ async function hydrateMovieByTmdbId(prisma: PrismaClient, tmdbId: number): Promi
       tmdbId: details.tmdbId,
       title: details.title,
       year: details.year,
+      synopsis: details.synopsis,
       posterUrl: details.posterUrl,
       genres: details.genres,
+      keywords: details.keywordNames,
+      country: details.country,
       director: details.director,
       castTop: details.castTop,
       posterLastValidatedAt: details.posterUrl ? new Date() : null,
@@ -698,8 +797,11 @@ async function hydrateMovieByTmdbId(prisma: PrismaClient, tmdbId: number): Promi
     update: {
       title: details.title,
       year: details.year,
+      synopsis: details.synopsis,
       ...(details.posterUrl ? { posterUrl: details.posterUrl, posterLastValidatedAt: new Date() } : {}),
       genres: details.genres,
+      keywords: details.keywordNames,
+      country: details.country,
       director: details.director,
       castTop: details.castTop,
     },
@@ -991,16 +1093,22 @@ async function main(): Promise<void> {
               tmdbId: tmdbResolved.tmdbId,
               title: tmdbResolved.title,
               year: tmdbResolved.year,
+              synopsis: tmdbResolved.synopsis,
               posterUrl: tmdbResolved.posterUrl,
               genres: tmdbResolved.genres,
+              keywords: tmdbResolved.keywordNames,
+              country: tmdbResolved.country,
               director: tmdbResolved.director,
               castTop: tmdbResolved.castTop,
             },
             update: {
               title: tmdbResolved.title,
               year: tmdbResolved.year,
+              synopsis: tmdbResolved.synopsis,
               posterUrl: tmdbResolved.posterUrl,
               genres: tmdbResolved.genres,
+              keywords: tmdbResolved.keywordNames,
+              country: tmdbResolved.country,
               director: tmdbResolved.director,
               castTop: tmdbResolved.castTop,
             },
@@ -1399,6 +1507,8 @@ async function main(): Promise<void> {
         missingStreaming,
       });
     }
+
+    await backfillCoreMovieMetadataForPack(prisma, pack.id);
 
     const duplicateEntries = [...duplicateCounter.entries()].filter(([, count]) => count > 1);
     const assignedEligibleCount = [...duplicateCounter.values()].reduce((acc, count) => acc + count, 0);

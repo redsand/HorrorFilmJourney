@@ -1,0 +1,61 @@
+{
+  "seasonSlug": "season-1",
+  "packSlug": "horror",
+  "taxonomyVersion": "season-1-horror-v3.5",
+  "defaults": {
+    "threshold": 0.65,
+    "targetSize": 120,
+    "minEligible": 80,
+    "maxNodesPerMovie": 3
+  },
+  "nodes": {
+    "supernatural-horror": { "threshold": 0.62, "targetSize": 120, "minEligible": 80 },
+    "psychological-horror": { "threshold": 0.68, "targetSize": 120, "minEligible": 80 },
+    "slasher-serial-killer": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "creature-monster": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "body-horror": { "threshold": 0.66, "targetSize": 120, "minEligible": 80 },
+    "cosmic-horror": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "folk-horror": { "threshold": 0.66, "targetSize": 120, "minEligible": 80 },
+    "sci-fi-horror": { "threshold": 0.67, "targetSize": 120, "minEligible": 80 },
+    "found-footage": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "survival-horror": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "apocalyptic-horror": { "threshold": 0.65, "targetSize": 120, "minEligible": 80 },
+    "gothic-horror": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "horror-comedy": { "threshold": 0.70, "targetSize": 120, "minEligible": 80 },
+    "splatter-extreme": { "threshold": 0.64, "targetSize": 120, "minEligible": 80 },
+    "social-domestic-horror": { "threshold": 0.66, "targetSize": 120, "minEligible": 80 },
+    "experimental-horror": { "threshold": 0.63, "targetSize": 120, "minEligible": 80 }
+  },
+  "overlapConstraints": {
+    "disallowedPairs": [
+      ["folk-horror", "horror-comedy"],
+      ["cosmic-horror", "horror-comedy"],
+      ["gothic-horror", "found-footage"],
+      ["experimental-horror", "slasher-serial-killer"],
+      ["slasher-serial-killer", "experimental-horror"],
+      ["found-footage", "gothic-horror"]
+    ],
+    "penalizedPairs": [
+      { "a": "folk-horror", "b": "slasher-serial-killer", "penalty": 0.1, "reason": "ritual slowburn rarely overlaps slasher grammar" },
+      { "a": "folk-horror", "b": "found-footage", "penalty": 0.08, "reason": "folk period framing rarely uses diegetic cameras" },
+      { "a": "folk-horror", "b": "splatter-extreme", "penalty": 0.08, "reason": "folk emphasis is atmosphere over explicit gore" },
+      { "a": "cosmic-horror", "b": "slasher-serial-killer", "penalty": 0.1, "reason": "cosmic scale is usually non-human threat driven" },
+      { "a": "cosmic-horror", "b": "found-footage", "penalty": 0.08, "reason": "cosmic films rarely use handheld realism" },
+      { "a": "cosmic-horror", "b": "social-domestic-horror", "penalty": 0.08, "reason": "cosmic and domestic allegory rarely co-anchor" },
+      { "a": "gothic-horror", "b": "splatter-extreme", "penalty": 0.08, "reason": "gothic mood is typically less transgressive-gore centric" },
+      { "a": "gothic-horror", "b": "apocalyptic-horror", "penalty": 0.08, "reason": "gothic inheritance stories rarely become collapse narratives" },
+      { "a": "horror-comedy", "b": "splatter-extreme", "penalty": 0.08, "reason": "comedic release and relentless extremity rarely co-dominate" },
+      { "a": "horror-comedy", "b": "body-horror", "penalty": 0.06, "reason": "visceral transformation focus is rarely comic-forward" },
+      { "a": "horror-comedy", "b": "apocalyptic-horror", "penalty": 0.08, "reason": "collapse stakes rarely preserve comic center" },
+      { "a": "horror-comedy", "b": "psychological-horror", "penalty": 0.1, "reason": "psychological dread tone rarely overlaps broad comedy" },
+      { "a": "experimental-horror", "b": "found-footage", "penalty": 0.08, "reason": "experimental abstraction differs from faux-realism" },
+      { "a": "experimental-horror", "b": "apocalyptic-horror", "penalty": 0.1, "reason": "experimental works rarely foreground collapse plotting" },
+      { "a": "experimental-horror", "b": "survival-horror", "penalty": 0.08, "reason": "survival mechanics rarely pair with abstract structure" },
+      { "a": "social-domestic-horror", "b": "creature-monster", "penalty": 0.08, "reason": "domestic allegory and creature spectacle seldom co-lead" },
+      { "a": "social-domestic-horror", "b": "splatter-extreme", "penalty": 0.08, "reason": "social/domestic focus is rarely splatter-driven" },
+      { "a": "supernatural-horror", "b": "slasher-serial-killer", "penalty": 0.06, "reason": "supernatural threat and human slasher logic often diverge" },
+      { "a": "psychological-horror", "b": "creature-monster", "penalty": 0.08, "reason": "internal dread focus and creature spectacle often separate" },
+      { "a": "psychological-horror", "b": "apocalyptic-horror", "penalty": 0.08, "reason": "subjective paranoia rarely aligns with outbreak macro-plot" }
+    ]
+  }
+}

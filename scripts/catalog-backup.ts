@@ -8,7 +8,10 @@ type BackupMovie = {
   year: number | null;
   posterUrl: string;
   posterLastValidatedAt: string | null;
+  synopsis: string | null;
   genres: unknown;
+  keywords: unknown;
+  country: string | null;
   director: string | null;
   castTop: unknown;
   ratings: Array<{
@@ -67,7 +70,10 @@ async function main(): Promise<void> {
         year: true,
         posterUrl: true,
         posterLastValidatedAt: true,
+        synopsis: true,
         genres: true,
+        keywords: true,
+        country: true,
         director: true,
         castTop: true,
         ratings: {
@@ -97,7 +103,10 @@ async function main(): Promise<void> {
       year: movie.year ?? null,
       posterUrl: movie.posterUrl,
       posterLastValidatedAt: movie.posterLastValidatedAt ? movie.posterLastValidatedAt.toISOString() : null,
+      synopsis: movie.synopsis ?? null,
       genres: movie.genres,
+      keywords: movie.keywords,
+      country: movie.country ?? null,
       director: movie.director ?? null,
       castTop: movie.castTop,
       ratings: movie.ratings.map((rating) => ({

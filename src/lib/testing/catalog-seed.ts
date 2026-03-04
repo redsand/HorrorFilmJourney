@@ -6,6 +6,9 @@ type SeedMovie = {
   title: string;
   year: number;
   genres: string[];
+  synopsis?: string;
+  keywords?: string[];
+  country?: string;
   director: string;
   castTop: Array<{ name: string; role?: string }>;
   ratings: {
@@ -17,6 +20,31 @@ type SeedMovie = {
 
 function dedupeHash(input: string): string {
   return createHash('sha256').update(input).digest('hex');
+}
+
+function defaultSynopsis(movie: SeedMovie): string {
+  if (movie.synopsis && movie.synopsis.trim().length > 0) {
+    return movie.synopsis.trim();
+  }
+  return `${movie.title} (${movie.year}) is part of the curated horror catalog seed for CinemaCodex.`;
+}
+
+function defaultKeywords(movie: SeedMovie): string[] {
+  const explicit = Array.isArray(movie.keywords)
+    ? movie.keywords.map((value) => value.trim().toLowerCase()).filter((value) => value.length > 0)
+    : [];
+  if (explicit.length > 0) {
+    return explicit.slice(0, 24);
+  }
+  const synthesized = [...new Set([...movie.genres, 'horror', String(movie.year)])];
+  return synthesized.slice(0, 24);
+}
+
+function defaultCountry(movie: SeedMovie): string {
+  if (typeof movie.country === 'string' && movie.country.trim().length > 0) {
+    return movie.country.trim();
+  }
+  return 'Unknown';
 }
 
 const posterUrlCache = new Map<number, string>();
@@ -334,6 +362,7 @@ async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Prom
         packId,
         slug: node.slug,
         name: node.name,
+        taxonomyVersion: 'season-1-foundational-v1',
         learningObjective: node.learningObjective,
         whatToNotice: node.whatToNotice,
         eraSubgenreFocus: node.eraSubgenreFocus,
@@ -342,6 +371,7 @@ async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Prom
       },
       update: {
         name: node.name,
+        taxonomyVersion: 'season-1-foundational-v1',
         learningObjective: node.learningObjective,
         whatToNotice: node.whatToNotice,
         eraSubgenreFocus: node.eraSubgenreFocus,
@@ -363,9 +393,26 @@ async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Prom
             nodeId: upsertedNode.id,
             movieId,
             rank: rank + 1,
+            source: 'curated',
+            score: 1,
+            evidence: {
+              seed: 'seedStarterHorrorCatalog',
+              nodeSlug: node.slug,
+            },
+            runId: 'seed-starter-horror-catalog',
+            taxonomyVersion: 'season-1-foundational-v1',
           };
         })
-        .filter((item): item is { nodeId: string; movieId: string; rank: number } => Boolean(item)),
+        .filter((item): item is {
+          nodeId: string;
+          movieId: string;
+          rank: number;
+          source: string;
+          score: number;
+          evidence: Record<string, unknown>;
+          runId: string;
+          taxonomyVersion: string;
+        } => Boolean(item)),
       skipDuplicates: true,
     });
   }
@@ -490,16 +537,22 @@ export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<Se
         tmdbId: movie.tmdbId,
         title: movie.title,
         year: movie.year,
+        synopsis: defaultSynopsis(movie),
         posterUrl,
         genres: movie.genres,
+        keywords: defaultKeywords(movie),
+        country: defaultCountry(movie),
         director: movie.director,
         castTop: movie.castTop.slice(0, 6),
       },
       update: {
         title: movie.title,
         year: movie.year,
+        synopsis: defaultSynopsis(movie),
         posterUrl,
         genres: movie.genres,
+        keywords: defaultKeywords(movie),
+        country: defaultCountry(movie),
         director: movie.director,
         castTop: movie.castTop.slice(0, 6),
       },

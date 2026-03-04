@@ -146,7 +146,10 @@ model Movie {
   year             Int?
   posterUrl        String
   posterLastValidatedAt DateTime?
+  synopsis         String?
   genres           Json?
+  keywords         Json?
+  country          String?
   director         String?
   castTop          Json?
   createdAt        DateTime               @default(now())
@@ -159,6 +162,7 @@ model Movie {
   streamingCache   MovieStreamingCache[]
   companionCache   CompanionCache[]
   nodeAssignments  NodeMovie[]
+  releaseAssignments SeasonNodeReleaseItem[]
   externalReadings ExternalReadingCuration[]
 }
 
@@ -412,6 +416,7 @@ model Season {
   updatedAt DateTime @updatedAt
 
   packs GenrePack[]
+  nodeReleases SeasonNodeRelease[]
   externalReadings ExternalReadingCuration[]
 }
 
@@ -431,6 +436,7 @@ model GenrePack {
   batches  RecommendationBatch[]
   progress JourneyProgress[]
   nodes    JourneyNode[]
+  nodeReleases SeasonNodeRelease[]
   interactions UserMovieInteraction[]
 }
 
@@ -439,6 +445,7 @@ model JourneyNode {
   packId              String
   slug                String
   name                String
+  taxonomyVersion     String   @default("legacy")
   learningObjective   String
   whatToNotice        Json
   eraSubgenreFocus    String
@@ -459,6 +466,11 @@ model NodeMovie {
   nodeId    String
   movieId   String
   rank      Int
+  source    String   @default("unknown")
+  score     Float?
+  evidence  Json?
+  runId     String?
+  taxonomyVersion String @default("legacy")
   createdAt DateTime @default(now())
 
   node  JourneyNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
@@ -466,5 +478,47 @@ model NodeMovie {
 
   @@unique([nodeId, movieId])
   @@index([nodeId, rank])
+  @@index([movieId])
+  @@index([source])
+  @@index([runId])
+  @@index([taxonomyVersion])
+}
+
+model SeasonNodeRelease {
+  id              String   @id @default(cuid())
+  seasonId        String
+  packId          String
+  taxonomyVersion String
+  runId           String
+  isPublished     Boolean  @default(false)
+  publishedAt     DateTime?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  pack   GenrePack @relation(fields: [packId], references: [id], onDelete: Cascade)
+  items  SeasonNodeReleaseItem[]
+
+  @@unique([packId, taxonomyVersion, runId])
+  @@index([seasonId, packId, isPublished, createdAt])
+  @@index([packId, taxonomyVersion, isPublished, createdAt])
+}
+
+model SeasonNodeReleaseItem {
+  id        String   @id @default(cuid())
+  releaseId String
+  nodeSlug  String
+  movieId   String
+  rank      Int
+  source    String
+  score     Float?
+  evidence  Json?
+  createdAt DateTime @default(now())
+
+  release SeasonNodeRelease @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  movie   Movie             @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([releaseId, nodeSlug, movieId])
+  @@index([releaseId, nodeSlug, rank])
   @@index([movieId])
 }

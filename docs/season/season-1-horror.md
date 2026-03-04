@@ -4,97 +4,13 @@
 
 Season 1 is a guided horror canon: users progress from foundations to contemporary forms while learning how craft, subgenre, and audience expectations evolved. The promise is intentional progression, not random picks.
 
-## Node map (10 units)
+## Node map (16 subgenres)
 
-### 1) Foundations: Silent and Early Horror
-- Learning objective: recognize the visual grammar that shaped modern horror language.
-- What you'll notice:
-  - expressionist lighting and shadow composition
-  - archetypal monster framing
-  - fear through atmosphere over explicit violence
-- Era/subgenre focus: 1920s-1940s, gothic and early monster cinema.
-- Default spoiler policy: `NO_SPOILERS`.
+The active Season 1 taxonomy is the 16-node subgenre curriculum in:
 
-### 2) Monsters and Archetypes
-- Learning objective: identify recurring fear archetypes and why they persist.
-- What you'll notice:
-  - predator rules and threat mythology
-  - victim/survivor role patterns
-  - location as a fear amplifier
-- Era/subgenre focus: 1950s-1980s, monsters, supernatural, proto-slasher.
-- Default spoiler policy: `NO_SPOILERS`.
+- `docs/season/season-1-horror-subgenre-curriculum.json`
 
-### 3) Psychological Horror
-- Learning objective: analyze tension built from perception, guilt, and ambiguity.
-- What you'll notice:
-  - subjective perspective choices
-  - ambiguity vs explicit threat
-  - tempo shifts that create dread
-- Era/subgenre focus: 1960s-2010s, psychological and gothic.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 4) Folk and Occult Horror
-- Learning objective: read ritual, belief, and place-based dread.
-- What you'll notice:
-  - ritual structure and social pressure
-  - sacred/profane imagery
-  - isolation and landscape as threat
-- Era/subgenre focus: 1970s-2020s, folk, occult, supernatural.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 5) Body Horror and Transformation
-- Learning objective: connect physical transformation to identity and anxiety themes.
-- What you'll notice:
-  - transformation beats and escalation
-  - practical effects used as narrative tools
-  - body-as-metaphor storytelling
-- Era/subgenre focus: 1970s-1990s, body horror and sci-fi horror.
-- Default spoiler policy: `LIGHT`.
-
-### 6) Slasher Evolution
-- Learning objective: map slasher conventions from origin to meta reinvention.
-- What you'll notice:
-  - set-piece pacing and kill rhythm
-  - final-girl framing and perspective
-  - self-aware genre commentary
-- Era/subgenre focus: 1970s-2010s, slasher and meta-horror.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 7) Found Footage and Realist Dread
-- Learning objective: understand realism illusions and immersion tactics.
-- What you'll notice:
-  - diegetic camera logic
-  - fragmented information escalation
-  - implied threat and uncertainty design
-- Era/subgenre focus: 1990s-2010s, found footage and survival horror.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 8) Modern Elevated Horror
-- Learning objective: evaluate social metaphor, family trauma, and formal ambition.
-- What you'll notice:
-  - thematic-symbolic pairing
-  - prestige pacing and tonal control
-  - interpretive endings and ambiguity
-- Era/subgenre focus: 2010s-2020s, psychological/social/supernatural.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 9) Zombie and Infection Nightmares
-- Learning objective: track contagion storytelling and social-collapse pressure.
-- What you'll notice:
-  - outbreak escalation rhythms
-  - group dynamics under survival stress
-  - infection-rule storytelling
-- Era/subgenre focus: 1960s-2010s, zombie and infection survival horror.
-- Default spoiler policy: `NO_SPOILERS`.
-
-### 10) Hauntings and Cursed Objects
-- Learning objective: identify ghost-story structure and curse-logic patterns.
-- What you'll notice:
-  - haunting escalation beats
-  - curse rules and payoffs
-  - sound/silence contrast for dread
-- Era/subgenre focus: 1970s-2020s, supernatural, occult, gothic, urban legend.
-- Default spoiler policy: `NO_SPOILERS`.
+This file is the source used by `npm run seed:season1:subgenres`, admin curriculum views, and recommendation node scoping. The older 10-node curriculum is deprecated and should not be used for active Season 1 assignment.
 
 ## Curation constraints
 

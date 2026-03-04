@@ -10,6 +10,9 @@ type TmdbMovieDetails = {
   genres?: Array<{ id?: number; name?: string }>;
   vote_average?: number;
   popularity?: number;
+  overview?: string;
+  production_countries?: Array<{ name?: string }>;
+  keywords?: { keywords?: Array<{ name?: string }> };
 };
 
 const DEFAULT_GENRES = [27, 53, 9648, 878, 14, 18, 35, 12]; // broaden horror-adjacent discovery
@@ -124,6 +127,18 @@ function toGenres(genreIds: number[]): string[] {
   return [...derived];
 }
 
+function parseKeywords(movie: TmdbMovieDetails): string[] {
+  return (movie.keywords?.keywords ?? [])
+    .map((entry) => (typeof entry?.name === 'string' ? entry.name.trim().toLowerCase() : ''))
+    .filter((entry) => entry.length > 0)
+    .slice(0, 24);
+}
+
+function parseCountry(movie: TmdbMovieDetails): string | null {
+  const first = (movie.production_countries ?? []).find((entry) => typeof entry?.name === 'string' && entry.name.trim().length > 0);
+  return first?.name?.trim() ?? null;
+}
+
 function parseJsonStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
@@ -155,7 +170,7 @@ async function fetchLatestTmdbId(apiKey: string): Promise<number> {
 }
 
 async function fetchMovieDetails(apiKey: string, tmdbId: number): Promise<TmdbMovieDetails | null> {
-  const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}&language=en-US`;
+  const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}&language=en-US&append_to_response=keywords`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -271,16 +286,22 @@ async function main(): Promise<void> {
             tmdbId: movie.id,
             title: movie.title.trim(),
             year: toYear(movie.release_date),
+            synopsis: typeof movie.overview === 'string' ? movie.overview.trim() : null,
             posterUrl,
             posterLastValidatedAt: new Date(),
             genres: mergedGenres,
+            keywords: parseKeywords(movie),
+            country: parseCountry(movie),
           },
           update: {
             title: movie.title.trim(),
             year: toYear(movie.release_date),
+            synopsis: typeof movie.overview === 'string' ? movie.overview.trim() : null,
             posterUrl,
             posterLastValidatedAt: new Date(),
             genres: mergedGenres,
+            keywords: parseKeywords(movie),
+            country: parseCountry(movie),
           },
           select: { id: true },
         });

@@ -16,6 +16,9 @@ type ImportedTitle = {
   year?: number | null;
   posterUrl?: string;
   genres?: unknown;
+  synopsis?: string | null;
+  keywords?: unknown;
+  country?: string | null;
   director?: string | null;
   castTop?: unknown;
   ratings?: ImportedRating[];
@@ -105,6 +108,16 @@ function normalizeCastTop(input: unknown): Array<{ name: string; role?: string }
     })
     .filter((entry): entry is { name: string; role?: string } => entry !== null)
     .slice(0, 8);
+}
+
+function normalizeKeywords(input: unknown): string[] {
+  if (!Array.isArray(input)) {
+    return [];
+  }
+  return input
+    .map((entry) => (typeof entry === 'string' ? entry.trim().toLowerCase() : ''))
+    .filter((entry) => entry.length > 0)
+    .slice(0, 24);
 }
 
 async function main(): Promise<void> {
@@ -207,18 +220,24 @@ async function main(): Promise<void> {
             tmdbId: title.tmdbId,
             title: title.title,
             year: typeof title.year === 'number' ? title.year : undefined,
+            synopsis: typeof title.synopsis === 'string' ? title.synopsis : undefined,
             posterUrl: title.posterUrl && title.posterUrl.trim().length > 0
               ? title.posterUrl.trim()
               : `https://image.tmdb.org/t/p/w500/placeholder-${title.tmdbId}.jpg`,
             genres: normalizeGenres(title.genres),
+            keywords: normalizeKeywords(title.keywords),
+            country: typeof title.country === 'string' ? title.country : undefined,
             director: title.director ?? undefined,
             castTop: normalizeCastTop(title.castTop),
           },
           update: {
             title: title.title,
             year: typeof title.year === 'number' ? title.year : undefined,
+            synopsis: typeof title.synopsis === 'string' ? title.synopsis : undefined,
             ...(title.posterUrl && title.posterUrl.trim().length > 0 ? { posterUrl: title.posterUrl.trim() } : {}),
             genres: normalizeGenres(title.genres),
+            keywords: normalizeKeywords(title.keywords),
+            country: typeof title.country === 'string' ? title.country : undefined,
             director: title.director ?? undefined,
             castTop: normalizeCastTop(title.castTop),
           },
@@ -284,4 +303,3 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
-

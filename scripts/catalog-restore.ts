@@ -9,7 +9,10 @@ type BackupMovie = {
   year: number | null;
   posterUrl: string;
   posterLastValidatedAt: string | null;
+  synopsis?: string | null;
   genres: unknown;
+  keywords?: unknown;
+  country?: string | null;
   director: string | null;
   castTop: unknown;
   ratings: Array<{
@@ -83,7 +86,10 @@ async function main(): Promise<void> {
           year: movie.year ?? undefined,
           posterUrl: movie.posterUrl,
           posterLastValidatedAt: movie.posterLastValidatedAt ? new Date(movie.posterLastValidatedAt) : undefined,
+          synopsis: movie.synopsis ?? undefined,
           genres: movie.genres ?? undefined,
+          keywords: movie.keywords ?? undefined,
+          country: movie.country ?? undefined,
           director: movie.director ?? undefined,
           castTop: movie.castTop ?? undefined,
         },
@@ -92,7 +98,10 @@ async function main(): Promise<void> {
           year: movie.year ?? undefined,
           posterUrl: movie.posterUrl,
           posterLastValidatedAt: movie.posterLastValidatedAt ? new Date(movie.posterLastValidatedAt) : undefined,
+          synopsis: movie.synopsis ?? undefined,
           genres: movie.genres ?? undefined,
+          keywords: movie.keywords ?? undefined,
+          country: movie.country ?? undefined,
           director: movie.director ?? undefined,
           castTop: movie.castTop ?? undefined,
         },

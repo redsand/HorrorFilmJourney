@@ -18,6 +18,7 @@
     "bootstrap:admin": "node --experimental-strip-types scripts/bootstrap-admin.ts",
     "seed:catalog": "node --experimental-strip-types scripts/seed-catalog.ts",
     "seed:season1:subgenres": "node --experimental-strip-types scripts/seed-season1-horror-subgenres.ts",
+    "publish:season1:nodes": "node --experimental-strip-types scripts/publish-season1-node-release.ts",
     "seed:season1:enrich-tags": "node --experimental-strip-types scripts/enrich-season1-horror-tags.ts",
     "seed:season2:cult": "node --experimental-strip-types scripts/seed-season2-cult-curriculum.ts",
     "update:seasons": "node --experimental-strip-types scripts/update-seasons.ts",
@@ -36,8 +37,9 @@
     "smoke:prod": "node --experimental-strip-types scripts/smoke-prod.ts",
     "eval:recs:offline": "node --experimental-strip-types scripts/eval-recommendations.ts",
     "audit:cult:controls": "node --experimental-strip-types scripts/audit-cult-controls.ts",
+    "audit:season1:nodes": "node --experimental-strip-types scripts/audit-season1-node-population.ts",
     "check:external-links:gates": "node --experimental-strip-types scripts/check-external-reading-gates.ts",
-    "setup:dev": "npx prisma migrate deploy && npm run bootstrap:admin && npm run seed:catalog",
+    "setup:dev": "npx prisma migrate deploy && npm run bootstrap:admin && npm run seed:catalog && npm run seed:season1:subgenres",
     "setup:test": "node --experimental-strip-types scripts/setup-test.ts",
     "reset:test-db": "node --experimental-strip-types scripts/reset-test-db.ts",
     "validate:rc": "node --experimental-strip-types scripts/validate-rc.ts"
