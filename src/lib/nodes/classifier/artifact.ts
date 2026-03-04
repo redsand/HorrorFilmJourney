@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import type { Season1NodeClassifierArtifact } from './types.ts';
+import type { Season1NodeClassifierArtifact } from './types';
 
 export async function loadSeason1ClassifierArtifact(path: string): Promise<Season1NodeClassifierArtifact> {
   const raw = await readFile(path, 'utf8');

@@ -1,5 +1,5 @@
-import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact } from './types.ts';
-import { buildVocabulary, vectorizeMovie } from './features.ts';
+import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact } from './types';
+import { buildVocabulary, vectorizeMovie } from './features';
 
 type TrainInput = {
   seasonSlug: string;
@@ -197,8 +197,8 @@ export function trainSeason1Classifier(input: TrainInput): Season1NodeClassifier
         validationF1: Number(calibrated.metrics.f1.toFixed(4)),
         validationPrecision: Number(calibrated.metrics.precision.toFixed(4)),
         validationRecall: Number(calibrated.metrics.recall.toFixed(4)),
-        positivesTrain: yTrain.reduce((sum, v) => sum + (v === 1 ? 1 : 0), 0),
-        positivesValidation: yVal.reduce((sum, v) => sum + (v === 1 ? 1 : 0), 0),
+        positivesTrain: yTrain.reduce<number>((sum, v) => sum + (v === 1 ? 1 : 0), 0),
+        positivesValidation: yVal.reduce<number>((sum, v) => sum + (v === 1 ? 1 : 0), 0),
       },
     });
   }
