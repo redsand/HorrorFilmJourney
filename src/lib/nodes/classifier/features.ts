@@ -1,4 +1,4 @@
-import type { ClassifierMovieInput } from './types.ts';
+import type { ClassifierMovieInput } from './types';
 
 function norm(value: string): string {
   return value

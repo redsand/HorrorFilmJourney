@@ -3,7 +3,7 @@ import type {
   LabelingFunctionResult,
   NodeExclusivityRule,
   WeakSupervisionMovie,
-} from './types.ts';
+} from './types';
 
 type NodeClassifier = {
   strongTags: string[];

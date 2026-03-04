@@ -1,2 +1,2 @@
-export * from './season1-governance.ts';
-export * from './release-artifact.ts';
+export * from './season1-governance';
+export * from './release-artifact';

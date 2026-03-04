@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 
 export type CreateSeasonNodeReleaseInput = {
   seasonId: string;
@@ -6,7 +6,7 @@ export type CreateSeasonNodeReleaseInput = {
   taxonomyVersion: string;
   runId: string;
   publish: boolean;
-  metadata?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonValue;
 };
 
 export async function createSeasonNodeReleaseFromNodeMovie(prisma: PrismaClient, input: CreateSeasonNodeReleaseInput): Promise<{ releaseId: string; itemCount: number }> {

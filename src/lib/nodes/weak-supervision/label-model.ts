@@ -3,7 +3,7 @@ import type {
   LabelingFunction,
   NodeProbability,
   WeakSupervisionMovie,
-} from './types.ts';
+} from './types';
 
 function clamp01(value: number): number {
   if (!Number.isFinite(value)) {

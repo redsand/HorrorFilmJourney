@@ -1,3 +1,3 @@
-export * from './types.ts';
-export * from './lfs.ts';
-export * from './label-model.ts';
+export * from './types';
+export * from './lfs';
+export * from './label-model';
