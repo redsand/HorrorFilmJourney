@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
 
 type CurriculumTitle = {
   title: string;
@@ -173,6 +174,45 @@ function parseIntEnv(name: string, fallback: number): number {
   }
   const parsed = Number.parseInt(raw, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function parseTargetPerNode(requiredFloor: number): number | 'all' {
+  const raw = process.env.SEASON1_TARGET_PER_NODE?.trim().toLowerCase();
+  if (!raw || raw === 'all') {
+    return 'all';
+  }
+  const parsed = Number.parseInt(raw, 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 'all';
+  }
+  return Math.max(requiredFloor, parsed);
+}
+
+const NODE_MATCH_TAGS: Record<string, string[]> = {
+  'supernatural-horror': ['supernatural', 'occult', 'paranormal', 'ghost', 'haunting', 'demonic'],
+  'psychological-horror': ['psychological', 'thriller', 'mystery', 'surreal'],
+  'slasher-serial-killer': ['slasher', 'serial-killer', 'stalker', 'home-invasion'],
+  'creature-monster': ['monster', 'creature-feature', 'animal-attack', 'kaiju', 'werewolf', 'vampire'],
+  'body-horror': ['body-horror', 'mutation', 'infection', 'parasite', 'medical'],
+  'cosmic-horror': ['cosmic-horror', 'eldritch', 'existential', 'sci-fi-horror'],
+  'folk-horror': ['folk-horror', 'pagan', 'ritual', 'rural', 'village-cult'],
+  'sci-fi-horror': ['sci-fi-horror', 'sci-fi', 'alien', 'tech-horror'],
+  'found-footage': ['found-footage', 'mockumentary', 'screenlife', 'surveillance'],
+  'survival-horror': ['survival-horror', 'survival', 'wilderness', 'siege', 'escape'],
+  'apocalyptic-horror': ['apocalyptic-horror', 'zombie', 'outbreak', 'end-of-world'],
+  'gothic-horror': ['gothic-horror', 'gothic', 'victorian', 'period'],
+  'horror-comedy': ['horror-comedy', 'comedy', 'satire', 'parody'],
+  'splatter-extreme': ['splatter-extreme', 'gore', 'extreme', 'transgressive'],
+  'social-domestic-horror': ['social-domestic-horror', 'social-thriller', 'family-trauma', 'domestic-horror'],
+  'experimental-horror': ['experimental-horror', 'surreal', 'avant-garde', 'dream-logic'],
+};
+
+function matchesNodeByGenre(nodeSlug: string, genres: string[]): boolean {
+  const tags = NODE_MATCH_TAGS[nodeSlug] ?? [];
+  if (tags.length === 0) {
+    return genres.includes('horror');
+  }
+  return genres.some((genre) => tags.includes(genre));
 }
 
 function mapDiscoverGenres(genreIds: number[], nodeSlug: string): string[] {
@@ -369,6 +409,7 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient();
   const apiKey = process.env.TMDB_API_KEY ?? null;
   const limitPerNode = parseIntEnv('SEASON1_REQUIRED_LIMIT_PER_NODE', 20);
+  const targetPerNode = parseTargetPerNode(limitPerNode);
   try {
     const spec = await loadSpec();
     const season = await prisma.season.upsert({
@@ -395,6 +436,37 @@ async function main(): Promise<void> {
     const summaries: NodeSummary[] = [];
     let totalRequested = 0;
     let totalAssigned = 0;
+
+    const catalogPool = (await prisma.movie.findMany({
+      select: {
+        id: true,
+        tmdbId: true,
+        posterUrl: true,
+        genres: true,
+        director: true,
+        castTop: true,
+        ratings: { select: { source: true, value: true } },
+      },
+    }))
+      .map((movie) => {
+        const genres = parseJsonStringArray(movie.genres);
+        const eligibility = evaluateCurriculumEligibility({
+          posterUrl: movie.posterUrl ?? '',
+          director: movie.director,
+          castTop: movie.castTop,
+          ratings: movie.ratings.map((rating) => ({ source: rating.source })),
+          hasStreamingData: false,
+        });
+        const popularity = movie.ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
+        return {
+          id: movie.id,
+          tmdbId: movie.tmdbId,
+          genres,
+          popularity,
+          eligible: eligibility.isEligible,
+        };
+      })
+      .filter((movie) => movie.eligible && movie.genres.includes('horror'));
 
     for (const [index, node] of spec.nodes.entries()) {
       const upsertedNode = await prisma.journeyNode.upsert({
@@ -447,12 +519,34 @@ async function main(): Promise<void> {
       if (assignments.length > 0) {
         await prisma.nodeMovie.createMany({ data: assignments, skipDuplicates: true });
       }
+
+      const shouldTopup = targetPerNode === 'all' || assignments.length < targetPerNode;
+      if (shouldTopup) {
+        const assignedIds = new Set(assignments.map((entry) => entry.movieId));
+        const topupPool = catalogPool
+          .filter((movie) => !assignedIds.has(movie.id))
+          .filter((movie) => matchesNodeByGenre(node.slug, movie.genres))
+          .sort((a, b) => (b.popularity - a.popularity) || (a.tmdbId - b.tmdbId));
+        const topup = (targetPerNode === 'all'
+          ? topupPool
+          : topupPool.slice(0, Math.max(0, targetPerNode - assignments.length)))
+          .map((movie, i) => ({
+            nodeId: upsertedNode.id,
+            movieId: movie.id,
+            rank: rank + i,
+          }));
+        if (topup.length > 0) {
+          await prisma.nodeMovie.createMany({ data: topup, skipDuplicates: true });
+          assignments.push(...topup);
+        }
+      }
+
       totalAssigned += assignments.length;
       summaries.push({
         slug: node.slug,
         requested: requestedTitles.length,
         assigned: assignments.length,
-        unresolved: requestedTitles.length - assignments.length,
+        unresolved: Math.max(0, requestedTitles.length - assignments.length),
       });
     }
 
@@ -462,6 +556,7 @@ async function main(): Promise<void> {
     lines.push(`Generated: ${new Date().toISOString()}`);
     lines.push('');
     lines.push(`Requested titles: ${totalRequested}`);
+    lines.push(`Target titles per node: ${targetPerNode === 'all' ? 'all eligible matches' : targetPerNode}`);
     lines.push(`Assigned titles: ${totalAssigned}`);
     lines.push(`Unresolved titles: ${unresolved.length}`);
     lines.push('');

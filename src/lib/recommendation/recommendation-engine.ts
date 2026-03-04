@@ -837,10 +837,11 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         },
       })) > 0
       : false;
+    const usePackScopedPool = hasPackCatalog && constraints.packPrimaryGenre.toLowerCase() !== 'horror';
 
     const allMovies = await this.prisma.movie.findMany({
       where: constraints.packId
-        ? hasPackCatalog
+        ? usePackScopedPool
           ? {
             nodeAssignments: {
               some: {
@@ -858,7 +859,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
       .filter((movie) => (
-        constraints.packId && hasPackCatalog
+        constraints.packId && usePackScopedPool
           ? true
           : normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase())
       ))
@@ -1181,6 +1182,107 @@ export type RecommendationEngineDeps = {
 const DEFAULT_TARGET_COUNT = 5;
 const DEFAULT_SKIP_DAYS = 30;
 
+async function resolveJourneyNodeWithCapacity(input: {
+  prisma: PrismaClient;
+  userId: string;
+  packId: string | null | undefined;
+  preferredJourneyNode: string;
+  targetCount: number;
+  excludeRecentSkippedDays: number;
+  packPrimaryGenre: string;
+}): Promise<string> {
+  if (!input.packId) {
+    return input.preferredJourneyNode;
+  }
+
+  const nodes = await input.prisma.journeyNode.findMany({
+    where: { packId: input.packId },
+    orderBy: { orderIndex: 'asc' },
+    select: { slug: true },
+  });
+  if (nodes.length === 0) {
+    return input.preferredJourneyNode;
+  }
+
+  const excludedMovieIds = new Set<string>();
+  const skipCutoff = new Date(Date.now() - input.excludeRecentSkippedDays * 24 * 60 * 60 * 1000);
+  const seenInteractions = await input.prisma.userMovieInteraction.findMany({
+    where: {
+      userId: input.userId,
+      OR: [
+        { status: InteractionStatus.WATCHED },
+        { status: InteractionStatus.ALREADY_SEEN },
+        { status: InteractionStatus.SKIPPED, createdAt: { gte: skipCutoff } },
+      ],
+    },
+    select: { movieId: true },
+  });
+  seenInteractions.forEach((item) => excludedMovieIds.add(item.movieId));
+  const recentRecommendationItems = await input.prisma.recommendationItem.findMany({
+    where: { batch: { userId: input.userId } },
+    orderBy: [{ batch: { createdAt: 'desc' } }, { rank: 'asc' }],
+    select: { movieId: true },
+    take: 30,
+  });
+  [...new Set(recentRecommendationItems.map((item) => item.movieId))]
+    .slice(0, 10)
+    .forEach((movieId) => excludedMovieIds.add(movieId));
+  const latestBatch = await input.prisma.recommendationBatch.findFirst({
+    where: { userId: input.userId },
+    orderBy: { createdAt: 'desc' },
+    select: { items: { select: { movieId: true } } },
+  });
+  latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
+
+  const preferredIndex = Math.max(0, nodes.findIndex((node) => node.slug === input.preferredJourneyNode));
+  const orderedSlugs = [
+    ...nodes.slice(preferredIndex).map((node) => node.slug),
+    ...nodes.slice(0, preferredIndex).map((node) => node.slug),
+  ];
+
+  for (const nodeSlug of orderedSlugs) {
+    // eslint-disable-next-line no-await-in-loop
+    const nodeAssignments = await input.prisma.nodeMovie.findMany({
+      where: { node: { packId: input.packId, slug: nodeSlug } },
+      select: {
+        movie: {
+          select: {
+            id: true,
+            genres: true,
+            posterUrl: true,
+            posterLastValidatedAt: true,
+            ratings: { select: { source: true } },
+          },
+        },
+      },
+    });
+    const availableCount = nodeAssignments
+      .map((entry) => entry.movie)
+      .filter((movie) => !excludedMovieIds.has(movie.id))
+      .filter((movie) => normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(input.packPrimaryGenre.toLowerCase()))
+      .filter((movie) => isRecommendationEligibleMovie({
+        posterUrl: movie.posterUrl,
+        posterLastValidatedAt: movie.posterLastValidatedAt,
+        ratings: movie.ratings,
+      }))
+      .length;
+
+    if (availableCount >= input.targetCount) {
+      if (nodeSlug !== input.preferredJourneyNode) {
+        console.info('[recommendations.engine] journey node auto-advanced', {
+          from: input.preferredJourneyNode,
+          to: nodeSlug,
+          availableCount,
+          targetCount: input.targetCount,
+        });
+      }
+      return nodeSlug;
+    }
+  }
+
+  return input.preferredJourneyNode;
+}
+
 export async function generateRecommendationBatchModern(
   userId: string,
   prisma: PrismaClient,
@@ -1206,7 +1308,7 @@ export async function generateRecommendationBatchModern(
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const excludeRecentSkippedDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
   const packPrimaryGenre = options.packPrimaryGenre ?? 'horror';
-  const resolvedJourneyNode = options.journeyNode ?? (
+  const preferredJourneyNode = options.journeyNode ?? (
     options.packId
       ? (await prisma.journeyProgress.findFirst({
         where: { userId, ...(options.packId ? { packId: options.packId } : {}) },
@@ -1221,6 +1323,15 @@ export async function generateRecommendationBatchModern(
       )?.slug ?? 'ENGINE_V1_CORE'
       : 'ENGINE_V1_CORE'
   );
+  const resolvedJourneyNode = await resolveJourneyNodeWithCapacity({
+    prisma,
+    userId,
+    packId: options.packId,
+    preferredJourneyNode,
+    targetCount,
+    excludeRecentSkippedDays,
+    packPrimaryGenre,
+  });
 
   const countersStartedAt = nowMs();
   const [excludedSeenCount, excludedSkippedRecentCount, allMovieCount] = await Promise.all([
