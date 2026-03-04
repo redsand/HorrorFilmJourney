@@ -48,6 +48,17 @@ type SnapshotItem = {
   score: number | null;
 };
 
+type NodeMovieAssignment = {
+  movieId: string;
+  nodeSlug: string;
+  rank: number;
+  tier: 'CORE' | 'EXTENDED';
+  coreRank: number | null;
+  source: string;
+  finalScore: number;
+  journeyScore: number;
+};
+
 type QualityProblem = {
   movieId: string;
   tmdbId: number;
@@ -187,7 +198,7 @@ async function main(): Promise<void> {
       })
       : null;
 
-    const [latestItemsRaw, previousItemsRaw, moviesRaw] = await Promise.all([
+    const [latestItemsRaw, previousItemsRaw, nodeMovieRaw, moviesRaw] = await Promise.all([
       prisma.seasonNodeReleaseItem.findMany({
         where: { releaseId: latestRelease.id },
         select: { movieId: true, nodeSlug: true, rank: true, source: true, score: true },
@@ -198,6 +209,22 @@ async function main(): Promise<void> {
           select: { movieId: true, nodeSlug: true, rank: true, source: true, score: true },
         })
         : Promise.resolve([] as SnapshotItem[]),
+      prisma.nodeMovie.findMany({
+        where: {
+          node: { packId: pack.id },
+          taxonomyVersion,
+        },
+        select: {
+          movieId: true,
+          rank: true,
+          tier: true,
+          coreRank: true,
+          source: true,
+          finalScore: true,
+          journeyScore: true,
+          node: { select: { slug: true } },
+        },
+      }),
       prisma.movie.findMany({
         select: {
           id: true,
@@ -218,6 +245,16 @@ async function main(): Promise<void> {
 
     const latestItems: SnapshotItem[] = latestItemsRaw;
     const previousItems: SnapshotItem[] = previousItemsRaw;
+    const nodeMovieAssignments: NodeMovieAssignment[] = nodeMovieRaw.map((row) => ({
+      movieId: row.movieId,
+      nodeSlug: row.node.slug,
+      rank: row.rank,
+      tier: row.tier,
+      coreRank: row.coreRank,
+      source: row.source,
+      finalScore: row.finalScore,
+      journeyScore: row.journeyScore,
+    }));
     const movieById = new Map<string, ParsedMovie>(
       moviesRaw.map((movie) => [movie.id, {
         id: movie.id,

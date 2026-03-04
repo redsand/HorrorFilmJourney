@@ -850,6 +850,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
           ? (await this.prisma.seasonNodeReleaseItem.count({ where: { releaseId: publishedReleaseId } })) > 0
           : (await this.prisma.nodeMovie.count({
             where: {
+              tier: 'CORE',
               node: {
                 packId: constraints.packId,
               },
@@ -874,6 +875,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
               : {
                 nodeAssignments: {
                   some: {
+                    tier: 'CORE',
                     node: {
                       packId: constraints.packId,
                     },
@@ -911,6 +913,7 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         })
         : await this.prisma.nodeMovie.findMany({
           where: {
+            tier: 'CORE',
             node: {
               packId: constraints.packId,
               slug: constraints.journeyNodeSlug,
@@ -919,6 +922,18 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
           orderBy: { rank: 'asc' },
           select: { movieId: true, source: true, score: true },
         });
+      const extendedAssignments = await this.prisma.nodeMovie.findMany({
+        where: {
+          tier: 'EXTENDED',
+          node: {
+            packId: constraints.packId,
+            slug: constraints.journeyNodeSlug,
+          },
+        },
+        orderBy: [{ finalScore: 'desc' }, { journeyScore: 'desc' }, { rank: 'asc' }],
+        select: { movieId: true, source: true, score: true },
+        take: Math.max(25, constraints.targetCount * 6),
+      });
       const curatedSet = new Set(curatedAssignments.map((item) => item.movieId));
       const eligibleSet = new Set(eligible.map((movie) => movie.id));
       const minConfidence = resolveSeason1NodeMinConfidence();
@@ -938,12 +953,25 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         }
       }
       curatedIds = highConfidenceIds;
+      if (curatedIds.length < constraints.targetCount) {
+        for (const item of extendedAssignments) {
+          if (!eligibleSet.has(item.movieId) || curatedSet.has(item.movieId) || curatedIds.includes(item.movieId)) {
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          curatedIds.push(item.movieId);
+          if (curatedIds.length >= constraints.targetCount) {
+            break;
+          }
+        }
+      }
       const fallbackIds = eligible
         .filter((movie) => !curatedSet.has(movie.id))
         .map((movie) => movie.id);
       console.info('[recommendations.engine] curriculum candidates', {
         journeyNodeSlug: constraints.journeyNodeSlug,
         curatedCount: curatedIds.length,
+        extendedCount: extendedAssignments.length,
         lowConfidenceCuratedCount: fallbackLowConfidenceIds.length,
         fallbackCount: fallbackIds.length,
         minConfidence,

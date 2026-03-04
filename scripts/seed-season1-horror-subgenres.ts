@@ -3,7 +3,6 @@ import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import {
   buildSeason1LabelingFunctions,
-  inferNodeProbabilities,
   type LabelingFunction,
 } from '../src/lib/nodes/weak-supervision/index.ts';
 import {
@@ -15,12 +14,16 @@ import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility
 import {
   applySeason1GovernanceEnvOverrides,
   loadSeason1NodeGovernanceConfig,
+  resolvePerNodeCoreThreshold,
+  resolvePerNodeMaxExtended,
   resolvePerNodeMinEligible,
+  resolvePerNodeQualityFloor,
   resolvePerNodeTargetSize,
-  resolvePerNodeThreshold,
   toPairKey,
 } from '../src/lib/nodes/governance/season1-governance.ts';
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
+import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
+import { evaluateJourneyWorthinessSelectionGate, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
 import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
 
 type CurriculumTitle = {
@@ -54,6 +57,7 @@ type CatalogMovie = {
   cast: string[];
   embeddingVector?: number[];
   popularity: number;
+  ratings: Array<{ source: string; value: number; scale?: string }>;
   eligible: boolean;
 };
 
@@ -61,8 +65,12 @@ type NodeAssignmentData = {
   nodeId: string;
   movieId: string;
   rank: number;
+  tier: 'CORE' | 'EXTENDED';
+  coreRank: number | null;
   source: 'curated' | 'weak_supervision';
   score: number | null;
+  finalScore: number;
+  journeyScore: number;
   evidence: Record<string, unknown>;
   runId: string;
   taxonomyVersion: string;
@@ -76,7 +84,10 @@ type WeakCandidate = {
   classifierProbability: number | null;
   assistProbability: number;
   adjustedProbability: number;
-  threshold: number;
+  qualityFloor: number;
+  coreThreshold: number;
+  finalScore: number;
+  journeyScore: number;
   firedLfNames: string[];
   evidenceSummary: string[];
   positiveWeight: number;
@@ -88,12 +99,17 @@ type NodeSummary = {
   slug: string;
   requested: number;
   curatedAssigned: number;
-  weakAssigned: number;
+  weakCoreAssigned: number;
+  weakExtendedAssigned: number;
   assigned: number;
+  coreCount: number;
+  extendedCount: number;
   targetSize: number;
   minEligible: number;
-  threshold: number;
+  qualityFloor: number;
+  coreThreshold: number;
   eligibleWeak: number;
+  excludedOnlyByOverlapForCore: number;
   belowMinFloor: boolean;
   unresolved: number;
 };
@@ -274,13 +290,27 @@ function makeLookupKey(title: string, year: number | null): string {
   return `${normalizeTitle(title)}::${year ?? -1}`;
 }
 
-function evidenceSummaryFromFired(fired: Array<{ lfName: string; evidence: string[] }>): string[] {
-  return fired
-    .slice(0, 4)
-    .map((entry) => {
-      const parts = entry.evidence.slice(0, 2).join(',');
-      return parts.length > 0 ? `${entry.lfName} (${parts})` : entry.lfName;
-    });
+function buildJourneyInput(movie: CatalogMovie): JourneyWorthinessMovieInput {
+  const voteCount = movie.ratings.find((rating) => rating.source === 'TMDB_VOTE_COUNT')?.value
+    ?? movie.ratings.find((rating) => rating.source === 'TMDB_VOTES')?.value
+    ?? null;
+  return {
+    year: movie.year,
+    runtimeMinutes: null,
+    popularity: movie.popularity,
+    voteCount,
+    posterUrl: '',
+    synopsis: movie.synopsis,
+    director: movie.director,
+    castTop: movie.cast,
+    genres: movie.genres,
+    keywords: movie.keywords,
+    ratings: movie.ratings.map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+      scale: rating.scale,
+    })),
+  };
 }
 
 async function loadSpec(): Promise<CurriculumSpec> {
@@ -364,7 +394,7 @@ async function main(): Promise<void> {
         director: true,
         castTop: true,
         embedding: { select: { vectorJson: true } },
-        ratings: { select: { source: true, value: true } },
+        ratings: { select: { source: true, value: true, scale: true } },
       },
     });
 
@@ -393,6 +423,11 @@ async function main(): Promise<void> {
           ? movie.embedding!.vectorJson.filter((entry): entry is number => typeof entry === 'number')
           : undefined,
         popularity,
+        ratings: movie.ratings.map((rating) => ({
+          source: rating.source,
+          value: rating.value,
+          scale: rating.scale ?? undefined,
+        })),
         eligible: eligibility.isEligible,
       };
     });
@@ -466,14 +501,27 @@ async function main(): Promise<void> {
           });
           continue;
         }
+        if (!found.eligible) {
+          unresolved.push({
+            nodeSlug: node.slug,
+            title: required.title,
+            year: required.year,
+            reason: 'fails hard eligibility',
+          });
+          continue;
+        }
 
         curatedMovieIds.add(found.id);
         curatedAssignments.push({
           nodeId: upsertedNode.id,
           movieId: found.id,
           rank: 0,
+          tier: 'CORE',
+          coreRank: 0,
           source: 'curated',
           score: 1,
+          finalScore: 1,
+          journeyScore: 1,
           evidence: {
             anchor: `${required.title} (${required.year})`,
             matchTitle: found.title,
@@ -490,29 +538,50 @@ async function main(): Promise<void> {
 
       curatedByNode.set(node.slug, curatedAssignments);
 
-      const threshold = resolvePerNodeThreshold(config, node.slug);
+      const qualityFloor = resolvePerNodeQualityFloor(config, node.slug);
+      const coreThreshold = resolvePerNodeCoreThreshold(config, node.slug);
       const weakCandidates = eligibleHorrorPool
         .filter((movie) => !curatedMovieIds.has(movie.id))
         .map((movie) => {
-          const nodeProbability = inferNodeProbabilities(movie, [node.slug], lfs)[0]!;
+          const scored = scoreMovieForNodes({
+            seasonId: 'season-1',
+            taxonomyVersion: config.taxonomyVersion,
+            movie: {
+              id: movie.id,
+              tmdbId: movie.tmdbId,
+              title: movie.title,
+              year: movie.year,
+              genres: movie.genres,
+              keywords: movie.keywords,
+              synopsis: movie.synopsis,
+            },
+            movieEmbedding: movie.embeddingVector,
+            nodeSlugs: [node.slug],
+            lfs,
+          })[0]!;
           const classifierProbability = classifierByMovie.get(movie.id)?.get(node.slug) ?? null;
           const assistProbability = classifierProbability === null
-            ? nodeProbability.probability
-            : ((1 - classifierAssistWeight) * nodeProbability.probability) + (classifierAssistWeight * classifierProbability);
+            ? scored.finalScore
+            : ((1 - classifierAssistWeight) * scored.finalScore) + (classifierAssistWeight * classifierProbability);
+          const journeyGate = evaluateJourneyWorthinessSelectionGate(buildJourneyInput(movie), 'season-1');
           return {
             movie,
-            rawProbability: nodeProbability.probability,
+            rawProbability: scored.weakScore,
             classifierProbability,
             assistProbability,
-            threshold,
-            firedLfNames: nodeProbability.fired.slice(0, 8).map((f) => f.lfName),
-            evidenceSummary: evidenceSummaryFromFired(nodeProbability.fired),
-            positiveWeight: Number(nodeProbability.positiveWeight.toFixed(4)),
-            negativeWeight: Number(nodeProbability.negativeWeight.toFixed(4)),
+            qualityFloor,
+            coreThreshold,
+            finalScore: scored.finalScore,
+            journeyScore: journeyGate.result.score,
+            journeyPass: journeyGate.pass,
+            firedLfNames: scored.evidence.weak.firedLfNames.slice(0, 8),
+            evidenceSummary: scored.evidence.weak.firedLfNames.slice(0, 4),
+            positiveWeight: Number(scored.evidence.weak.positiveWeight.toFixed(4)),
+            negativeWeight: Number(scored.evidence.weak.negativeWeight.toFixed(4)),
           };
         })
-        .filter((entry) => entry.rawProbability >= threshold)
-        .sort((a, b) => (b.assistProbability - a.assistProbability) || (b.rawProbability - a.rawProbability) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
+        .filter((entry) => entry.finalScore >= qualityFloor && entry.journeyPass)
+        .sort((a, b) => (b.finalScore - a.finalScore) || (b.journeyScore - a.journeyScore) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
         .map((entry) => ({
           nodeSlug: node.slug,
           nodeId: upsertedNode.id,
@@ -520,8 +589,11 @@ async function main(): Promise<void> {
           rawProbability: Number(entry.rawProbability.toFixed(6)),
           classifierProbability: entry.classifierProbability === null ? null : Number(entry.classifierProbability.toFixed(6)),
           assistProbability: Number(entry.assistProbability.toFixed(6)),
-          adjustedProbability: Number(entry.assistProbability.toFixed(6)),
-          threshold: entry.threshold,
+          adjustedProbability: Number(entry.finalScore.toFixed(6)),
+          qualityFloor: entry.qualityFloor,
+          coreThreshold: entry.coreThreshold,
+          finalScore: Number(entry.finalScore.toFixed(6)),
+          journeyScore: Number(entry.journeyScore.toFixed(6)),
           firedLfNames: entry.firedLfNames,
           evidenceSummary: entry.evidenceSummary,
           positiveWeight: entry.positiveWeight,
@@ -533,7 +605,6 @@ async function main(): Promise<void> {
     }
 
     const disallowed = config.overlapConstraints.disallowedPairs;
-    const penalized = config.overlapConstraints.penalizedPairs;
     const maxNodesPerMovie = config.defaults.maxNodesPerMovie;
 
     const workingAssignmentsByMovie = new Map<string, Set<string>>();
@@ -542,64 +613,85 @@ async function main(): Promise<void> {
     }
 
     const nodeSelectedWeak = new Map<string, WeakCandidate[]>();
-    const nodeWeakCount = new Map<string, number>(specNodeSlugs.map((slug) => [slug, 0] as const));
-    const flattened = [...weakCandidatesByNode.values()].flat();
+    const nodeExtendedPool = new Map<string, WeakCandidate[]>();
+    for (const nodeSlug of specNodeSlugs) {
+      const pool = (weakCandidatesByNode.get(nodeSlug) ?? [])
+        .sort((a, b) => (b.finalScore - a.finalScore)
+          || (b.journeyScore - a.journeyScore)
+          || (b.movie.popularity - a.movie.popularity)
+          || (a.movie.tmdbId - b.movie.tmdbId));
+      const maxExtended = resolvePerNodeMaxExtended(config, nodeSlug);
+      nodeExtendedPool.set(nodeSlug, maxExtended === null ? pool : pool.slice(0, maxExtended));
+    }
 
-    flattened.sort((a, b) => (b.assistProbability - a.assistProbability)
-      || (b.rawProbability - a.rawProbability)
-      || (b.movie.popularity - a.movie.popularity)
-      || a.nodeSlug.localeCompare(b.nodeSlug)
-      || (a.movie.tmdbId - b.movie.tmdbId));
+    const coreSelectedKey = new Set<string>();
+    const coreOverlapExcludedByNode = new Map<string, number>(specNodeSlugs.map((slug) => [slug, 0] as const));
+    const targetByNode = new Map<string, number>(
+      specNodeSlugs.map((slug) => [slug, resolvePerNodeTargetSize(config, slug)] as const),
+    );
 
-    for (const candidate of flattened) {
-      const target = resolvePerNodeTargetSize(config, candidate.nodeSlug);
-      const curatedCount = curatedByNode.get(candidate.nodeSlug)?.length ?? 0;
-      const weakCap = Math.max(0, target - curatedCount);
-      const currentWeak = nodeWeakCount.get(candidate.nodeSlug) ?? 0;
-      if (currentWeak >= weakCap) {
-        continue;
+    const corePasses: Array<{ requireCoreThreshold: boolean; candidates: WeakCandidate[] }> = [
+      {
+        requireCoreThreshold: true,
+        candidates: [...nodeExtendedPool.values()].flat()
+          .filter((candidate) => candidate.finalScore >= candidate.coreThreshold),
+      },
+      {
+        requireCoreThreshold: false,
+        candidates: [...nodeExtendedPool.values()].flat(),
+      },
+    ];
+
+    for (const pass of corePasses) {
+      const flattened = [...pass.candidates].sort((a, b) => (b.finalScore - a.finalScore)
+        || (b.journeyScore - a.journeyScore)
+        || (b.movie.popularity - a.movie.popularity)
+        || a.nodeSlug.localeCompare(b.nodeSlug)
+        || (a.movie.tmdbId - b.movie.tmdbId));
+
+      for (const candidate of flattened) {
+        const key = `${candidate.nodeSlug}::${candidate.movie.id}`;
+        if (coreSelectedKey.has(key)) {
+          continue;
+        }
+        const target = targetByNode.get(candidate.nodeSlug) ?? 0;
+        const curatedCount = curatedByNode.get(candidate.nodeSlug)?.length ?? 0;
+        const nodeList = nodeSelectedWeak.get(candidate.nodeSlug) ?? [];
+        if ((curatedCount + nodeList.length) >= target) {
+          continue;
+        }
+        if (pass.requireCoreThreshold && candidate.finalScore < candidate.coreThreshold) {
+          continue;
+        }
+
+        const movieSet = workingAssignmentsByMovie.get(candidate.movie.id) ?? new Set<string>();
+        if (movieSet.has(candidate.nodeSlug)) {
+          continue;
+        }
+        if (movieSet.size >= maxNodesPerMovie) {
+          continue;
+        }
+        const disallowedConflict = [...movieSet].some((existingSlug) =>
+          disallowed.some(([a, b]) => isPairMatch(a, b, existingSlug, candidate.nodeSlug)));
+        if (disallowedConflict) {
+          coreOverlapExcludedByNode.set(
+            candidate.nodeSlug,
+            (coreOverlapExcludedByNode.get(candidate.nodeSlug) ?? 0) + 1,
+          );
+          continue;
+        }
+
+        const accepted: WeakCandidate = {
+          ...candidate,
+          penalties: [],
+          adjustedProbability: candidate.finalScore,
+        };
+        nodeList.push(accepted);
+        nodeSelectedWeak.set(candidate.nodeSlug, nodeList);
+        movieSet.add(candidate.nodeSlug);
+        workingAssignmentsByMovie.set(candidate.movie.id, movieSet);
+        coreSelectedKey.add(key);
       }
-
-      const movieSet = workingAssignmentsByMovie.get(candidate.movie.id) ?? new Set<string>();
-      if (movieSet.has(candidate.nodeSlug)) {
-        continue;
-      }
-      if (movieSet.size >= maxNodesPerMovie) {
-        continue;
-      }
-
-      const disallowedConflict = [...movieSet].some((existingSlug) =>
-        disallowed.some(([a, b]) => isPairMatch(a, b, existingSlug, candidate.nodeSlug)));
-      if (disallowedConflict) {
-        continue;
-      }
-
-      const penalties = [...movieSet]
-        .flatMap((existingSlug) =>
-          penalized
-            .filter((rule) => isPairMatch(rule.a, rule.b, existingSlug, candidate.nodeSlug))
-            .map((rule) => ({ pairWith: existingSlug, amount: rule.penalty, reason: rule.reason })),
-        );
-
-      const totalPenalty = penalties.reduce((sum, item) => sum + item.amount, 0);
-      const penalizedRaw = Math.max(0, candidate.rawProbability - totalPenalty);
-      const adjusted = Math.max(0, candidate.assistProbability - totalPenalty);
-      if (penalizedRaw < candidate.threshold) {
-        continue;
-      }
-
-      const accepted: WeakCandidate = {
-        ...candidate,
-        penalties,
-        adjustedProbability: Number(adjusted.toFixed(6)),
-      };
-
-      const nodeList = nodeSelectedWeak.get(candidate.nodeSlug) ?? [];
-      nodeList.push(accepted);
-      nodeSelectedWeak.set(candidate.nodeSlug, nodeList);
-      nodeWeakCount.set(candidate.nodeSlug, currentWeak + 1);
-      movieSet.add(candidate.nodeSlug);
-      workingAssignmentsByMovie.set(candidate.movie.id, movieSet);
     }
 
     const summaries: NodeSummary[] = [];
@@ -613,34 +705,47 @@ async function main(): Promise<void> {
       }
 
       const curated = curatedByNode.get(node.slug) ?? [];
-      const weak = (nodeSelectedWeak.get(node.slug) ?? [])
-        .sort((a, b) => (b.adjustedProbability - a.adjustedProbability)
-          || (b.rawProbability - a.rawProbability)
+      const coreWeak = (nodeSelectedWeak.get(node.slug) ?? [])
+        .sort((a, b) => (b.finalScore - a.finalScore)
+          || (b.journeyScore - a.journeyScore)
+          || (b.movie.popularity - a.movie.popularity)
+          || (a.movie.tmdbId - b.movie.tmdbId));
+      const coreMovieIds = new Set(coreWeak.map((entry) => entry.movie.id));
+      const extendedOnly = (nodeExtendedPool.get(node.slug) ?? [])
+        .filter((entry) => !coreMovieIds.has(entry.movie.id))
+        .sort((a, b) => (b.finalScore - a.finalScore)
+          || (b.journeyScore - a.journeyScore)
           || (b.movie.popularity - a.movie.popularity)
           || (a.movie.tmdbId - b.movie.tmdbId));
 
       const assignments: NodeAssignmentData[] = [];
-      let rank = 1;
+      let coreRank = 1;
 
       for (const entry of curated) {
-        assignments.push({ ...entry, rank });
-        rank += 1;
+        assignments.push({ ...entry, rank: coreRank, coreRank, tier: 'CORE' });
+        coreRank += 1;
       }
 
-      for (const entry of weak) {
+      for (const entry of coreWeak) {
         assignments.push({
           nodeId: nodeInfo.id,
           movieId: entry.movie.id,
-          rank,
+          rank: coreRank,
+          tier: 'CORE',
+          coreRank,
           source: 'weak_supervision',
-          score: Number(entry.adjustedProbability.toFixed(4)),
+          score: Number(entry.finalScore.toFixed(4)),
+          finalScore: Number(entry.finalScore.toFixed(6)),
+          journeyScore: Number(entry.journeyScore.toFixed(6)),
           evidence: {
-            threshold: entry.threshold,
+            qualityFloor: entry.qualityFloor,
+            coreThreshold: entry.coreThreshold,
             rawProbability: Number(entry.rawProbability.toFixed(4)),
             classifierProbability: entry.classifierProbability === null ? null : Number(entry.classifierProbability.toFixed(4)),
             assistProbability: Number(entry.assistProbability.toFixed(4)),
             assistWeight: classifierArtifact ? classifierAssistWeight : 0,
-            adjustedProbability: Number(entry.adjustedProbability.toFixed(4)),
+            adjustedProbability: Number(entry.finalScore.toFixed(4)),
+            journeyScore: Number(entry.journeyScore.toFixed(4)),
             penalties: entry.penalties,
             firedLfNames: entry.firedLfNames,
             evidence: entry.evidenceSummary,
@@ -650,7 +755,40 @@ async function main(): Promise<void> {
           runId,
           taxonomyVersion: config.taxonomyVersion,
         });
-        rank += 1;
+        coreRank += 1;
+      }
+
+      let extendedRank = coreRank;
+      for (const entry of extendedOnly) {
+        assignments.push({
+          nodeId: nodeInfo.id,
+          movieId: entry.movie.id,
+          rank: extendedRank,
+          tier: 'EXTENDED',
+          coreRank: null,
+          source: 'weak_supervision',
+          score: Number(entry.finalScore.toFixed(4)),
+          finalScore: Number(entry.finalScore.toFixed(6)),
+          journeyScore: Number(entry.journeyScore.toFixed(6)),
+          evidence: {
+            qualityFloor: entry.qualityFloor,
+            coreThreshold: entry.coreThreshold,
+            rawProbability: Number(entry.rawProbability.toFixed(4)),
+            classifierProbability: entry.classifierProbability === null ? null : Number(entry.classifierProbability.toFixed(4)),
+            assistProbability: Number(entry.assistProbability.toFixed(4)),
+            assistWeight: classifierArtifact ? classifierAssistWeight : 0,
+            adjustedProbability: Number(entry.finalScore.toFixed(4)),
+            journeyScore: Number(entry.journeyScore.toFixed(4)),
+            penalties: entry.penalties,
+            firedLfNames: entry.firedLfNames,
+            evidence: entry.evidenceSummary,
+            positiveWeight: entry.positiveWeight,
+            negativeWeight: entry.negativeWeight,
+          },
+          runId,
+          taxonomyVersion: config.taxonomyVersion,
+        });
+        extendedRank += 1;
       }
 
       await prisma.nodeMovie.deleteMany({ where: { nodeId: nodeInfo.id } });
@@ -666,14 +804,19 @@ async function main(): Promise<void> {
         slug: node.slug,
         requested: requestedTitles.length,
         curatedAssigned: curated.length,
-        weakAssigned: weak.length,
+        weakCoreAssigned: coreWeak.length,
+        weakExtendedAssigned: extendedOnly.length,
         assigned: assignments.length,
+        coreCount: curated.length + coreWeak.length,
+        extendedCount: extendedOnly.length,
         targetSize: resolvePerNodeTargetSize(config, node.slug),
         minEligible: resolvePerNodeMinEligible(config, node.slug),
-        threshold: resolvePerNodeThreshold(config, node.slug),
-        eligibleWeak: weakCandidatesByNode.get(node.slug)?.length ?? 0,
-        unresolved: Math.max(0, requestedTitles.length - curated.length),
-        belowMinFloor: assignments.length < resolvePerNodeMinEligible(config, node.slug),
+        qualityFloor: resolvePerNodeQualityFloor(config, node.slug),
+        coreThreshold: resolvePerNodeCoreThreshold(config, node.slug),
+        eligibleWeak: nodeExtendedPool.get(node.slug)?.length ?? 0,
+        excludedOnlyByOverlapForCore: coreOverlapExcludedByNode.get(node.slug) ?? 0,
+        unresolved: unresolved.filter((row) => row.nodeSlug === node.slug).length,
+        belowMinFloor: (curated.length + coreWeak.length) < resolvePerNodeMinEligible(config, node.slug),
       });
     }
 
@@ -689,6 +832,7 @@ async function main(): Promise<void> {
         source: 'seed-season1-horror-subgenres',
         nodeCount: summaries.length,
         maxNodesPerMovie,
+        defaultMaxExtendedPerNode: config.defaults.maxExtendedPerNode ?? null,
         publishSnapshot,
       },
     });
@@ -709,11 +853,11 @@ async function main(): Promise<void> {
     lines.push('');
     lines.push('## Per-node');
     lines.push('');
-    lines.push('| Node | Requested | Curated | Weak | Assigned | Target | Min | Threshold | Eligible weak | Below min | Unresolved |');
-    lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |');
+    lines.push('| Node | Requested | Curated Core | Weak Core | Extended | Assigned | Target Core | Min Core | Quality Floor | Core Threshold | Eligible Extended | Overlap Excl. | Below min | Unresolved |');
+    lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |');
     summaries.forEach((summary) => {
       lines.push(
-        `| ${summary.slug} | ${summary.requested} | ${summary.curatedAssigned} | ${summary.weakAssigned} | ${summary.assigned} | ${summary.targetSize} | ${summary.minEligible} | ${summary.threshold.toFixed(2)} | ${summary.eligibleWeak} | ${summary.belowMinFloor ? 'YES' : 'NO'} | ${summary.unresolved} |`,
+        `| ${summary.slug} | ${summary.requested} | ${summary.curatedAssigned} | ${summary.weakCoreAssigned} | ${summary.extendedCount} | ${summary.assigned} | ${summary.targetSize} | ${summary.minEligible} | ${summary.qualityFloor.toFixed(2)} | ${summary.coreThreshold.toFixed(2)} | ${summary.eligibleWeak} | ${summary.excludedOnlyByOverlapForCore} | ${summary.belowMinFloor ? 'YES' : 'NO'} | ${summary.unresolved} |`,
       );
     });
     lines.push('');

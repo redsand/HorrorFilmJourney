@@ -46,13 +46,17 @@ export async function GET(request: Request): Promise<Response> {
       },
       ...(source ? { source } : {}),
     },
-    orderBy: [{ node: { orderIndex: 'asc' } }, { rank: 'asc' }],
+    orderBy: [{ node: { orderIndex: 'asc' } }, { tier: 'asc' }, { coreRank: 'asc' }, { rank: 'asc' }],
     take: limit,
     select: {
       id: true,
       rank: true,
+      tier: true,
+      coreRank: true,
       source: true,
       score: true,
+      finalScore: true,
+      journeyScore: true,
       runId: true,
       taxonomyVersion: true,
       evidence: true,
@@ -70,8 +74,12 @@ export async function GET(request: Request): Promise<Response> {
       title: row.movie.title,
       year: row.movie.year,
       rank: row.rank,
+      tier: row.tier.toLowerCase(),
+      coreRank: row.coreRank,
       source: row.source,
       score: row.score,
+      finalScore: row.finalScore,
+      journeyScore: row.journeyScore,
       runId: row.runId,
       taxonomyVersion: row.taxonomyVersion,
       evidence: row.evidence,
@@ -130,11 +138,11 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const currentMaxRank = await prisma.nodeMovie.findFirst({
-    where: { nodeId: node.id },
-    orderBy: { rank: 'desc' },
-    select: { rank: true },
+    where: { nodeId: node.id, tier: 'CORE' },
+    orderBy: { coreRank: 'desc' },
+    select: { coreRank: true },
   });
-  const nextRank = (currentMaxRank?.rank ?? 0) + 1;
+  const nextRank = (currentMaxRank?.coreRank ?? 0) + 1;
 
   await prisma.nodeMovie.upsert({
     where: {
@@ -147,8 +155,12 @@ export async function POST(request: Request): Promise<Response> {
       nodeId: node.id,
       movieId: movie.id,
       rank: nextRank,
+      tier: 'CORE',
+      coreRank: nextRank,
       source: 'override',
       score: parsed.data.score ?? 1,
+      finalScore: parsed.data.score ?? 1,
+      journeyScore: 1,
       evidence: decisionEvidence,
       runId,
       taxonomyVersion: node.taxonomyVersion,
@@ -156,6 +168,10 @@ export async function POST(request: Request): Promise<Response> {
     update: {
       source: 'override',
       score: parsed.data.score ?? 1,
+      tier: 'CORE',
+      coreRank: nextRank,
+      finalScore: parsed.data.score ?? 1,
+      journeyScore: 1,
       evidence: decisionEvidence,
       runId,
       taxonomyVersion: node.taxonomyVersion,

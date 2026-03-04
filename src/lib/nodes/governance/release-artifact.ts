@@ -15,8 +15,9 @@ export async function createSeasonNodeReleaseFromNodeMovie(prisma: PrismaClient,
     where: {
       node: { packId: input.packId },
       taxonomyVersion: input.taxonomyVersion,
+      tier: 'CORE',
     },
-    orderBy: [{ node: { orderIndex: 'asc' } }, { rank: 'asc' }],
+    orderBy: [{ node: { orderIndex: 'asc' } }, { coreRank: 'asc' }, { rank: 'asc' }],
     select: {
       movieId: true,
       rank: true,

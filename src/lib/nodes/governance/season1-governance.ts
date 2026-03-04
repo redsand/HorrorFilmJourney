@@ -13,14 +13,20 @@ export type SeasonNodeGovernanceConfig = {
   taxonomyVersion: string;
   defaults: {
     threshold: number;
+    qualityFloor: number;
+    coreThreshold: number;
     targetSize: number;
     minEligible: number;
     maxNodesPerMovie: number;
+    maxExtendedPerNode?: number | null;
   };
   nodes: Record<string, {
     threshold?: number;
+    qualityFloor?: number;
+    coreThreshold?: number;
     targetSize?: number;
     minEligible?: number;
+    maxExtendedPerNode?: number | null;
   }>;
   overlapConstraints: {
     disallowedPairs: Array<[string, string]>;
@@ -81,6 +87,14 @@ export function resolvePerNodeThreshold(config: SeasonNodeGovernanceConfig, node
   return config.nodes[nodeSlug]?.threshold ?? config.defaults.threshold;
 }
 
+export function resolvePerNodeQualityFloor(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
+  return config.nodes[nodeSlug]?.qualityFloor ?? config.defaults.qualityFloor;
+}
+
+export function resolvePerNodeCoreThreshold(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
+  return config.nodes[nodeSlug]?.coreThreshold ?? config.defaults.coreThreshold;
+}
+
 export function resolvePerNodeTargetSize(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
   return config.nodes[nodeSlug]?.targetSize ?? config.defaults.targetSize;
 }
@@ -89,11 +103,29 @@ export function resolvePerNodeMinEligible(config: SeasonNodeGovernanceConfig, no
   return config.nodes[nodeSlug]?.minEligible ?? config.defaults.minEligible;
 }
 
+export function resolvePerNodeMaxExtended(config: SeasonNodeGovernanceConfig, nodeSlug: string): number | null {
+  const raw = config.nodes[nodeSlug]?.maxExtendedPerNode;
+  if (typeof raw === 'number') {
+    return Math.max(1, Math.floor(raw));
+  }
+  if (raw === null) {
+    return null;
+  }
+  const fallback = config.defaults.maxExtendedPerNode;
+  if (typeof fallback === 'number') {
+    return Math.max(1, Math.floor(fallback));
+  }
+  return null;
+}
+
 export function applySeason1GovernanceEnvOverrides(config: SeasonNodeGovernanceConfig, nodeSlugs: string[]): SeasonNodeGovernanceConfig {
   const thresholdOverride = parseFloatEnv('SEASON1_DEFAULT_THRESHOLD');
+  const qualityFloorOverride = parseFloatEnv('SEASON1_DEFAULT_QUALITY_FLOOR');
+  const coreThresholdOverride = parseFloatEnv('SEASON1_DEFAULT_CORE_THRESHOLD');
   const targetOverride = parseIntEnv('SEASON1_TARGET_PER_NODE');
   const minOverride = parseIntEnv('SEASON1_MIN_ELIGIBLE_PER_NODE');
   const maxNodesOverride = parseIntEnv('SEASON1_MAX_NODES_PER_MOVIE');
+  const maxExtendedOverride = parseIntEnv('SEASON1_MAX_EXTENDED_PER_NODE');
   const taxonomyVersionOverride = process.env.SEASON1_TAXONOMY_VERSION?.trim();
 
   const thresholdByNode = parseThresholdOverrides(nodeSlugs);
@@ -103,9 +135,12 @@ export function applySeason1GovernanceEnvOverrides(config: SeasonNodeGovernanceC
     taxonomyVersion: taxonomyVersionOverride && taxonomyVersionOverride.length > 0 ? taxonomyVersionOverride : config.taxonomyVersion,
     defaults: {
       threshold: thresholdOverride === null ? config.defaults.threshold : clamp01(thresholdOverride),
+      qualityFloor: qualityFloorOverride === null ? config.defaults.qualityFloor : clamp01(qualityFloorOverride),
+      coreThreshold: coreThresholdOverride === null ? config.defaults.coreThreshold : clamp01(coreThresholdOverride),
       targetSize: targetOverride === null ? config.defaults.targetSize : Math.max(1, targetOverride),
       minEligible: minOverride === null ? config.defaults.minEligible : Math.max(1, minOverride),
       maxNodesPerMovie: maxNodesOverride === null ? config.defaults.maxNodesPerMovie : Math.max(1, maxNodesOverride),
+      maxExtendedPerNode: maxExtendedOverride === null ? config.defaults.maxExtendedPerNode : Math.max(1, maxExtendedOverride),
     },
     nodes: Object.fromEntries(
       Object.entries(config.nodes).map(([slug, node]) => {

@@ -41,6 +41,11 @@ enum ExternalReadingSourceType {
   RETROSPECTIVE
 }
 
+enum NodeAssignmentTier {
+  CORE
+  EXTENDED
+}
+
 model User {
   id             String                 @id @default(cuid())
   displayName    String
@@ -466,8 +471,12 @@ model NodeMovie {
   nodeId    String
   movieId   String
   rank      Int
+  tier      NodeAssignmentTier @default(CORE)
+  coreRank  Int?
   source    String   @default("unknown")
   score     Float?
+  finalScore Float   @default(0)
+  journeyScore Float @default(0)
   evidence  Json?
   runId     String?
   taxonomyVersion String @default("legacy")
@@ -482,6 +491,8 @@ model NodeMovie {
   @@index([source])
   @@index([runId])
   @@index([taxonomyVersion])
+  @@index([nodeId, tier, rank])
+  @@index([nodeId, tier, coreRank])
 }
 
 model SeasonNodeRelease {
