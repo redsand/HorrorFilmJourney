@@ -1,7 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { computeJourneyWorthiness, type JourneyWorthinessMovieInput } from '@/lib/journey/journeyWorthiness';
+import {
+  computeJourneyWorthiness,
+  evaluateJourneyWorthinessTierGate,
+  type JourneyWorthinessMovieInput,
+} from '@/lib/journey/journeyWorthiness';
 
 type Fixture = {
   high_quality: JourneyWorthinessMovieInput;
@@ -65,5 +69,42 @@ describe('journey worthiness', () => {
     expect(result.reasons).not.toContain('runtime_outlier');
     expect(result.reasons).not.toContain('low_vote_count');
     expect(result.evidence.normalizedRating).toBeCloseTo(0.76, 6);
+  });
+
+  it('classic with votes passes core journey gate', () => {
+    const gate = evaluateJourneyWorthinessTierGate(fixture.high_quality, 'season-1', 'core', { nowYear: 2026 });
+    expect(gate.pass).toBe(true);
+    expect(gate.hardFailures).toEqual([]);
+  });
+
+  it('unrated but complete metadata can pass extended and fail core', () => {
+    const unrated: JourneyWorthinessMovieInput = {
+      ...fixture.high_quality,
+      tmdbVoteCount: 0,
+      voteCount: 0,
+    };
+    const extended = evaluateJourneyWorthinessTierGate(unrated, 'season-1', 'extended', { nowYear: 2026 });
+    const core = evaluateJourneyWorthinessTierGate(unrated, 'season-1', 'core', { nowYear: 2026 });
+
+    expect(extended.pass).toBe(true);
+    expect(extended.result.voteCountState).toBe('zero');
+    expect(core.pass).toBe(false);
+    expect(core.hardFailures).toContain('vote_count_required_for_core');
+  });
+
+  it('missing vote count remains hard failure', () => {
+    const missingVotes: JourneyWorthinessMovieInput = {
+      ...fixture.high_quality,
+      tmdbVoteCount: null,
+      voteCount: null,
+      ratings: fixture.high_quality.ratings?.filter((row) => row.source !== 'TMDB_VOTE_COUNT') ?? [],
+    };
+    const extended = evaluateJourneyWorthinessTierGate(missingVotes, 'season-1', 'extended', { nowYear: 2026 });
+    const core = evaluateJourneyWorthinessTierGate(missingVotes, 'season-1', 'core', { nowYear: 2026 });
+
+    expect(extended.pass).toBe(false);
+    expect(core.pass).toBe(false);
+    expect(extended.hardFailures).toContain('missing_vote_count');
+    expect(core.hardFailures).toContain('missing_vote_count');
   });
 });

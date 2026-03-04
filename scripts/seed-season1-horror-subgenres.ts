@@ -26,7 +26,11 @@ import {
 } from '../src/lib/nodes/governance/season1-governance.ts';
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
 import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
-import { computeJourneyWorthiness, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
+import {
+  computeJourneyWorthiness,
+  evaluateJourneyWorthinessTierGate,
+  type JourneyWorthinessMovieInput,
+} from '../src/lib/journey/journey-worthiness.ts';
 import {
   LOCAL_MOVIE_EMBEDDING_DIM,
   LOCAL_MOVIE_EMBEDDING_MODEL,
@@ -794,9 +798,12 @@ async function main(): Promise<void> {
           const assistProbability = classifierProbability === null
             ? scored.finalScore
             : ((1 - classifierAssistWeight) * scored.finalScore) + (classifierAssistWeight * classifierProbability);
-          const journeyResult = computeJourneyWorthiness(buildJourneyInput(movie), 'season-1');
-          const journeyPassExtended = journeyResult.score >= journeyMinExtended;
-          const journeyPassCore = journeyResult.score >= journeyMinCore;
+          const journeyInput = buildJourneyInput(movie);
+          const journeyResult = computeJourneyWorthiness(journeyInput, 'season-1');
+          const journeyExtendedGate = evaluateJourneyWorthinessTierGate(journeyInput, 'season-1', 'extended', { threshold: journeyMinExtended });
+          const journeyCoreGate = evaluateJourneyWorthinessTierGate(journeyInput, 'season-1', 'core', { threshold: journeyMinCore });
+          const journeyPassExtended = journeyExtendedGate.pass;
+          const journeyPassCore = journeyCoreGate.pass;
           if (!journeyPassExtended) {
             exclusionCollector.record('journey_fail_extended', {
               movieId: movie.id,
@@ -804,7 +811,13 @@ async function main(): Promise<void> {
               title: movie.title,
               year: movie.year,
               nodeSlug: node.slug,
-              details: [`journeyScore=${journeyResult.score}`, `journeyMinExtended=${journeyMinExtended}`],
+              details: [
+                `journeyScore=${journeyResult.score}`,
+                `journeyMinExtended=${journeyMinExtended}`,
+                ...(journeyExtendedGate.hardFailures.length > 0
+                  ? [`hardFailures=${journeyExtendedGate.hardFailures.join(',')}`]
+                  : []),
+              ],
             });
           }
           if (scored.finalScore < qualityFloor) {

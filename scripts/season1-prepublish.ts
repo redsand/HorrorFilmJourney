@@ -32,7 +32,7 @@ type RunResult = {
 
 const COVERAGE_THRESHOLDS = {
   runtimeCoverageMin: 0.9,
-  voteCountCoverageMin: 0.9,
+  voteCountFieldPresenceMin: 0.9,
   directorAndCastTopCoverageMin: 0.85,
   receptionCountCoverageMin: 0.8,
   topByVotesCoverageMin: 80,
@@ -185,9 +185,9 @@ async function main(): Promise<void> {
         details: `${(coverage.runtimeCoverage * 100).toFixed(2)}%`,
       },
       {
-        name: 'voteCount coverage >= 0.90',
-        pass: coverage.voteCountCoverage >= COVERAGE_THRESHOLDS.voteCountCoverageMin,
-        details: `${(coverage.voteCountCoverage * 100).toFixed(2)}%`,
+        name: 'voteCount field presence >= 0.90',
+        pass: coverage.voteCountFieldPresence >= COVERAGE_THRESHOLDS.voteCountFieldPresenceMin,
+        details: `${(coverage.voteCountFieldPresence * 100).toFixed(2)}%`,
       },
       {
         name: 'credits coverage >= 0.85',
@@ -393,7 +393,9 @@ async function main(): Promise<void> {
       },
       coverage: {
         runtime: coverage.runtimeCoverage,
-        voteCount: coverage.voteCountCoverage,
+        voteCountFieldPresence: coverage.voteCountFieldPresence,
+        voteCountPositiveCoverage: coverage.voteCountPositiveCoverage,
+        voteCountZeroRate: coverage.voteCountZeroRate,
         credits: coverage.directorAndCastTopCoverage,
         reception: coverage.receptionCountCoverage,
       },
@@ -431,7 +433,9 @@ async function main(): Promise<void> {
       '## Coverage Metrics',
       '',
       `- Runtime: ${(coverage.runtimeCoverage * 100).toFixed(2)}%`,
-      `- Vote count: ${(coverage.voteCountCoverage * 100).toFixed(2)}%`,
+      `- Vote count field presence: ${(coverage.voteCountFieldPresence * 100).toFixed(2)}%`,
+      `- Vote count positive coverage: ${(coverage.voteCountPositiveCoverage * 100).toFixed(2)}%`,
+      `- Vote count zero rate: ${(coverage.voteCountZeroRate * 100).toFixed(2)}%`,
       `- Credits (director+castTop): ${(coverage.directorAndCastTopCoverage * 100).toFixed(2)}%`,
       `- Reception count: ${(coverage.receptionCountCoverage * 100).toFixed(2)}%`,
       '',
@@ -472,3 +476,10 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.stack ?? error.message : String(error));
   process.exit(1);
 });
+    if (coverage.voteCountZeroRate > 0.2) {
+      checks.push({
+        name: 'voteCount zero-rate warning (>20%)',
+        pass: true,
+        details: `${(coverage.voteCountZeroRate * 100).toFixed(2)}% sampleTmdbIds=[${coverage.sampleIds.zeroVoteCount.join(',')}]`,
+      });
+    }

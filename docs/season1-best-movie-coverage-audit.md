@@ -1,48 +1,48 @@
 # Season 1 Best-Movie Coverage Audit
 
-Generated: 2026-03-04T18:26:52.290Z
-Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifacts\season1\coverage-audit\2026-03-04T18-25-25-115Z`
+Generated: 2026-03-04T18:57:18.836Z
+Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifacts\season1\rebuild\2026-03-04T12-36-51\audit-toplist-robustness-check`
 
 ## Snapshot Summary
 
-- Release ID: `cmmcc7vgo00yjq4d329eomxo8`
-- Run ID: `season1-weak-supervision-2026-03-04T17:54:45.229Z`
+- Release ID: `cmmcdszbv01r4yl47ro9g6fd6`
+- Run ID: `season1-weak-supervision-2026-03-04T18:36:52.513Z`
 - Taxonomy Version: `season-1-horror-v3.5`
-- Core unique movies: **297**
-- Extended unique movies: **595**
-- Extended unique only movies: **541**
-- Total unique movies: **838**
+- Core unique movies: **411**
+- Extended unique movies: **1360**
+- Extended unique only movies: **1290**
+- Total unique movies: **1701**
 
 ## Top List Coverage
 
 | Top List | In Core | In Extended | Not In Snapshot | Core % | Total Snapshot % |
 |---|---:|---:|---:|---:|---:|
-| TopByVotes | 88 | 13 | 399 | 17.60 | 20.20 |
-| TopByRating | 16 | 1 | 138 | 10.32 | 10.97 |
-| TopByHybrid | 89 | 7 | 404 | 17.80 | 19.20 |
+| TopByVotes | 179 | 73 | 248 | 35.80 | 50.40 |
+| TopByRating | 51 | 25 | 79 | 32.90 | 49.03 |
+| TopByHybrid | 188 | 67 | 245 | 37.60 | 51.00 |
 
 ## Top 20 Omitted High-Quality Titles
 
-1. Interstellar (2014) - rating 8.5, votes 39019, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-2. The Avengers (2012) - rating 8, votes 36233, reason: `node_score_below_quality_floor`
-3. Zootopia 2 (2025) - rating 7.6, votes 1918, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-4. Avatar: Fire and Ash (2025) - rating 7.3, votes 1849, reason: `node_score_below_quality_floor`
-5. Inception (2010) - rating 8.4, votes 38775, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-6. Predator: Badlands (2025) - rating 7.7, votes 2235, reason: `node_score_below_quality_floor`
-7. Avengers: Infinity War (2018) - rating 8.2, votes 31548, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-8. The Housemaid (2025) - rating 7.3, votes 1378, reason: `node_score_below_quality_floor`
-9. The Matrix (1999) - rating 8.2, votes 27457, reason: `node_score_below_quality_floor`
-10. Avatar (2009) - rating 7.6, votes 33544, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-11. Mercy (2026) - rating 7.1, votes 631, reason: `node_score_below_quality_floor`
-12. Spider-Man: Into the Spider-Verse (2018) - rating 8.4, votes 16923, reason: `node_score_below_quality_floor`
-13. Joker (2019) - rating 8.1, votes 27365, reason: `node_score_below_quality_floor`
-14. The Shadow's Edge (2025) - rating 7.2, votes 460, reason: `node_score_below_quality_floor`
-15. History of the World: Part I (1981) - rating 6.8, votes 885, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
-16. Shutter Island (2010) - rating 8.2, votes 25489, reason: `node_score_below_quality_floor`
-17. Inglourious Basterds (2009) - rating 8.2, votes 23817, reason: `node_score_below_quality_floor`
-18. Avengers: Endgame (2019) - rating 8.2, votes 27320, reason: `node_score_below_quality_floor`
-19. The Empire Strikes Back (1980) - rating 8.4, votes 18123, reason: `node_score_below_quality_floor`
-20. Star Wars (1977) - rating 8.2, votes 21998, reason: `node_score_below_quality_floor`
+1. The Avengers (2012) - rating 8, votes 36233, reason: `node_score_below_quality_floor`
+2. Avatar: Fire and Ash (2025) - rating 7.3, votes 1849, reason: `node_score_below_quality_floor`
+3. Predator: Badlands (2025) - rating 7.7, votes 2235, reason: `node_score_below_quality_floor`
+4. The Housemaid (2025) - rating 7.3, votes 1378, reason: `node_score_below_quality_floor`
+5. The Matrix (1999) - rating 8.2, votes 27457, reason: `node_score_below_quality_floor`
+6. Mercy (2026) - rating 7.1, votes 631, reason: `node_score_below_quality_floor`
+7. Spider-Man: Into the Spider-Verse (2018) - rating 8.4, votes 16923, reason: `node_score_below_quality_floor`
+8. Joker (2019) - rating 8.1, votes 27365, reason: `node_score_below_quality_floor`
+9. The Shadow's Edge (2025) - rating 7.2, votes 460, reason: `node_score_below_quality_floor`
+10. Shutter Island (2010) - rating 8.2, votes 25489, reason: `node_score_below_quality_floor`
+11. Inglourious Basterds (2009) - rating 8.2, votes 23817, reason: `node_score_below_quality_floor`
+12. Avengers: Endgame (2019) - rating 8.2, votes 27320, reason: `node_score_below_quality_floor`
+13. The Empire Strikes Back (1980) - rating 8.4, votes 18123, reason: `node_score_below_quality_floor`
+14. Star Wars (1977) - rating 8.2, votes 21998, reason: `node_score_below_quality_floor`
+15. Psycho (1960) - rating 8.4, votes 10838, reason: `node_score_below_quality_floor`
+16. The Prestige (2006) - rating 8.2, votes 17278, reason: `node_score_below_quality_floor`
+17. Iron Man (2008) - rating 7.7, votes 27807, reason: `node_score_below_quality_floor`
+18. The Silence of the Lambs (1991) - rating 8.3, votes 17637, reason: `node_score_below_quality_floor`
+19. The Dark Knight Rises (2012) - rating 7.8, votes 24042, reason: `node_score_below_quality_floor`
+20. The Departed (2006) - rating 8.2, votes 15936, reason: `node_score_below_quality_floor`
 
 ## Omission Triage (Top 100)
 
@@ -54,53 +54,54 @@ Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifact
 ## Recommendations
 
 ### Must Fix Before Publish
-- low_snapshot_coverage_TopByVotes:20.2%
-- low_snapshot_coverage_TopByRating:10.967742%
-- low_snapshot_coverage_TopByHybrid:19.2%
+- low_snapshot_coverage_TopByVotes:50.4%
+- low_snapshot_coverage_TopByRating:49.032258%
+- low_snapshot_coverage_TopByHybrid:51%
 
 ### Nice To Improve
-- high_cap_pressure:supernatural-horror:delta=0.000462:pressure=23
-- high_cap_pressure:sci-fi-horror:delta=0.000607:pressure=24
-- high_cap_pressure:horror-comedy:delta=0.00016:pressure=60
-- high_cap_pressure:social-domestic-horror:delta=0.001891:pressure=27
-- underfilled_core:supernatural-horror:32/120
-- underfilled_core:psychological-horror:19/120
+- high_cap_pressure:supernatural-horror:delta=0.000422:pressure=24
+- high_cap_pressure:sci-fi-horror:delta=0.000823:pressure=49
+- high_cap_pressure:apocalyptic-horror:delta=0.000795:pressure=23
+- high_cap_pressure:horror-comedy:delta=0.000382:pressure=147
+- high_cap_pressure:social-domestic-horror:delta=0.00042:pressure=75
+- underfilled_core:supernatural-horror:36/120
+- underfilled_core:psychological-horror:21/120
 - underfilled_core:slasher-serial-killer:28/120
-- underfilled_core:creature-monster:24/120
-- underfilled_core:body-horror:19/120
-- underfilled_core:cosmic-horror:17/120
-- underfilled_core:folk-horror:20/120
-- underfilled_core:sci-fi-horror:32/120
-- underfilled_core:found-footage:18/120
-- underfilled_core:survival-horror:24/120
-- underfilled_core:apocalyptic-horror:27/120
-- underfilled_core:gothic-horror:21/120
-- underfilled_core:horror-comedy:22/120
-- underfilled_core:splatter-extreme:21/120
-- underfilled_core:social-domestic-horror:21/120
-- underfilled_core:experimental-horror:21/120
+- underfilled_core:creature-monster:30/120
+- underfilled_core:body-horror:21/120
+- underfilled_core:cosmic-horror:22/120
+- underfilled_core:folk-horror:23/120
+- underfilled_core:sci-fi-horror:75/120
+- underfilled_core:found-footage:19/120
+- underfilled_core:survival-horror:37/120
+- underfilled_core:apocalyptic-horror:37/120
+- underfilled_core:gothic-horror:23/120
+- underfilled_core:horror-comedy:42/120
+- underfilled_core:splatter-extreme:22/120
+- underfilled_core:social-domestic-horror:34/120
+- underfilled_core:experimental-horror:30/120
 
 ### Manual Curation Candidates
-- Interstellar (2014) - likely_excluded_by_extended_cap_or_overlap_constraints
 - The Avengers (2012) - node_score_below_quality_floor
-- Zootopia 2 (2025) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Avatar: Fire and Ash (2025) - node_score_below_quality_floor
-- Inception (2010) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Predator: Badlands (2025) - node_score_below_quality_floor
-- Avengers: Infinity War (2018) - likely_excluded_by_extended_cap_or_overlap_constraints
 - The Housemaid (2025) - node_score_below_quality_floor
 - The Matrix (1999) - node_score_below_quality_floor
-- Avatar (2009) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Mercy (2026) - node_score_below_quality_floor
 - Spider-Man: Into the Spider-Verse (2018) - node_score_below_quality_floor
 - Joker (2019) - node_score_below_quality_floor
 - The Shadow's Edge (2025) - node_score_below_quality_floor
-- History of the World: Part I (1981) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Shutter Island (2010) - node_score_below_quality_floor
 - Inglourious Basterds (2009) - node_score_below_quality_floor
 - Avengers: Endgame (2019) - node_score_below_quality_floor
 - The Empire Strikes Back (1980) - node_score_below_quality_floor
 - Star Wars (1977) - node_score_below_quality_floor
+- Psycho (1960) - node_score_below_quality_floor
+- The Prestige (2006) - node_score_below_quality_floor
+- Iron Man (2008) - node_score_below_quality_floor
+- The Silence of the Lambs (1991) - node_score_below_quality_floor
+- The Dark Knight Rises (2012) - node_score_below_quality_floor
+- The Departed (2006) - node_score_below_quality_floor
 
 ## Artifact Files
 

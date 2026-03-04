@@ -60,6 +60,7 @@ export type JourneyWorthinessConfig = {
 export type JourneyWorthinessResult = {
   score: number;
   reasons: JourneyWorthinessReason[];
+  voteCountState: 'missing' | 'zero' | 'positive';
   evidence: {
     normalizedRating: number;
     voteConfidence: number;
@@ -97,6 +98,16 @@ export const DEFAULT_JOURNEY_WORTHINESS_GATE_THRESHOLD = 0.6;
 export type JourneyWorthinessGateResult = {
   pass: boolean;
   threshold: number;
+  result: JourneyWorthinessResult;
+};
+
+export type JourneyWorthinessTier = 'core' | 'extended';
+
+export type JourneyWorthinessTierGateResult = {
+  pass: boolean;
+  threshold: number;
+  tier: JourneyWorthinessTier;
+  hardFailures: string[];
   result: JourneyWorthinessResult;
 };
 
@@ -225,6 +236,26 @@ function computeRuntimeYearSanity(
   return 0;
 }
 
+function resolveRawTmdbVoteCount(input: JourneyWorthinessMovieInput): number | null {
+  const direct = [input.tmdbVoteCount, input.voteCount]
+    .find((value) => Number.isFinite(value));
+  if (Number.isFinite(direct)) {
+    const numeric = Number(direct);
+    return numeric >= 0 ? numeric : null;
+  }
+  const tmdbRow = (input.ratings ?? []).find((rating) => rating.source.toUpperCase() === 'TMDB_VOTE_COUNT');
+  if (!tmdbRow || !Number.isFinite(tmdbRow.value)) return null;
+  return tmdbRow.value >= 0 ? tmdbRow.value : null;
+}
+
+function computeStrongCompletenessSignal(input: JourneyWorthinessMovieInput, runtimeMinutes: number | null): boolean {
+  const hasPoster = typeof input.posterUrl === 'string' && input.posterUrl.trim().length > 0;
+  const hasOverview = typeof input.synopsis === 'string' && input.synopsis.trim().length > 0;
+  const hasCreditsSignal = hasCredits(input);
+  const hasRuntime = Number.isFinite(runtimeMinutes) && (runtimeMinutes as number) > 0;
+  return hasPoster && hasOverview && hasCreditsSignal && hasRuntime;
+}
+
 export function computeJourneyWorthiness(
   movie: JourneyWorthinessMovieInput,
   seasonId: string,
@@ -244,7 +275,8 @@ export function computeJourneyWorthiness(
     })),
   });
   const runtimeMinutes = canonical.runtime;
-  const voteCount = canonical.tmdbVoteCount;
+  const rawVoteCount = resolveRawTmdbVoteCount(movie);
+  const voteCount = rawVoteCount;
   const tmdbVoteAverage = canonical.tmdbVoteAverage;
   const popularityValue = canonical.popularity;
 
@@ -260,9 +292,16 @@ export function computeJourneyWorthiness(
     metadataCompleteness: computeMetadataCompleteness(movie),
   });
   const normalizedRating = normalizedSignals.rating;
-  const voteConfidence = clamp01(normalizedSignals.voteCount / 5);
+  const voteConfidenceBase = clamp01(normalizedSignals.voteCount / 5);
   const popularity = normalizedSignals.popularity;
   const metadataCompleteness = computeMetadataCompleteness(movie);
+  const strongCompletenessSignal = computeStrongCompletenessSignal(movie, runtimeMinutes);
+  const voteCountState: JourneyWorthinessResult['voteCountState'] = voteCount === null
+    ? 'missing'
+    : (voteCount === 0 ? 'zero' : 'positive');
+  const voteConfidence = voteCountState === 'zero'
+    ? Math.min(0.35, Math.max(voteConfidenceBase, strongCompletenessSignal ? 0.25 : 0.05))
+    : voteConfidenceBase;
   const receptionPresence = computeReceptionPresence(movie);
   const runtimeYearSanity = computeRuntimeYearSanity(runtimeMinutes, movie.year, config, nowYear);
   const directorSignal = typeof movie.director === 'string' && movie.director.trim().length > 0 ? 1 : 0;
@@ -283,7 +322,9 @@ export function computeJourneyWorthiness(
   ).toFixed(6));
 
   const reasons: JourneyWorthinessReason[] = [];
-  if (!Number.isFinite(voteCount) || (voteCount as number) < config.thresholds.minVoteCount || voteConfidence < 0.45) {
+  if (voteCountState === 'missing' || (voteCountState === 'positive' && ((voteCount as number) < config.thresholds.minVoteCount || voteConfidence < 0.45))) {
+    reasons.push('low_vote_count');
+  } else if (voteCountState === 'zero' && !strongCompletenessSignal) {
     reasons.push('low_vote_count');
   }
   if (metadataCompleteness < config.thresholds.minMetadataCompleteness) {
@@ -303,6 +344,7 @@ export function computeJourneyWorthiness(
   return {
     score,
     reasons,
+    voteCountState,
     evidence: {
       normalizedRating: Number(normalizedRating.toFixed(6)),
       voteConfidence: Number(voteConfidence.toFixed(6)),
@@ -333,12 +375,11 @@ export function evaluateJourneyWorthinessSelectionGate(
   seasonId: string,
   options?: JourneyWorthinessGateOptions,
 ): JourneyWorthinessGateResult {
-  const result = computeJourneyWorthiness(movie, seasonId, options);
-  const threshold = options?.threshold ?? DEFAULT_JOURNEY_WORTHINESS_GATE_THRESHOLD;
+  const evaluated = evaluateJourneyWorthinessTierGate(movie, seasonId, 'extended', options);
   return {
-    pass: result.score >= threshold,
-    threshold,
-    result,
+    pass: evaluated.pass,
+    threshold: evaluated.threshold,
+    result: evaluated.result,
   };
 }
 
@@ -356,4 +397,41 @@ export function journeyWorthinessDiagnosticPass(
   options?: JourneyWorthinessGateOptions,
 ): boolean {
   return journeyWorthinessSelectionGatePass(movie, seasonId, options);
+}
+
+export function evaluateJourneyWorthinessTierGate(
+  movie: JourneyWorthinessMovieInput,
+  seasonId: string,
+  tier: JourneyWorthinessTier,
+  options?: JourneyWorthinessGateOptions,
+): JourneyWorthinessTierGateResult {
+  const config = loadSeasonJourneyWorthinessConfig(seasonId);
+  const result = computeJourneyWorthiness(movie, seasonId, options);
+  const threshold = options?.threshold
+    ?? (tier === 'core'
+      ? (config.gates?.journeyMinCore ?? DEFAULT_JOURNEY_WORTHINESS_GATE_THRESHOLD)
+      : (config.gates?.journeyMinExtended ?? config.gates?.journeyMinCore ?? DEFAULT_JOURNEY_WORTHINESS_GATE_THRESHOLD));
+  const hardFailures: string[] = [];
+
+  if (result.voteCountState === 'missing') {
+    hardFailures.push('missing_vote_count');
+  } else if (tier === 'core' && result.voteCountState !== 'positive') {
+    hardFailures.push('vote_count_required_for_core');
+  } else if (tier === 'extended' && result.voteCountState === 'zero') {
+    const strongCompleteness = result.evidence.metadataCompleteness >= config.thresholds.minMetadataCompleteness
+      && result.evidence.directorSignal >= 1
+      && !result.reasons.includes('missing_metadata')
+      && !result.reasons.includes('runtime_outlier');
+    if (!strongCompleteness) {
+      hardFailures.push('zero_vote_count_requires_strong_completeness');
+    }
+  }
+
+  return {
+    pass: hardFailures.length === 0 && result.score >= threshold,
+    threshold,
+    tier,
+    hardFailures,
+    result,
+  };
 }

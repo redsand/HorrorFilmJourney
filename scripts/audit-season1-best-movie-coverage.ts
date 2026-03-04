@@ -20,6 +20,7 @@ import {
   resolvePerNodeTargetSize,
 } from '../src/lib/nodes/governance/season1-governance';
 import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance';
+import { resolveDynamicMinVotes } from '../src/lib/audit/toplist-robustness';
 
 type Cli = {
   outputDir: string;
@@ -227,6 +228,9 @@ function hasMissingCreditsOrMetadata(row: ScoredMovie): boolean {
 async function main(): Promise<void> {
   const cli = parseCli(process.argv.slice(2));
   const scopeNodeMin = Number(process.env.SEASON1_SCOPE_NODE_MIN ?? '0.70');
+  const topListSize = Number.parseInt(process.env.SEASON1_AUDIT_TOPLIST_SIZE ?? '500', 10) || 500;
+  const topByVotesConfiguredMin = Number.parseInt(process.env.SEASON1_AUDIT_TOPBYVOTES_MIN_VOTES ?? '1', 10) || 1;
+  const topByHybridConfiguredMin = Number.parseInt(process.env.SEASON1_AUDIT_TOPBYHYBRID_MIN_VOTES ?? '100', 10) || 100;
   await mkdir(cli.outputDir, { recursive: true });
   await mkdir(resolve('docs'), { recursive: true });
 
@@ -466,25 +470,41 @@ async function main(): Promise<void> {
       })),
     };
 
-    const topByVotes: TopListEntry[] = season1CandidatePoolRows
-      .filter((entry) => entry.row.metrics.rating >= 6.5)
+    const topByVotesSource = season1CandidatePoolRows
+      .filter((entry) => entry.row.metrics.voteCount > 0)
+      .filter((entry) => entry.row.metrics.rating >= 6.5);
+    const topByVotesMinUsed = resolveDynamicMinVotes({
+      voteCounts: topByVotesSource.map((entry) => entry.row.metrics.voteCount),
+      targetSize: topListSize,
+      configuredMinVotes: topByVotesConfiguredMin,
+    });
+    const topByVotes: TopListEntry[] = topByVotesSource
+      .filter((entry) => entry.row.metrics.voteCount >= topByVotesMinUsed)
       .sort((a, b) => (b.row.metrics.voteCount - a.row.metrics.voteCount)
         || (b.row.metrics.rating - a.row.metrics.rating)
         || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
-      .slice(0, 500)
+      .slice(0, topListSize)
       .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.voteCount }));
     const topByRating: TopListEntry[] = season1CandidatePoolRows
       .filter((entry) => entry.row.metrics.voteCount >= 10_000)
       .sort((a, b) => (b.row.metrics.rating - a.row.metrics.rating)
         || (b.row.metrics.voteCount - a.row.metrics.voteCount)
         || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
-      .slice(0, 500)
+      .slice(0, topListSize)
       .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.rating }));
-    const topByHybrid: TopListEntry[] = season1CandidatePoolRows
+    const topByHybridSource = season1CandidatePoolRows
+      .filter((entry) => entry.row.metrics.voteCount > 0);
+    const topByHybridMinUsed = resolveDynamicMinVotes({
+      voteCounts: topByHybridSource.map((entry) => entry.row.metrics.voteCount),
+      targetSize: topListSize,
+      configuredMinVotes: topByHybridConfiguredMin,
+    });
+    const topByHybrid: TopListEntry[] = topByHybridSource
+      .filter((entry) => entry.row.metrics.voteCount >= topByHybridMinUsed)
       .sort((a, b) => (b.row.metrics.hybridScore - a.row.metrics.hybridScore)
         || (b.row.metrics.voteCount - a.row.metrics.voteCount)
         || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
-      .slice(0, 500)
+      .slice(0, topListSize)
       .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.hybridScore }));
 
     const coverageForList = (name: string, list: TopListEntry[]) => {
@@ -782,6 +802,21 @@ async function main(): Promise<void> {
         catalogRows: scoredMovies.length,
         season1ScopeRows: season1CandidatePoolRows.length,
         excludedOutOfScopeRows: scoredMovies.length - season1CandidatePoolRows.length,
+      },
+      toplistBuild: {
+        targetSize: topListSize,
+        topByVotes: {
+          configuredMinVotes: topByVotesConfiguredMin,
+          minVotesUsed: topByVotesMinUsed,
+          sourceSize: topByVotesSource.length,
+          listSize: topByVotes.length,
+        },
+        topByHybrid: {
+          configuredMinVotes: topByHybridConfiguredMin,
+          minVotesUsed: topByHybridMinUsed,
+          sourceSize: topByHybridSource.length,
+          listSize: topByHybrid.length,
+        },
       },
     };
     const toplistCandidatePoolExamples = {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { computeCoverageGateMetrics, type CoverageMovieInput } from '@/lib/verification/catalog-coverage-gate';
 import { computeCanonicalRuntimeVoteCoverage } from '@/lib/movie/canonical-metrics';
+import { computeVoteCountCoverageBreakdown } from '@/lib/metrics/catalog-coverage';
 
 describe('canonical runtime/vote coverage alignment', () => {
   it('matches coverage-gate runtime/voteCount metrics using canonical DB fields', () => {
@@ -46,8 +47,14 @@ describe('canonical runtime/vote coverage alignment', () => {
     );
 
     expect(gate.runtimeCoverage).toBe(canonical.runtimeCoverage);
-    expect(gate.voteCountCoverage).toBe(canonical.voteCountCoverage);
+    const voteCoverage = computeVoteCountCoverageBreakdown(
+      movies.map((movie) => ({ tmdbId: movie.tmdbId, ratings: movie.ratings })),
+    );
+    expect(gate.voteCountFieldPresence).toBe(voteCoverage.voteCountFieldPresence);
+    expect(gate.voteCountPositiveCoverage).toBe(voteCoverage.voteCountPositiveCoverage);
+    expect(gate.voteCountZeroRate).toBe(voteCoverage.voteCountZeroRate);
     expect(gate.sampleIds.missingRuntime).toEqual(canonical.missingRuntimeIds.slice(0, 10));
-    expect(gate.sampleIds.missingVoteCount).toEqual(canonical.missingVoteCountIds.slice(0, 10));
+    expect(gate.sampleIds.missingVoteCountField).toEqual(voteCoverage.nullTmdbIds.slice(0, 10));
+    expect(gate.sampleIds.zeroVoteCount).toEqual(voteCoverage.zeroTmdbIds.slice(0, 10));
   });
 });
