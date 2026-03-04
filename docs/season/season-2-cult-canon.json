@@ -1,0 +1,5354 @@
+{
+  "top50": [
+    {
+      "title": "El Topo",
+      "year": 1970,
+      "tmdbId": 13041,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 92,
+      "canonScore": 105,
+      "rank": 1
+    },
+    {
+      "title": "Eraserhead",
+      "year": 1977,
+      "tmdbId": 985,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 90,
+      "canonScore": 103,
+      "rank": 2
+    },
+    {
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "tmdbId": 7003,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 90,
+      "canonScore": 102,
+      "rank": 3
+    },
+    {
+      "title": "Female Trouble",
+      "year": 1974,
+      "tmdbId": 14267,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 4
+    },
+    {
+      "title": "Suspiria",
+      "year": 1977,
+      "tmdbId": 11906,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 5
+    },
+    {
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "tmdbId": 923,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 6
+    },
+    {
+      "title": "Ichi the Killer",
+      "year": 2001,
+      "tmdbId": 9696,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Takashi Miike",
+      "cultConfidenceScore": 92,
+      "canonScore": 101,
+      "rank": 7
+    },
+    {
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "tmdbId": 1018,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 91,
+      "canonScore": 100,
+      "rank": 8
+    },
+    {
+      "title": "The Evil Dead",
+      "year": 1981,
+      "tmdbId": 764,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Sam Raimi",
+      "cultConfidenceScore": 88,
+      "canonScore": 100,
+      "rank": 9
+    },
+    {
+      "title": "Escape from New York",
+      "year": 1981,
+      "tmdbId": 1103,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 10
+    },
+    {
+      "title": "The Thing",
+      "year": 1982,
+      "tmdbId": 1091,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 11
+    },
+    {
+      "title": "Videodrome",
+      "year": 1983,
+      "tmdbId": 837,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 12
+    },
+    {
+      "title": "Re-Animator",
+      "year": 1985,
+      "tmdbId": 1694,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Stuart Gordon",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 13
+    },
+    {
+      "title": "The Fly",
+      "year": 1986,
+      "tmdbId": 9426,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 14
+    },
+    {
+      "title": "They Live",
+      "year": 1988,
+      "tmdbId": 8337,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 15
+    },
+    {
+      "title": "The Killer",
+      "year": 1989,
+      "tmdbId": 10835,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 97,
+      "rank": 16
+    },
+    {
+      "title": "Hard Boiled",
+      "year": 1992,
+      "tmdbId": 11782,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 95,
+      "rank": 17
+    },
+    {
+      "title": "Brazil",
+      "year": 1985,
+      "tmdbId": 68,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Terry Gilliam",
+      "cultConfidenceScore": 83,
+      "canonScore": 95,
+      "rank": 18
+    },
+    {
+      "title": "The Texas Chain Saw Massacre",
+      "year": 1974,
+      "tmdbId": 30497,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Tobe Hooper",
+      "cultConfidenceScore": 82,
+      "canonScore": 95,
+      "rank": 19
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "tmdbId": 149,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Katsuhiro Otomo",
+      "cultConfidenceScore": 82,
+      "canonScore": 94,
+      "rank": 20
+    },
+    {
+      "title": "The Warriors",
+      "year": 1979,
+      "tmdbId": 11474,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Walter Hill",
+      "cultConfidenceScore": 81,
+      "canonScore": 94,
+      "rank": 21
+    },
+    {
+      "title": "Pink Flamingos",
+      "year": 1972,
+      "tmdbId": 692,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 22
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "tmdbId": 36685,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jim Sharman",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 23
+    },
+    {
+      "title": "Spider Baby",
+      "year": 1967,
+      "tmdbId": 28504,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Jack Hill",
+      "cultConfidenceScore": 80,
+      "canonScore": 92,
+      "rank": 24
+    },
+    {
+      "title": "The Devils",
+      "year": 1971,
+      "tmdbId": 31767,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Ken Russell",
+      "cultConfidenceScore": 79,
+      "canonScore": 90.5,
+      "rank": 25
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "tmdbId": 9323,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Mamoru Oshii",
+      "cultConfidenceScore": 80,
+      "canonScore": 90,
+      "rank": 26
+    },
+    {
+      "title": "The Return of the Living Dead",
+      "year": 1985,
+      "tmdbId": 10925,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Dan O'Bannon",
+      "cultConfidenceScore": 79,
+      "canonScore": 89.5,
+      "rank": 27
+    },
+    {
+      "title": "Deep Red",
+      "year": 1975,
+      "tmdbId": 20126,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 78,
+      "canonScore": 89.5,
+      "rank": 28
+    },
+    {
+      "title": "Blade Runner",
+      "year": 1982,
+      "tmdbId": 78,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Ridley Scott",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 29
+    },
+    {
+      "title": "This Is Spinal Tap",
+      "year": 1984,
+      "tmdbId": 11031,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Rob Reiner",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 30
+    },
+    {
+      "title": "Clue",
+      "year": 1985,
+      "tmdbId": 15196,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Jonathan Lynn",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 31
+    },
+    {
+      "title": "Hellraiser",
+      "year": 1987,
+      "tmdbId": 9003,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Clive Barker",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 32
+    },
+    {
+      "title": "Near Dark",
+      "year": 1987,
+      "tmdbId": 11879,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Kathryn Bigelow",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 33
+    },
+    {
+      "title": "The Holy Mountain",
+      "year": 1973,
+      "tmdbId": 8327,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 77,
+      "canonScore": 88.5,
+      "rank": 34
+    },
+    {
+      "title": "Withnail & I",
+      "year": 1987,
+      "tmdbId": 13446,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Bruce Robinson",
+      "cultConfidenceScore": 77,
+      "canonScore": 87.5,
+      "rank": 35
+    },
+    {
+      "title": "Polyester",
+      "year": 1981,
+      "tmdbId": 14269,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 36
+    },
+    {
+      "title": "The Stuff",
+      "year": 1985,
+      "tmdbId": 18502,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Larry Cohen",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 37
+    },
+    {
+      "title": "Big Trouble in Little China",
+      "year": 1986,
+      "tmdbId": 6978,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 38
+    },
+    {
+      "title": "Oldboy",
+      "year": 2003,
+      "tmdbId": 670,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Park Chan-wook",
+      "cultConfidenceScore": 77,
+      "canonScore": 84.5,
+      "rank": 39
+    },
+    {
+      "title": "Clerks",
+      "year": 1994,
+      "tmdbId": 2292,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Kevin Smith",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 40
+    },
+    {
+      "title": "Fight Club",
+      "year": 1999,
+      "tmdbId": 550,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Fincher",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 41
+    },
+    {
+      "title": "Dark City",
+      "year": 1998,
+      "tmdbId": 2666,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Alex Proyas",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 42
+    },
+    {
+      "title": "The Big Lebowski",
+      "year": 1998,
+      "tmdbId": 115,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Joel Coen",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 43
+    },
+    {
+      "title": "Soldier Blue",
+      "year": 1970,
+      "tmdbId": 14384,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Ralph Nelson",
+      "cultConfidenceScore": 72,
+      "canonScore": 83.5,
+      "rank": 44
+    },
+    {
+      "title": "Battle Royale",
+      "year": 2000,
+      "tmdbId": 3176,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Kinji Fukasaku",
+      "cultConfidenceScore": 75,
+      "canonScore": 82.5,
+      "rank": 45
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "tmdbId": null,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 46
+    },
+    {
+      "title": "Audition",
+      "year": 1999,
+      "tmdbId": null,
+      "node": "eurocult",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 47
+    },
+    {
+      "title": "Office Space",
+      "year": 1999,
+      "tmdbId": 1542,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Mike Judge",
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 48
+    },
+    {
+      "title": "The Swimmer",
+      "year": 1968,
+      "tmdbId": 33564,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Frank Perry",
+      "cultConfidenceScore": 72,
+      "canonScore": 82.5,
+      "rank": 49
+    },
+    {
+      "title": "Donnie Darko",
+      "year": 2001,
+      "tmdbId": 141,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Richard Kelly",
+      "cultConfidenceScore": 74,
+      "canonScore": 81.5,
+      "rank": 50
+    }
+  ],
+  "top100": [
+    {
+      "title": "El Topo",
+      "year": 1970,
+      "tmdbId": 13041,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 92,
+      "canonScore": 105,
+      "rank": 1
+    },
+    {
+      "title": "Eraserhead",
+      "year": 1977,
+      "tmdbId": 985,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 90,
+      "canonScore": 103,
+      "rank": 2
+    },
+    {
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "tmdbId": 7003,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 90,
+      "canonScore": 102,
+      "rank": 3
+    },
+    {
+      "title": "Female Trouble",
+      "year": 1974,
+      "tmdbId": 14267,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 4
+    },
+    {
+      "title": "Suspiria",
+      "year": 1977,
+      "tmdbId": 11906,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 5
+    },
+    {
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "tmdbId": 923,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 6
+    },
+    {
+      "title": "Ichi the Killer",
+      "year": 2001,
+      "tmdbId": 9696,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Takashi Miike",
+      "cultConfidenceScore": 92,
+      "canonScore": 101,
+      "rank": 7
+    },
+    {
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "tmdbId": 1018,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 91,
+      "canonScore": 100,
+      "rank": 8
+    },
+    {
+      "title": "The Evil Dead",
+      "year": 1981,
+      "tmdbId": 764,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Sam Raimi",
+      "cultConfidenceScore": 88,
+      "canonScore": 100,
+      "rank": 9
+    },
+    {
+      "title": "Escape from New York",
+      "year": 1981,
+      "tmdbId": 1103,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 10
+    },
+    {
+      "title": "The Thing",
+      "year": 1982,
+      "tmdbId": 1091,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 11
+    },
+    {
+      "title": "Videodrome",
+      "year": 1983,
+      "tmdbId": 837,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 12
+    },
+    {
+      "title": "Re-Animator",
+      "year": 1985,
+      "tmdbId": 1694,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Stuart Gordon",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 13
+    },
+    {
+      "title": "The Fly",
+      "year": 1986,
+      "tmdbId": 9426,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 14
+    },
+    {
+      "title": "They Live",
+      "year": 1988,
+      "tmdbId": 8337,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 15
+    },
+    {
+      "title": "The Killer",
+      "year": 1989,
+      "tmdbId": 10835,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 97,
+      "rank": 16
+    },
+    {
+      "title": "Hard Boiled",
+      "year": 1992,
+      "tmdbId": 11782,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 95,
+      "rank": 17
+    },
+    {
+      "title": "Brazil",
+      "year": 1985,
+      "tmdbId": 68,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Terry Gilliam",
+      "cultConfidenceScore": 83,
+      "canonScore": 95,
+      "rank": 18
+    },
+    {
+      "title": "The Texas Chain Saw Massacre",
+      "year": 1974,
+      "tmdbId": 30497,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Tobe Hooper",
+      "cultConfidenceScore": 82,
+      "canonScore": 95,
+      "rank": 19
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "tmdbId": 149,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Katsuhiro Otomo",
+      "cultConfidenceScore": 82,
+      "canonScore": 94,
+      "rank": 20
+    },
+    {
+      "title": "The Warriors",
+      "year": 1979,
+      "tmdbId": 11474,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Walter Hill",
+      "cultConfidenceScore": 81,
+      "canonScore": 94,
+      "rank": 21
+    },
+    {
+      "title": "Pink Flamingos",
+      "year": 1972,
+      "tmdbId": 692,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 22
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "tmdbId": 36685,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jim Sharman",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 23
+    },
+    {
+      "title": "Spider Baby",
+      "year": 1967,
+      "tmdbId": 28504,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Jack Hill",
+      "cultConfidenceScore": 80,
+      "canonScore": 92,
+      "rank": 24
+    },
+    {
+      "title": "The Devils",
+      "year": 1971,
+      "tmdbId": 31767,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Ken Russell",
+      "cultConfidenceScore": 79,
+      "canonScore": 90.5,
+      "rank": 25
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "tmdbId": 9323,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Mamoru Oshii",
+      "cultConfidenceScore": 80,
+      "canonScore": 90,
+      "rank": 26
+    },
+    {
+      "title": "The Return of the Living Dead",
+      "year": 1985,
+      "tmdbId": 10925,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Dan O'Bannon",
+      "cultConfidenceScore": 79,
+      "canonScore": 89.5,
+      "rank": 27
+    },
+    {
+      "title": "Deep Red",
+      "year": 1975,
+      "tmdbId": 20126,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 78,
+      "canonScore": 89.5,
+      "rank": 28
+    },
+    {
+      "title": "Blade Runner",
+      "year": 1982,
+      "tmdbId": 78,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Ridley Scott",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 29
+    },
+    {
+      "title": "This Is Spinal Tap",
+      "year": 1984,
+      "tmdbId": 11031,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Rob Reiner",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 30
+    },
+    {
+      "title": "Clue",
+      "year": 1985,
+      "tmdbId": 15196,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Jonathan Lynn",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 31
+    },
+    {
+      "title": "Hellraiser",
+      "year": 1987,
+      "tmdbId": 9003,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Clive Barker",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 32
+    },
+    {
+      "title": "Near Dark",
+      "year": 1987,
+      "tmdbId": 11879,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Kathryn Bigelow",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 33
+    },
+    {
+      "title": "The Holy Mountain",
+      "year": 1973,
+      "tmdbId": 8327,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 77,
+      "canonScore": 88.5,
+      "rank": 34
+    },
+    {
+      "title": "Withnail & I",
+      "year": 1987,
+      "tmdbId": 13446,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Bruce Robinson",
+      "cultConfidenceScore": 77,
+      "canonScore": 87.5,
+      "rank": 35
+    },
+    {
+      "title": "Polyester",
+      "year": 1981,
+      "tmdbId": 14269,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 36
+    },
+    {
+      "title": "The Stuff",
+      "year": 1985,
+      "tmdbId": 18502,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Larry Cohen",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 37
+    },
+    {
+      "title": "Big Trouble in Little China",
+      "year": 1986,
+      "tmdbId": 6978,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 38
+    },
+    {
+      "title": "Oldboy",
+      "year": 2003,
+      "tmdbId": 670,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Park Chan-wook",
+      "cultConfidenceScore": 77,
+      "canonScore": 84.5,
+      "rank": 39
+    },
+    {
+      "title": "Clerks",
+      "year": 1994,
+      "tmdbId": 2292,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Kevin Smith",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 40
+    },
+    {
+      "title": "Fight Club",
+      "year": 1999,
+      "tmdbId": 550,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Fincher",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 41
+    },
+    {
+      "title": "Dark City",
+      "year": 1998,
+      "tmdbId": 2666,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Alex Proyas",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 42
+    },
+    {
+      "title": "The Big Lebowski",
+      "year": 1998,
+      "tmdbId": 115,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Joel Coen",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 43
+    },
+    {
+      "title": "Soldier Blue",
+      "year": 1970,
+      "tmdbId": 14384,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Ralph Nelson",
+      "cultConfidenceScore": 72,
+      "canonScore": 83.5,
+      "rank": 44
+    },
+    {
+      "title": "Battle Royale",
+      "year": 2000,
+      "tmdbId": 3176,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Kinji Fukasaku",
+      "cultConfidenceScore": 75,
+      "canonScore": 82.5,
+      "rank": 45
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "tmdbId": null,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 46
+    },
+    {
+      "title": "Audition",
+      "year": 1999,
+      "tmdbId": null,
+      "node": "eurocult",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 47
+    },
+    {
+      "title": "Office Space",
+      "year": 1999,
+      "tmdbId": 1542,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Mike Judge",
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 48
+    },
+    {
+      "title": "The Swimmer",
+      "year": 1968,
+      "tmdbId": 33564,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Frank Perry",
+      "cultConfidenceScore": 72,
+      "canonScore": 82.5,
+      "rank": 49
+    },
+    {
+      "title": "Donnie Darko",
+      "year": 2001,
+      "tmdbId": 141,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Richard Kelly",
+      "cultConfidenceScore": 74,
+      "canonScore": 81.5,
+      "rank": 50
+    },
+    {
+      "title": "Velvet Goldmine",
+      "year": 1998,
+      "tmdbId": 1808,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Todd Haynes",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 51
+    },
+    {
+      "title": "American Movie",
+      "year": 1999,
+      "tmdbId": 14242,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Chris Smith",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 52
+    },
+    {
+      "title": "The Boondock Saints",
+      "year": 1999,
+      "tmdbId": 8374,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Troy Duffy",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 53
+    },
+    {
+      "title": "Hush... Hush, Sweet Charlotte",
+      "year": 1964,
+      "tmdbId": 10299,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Robert Aldrich",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 54
+    },
+    {
+      "title": "The Naked Kiss",
+      "year": 1964,
+      "tmdbId": 26031,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Samuel Fuller",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 55
+    },
+    {
+      "title": "Tokyo Drifter",
+      "year": 1966,
+      "tmdbId": 45706,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Seijun Suzuki",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 56
+    },
+    {
+      "title": "Solaris",
+      "year": 1972,
+      "tmdbId": 593,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Andrei Tarkovsky",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 57
+    },
+    {
+      "title": "Lady Snowblood",
+      "year": 1973,
+      "tmdbId": 2487,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Toshiya Fujita",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 58
+    },
+    {
+      "title": "The Wicker Man",
+      "year": 1973,
+      "tmdbId": 16307,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Robin Hardy",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 59
+    },
+    {
+      "title": "Orpheus",
+      "year": 1950,
+      "tmdbId": 4558,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Jean Cocteau",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 60
+    },
+    {
+      "title": "The 7th Voyage of Sinbad",
+      "year": 1958,
+      "tmdbId": 15515,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Nathan Juran",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 61
+    },
+    {
+      "title": "Hedwig and the Angry Inch",
+      "year": 2001,
+      "tmdbId": 13403,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Cameron Mitchell",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 62
+    },
+    {
+      "title": "Faster, Pussycat! Kill! Kill!",
+      "year": 1965,
+      "tmdbId": 315,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 63
+    },
+    {
+      "title": "Le Samouraï",
+      "year": 1967,
+      "tmdbId": 5511,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Jean-Pierre Melville",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 64
+    },
+    {
+      "title": "Liquid Sky",
+      "year": 1982,
+      "tmdbId": 20980,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Slava Tsukerman",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 65
+    },
+    {
+      "title": "D.O.A.",
+      "year": 1949,
+      "tmdbId": 18995,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Rudolph Maté",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 66
+    },
+    {
+      "title": "The Narrow Margin",
+      "year": 1952,
+      "tmdbId": 31713,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Richard Fleischer",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 67
+    },
+    {
+      "title": "Blackboard Jungle",
+      "year": 1955,
+      "tmdbId": 26516,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Richard Brooks",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 68
+    },
+    {
+      "title": "The Big Combo",
+      "year": 1955,
+      "tmdbId": 22342,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Joseph H. Lewis",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 69
+    },
+    {
+      "title": "A Man Escaped",
+      "year": 1956,
+      "tmdbId": 15244,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Robert Bresson",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 70
+    },
+    {
+      "title": "American Psycho",
+      "year": 2000,
+      "tmdbId": 1359,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Mary Harron",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 71
+    },
+    {
+      "title": "Black Sunday",
+      "year": 1960,
+      "tmdbId": 27632,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Mario Bava",
+      "cultConfidenceScore": 75,
+      "canonScore": 79,
+      "rank": 72
+    },
+    {
+      "title": "Phantom of the Paradise",
+      "year": 1974,
+      "tmdbId": 27327,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 74,
+      "canonScore": 79,
+      "rank": 73
+    },
+    {
+      "title": "Carrie",
+      "year": 1976,
+      "tmdbId": 7340,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 74,
+      "canonScore": 79,
+      "rank": 74
+    },
+    {
+      "title": "Monty Python and the Holy Grail",
+      "year": 1975,
+      "tmdbId": 762,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Terry Jones",
+      "cultConfidenceScore": 69,
+      "canonScore": 79,
+      "rank": 75
+    },
+    {
+      "title": "The Cabinet of Dr. Caligari",
+      "year": 1920,
+      "tmdbId": 234,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Robert Wiene",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 76
+    },
+    {
+      "title": "Un Chien Andalou",
+      "year": 1929,
+      "tmdbId": 626,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Luis Buñuel",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 77
+    },
+    {
+      "title": "Freaks",
+      "year": 1932,
+      "tmdbId": 136,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Tod Browning",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 78
+    },
+    {
+      "title": "The Dawn Patrol",
+      "year": 1938,
+      "tmdbId": 46688,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Edmund Goulding",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 79
+    },
+    {
+      "title": "Brief Encounter",
+      "year": 1945,
+      "tmdbId": 851,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "David Lean",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 80
+    },
+    {
+      "title": "The Lost Weekend",
+      "year": 1945,
+      "tmdbId": 28580,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Billy Wilder",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 81
+    },
+    {
+      "title": "The Night of the Hunter",
+      "year": 1955,
+      "tmdbId": 3112,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Charles Laughton",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 82
+    },
+    {
+      "title": "Mudhoney",
+      "year": 1965,
+      "tmdbId": 5719,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 69,
+      "canonScore": 78,
+      "rank": 83
+    },
+    {
+      "title": "Repo Man",
+      "year": 1984,
+      "tmdbId": 13820,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Alex Cox",
+      "cultConfidenceScore": 69,
+      "canonScore": 78,
+      "rank": 84
+    },
+    {
+      "title": "A Bay of Blood",
+      "year": 1971,
+      "tmdbId": 5486,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Mario Bava",
+      "cultConfidenceScore": 68,
+      "canonScore": 78,
+      "rank": 85
+    },
+    {
+      "title": "The Jerk",
+      "year": 1979,
+      "tmdbId": 6471,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Carl Reiner",
+      "cultConfidenceScore": 68,
+      "canonScore": 78,
+      "rank": 86
+    },
+    {
+      "title": "Heavy Metal",
+      "year": 1981,
+      "tmdbId": 11827,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Gerald Potterton",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 87
+    },
+    {
+      "title": "Basket Case",
+      "year": 1982,
+      "tmdbId": 27813,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Frank Henenlotter",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 88
+    },
+    {
+      "title": "Poltergeist",
+      "year": 1982,
+      "tmdbId": 609,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Tobe Hooper",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 89
+    },
+    {
+      "title": "Sleepaway Camp",
+      "year": 1983,
+      "tmdbId": 13567,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Robert Hiltzik",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 90
+    },
+    {
+      "title": "Dark Star",
+      "year": 1974,
+      "tmdbId": 1410,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 67,
+      "canonScore": 77,
+      "rank": 91
+    },
+    {
+      "title": "The Gods Must Be Crazy",
+      "year": 1980,
+      "tmdbId": 8393,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jamie Uys",
+      "cultConfidenceScore": 67,
+      "canonScore": 76,
+      "rank": 92
+    },
+    {
+      "title": "Fright Night",
+      "year": 1985,
+      "tmdbId": 11797,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Tom Holland",
+      "cultConfidenceScore": 67,
+      "canonScore": 76,
+      "rank": 93
+    },
+    {
+      "title": "Grey Gardens",
+      "year": 1975,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 66,
+      "canonScore": 76,
+      "rank": 94
+    },
+    {
+      "title": "Up!",
+      "year": 1976,
+      "tmdbId": 5651,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 66,
+      "canonScore": 76,
+      "rank": 95
+    },
+    {
+      "title": "The Beyond",
+      "year": 1981,
+      "tmdbId": 19204,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Lucio Fulci",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 96
+    },
+    {
+      "title": "A Better Tomorrow",
+      "year": 1986,
+      "tmdbId": 11471,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "John Woo",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 97
+    },
+    {
+      "title": "Blue Velvet",
+      "year": 1986,
+      "tmdbId": 793,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "David Lynch",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 98
+    },
+    {
+      "title": "Belladonna of Sadness",
+      "year": 1973,
+      "tmdbId": 64847,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Eiichi Yamamoto",
+      "cultConfidenceScore": 65,
+      "canonScore": 75,
+      "rank": 99
+    },
+    {
+      "title": "Fantastic Planet",
+      "year": 1973,
+      "tmdbId": 16306,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "René Laloux",
+      "cultConfidenceScore": 65,
+      "canonScore": 75,
+      "rank": 100
+    }
+  ],
+  "top250": [
+    {
+      "title": "El Topo",
+      "year": 1970,
+      "tmdbId": 13041,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 92,
+      "canonScore": 105,
+      "rank": 1
+    },
+    {
+      "title": "Eraserhead",
+      "year": 1977,
+      "tmdbId": 985,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 90,
+      "canonScore": 103,
+      "rank": 2
+    },
+    {
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "tmdbId": 7003,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 90,
+      "canonScore": 102,
+      "rank": 3
+    },
+    {
+      "title": "Female Trouble",
+      "year": 1974,
+      "tmdbId": 14267,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 4
+    },
+    {
+      "title": "Suspiria",
+      "year": 1977,
+      "tmdbId": 11906,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 5
+    },
+    {
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "tmdbId": 923,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "George A. Romero",
+      "cultConfidenceScore": 89,
+      "canonScore": 102,
+      "rank": 6
+    },
+    {
+      "title": "Ichi the Killer",
+      "year": 2001,
+      "tmdbId": 9696,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Takashi Miike",
+      "cultConfidenceScore": 92,
+      "canonScore": 101,
+      "rank": 7
+    },
+    {
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "tmdbId": 1018,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Lynch",
+      "cultConfidenceScore": 91,
+      "canonScore": 100,
+      "rank": 8
+    },
+    {
+      "title": "The Evil Dead",
+      "year": 1981,
+      "tmdbId": 764,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Sam Raimi",
+      "cultConfidenceScore": 88,
+      "canonScore": 100,
+      "rank": 9
+    },
+    {
+      "title": "Escape from New York",
+      "year": 1981,
+      "tmdbId": 1103,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 10
+    },
+    {
+      "title": "The Thing",
+      "year": 1982,
+      "tmdbId": 1091,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 11
+    },
+    {
+      "title": "Videodrome",
+      "year": 1983,
+      "tmdbId": 837,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 12
+    },
+    {
+      "title": "Re-Animator",
+      "year": 1985,
+      "tmdbId": 1694,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Stuart Gordon",
+      "cultConfidenceScore": 87,
+      "canonScore": 99,
+      "rank": 13
+    },
+    {
+      "title": "The Fly",
+      "year": 1986,
+      "tmdbId": 9426,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 14
+    },
+    {
+      "title": "They Live",
+      "year": 1988,
+      "tmdbId": 8337,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 86,
+      "canonScore": 98,
+      "rank": 15
+    },
+    {
+      "title": "The Killer",
+      "year": 1989,
+      "tmdbId": 10835,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 97,
+      "rank": 16
+    },
+    {
+      "title": "Hard Boiled",
+      "year": 1992,
+      "tmdbId": 11782,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "John Woo",
+      "cultConfidenceScore": 85,
+      "canonScore": 95,
+      "rank": 17
+    },
+    {
+      "title": "Brazil",
+      "year": 1985,
+      "tmdbId": 68,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Terry Gilliam",
+      "cultConfidenceScore": 83,
+      "canonScore": 95,
+      "rank": 18
+    },
+    {
+      "title": "The Texas Chain Saw Massacre",
+      "year": 1974,
+      "tmdbId": 30497,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Tobe Hooper",
+      "cultConfidenceScore": 82,
+      "canonScore": 95,
+      "rank": 19
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "tmdbId": 149,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Katsuhiro Otomo",
+      "cultConfidenceScore": 82,
+      "canonScore": 94,
+      "rank": 20
+    },
+    {
+      "title": "The Warriors",
+      "year": 1979,
+      "tmdbId": 11474,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Walter Hill",
+      "cultConfidenceScore": 81,
+      "canonScore": 94,
+      "rank": 21
+    },
+    {
+      "title": "Pink Flamingos",
+      "year": 1972,
+      "tmdbId": 692,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 22
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "tmdbId": 36685,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jim Sharman",
+      "cultConfidenceScore": 80,
+      "canonScore": 93,
+      "rank": 23
+    },
+    {
+      "title": "Spider Baby",
+      "year": 1967,
+      "tmdbId": 28504,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Jack Hill",
+      "cultConfidenceScore": 80,
+      "canonScore": 92,
+      "rank": 24
+    },
+    {
+      "title": "The Devils",
+      "year": 1971,
+      "tmdbId": 31767,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Ken Russell",
+      "cultConfidenceScore": 79,
+      "canonScore": 90.5,
+      "rank": 25
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "tmdbId": 9323,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Mamoru Oshii",
+      "cultConfidenceScore": 80,
+      "canonScore": 90,
+      "rank": 26
+    },
+    {
+      "title": "The Return of the Living Dead",
+      "year": 1985,
+      "tmdbId": 10925,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Dan O'Bannon",
+      "cultConfidenceScore": 79,
+      "canonScore": 89.5,
+      "rank": 27
+    },
+    {
+      "title": "Deep Red",
+      "year": 1975,
+      "tmdbId": 20126,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 78,
+      "canonScore": 89.5,
+      "rank": 28
+    },
+    {
+      "title": "Blade Runner",
+      "year": 1982,
+      "tmdbId": 78,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Ridley Scott",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 29
+    },
+    {
+      "title": "This Is Spinal Tap",
+      "year": 1984,
+      "tmdbId": 11031,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Rob Reiner",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 30
+    },
+    {
+      "title": "Clue",
+      "year": 1985,
+      "tmdbId": 15196,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Jonathan Lynn",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 31
+    },
+    {
+      "title": "Hellraiser",
+      "year": 1987,
+      "tmdbId": 9003,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Clive Barker",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 32
+    },
+    {
+      "title": "Near Dark",
+      "year": 1987,
+      "tmdbId": 11879,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Kathryn Bigelow",
+      "cultConfidenceScore": 78,
+      "canonScore": 88.5,
+      "rank": 33
+    },
+    {
+      "title": "The Holy Mountain",
+      "year": 1973,
+      "tmdbId": 8327,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 77,
+      "canonScore": 88.5,
+      "rank": 34
+    },
+    {
+      "title": "Withnail & I",
+      "year": 1987,
+      "tmdbId": 13446,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Bruce Robinson",
+      "cultConfidenceScore": 77,
+      "canonScore": 87.5,
+      "rank": 35
+    },
+    {
+      "title": "Polyester",
+      "year": 1981,
+      "tmdbId": 14269,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Waters",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 36
+    },
+    {
+      "title": "The Stuff",
+      "year": 1985,
+      "tmdbId": 18502,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Larry Cohen",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 37
+    },
+    {
+      "title": "Big Trouble in Little China",
+      "year": 1986,
+      "tmdbId": 6978,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 75,
+      "canonScore": 85.5,
+      "rank": 38
+    },
+    {
+      "title": "Oldboy",
+      "year": 2003,
+      "tmdbId": 670,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Park Chan-wook",
+      "cultConfidenceScore": 77,
+      "canonScore": 84.5,
+      "rank": 39
+    },
+    {
+      "title": "Clerks",
+      "year": 1994,
+      "tmdbId": 2292,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Kevin Smith",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 40
+    },
+    {
+      "title": "Fight Club",
+      "year": 1999,
+      "tmdbId": 550,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Fincher",
+      "cultConfidenceScore": 76,
+      "canonScore": 84.5,
+      "rank": 41
+    },
+    {
+      "title": "Dark City",
+      "year": 1998,
+      "tmdbId": 2666,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Alex Proyas",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 42
+    },
+    {
+      "title": "The Big Lebowski",
+      "year": 1998,
+      "tmdbId": 115,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Joel Coen",
+      "cultConfidenceScore": 75,
+      "canonScore": 83.5,
+      "rank": 43
+    },
+    {
+      "title": "Soldier Blue",
+      "year": 1970,
+      "tmdbId": 14384,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Ralph Nelson",
+      "cultConfidenceScore": 72,
+      "canonScore": 83.5,
+      "rank": 44
+    },
+    {
+      "title": "Battle Royale",
+      "year": 2000,
+      "tmdbId": 3176,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Kinji Fukasaku",
+      "cultConfidenceScore": 75,
+      "canonScore": 82.5,
+      "rank": 45
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "tmdbId": null,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 46
+    },
+    {
+      "title": "Audition",
+      "year": 1999,
+      "tmdbId": null,
+      "node": "eurocult",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 47
+    },
+    {
+      "title": "Office Space",
+      "year": 1999,
+      "tmdbId": 1542,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Mike Judge",
+      "cultConfidenceScore": 74,
+      "canonScore": 82.5,
+      "rank": 48
+    },
+    {
+      "title": "The Swimmer",
+      "year": 1968,
+      "tmdbId": 33564,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Frank Perry",
+      "cultConfidenceScore": 72,
+      "canonScore": 82.5,
+      "rank": 49
+    },
+    {
+      "title": "Donnie Darko",
+      "year": 2001,
+      "tmdbId": 141,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Richard Kelly",
+      "cultConfidenceScore": 74,
+      "canonScore": 81.5,
+      "rank": 50
+    },
+    {
+      "title": "Velvet Goldmine",
+      "year": 1998,
+      "tmdbId": 1808,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Todd Haynes",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 51
+    },
+    {
+      "title": "American Movie",
+      "year": 1999,
+      "tmdbId": 14242,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Chris Smith",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 52
+    },
+    {
+      "title": "The Boondock Saints",
+      "year": 1999,
+      "tmdbId": 8374,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Troy Duffy",
+      "cultConfidenceScore": 73,
+      "canonScore": 81.5,
+      "rank": 53
+    },
+    {
+      "title": "Hush... Hush, Sweet Charlotte",
+      "year": 1964,
+      "tmdbId": 10299,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Robert Aldrich",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 54
+    },
+    {
+      "title": "The Naked Kiss",
+      "year": 1964,
+      "tmdbId": 26031,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Samuel Fuller",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 55
+    },
+    {
+      "title": "Tokyo Drifter",
+      "year": 1966,
+      "tmdbId": 45706,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Seijun Suzuki",
+      "cultConfidenceScore": 71,
+      "canonScore": 81.5,
+      "rank": 56
+    },
+    {
+      "title": "Solaris",
+      "year": 1972,
+      "tmdbId": 593,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Andrei Tarkovsky",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 57
+    },
+    {
+      "title": "Lady Snowblood",
+      "year": 1973,
+      "tmdbId": 2487,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Toshiya Fujita",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 58
+    },
+    {
+      "title": "The Wicker Man",
+      "year": 1973,
+      "tmdbId": 16307,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Robin Hardy",
+      "cultConfidenceScore": 70,
+      "canonScore": 81.5,
+      "rank": 59
+    },
+    {
+      "title": "Orpheus",
+      "year": 1950,
+      "tmdbId": 4558,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Jean Cocteau",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 60
+    },
+    {
+      "title": "The 7th Voyage of Sinbad",
+      "year": 1958,
+      "tmdbId": 15515,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Nathan Juran",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 61
+    },
+    {
+      "title": "Hedwig and the Angry Inch",
+      "year": 2001,
+      "tmdbId": 13403,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Cameron Mitchell",
+      "cultConfidenceScore": 73,
+      "canonScore": 80.5,
+      "rank": 62
+    },
+    {
+      "title": "Faster, Pussycat! Kill! Kill!",
+      "year": 1965,
+      "tmdbId": 315,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 63
+    },
+    {
+      "title": "Le Samouraï",
+      "year": 1967,
+      "tmdbId": 5511,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Jean-Pierre Melville",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 64
+    },
+    {
+      "title": "Liquid Sky",
+      "year": 1982,
+      "tmdbId": 20980,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Slava Tsukerman",
+      "cultConfidenceScore": 70,
+      "canonScore": 80.5,
+      "rank": 65
+    },
+    {
+      "title": "D.O.A.",
+      "year": 1949,
+      "tmdbId": 18995,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Rudolph Maté",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 66
+    },
+    {
+      "title": "The Narrow Margin",
+      "year": 1952,
+      "tmdbId": 31713,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Richard Fleischer",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 67
+    },
+    {
+      "title": "Blackboard Jungle",
+      "year": 1955,
+      "tmdbId": 26516,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Richard Brooks",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 68
+    },
+    {
+      "title": "The Big Combo",
+      "year": 1955,
+      "tmdbId": 22342,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Joseph H. Lewis",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 69
+    },
+    {
+      "title": "A Man Escaped",
+      "year": 1956,
+      "tmdbId": 15244,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Robert Bresson",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 70
+    },
+    {
+      "title": "American Psycho",
+      "year": 2000,
+      "tmdbId": 1359,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Mary Harron",
+      "cultConfidenceScore": 72,
+      "canonScore": 79.5,
+      "rank": 71
+    },
+    {
+      "title": "Black Sunday",
+      "year": 1960,
+      "tmdbId": 27632,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Mario Bava",
+      "cultConfidenceScore": 75,
+      "canonScore": 79,
+      "rank": 72
+    },
+    {
+      "title": "Phantom of the Paradise",
+      "year": 1974,
+      "tmdbId": 27327,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 74,
+      "canonScore": 79,
+      "rank": 73
+    },
+    {
+      "title": "Carrie",
+      "year": 1976,
+      "tmdbId": 7340,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 74,
+      "canonScore": 79,
+      "rank": 74
+    },
+    {
+      "title": "Monty Python and the Holy Grail",
+      "year": 1975,
+      "tmdbId": 762,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Terry Jones",
+      "cultConfidenceScore": 69,
+      "canonScore": 79,
+      "rank": 75
+    },
+    {
+      "title": "The Cabinet of Dr. Caligari",
+      "year": 1920,
+      "tmdbId": 234,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Robert Wiene",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 76
+    },
+    {
+      "title": "Un Chien Andalou",
+      "year": 1929,
+      "tmdbId": 626,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Luis Buñuel",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 77
+    },
+    {
+      "title": "Freaks",
+      "year": 1932,
+      "tmdbId": 136,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Tod Browning",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 78
+    },
+    {
+      "title": "The Dawn Patrol",
+      "year": 1938,
+      "tmdbId": 46688,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Edmund Goulding",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 79
+    },
+    {
+      "title": "Brief Encounter",
+      "year": 1945,
+      "tmdbId": 851,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "David Lean",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 80
+    },
+    {
+      "title": "The Lost Weekend",
+      "year": 1945,
+      "tmdbId": 28580,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Billy Wilder",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 81
+    },
+    {
+      "title": "The Night of the Hunter",
+      "year": 1955,
+      "tmdbId": 3112,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Charles Laughton",
+      "cultConfidenceScore": 71,
+      "canonScore": 78.5,
+      "rank": 82
+    },
+    {
+      "title": "Mudhoney",
+      "year": 1965,
+      "tmdbId": 5719,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 69,
+      "canonScore": 78,
+      "rank": 83
+    },
+    {
+      "title": "Repo Man",
+      "year": 1984,
+      "tmdbId": 13820,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Alex Cox",
+      "cultConfidenceScore": 69,
+      "canonScore": 78,
+      "rank": 84
+    },
+    {
+      "title": "A Bay of Blood",
+      "year": 1971,
+      "tmdbId": 5486,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Mario Bava",
+      "cultConfidenceScore": 68,
+      "canonScore": 78,
+      "rank": 85
+    },
+    {
+      "title": "The Jerk",
+      "year": 1979,
+      "tmdbId": 6471,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Carl Reiner",
+      "cultConfidenceScore": 68,
+      "canonScore": 78,
+      "rank": 86
+    },
+    {
+      "title": "Heavy Metal",
+      "year": 1981,
+      "tmdbId": 11827,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Gerald Potterton",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 87
+    },
+    {
+      "title": "Basket Case",
+      "year": 1982,
+      "tmdbId": 27813,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Frank Henenlotter",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 88
+    },
+    {
+      "title": "Poltergeist",
+      "year": 1982,
+      "tmdbId": 609,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Tobe Hooper",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 89
+    },
+    {
+      "title": "Sleepaway Camp",
+      "year": 1983,
+      "tmdbId": 13567,
+      "node": "cult-horror",
+      "tier": "core",
+      "director": "Robert Hiltzik",
+      "cultConfidenceScore": 68,
+      "canonScore": 77,
+      "rank": 90
+    },
+    {
+      "title": "Dark Star",
+      "year": 1974,
+      "tmdbId": 1410,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 67,
+      "canonScore": 77,
+      "rank": 91
+    },
+    {
+      "title": "The Gods Must Be Crazy",
+      "year": 1980,
+      "tmdbId": 8393,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jamie Uys",
+      "cultConfidenceScore": 67,
+      "canonScore": 76,
+      "rank": 92
+    },
+    {
+      "title": "Fright Night",
+      "year": 1985,
+      "tmdbId": 11797,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Tom Holland",
+      "cultConfidenceScore": 67,
+      "canonScore": 76,
+      "rank": 93
+    },
+    {
+      "title": "Grey Gardens",
+      "year": 1975,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 66,
+      "canonScore": 76,
+      "rank": 94
+    },
+    {
+      "title": "Up!",
+      "year": 1976,
+      "tmdbId": 5651,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Russ Meyer",
+      "cultConfidenceScore": 66,
+      "canonScore": 76,
+      "rank": 95
+    },
+    {
+      "title": "The Beyond",
+      "year": 1981,
+      "tmdbId": 19204,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Lucio Fulci",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 96
+    },
+    {
+      "title": "A Better Tomorrow",
+      "year": 1986,
+      "tmdbId": 11471,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "John Woo",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 97
+    },
+    {
+      "title": "Blue Velvet",
+      "year": 1986,
+      "tmdbId": 793,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "David Lynch",
+      "cultConfidenceScore": 71,
+      "canonScore": 75,
+      "rank": 98
+    },
+    {
+      "title": "Belladonna of Sadness",
+      "year": 1973,
+      "tmdbId": 64847,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Eiichi Yamamoto",
+      "cultConfidenceScore": 65,
+      "canonScore": 75,
+      "rank": 99
+    },
+    {
+      "title": "Fantastic Planet",
+      "year": 1973,
+      "tmdbId": 16306,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "René Laloux",
+      "cultConfidenceScore": 65,
+      "canonScore": 75,
+      "rank": 100
+    },
+    {
+      "title": "RoboCop",
+      "year": 1987,
+      "tmdbId": 5548,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Paul Verhoeven",
+      "cultConfidenceScore": 70,
+      "canonScore": 74,
+      "rank": 101
+    },
+    {
+      "title": "Fear and Loathing in Las Vegas",
+      "year": 1998,
+      "tmdbId": 1878,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Terry Gilliam",
+      "cultConfidenceScore": 67,
+      "canonScore": 74,
+      "rank": 102
+    },
+    {
+      "title": "House of Games",
+      "year": 1987,
+      "tmdbId": 26719,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "David Mamet",
+      "cultConfidenceScore": 65,
+      "canonScore": 74,
+      "rank": 103
+    },
+    {
+      "title": "Heathers",
+      "year": 1988,
+      "tmdbId": null,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 65,
+      "canonScore": 74,
+      "rank": 104
+    },
+    {
+      "title": "Scarface",
+      "year": 1983,
+      "tmdbId": 111,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 69,
+      "canonScore": 73,
+      "rank": 105
+    },
+    {
+      "title": "Evil Dead II",
+      "year": 1987,
+      "tmdbId": 765,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Sam Raimi",
+      "cultConfidenceScore": 69,
+      "canonScore": 73,
+      "rank": 106
+    },
+    {
+      "title": "Hairspray",
+      "year": 1988,
+      "tmdbId": 11054,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "John Waters",
+      "cultConfidenceScore": 69,
+      "canonScore": 73,
+      "rank": 107
+    },
+    {
+      "title": "Santa Sangre",
+      "year": 1989,
+      "tmdbId": 19236,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Alejandro Jodorowsky",
+      "cultConfidenceScore": 69,
+      "canonScore": 73,
+      "rank": 108
+    },
+    {
+      "title": "Tetsuo: The Iron Man",
+      "year": 1989,
+      "tmdbId": 41428,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Shinya Tsukamoto",
+      "cultConfidenceScore": 69,
+      "canonScore": 73,
+      "rank": 109
+    },
+    {
+      "title": "Valerie and Her Week of Wonders",
+      "year": 1970,
+      "tmdbId": 46315,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Jaromil Jireš",
+      "cultConfidenceScore": 67,
+      "canonScore": 72,
+      "rank": 110
+    },
+    {
+      "title": "A Clockwork Orange",
+      "year": 1971,
+      "tmdbId": 185,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Stanley Kubrick",
+      "cultConfidenceScore": 67,
+      "canonScore": 72,
+      "rank": 111
+    },
+    {
+      "title": "Harold and Maude",
+      "year": 1971,
+      "tmdbId": 343,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Hal Ashby",
+      "cultConfidenceScore": 67,
+      "canonScore": 72,
+      "rank": 112
+    },
+    {
+      "title": "Wake in Fright",
+      "year": 1971,
+      "tmdbId": 26405,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Ted Kotcheff",
+      "cultConfidenceScore": 67,
+      "canonScore": 72,
+      "rank": 113
+    },
+    {
+      "title": "The Kentucky Fried Movie",
+      "year": 1977,
+      "tmdbId": 11598,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Landis",
+      "cultConfidenceScore": 62,
+      "canonScore": 72,
+      "rank": 114
+    },
+    {
+      "title": "Phantasm",
+      "year": 1979,
+      "tmdbId": 9638,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Don Coscarelli",
+      "cultConfidenceScore": 62,
+      "canonScore": 72,
+      "rank": 115
+    },
+    {
+      "title": "Army of Darkness",
+      "year": 1992,
+      "tmdbId": 766,
+      "node": "cult-horror",
+      "tier": "extended",
+      "director": "Sam Raimi",
+      "cultConfidenceScore": 69,
+      "canonScore": 71,
+      "rank": 116
+    },
+    {
+      "title": "Braindead",
+      "year": 1992,
+      "tmdbId": 763,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Peter Jackson",
+      "cultConfidenceScore": 69,
+      "canonScore": 71,
+      "rank": 117
+    },
+    {
+      "title": "Eyes Without a Face",
+      "year": 1960,
+      "tmdbId": 31417,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Georges Franju",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 118
+    },
+    {
+      "title": "Peeping Tom",
+      "year": 1960,
+      "tmdbId": 11167,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Michael Powell",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 119
+    },
+    {
+      "title": "Carnival of Souls",
+      "year": 1962,
+      "tmdbId": 16093,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Herk Harvey",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 120
+    },
+    {
+      "title": "La Jetée",
+      "year": 1962,
+      "tmdbId": 662,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Chris Marker",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 121
+    },
+    {
+      "title": "The Loneliness of the Long Distance Runner",
+      "year": 1962,
+      "tmdbId": 16103,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Tony Richardson",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 122
+    },
+    {
+      "title": "The Trial",
+      "year": 1962,
+      "tmdbId": 3009,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Orson Welles",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 123
+    },
+    {
+      "title": "The Draughtsman's Contract",
+      "year": 1982,
+      "tmdbId": 10831,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Peter Greenaway",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 124
+    },
+    {
+      "title": "The Cook, the Thief, His Wife & Her Lover",
+      "year": 1989,
+      "tmdbId": 7452,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Peter Greenaway",
+      "cultConfidenceScore": 67,
+      "canonScore": 71,
+      "rank": 125
+    },
+    {
+      "title": "Don't Look Now",
+      "year": 1973,
+      "tmdbId": 931,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Nicolas Roeg",
+      "cultConfidenceScore": 66,
+      "canonScore": 71,
+      "rank": 126
+    },
+    {
+      "title": "The Man Who Would Be King",
+      "year": 1975,
+      "tmdbId": 983,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "John Huston",
+      "cultConfidenceScore": 66,
+      "canonScore": 71,
+      "rank": 127
+    },
+    {
+      "title": "Reservoir Dogs",
+      "year": 1992,
+      "tmdbId": 500,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Quentin Tarantino",
+      "cultConfidenceScore": 64,
+      "canonScore": 71,
+      "rank": 128
+    },
+    {
+      "title": "The Beast of Yucca Flats",
+      "year": 1961,
+      "tmdbId": 22727,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Coleman Francis",
+      "cultConfidenceScore": 62,
+      "canonScore": 71,
+      "rank": 129
+    },
+    {
+      "title": "Blood Feast",
+      "year": 1963,
+      "tmdbId": 28172,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Herschell Gordon Lewis",
+      "cultConfidenceScore": 62,
+      "canonScore": 71,
+      "rank": 130
+    },
+    {
+      "title": "Performance",
+      "year": 1970,
+      "tmdbId": 26606,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Nicolas Roeg",
+      "cultConfidenceScore": 61,
+      "canonScore": 71,
+      "rank": 131
+    },
+    {
+      "title": "The Boys in the Band",
+      "year": 1970,
+      "tmdbId": 34377,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "William Friedkin",
+      "cultConfidenceScore": 61,
+      "canonScore": 71,
+      "rank": 132
+    },
+    {
+      "title": "The Spider's Stratagem",
+      "year": 1970,
+      "tmdbId": 42595,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Bernardo Bertolucci",
+      "cultConfidenceScore": 61,
+      "canonScore": 71,
+      "rank": 133
+    },
+    {
+      "title": "Too Late the Hero",
+      "year": 1970,
+      "tmdbId": 31935,
+      "node": "midnight-movies",
+      "tier": "core",
+      "director": "Robert Aldrich",
+      "cultConfidenceScore": 61,
+      "canonScore": 71,
+      "rank": 134
+    },
+    {
+      "title": "The Servant",
+      "year": 1963,
+      "tmdbId": 42987,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Joseph Losey",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 135
+    },
+    {
+      "title": "Onibaba",
+      "year": 1964,
+      "tmdbId": 3763,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Kaneto Shindō",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 136
+    },
+    {
+      "title": "Repulsion",
+      "year": 1965,
+      "tmdbId": 11481,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Roman Polanski",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 137
+    },
+    {
+      "title": "The Hill",
+      "year": 1965,
+      "tmdbId": 24395,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Sidney Lumet",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 138
+    },
+    {
+      "title": "Seconds",
+      "year": 1966,
+      "tmdbId": 20620,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "John Frankenheimer",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 139
+    },
+    {
+      "title": "Tenebre",
+      "year": 1982,
+      "tmdbId": 29702,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 140
+    },
+    {
+      "title": "The Adventures of Baron Munchausen",
+      "year": 1988,
+      "tmdbId": 14506,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Terry Gilliam",
+      "cultConfidenceScore": 66,
+      "canonScore": 70,
+      "rank": 141
+    },
+    {
+      "title": "Black Christmas",
+      "year": 1974,
+      "tmdbId": 16938,
+      "node": "cult-horror",
+      "tier": "extended",
+      "director": "Bob Clark",
+      "cultConfidenceScore": 65,
+      "canonScore": 70,
+      "rank": 142
+    },
+    {
+      "title": "Picnic at Hanging Rock",
+      "year": 1975,
+      "tmdbId": 11020,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Peter Weir",
+      "cultConfidenceScore": 65,
+      "canonScore": 70,
+      "rank": 143
+    },
+    {
+      "title": "The Duellists",
+      "year": 1977,
+      "tmdbId": 19067,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "director": "Ridley Scott",
+      "cultConfidenceScore": 65,
+      "canonScore": 70,
+      "rank": 144
+    },
+    {
+      "title": "Crumb",
+      "year": 1994,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 63,
+      "canonScore": 70,
+      "rank": 145
+    },
+    {
+      "title": "Three Colors: Red",
+      "year": 1994,
+      "tmdbId": 110,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Krzysztof Kieślowski",
+      "cultConfidenceScore": 63,
+      "canonScore": 70,
+      "rank": 146
+    },
+    {
+      "title": "The Blair Witch Project",
+      "year": 1999,
+      "tmdbId": 7016,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Daniel Myrick",
+      "cultConfidenceScore": 63,
+      "canonScore": 70,
+      "rank": 147
+    },
+    {
+      "title": "Santa Claus Conquers the Martians",
+      "year": 1964,
+      "tmdbId": 32307,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Nicholas Webster",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 148
+    },
+    {
+      "title": "The Creeping Terror",
+      "year": 1964,
+      "tmdbId": 31275,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Vic Savage",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 149
+    },
+    {
+      "title": "The Horror of Party Beach",
+      "year": 1964,
+      "tmdbId": 42794,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Del Tenney",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 150
+    },
+    {
+      "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+      "year": 1964,
+      "tmdbId": 31383,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Ray Dennis Steckler",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 151
+    },
+    {
+      "title": "The Long Hair of Death",
+      "year": 1964,
+      "tmdbId": 83121,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Antonio Margheriti",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 152
+    },
+    {
+      "title": "Manos: The Hands of Fate",
+      "year": 1966,
+      "tmdbId": 22293,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Harold P. Warren",
+      "cultConfidenceScore": 61,
+      "canonScore": 70,
+      "rank": 153
+    },
+    {
+      "title": "200 Motels",
+      "year": 1971,
+      "tmdbId": 27645,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Tony Palmer",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 154
+    },
+    {
+      "title": "Countess Dracula",
+      "year": 1971,
+      "tmdbId": 39043,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Peter Sasdy",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 155
+    },
+    {
+      "title": "I Drink Your Blood",
+      "year": 1971,
+      "tmdbId": 27313,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "David E. Durston",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 156
+    },
+    {
+      "title": "THX 1138",
+      "year": 1971,
+      "tmdbId": 636,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "George Lucas",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 157
+    },
+    {
+      "title": "Last House on the Left",
+      "year": 1972,
+      "tmdbId": null,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 158
+    },
+    {
+      "title": "Sisters",
+      "year": 1972,
+      "tmdbId": null,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 159
+    },
+    {
+      "title": "Street Mobster",
+      "year": 1972,
+      "tmdbId": 21613,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Kinji Fukasaku",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 160
+    },
+    {
+      "title": "Tombs of the Blind Dead",
+      "year": 1972,
+      "tmdbId": 37601,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Amando de Ossorio",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 161
+    },
+    {
+      "title": "The Last House on Dead End Street",
+      "year": 1973,
+      "tmdbId": null,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 162
+    },
+    {
+      "title": "Thriller: A Cruel Picture",
+      "year": 1973,
+      "tmdbId": 15018,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Bo Arne Vibenius",
+      "cultConfidenceScore": 60,
+      "canonScore": 70,
+      "rank": 163
+    },
+    {
+      "title": "Hour of the Wolf",
+      "year": 1968,
+      "tmdbId": 18333,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Ingmar Bergman",
+      "cultConfidenceScore": 65,
+      "canonScore": 69,
+      "rank": 164
+    },
+    {
+      "title": "The Cremator",
+      "year": 1969,
+      "tmdbId": 18352,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "director": "Juraj Herz",
+      "cultConfidenceScore": 65,
+      "canonScore": 69,
+      "rank": 165
+    },
+    {
+      "title": "Close Encounters of the Third Kind",
+      "year": 1977,
+      "tmdbId": 840,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Steven Spielberg",
+      "cultConfidenceScore": 64,
+      "canonScore": 69,
+      "rank": 166
+    },
+    {
+      "title": "House",
+      "year": 1977,
+      "tmdbId": 25623,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Nobuhiko Obayashi",
+      "cultConfidenceScore": 64,
+      "canonScore": 69,
+      "rank": 167
+    },
+    {
+      "title": "Stalker",
+      "year": 1979,
+      "tmdbId": 1398,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Andrei Tarkovsky",
+      "cultConfidenceScore": 64,
+      "canonScore": 69,
+      "rank": 168
+    },
+    {
+      "title": "The Room",
+      "year": 2003,
+      "tmdbId": 17473,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Tommy Wiseau",
+      "cultConfidenceScore": 63,
+      "canonScore": 69,
+      "rank": 169
+    },
+    {
+      "title": "When We Were Kings",
+      "year": 1996,
+      "tmdbId": 10548,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Leon Gast",
+      "cultConfidenceScore": 62,
+      "canonScore": 69,
+      "rank": 170
+    },
+    {
+      "title": "The Virgin Suicides",
+      "year": 1999,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 62,
+      "canonScore": 69,
+      "rank": 171
+    },
+    {
+      "title": "The Loved One",
+      "year": 1965,
+      "tmdbId": 16303,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Tony Richardson",
+      "cultConfidenceScore": 60,
+      "canonScore": 69,
+      "rank": 172
+    },
+    {
+      "title": "Cul-de-sac",
+      "year": 1966,
+      "tmdbId": 4772,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Roman Polanski",
+      "cultConfidenceScore": 60,
+      "canonScore": 69,
+      "rank": 173
+    },
+    {
+      "title": "Weekend",
+      "year": 1967,
+      "tmdbId": 8075,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Jean-Luc Godard",
+      "cultConfidenceScore": 60,
+      "canonScore": 69,
+      "rank": 174
+    },
+    {
+      "title": "Barbarella",
+      "year": 1968,
+      "tmdbId": 8069,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Roger Vadim",
+      "cultConfidenceScore": 60,
+      "canonScore": 69,
+      "rank": 175
+    },
+    {
+      "title": "Cisco Pike",
+      "year": 1971,
+      "tmdbId": 55044,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Bill L. Norton",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 176
+    },
+    {
+      "title": "The Grissom Gang",
+      "year": 1971,
+      "tmdbId": 79645,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Robert Aldrich",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 177
+    },
+    {
+      "title": "They Might Be Giants",
+      "year": 1971,
+      "tmdbId": 27841,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Anthony Harvey",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 178
+    },
+    {
+      "title": "Fritz the Cat",
+      "year": 1972,
+      "tmdbId": 12593,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Ralph Bakshi",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 179
+    },
+    {
+      "title": "Silent Running",
+      "year": 1972,
+      "tmdbId": 811,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "director": "Douglas Trumbull",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 180
+    },
+    {
+      "title": "Stone",
+      "year": 1974,
+      "tmdbId": 14937,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Sandy Harbutt",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 181
+    },
+    {
+      "title": "The Living Dead at Manchester Morgue",
+      "year": 1974,
+      "tmdbId": 25627,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Jorge Grau",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 182
+    },
+    {
+      "title": "The Night Porter",
+      "year": 1974,
+      "tmdbId": 26648,
+      "node": "eurocult",
+      "tier": "core",
+      "director": "Liliana Cavani",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 183
+    },
+    {
+      "title": "Ilsa: She Wolf of the SS",
+      "year": 1975,
+      "tmdbId": 20850,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "director": "Don Edmonds",
+      "cultConfidenceScore": 59,
+      "canonScore": 69,
+      "rank": 184
+    },
+    {
+      "title": "Shivers",
+      "year": 1975,
+      "tmdbId": 27429,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 63,
+      "canonScore": 68,
+      "rank": 185
+    },
+    {
+      "title": "Reefer Madness",
+      "year": 1936,
+      "tmdbId": null,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 62,
+      "canonScore": 68,
+      "rank": 186
+    },
+    {
+      "title": "Glen or Glenda",
+      "year": 1953,
+      "tmdbId": 24018,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Edward D. Wood Jr.",
+      "cultConfidenceScore": 62,
+      "canonScore": 68,
+      "rank": 187
+    },
+    {
+      "title": "Robot Monster",
+      "year": 1953,
+      "tmdbId": 43353,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Phil Tucker",
+      "cultConfidenceScore": 62,
+      "canonScore": 68,
+      "rank": 188
+    },
+    {
+      "title": "The Giant Claw",
+      "year": 1957,
+      "tmdbId": 36089,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Fred F. Sears",
+      "cultConfidenceScore": 62,
+      "canonScore": 68,
+      "rank": 189
+    },
+    {
+      "title": "Plan 9 from Outer Space",
+      "year": 1959,
+      "tmdbId": null,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 62,
+      "canonScore": 68,
+      "rank": 190
+    },
+    {
+      "title": "Gimme Shelter",
+      "year": 1970,
+      "tmdbId": 132,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Charlotte Zwerin",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 191
+    },
+    {
+      "title": "The Harder They Come",
+      "year": 1972,
+      "tmdbId": 7514,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Perry Henzell",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 192
+    },
+    {
+      "title": "Dillinger",
+      "year": 1973,
+      "tmdbId": 28110,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Milius",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 193
+    },
+    {
+      "title": "Going Places",
+      "year": 1974,
+      "tmdbId": 4031,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Bertrand Blier",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 194
+    },
+    {
+      "title": "Inserts",
+      "year": 1975,
+      "tmdbId": 32069,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Byrum",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 195
+    },
+    {
+      "title": "The Day of the Locust",
+      "year": 1975,
+      "tmdbId": 5122,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "John Schlesinger",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 196
+    },
+    {
+      "title": "Shock Waves",
+      "year": 1977,
+      "tmdbId": 26680,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Ken Wiederhorn",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 197
+    },
+    {
+      "title": "The Star Wars Holiday Special",
+      "year": 1978,
+      "tmdbId": 74849,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Steve Binder",
+      "cultConfidenceScore": 58,
+      "canonScore": 68,
+      "rank": 198
+    },
+    {
+      "title": "Possession",
+      "year": 1981,
+      "tmdbId": 21484,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Andrzej Żuławski",
+      "cultConfidenceScore": 63,
+      "canonScore": 67,
+      "rank": 199
+    },
+    {
+      "title": "The Dark Crystal",
+      "year": 1982,
+      "tmdbId": 11639,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Jim Henson",
+      "cultConfidenceScore": 63,
+      "canonScore": 67,
+      "rank": 200
+    },
+    {
+      "title": "Rabid",
+      "year": 1977,
+      "tmdbId": 29437,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 62,
+      "canonScore": 67,
+      "rank": 201
+    },
+    {
+      "title": "The Prowler",
+      "year": 1951,
+      "tmdbId": 22985,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Joseph Losey",
+      "cultConfidenceScore": 61,
+      "canonScore": 67,
+      "rank": 202
+    },
+    {
+      "title": "Teaserama",
+      "year": 1955,
+      "tmdbId": 70233,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Irving Klaw",
+      "cultConfidenceScore": 61,
+      "canonScore": 67,
+      "rank": 203
+    },
+    {
+      "title": "The Phenix City Story",
+      "year": 1955,
+      "tmdbId": 35956,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Phil Karlson",
+      "cultConfidenceScore": 61,
+      "canonScore": 67,
+      "rank": 204
+    },
+    {
+      "title": "High School Confidential!",
+      "year": 1958,
+      "tmdbId": 43116,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "director": "Jack Arnold",
+      "cultConfidenceScore": 61,
+      "canonScore": 67,
+      "rank": 205
+    },
+    {
+      "title": "The End",
+      "year": 1978,
+      "tmdbId": 35976,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Burt Reynolds",
+      "cultConfidenceScore": 57,
+      "canonScore": 67,
+      "rank": 206
+    },
+    {
+      "title": "Wise Blood",
+      "year": 1979,
+      "tmdbId": 42179,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "John Huston",
+      "cultConfidenceScore": 57,
+      "canonScore": 67,
+      "rank": 207
+    },
+    {
+      "title": "Pi",
+      "year": 1998,
+      "tmdbId": 473,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Darren Aronofsky",
+      "cultConfidenceScore": 64,
+      "canonScore": 66,
+      "rank": 208
+    },
+    {
+      "title": "Christiane F.",
+      "year": 1981,
+      "tmdbId": 9589,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "Uli Edel",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 209
+    },
+    {
+      "title": "The Decline of Western Civilization",
+      "year": 1981,
+      "tmdbId": 21137,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "Penelope Spheeris",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 210
+    },
+    {
+      "title": "Gremlins",
+      "year": 1984,
+      "tmdbId": 927,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Joe Dante",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 211
+    },
+    {
+      "title": "Top Secret!",
+      "year": 1984,
+      "tmdbId": 8764,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Jim Abrahams",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 212
+    },
+    {
+      "title": "Highlander",
+      "year": 1986,
+      "tmdbId": 8009,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Russell Mulcahy",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 213
+    },
+    {
+      "title": "Labyrinth",
+      "year": 1986,
+      "tmdbId": 13597,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Jim Henson",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 214
+    },
+    {
+      "title": "The Hidden",
+      "year": 1987,
+      "tmdbId": 12476,
+      "node": "video-store-era",
+      "tier": "extended",
+      "director": "Jack Sholder",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 215
+    },
+    {
+      "title": "The Lost Boys",
+      "year": 1987,
+      "tmdbId": 1547,
+      "node": "video-store-era",
+      "tier": "extended",
+      "director": "Joel Schumacher",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 216
+    },
+    {
+      "title": "The Blob",
+      "year": 1988,
+      "tmdbId": 9599,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Chuck Russell",
+      "cultConfidenceScore": 62,
+      "canonScore": 66,
+      "rank": 217
+    },
+    {
+      "title": "Häxan",
+      "year": 1922,
+      "tmdbId": 57283,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Benjamin Christensen",
+      "cultConfidenceScore": 60,
+      "canonScore": 66,
+      "rank": 218
+    },
+    {
+      "title": "Vampyr",
+      "year": 1932,
+      "tmdbId": 779,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Carl Theodor Dreyer",
+      "cultConfidenceScore": 60,
+      "canonScore": 66,
+      "rank": 219
+    },
+    {
+      "title": "The Strange Love of Martha Ivers",
+      "year": 1946,
+      "tmdbId": 27033,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Lewis Milestone",
+      "cultConfidenceScore": 60,
+      "canonScore": 66,
+      "rank": 220
+    },
+    {
+      "title": "The Red Shoes",
+      "year": 1948,
+      "tmdbId": 19542,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Emeric Pressburger",
+      "cultConfidenceScore": 60,
+      "canonScore": 66,
+      "rank": 221
+    },
+    {
+      "title": "Run of the Arrow",
+      "year": 1957,
+      "tmdbId": 35001,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "director": "Samuel Fuller",
+      "cultConfidenceScore": 60,
+      "canonScore": 66,
+      "rank": 222
+    },
+    {
+      "title": "Cannibal Apocalypse",
+      "year": 1980,
+      "tmdbId": 8692,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Antonio Margheriti",
+      "cultConfidenceScore": 57,
+      "canonScore": 66,
+      "rank": 223
+    },
+    {
+      "title": "The Apple",
+      "year": 1980,
+      "tmdbId": 49069,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "director": "Menahem Golan",
+      "cultConfidenceScore": 57,
+      "canonScore": 66,
+      "rank": 224
+    },
+    {
+      "title": "The Howling",
+      "year": 1981,
+      "tmdbId": 11298,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Joe Dante",
+      "cultConfidenceScore": 57,
+      "canonScore": 66,
+      "rank": 225
+    },
+    {
+      "title": "Altered States",
+      "year": 1980,
+      "tmdbId": 11542,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "Ken Russell",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 226
+    },
+    {
+      "title": "Inferno",
+      "year": 1980,
+      "tmdbId": 16395,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 227
+    },
+    {
+      "title": "Scanners",
+      "year": 1981,
+      "tmdbId": 9538,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "director": "David Cronenberg",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 228
+    },
+    {
+      "title": "Come and See",
+      "year": 1985,
+      "tmdbId": 25237,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "Elem Klimov",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 229
+    },
+    {
+      "title": "The Princess Bride",
+      "year": 1987,
+      "tmdbId": 2493,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Rob Reiner",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 230
+    },
+    {
+      "title": "Beetlejuice",
+      "year": 1988,
+      "tmdbId": 4011,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "director": "Tim Burton",
+      "cultConfidenceScore": 61,
+      "canonScore": 65,
+      "rank": 231
+    },
+    {
+      "title": "Light Sleeper",
+      "year": 1992,
+      "tmdbId": 36351,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "Paul Schrader",
+      "cultConfidenceScore": 58,
+      "canonScore": 65,
+      "rank": 232
+    },
+    {
+      "title": "The Cannonball Run",
+      "year": 1981,
+      "tmdbId": 11286,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "director": "Hal Needham",
+      "cultConfidenceScore": 56,
+      "canonScore": 65,
+      "rank": 233
+    },
+    {
+      "title": "The Loveless",
+      "year": 1981,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 56,
+      "canonScore": 65,
+      "rank": 234
+    },
+    {
+      "title": "Night of the Comet",
+      "year": 1984,
+      "tmdbId": 18462,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Thom Eberhardt",
+      "cultConfidenceScore": 56,
+      "canonScore": 65,
+      "rank": 235
+    },
+    {
+      "title": "The Last Dragon",
+      "year": 1985,
+      "tmdbId": 13938,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Michael Schultz",
+      "cultConfidenceScore": 56,
+      "canonScore": 65,
+      "rank": 236
+    },
+    {
+      "title": "Chopping Mall",
+      "year": 1986,
+      "tmdbId": 28941,
+      "node": "video-store-era",
+      "tier": "core",
+      "director": "Jim Wynorski",
+      "cultConfidenceScore": 56,
+      "canonScore": 65,
+      "rank": 237
+    },
+    {
+      "title": "The New York Ripper",
+      "year": 1982,
+      "tmdbId": 30874,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Lucio Fulci",
+      "cultConfidenceScore": 60,
+      "canonScore": 64,
+      "rank": 238
+    },
+    {
+      "title": "From Beyond",
+      "year": 1986,
+      "tmdbId": 14510,
+      "node": "cult-horror",
+      "tier": "extended",
+      "director": "Stuart Gordon",
+      "cultConfidenceScore": 60,
+      "canonScore": 64,
+      "rank": 239
+    },
+    {
+      "title": "Audition",
+      "year": 2000,
+      "tmdbId": 11075,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Takashi Miike",
+      "cultConfidenceScore": 62,
+      "canonScore": 63,
+      "rank": 240
+    },
+    {
+      "title": "Requiem for a Dream",
+      "year": 2000,
+      "tmdbId": 641,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "director": "Darren Aronofsky",
+      "cultConfidenceScore": 62,
+      "canonScore": 63,
+      "rank": 241
+    },
+    {
+      "title": "Tremors",
+      "year": 1990,
+      "tmdbId": 9362,
+      "node": "video-store-era",
+      "tier": "extended",
+      "director": "Ron Underwood",
+      "cultConfidenceScore": 61,
+      "canonScore": 63,
+      "rank": 242
+    },
+    {
+      "title": "Riki-Oh: The Story of Ricky",
+      "year": 1991,
+      "tmdbId": 17467,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Lam Nai-Choi",
+      "cultConfidenceScore": 61,
+      "canonScore": 63,
+      "rank": 243
+    },
+    {
+      "title": "The Toxic Avenger",
+      "year": 1984,
+      "tmdbId": 15239,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "director": "Lloyd Kaufman",
+      "cultConfidenceScore": 59,
+      "canonScore": 63,
+      "rank": 244
+    },
+    {
+      "title": "Opera",
+      "year": 1987,
+      "tmdbId": 20115,
+      "node": "eurocult",
+      "tier": "extended",
+      "director": "Dario Argento",
+      "cultConfidenceScore": 59,
+      "canonScore": 63,
+      "rank": 245
+    },
+    {
+      "title": "Prince of Darkness",
+      "year": 1987,
+      "tmdbId": 8852,
+      "node": "cult-horror",
+      "tier": "extended",
+      "director": "John Carpenter",
+      "cultConfidenceScore": 59,
+      "canonScore": 63,
+      "rank": 246
+    },
+    {
+      "title": "Sisters",
+      "year": 1973,
+      "tmdbId": 22307,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "director": "Brian De Palma",
+      "cultConfidenceScore": 58,
+      "canonScore": 63,
+      "rank": 247
+    },
+    {
+      "title": "Apartment Zero",
+      "year": 1988,
+      "tmdbId": null,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": null,
+      "cultConfidenceScore": 54,
+      "canonScore": 63,
+      "rank": 248
+    },
+    {
+      "title": "Ghosts... of the Civil Dead",
+      "year": 1988,
+      "tmdbId": 31219,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "director": "John Hillcoat",
+      "cultConfidenceScore": 54,
+      "canonScore": 63,
+      "rank": 249
+    },
+    {
+      "title": "The Crow",
+      "year": 1994,
+      "tmdbId": 9495,
+      "node": "video-store-era",
+      "tier": "extended",
+      "director": "Alex Proyas",
+      "cultConfidenceScore": 60,
+      "canonScore": 62,
+      "rank": 250
+    }
+  ],
+  "nodeLeaders": [
+    {
+      "node": "camp-cult-comedy",
+      "leaders": [
+        {
+          "rank": 23,
+          "title": "The Rocky Horror Picture Show",
+          "year": 1975,
+          "tier": "core",
+          "canonScore": 93,
+          "cultConfidenceScore": 80,
+          "director": "Jim Sharman"
+        },
+        {
+          "rank": 30,
+          "title": "This Is Spinal Tap",
+          "year": 1984,
+          "tier": "core",
+          "canonScore": 88.5,
+          "cultConfidenceScore": 78,
+          "director": "Rob Reiner"
+        },
+        {
+          "rank": 35,
+          "title": "Withnail & I",
+          "year": 1987,
+          "tier": "core",
+          "canonScore": 87.5,
+          "cultConfidenceScore": 77,
+          "director": "Bruce Robinson"
+        },
+        {
+          "rank": 36,
+          "title": "Polyester",
+          "year": 1981,
+          "tier": "core",
+          "canonScore": 85.5,
+          "cultConfidenceScore": 75,
+          "director": "John Waters"
+        },
+        {
+          "rank": 40,
+          "title": "Clerks",
+          "year": 1994,
+          "tier": "core",
+          "canonScore": 84.5,
+          "cultConfidenceScore": 76,
+          "director": "Kevin Smith"
+        }
+      ]
+    },
+    {
+      "node": "cult-horror",
+      "leaders": [
+        {
+          "rank": 6,
+          "title": "Dawn of the Dead",
+          "year": 1978,
+          "tier": "core",
+          "canonScore": 102,
+          "cultConfidenceScore": 89,
+          "director": "George A. Romero"
+        },
+        {
+          "rank": 9,
+          "title": "The Evil Dead",
+          "year": 1981,
+          "tier": "core",
+          "canonScore": 100,
+          "cultConfidenceScore": 88,
+          "director": "Sam Raimi"
+        },
+        {
+          "rank": 11,
+          "title": "The Thing",
+          "year": 1982,
+          "tier": "core",
+          "canonScore": 99,
+          "cultConfidenceScore": 87,
+          "director": "John Carpenter"
+        },
+        {
+          "rank": 13,
+          "title": "Re-Animator",
+          "year": 1985,
+          "tier": "core",
+          "canonScore": 99,
+          "cultConfidenceScore": 87,
+          "director": "Stuart Gordon"
+        },
+        {
+          "rank": 19,
+          "title": "The Texas Chain Saw Massacre",
+          "year": 1974,
+          "tier": "core",
+          "canonScore": 95,
+          "cultConfidenceScore": 82,
+          "director": "Tobe Hooper"
+        }
+      ]
+    },
+    {
+      "node": "cult-science-fiction",
+      "leaders": [
+        {
+          "rank": 10,
+          "title": "Escape from New York",
+          "year": 1981,
+          "tier": "core",
+          "canonScore": 99,
+          "cultConfidenceScore": 87,
+          "director": "John Carpenter"
+        },
+        {
+          "rank": 12,
+          "title": "Videodrome",
+          "year": 1983,
+          "tier": "core",
+          "canonScore": 99,
+          "cultConfidenceScore": 87,
+          "director": "David Cronenberg"
+        },
+        {
+          "rank": 15,
+          "title": "They Live",
+          "year": 1988,
+          "tier": "core",
+          "canonScore": 98,
+          "cultConfidenceScore": 86,
+          "director": "John Carpenter"
+        },
+        {
+          "rank": 18,
+          "title": "Brazil",
+          "year": 1985,
+          "tier": "core",
+          "canonScore": 95,
+          "cultConfidenceScore": 83,
+          "director": "Terry Gilliam"
+        },
+        {
+          "rank": 20,
+          "title": "Akira",
+          "year": 1988,
+          "tier": "core",
+          "canonScore": 94,
+          "cultConfidenceScore": 82,
+          "director": "Katsuhiro Otomo"
+        }
+      ]
+    },
+    {
+      "node": "eurocult",
+      "leaders": [
+        {
+          "rank": 5,
+          "title": "Suspiria",
+          "year": 1977,
+          "tier": "core",
+          "canonScore": 102,
+          "cultConfidenceScore": 89,
+          "director": "Dario Argento"
+        },
+        {
+          "rank": 7,
+          "title": "Ichi the Killer",
+          "year": 2001,
+          "tier": "core",
+          "canonScore": 101,
+          "cultConfidenceScore": 92,
+          "director": "Takashi Miike"
+        },
+        {
+          "rank": 25,
+          "title": "The Devils",
+          "year": 1971,
+          "tier": "core",
+          "canonScore": 90.5,
+          "cultConfidenceScore": 79,
+          "director": "Ken Russell"
+        },
+        {
+          "rank": 28,
+          "title": "Deep Red",
+          "year": 1975,
+          "tier": "core",
+          "canonScore": 89.5,
+          "cultConfidenceScore": 78,
+          "director": "Dario Argento"
+        },
+        {
+          "rank": 47,
+          "title": "Audition",
+          "year": 1999,
+          "tier": "core",
+          "canonScore": 82.5,
+          "cultConfidenceScore": 74,
+          "director": null
+        }
+      ]
+    },
+    {
+      "node": "grindhouse-exploitation",
+      "leaders": [
+        {
+          "rank": 16,
+          "title": "The Killer",
+          "year": 1989,
+          "tier": "core",
+          "canonScore": 97,
+          "cultConfidenceScore": 85,
+          "director": "John Woo"
+        },
+        {
+          "rank": 17,
+          "title": "Hard Boiled",
+          "year": 1992,
+          "tier": "core",
+          "canonScore": 95,
+          "cultConfidenceScore": 85,
+          "director": "John Woo"
+        },
+        {
+          "rank": 24,
+          "title": "Spider Baby",
+          "year": 1967,
+          "tier": "core",
+          "canonScore": 92,
+          "cultConfidenceScore": 80,
+          "director": "Jack Hill"
+        },
+        {
+          "rank": 45,
+          "title": "Battle Royale",
+          "year": 2000,
+          "tier": "core",
+          "canonScore": 82.5,
+          "cultConfidenceScore": 75,
+          "director": "Kinji Fukasaku"
+        },
+        {
+          "rank": 49,
+          "title": "The Swimmer",
+          "year": 1968,
+          "tier": "core",
+          "canonScore": 82.5,
+          "cultConfidenceScore": 72,
+          "director": "Frank Perry"
+        }
+      ]
+    },
+    {
+      "node": "midnight-movies",
+      "leaders": [
+        {
+          "rank": 1,
+          "title": "El Topo",
+          "year": 1970,
+          "tier": "core",
+          "canonScore": 105,
+          "cultConfidenceScore": 92,
+          "director": "Alejandro Jodorowsky"
+        },
+        {
+          "rank": 2,
+          "title": "Eraserhead",
+          "year": 1977,
+          "tier": "core",
+          "canonScore": 103,
+          "cultConfidenceScore": 90,
+          "director": "David Lynch"
+        },
+        {
+          "rank": 21,
+          "title": "The Warriors",
+          "year": 1979,
+          "tier": "core",
+          "canonScore": 94,
+          "cultConfidenceScore": 81,
+          "director": "Walter Hill"
+        },
+        {
+          "rank": 22,
+          "title": "Pink Flamingos",
+          "year": 1972,
+          "tier": "core",
+          "canonScore": 93,
+          "cultConfidenceScore": 80,
+          "director": "John Waters"
+        },
+        {
+          "rank": 44,
+          "title": "Soldier Blue",
+          "year": 1970,
+          "tier": "core",
+          "canonScore": 83.5,
+          "cultConfidenceScore": 72,
+          "director": "Ralph Nelson"
+        }
+      ]
+    },
+    {
+      "node": "modern-cult-phenomena",
+      "leaders": [
+        {
+          "rank": 8,
+          "title": "Mulholland Drive",
+          "year": 2001,
+          "tier": "core",
+          "canonScore": 100,
+          "cultConfidenceScore": 91,
+          "director": "David Lynch"
+        },
+        {
+          "rank": 39,
+          "title": "Oldboy",
+          "year": 2003,
+          "tier": "core",
+          "canonScore": 84.5,
+          "cultConfidenceScore": 77,
+          "director": "Park Chan-wook"
+        },
+        {
+          "rank": 41,
+          "title": "Fight Club",
+          "year": 1999,
+          "tier": "core",
+          "canonScore": 84.5,
+          "cultConfidenceScore": 76,
+          "director": "David Fincher"
+        },
+        {
+          "rank": 52,
+          "title": "American Movie",
+          "year": 1999,
+          "tier": "core",
+          "canonScore": 81.5,
+          "cultConfidenceScore": 73,
+          "director": "Chris Smith"
+        },
+        {
+          "rank": 53,
+          "title": "The Boondock Saints",
+          "year": 1999,
+          "tier": "core",
+          "canonScore": 81.5,
+          "cultConfidenceScore": 73,
+          "director": "Troy Duffy"
+        }
+      ]
+    },
+    {
+      "node": "origins-of-cult-cinema",
+      "leaders": [
+        {
+          "rank": 3,
+          "title": "Night of the Living Dead",
+          "year": 1968,
+          "tier": "core",
+          "canonScore": 102,
+          "cultConfidenceScore": 90,
+          "director": "George A. Romero"
+        },
+        {
+          "rank": 72,
+          "title": "Black Sunday",
+          "year": 1960,
+          "tier": "extended",
+          "canonScore": 79,
+          "cultConfidenceScore": 75,
+          "director": "Mario Bava"
+        },
+        {
+          "rank": 76,
+          "title": "The Cabinet of Dr. Caligari",
+          "year": 1920,
+          "tier": "core",
+          "canonScore": 78.5,
+          "cultConfidenceScore": 71,
+          "director": "Robert Wiene"
+        },
+        {
+          "rank": 77,
+          "title": "Un Chien Andalou",
+          "year": 1929,
+          "tier": "core",
+          "canonScore": 78.5,
+          "cultConfidenceScore": 71,
+          "director": "Luis Buñuel"
+        },
+        {
+          "rank": 78,
+          "title": "Freaks",
+          "year": 1932,
+          "tier": "core",
+          "canonScore": 78.5,
+          "cultConfidenceScore": 71,
+          "director": "Tod Browning"
+        }
+      ]
+    },
+    {
+      "node": "outsider-cinema",
+      "leaders": [
+        {
+          "rank": 4,
+          "title": "Female Trouble",
+          "year": 1974,
+          "tier": "core",
+          "canonScore": 102,
+          "cultConfidenceScore": 89,
+          "director": "John Waters"
+        },
+        {
+          "rank": 34,
+          "title": "The Holy Mountain",
+          "year": 1973,
+          "tier": "core",
+          "canonScore": 88.5,
+          "cultConfidenceScore": 77,
+          "director": "Alejandro Jodorowsky"
+        },
+        {
+          "rank": 51,
+          "title": "Velvet Goldmine",
+          "year": 1998,
+          "tier": "core",
+          "canonScore": 81.5,
+          "cultConfidenceScore": 73,
+          "director": "Todd Haynes"
+        },
+        {
+          "rank": 54,
+          "title": "Hush... Hush, Sweet Charlotte",
+          "year": 1964,
+          "tier": "core",
+          "canonScore": 81.5,
+          "cultConfidenceScore": 71,
+          "director": "Robert Aldrich"
+        },
+        {
+          "rank": 55,
+          "title": "The Naked Kiss",
+          "year": 1964,
+          "tier": "core",
+          "canonScore": 81.5,
+          "cultConfidenceScore": 71,
+          "director": "Samuel Fuller"
+        }
+      ]
+    },
+    {
+      "node": "psychotronic-cinema",
+      "leaders": [
+        {
+          "rank": 88,
+          "title": "Basket Case",
+          "year": 1982,
+          "tier": "core",
+          "canonScore": 77,
+          "cultConfidenceScore": 68,
+          "director": "Frank Henenlotter"
+        },
+        {
+          "rank": 129,
+          "title": "The Beast of Yucca Flats",
+          "year": 1961,
+          "tier": "core",
+          "canonScore": 71,
+          "cultConfidenceScore": 62,
+          "director": "Coleman Francis"
+        },
+        {
+          "rank": 148,
+          "title": "Santa Claus Conquers the Martians",
+          "year": 1964,
+          "tier": "core",
+          "canonScore": 70,
+          "cultConfidenceScore": 61,
+          "director": "Nicholas Webster"
+        },
+        {
+          "rank": 149,
+          "title": "The Creeping Terror",
+          "year": 1964,
+          "tier": "core",
+          "canonScore": 70,
+          "cultConfidenceScore": 61,
+          "director": "Vic Savage"
+        },
+        {
+          "rank": 150,
+          "title": "The Horror of Party Beach",
+          "year": 1964,
+          "tier": "core",
+          "canonScore": 70,
+          "cultConfidenceScore": 61,
+          "director": "Del Tenney"
+        }
+      ]
+    },
+    {
+      "node": "video-store-era",
+      "leaders": [
+        {
+          "rank": 14,
+          "title": "The Fly",
+          "year": 1986,
+          "tier": "core",
+          "canonScore": 98,
+          "cultConfidenceScore": 86,
+          "director": "David Cronenberg"
+        },
+        {
+          "rank": 31,
+          "title": "Clue",
+          "year": 1985,
+          "tier": "core",
+          "canonScore": 88.5,
+          "cultConfidenceScore": 78,
+          "director": "Jonathan Lynn"
+        },
+        {
+          "rank": 37,
+          "title": "The Stuff",
+          "year": 1985,
+          "tier": "core",
+          "canonScore": 85.5,
+          "cultConfidenceScore": 75,
+          "director": "Larry Cohen"
+        },
+        {
+          "rank": 38,
+          "title": "Big Trouble in Little China",
+          "year": 1986,
+          "tier": "core",
+          "canonScore": 85.5,
+          "cultConfidenceScore": 75,
+          "director": "John Carpenter"
+        },
+        {
+          "rank": 83,
+          "title": "Mudhoney",
+          "year": 1965,
+          "tier": "core",
+          "canonScore": 78,
+          "cultConfidenceScore": 69,
+          "director": "Russ Meyer"
+        }
+      ]
+    }
+  ],
+  "topCultDirectors": [
+    {
+      "rank": 1,
+      "director": "John Carpenter",
+      "filmCount": 6,
+      "directorCultScore": 461,
+      "topFilm": {
+        "title": "Escape from New York",
+        "year": 1981,
+        "cultConfidenceScore": 87
+      }
+    },
+    {
+      "rank": 2,
+      "director": "David Cronenberg",
+      "filmCount": 6,
+      "directorCultScore": 415,
+      "topFilm": {
+        "title": "Videodrome",
+        "year": 1983,
+        "cultConfidenceScore": 87
+      }
+    },
+    {
+      "rank": 3,
+      "director": "Robert Aldrich",
+      "filmCount": 6,
+      "directorCultScore": 353,
+      "topFilm": {
+        "title": "Hush... Hush, Sweet Charlotte",
+        "year": 1964,
+        "cultConfidenceScore": 71
+      }
+    },
+    {
+      "rank": 4,
+      "director": "Dario Argento",
+      "filmCount": 5,
+      "directorCultScore": 353,
+      "topFilm": {
+        "title": "Suspiria",
+        "year": 1977,
+        "cultConfidenceScore": 89
+      }
+    },
+    {
+      "rank": 5,
+      "director": "Takashi Miike",
+      "filmCount": 5,
+      "directorCultScore": 324,
+      "topFilm": {
+        "title": "Ichi the Killer",
+        "year": 2001,
+        "cultConfidenceScore": 92
+      }
+    },
+    {
+      "rank": 6,
+      "director": "John Waters",
+      "filmCount": 4,
+      "directorCultScore": 313,
+      "topFilm": {
+        "title": "Female Trouble",
+        "year": 1974,
+        "cultConfidenceScore": 89
+      }
+    },
+    {
+      "rank": 7,
+      "director": "Sam Raimi",
+      "filmCount": 4,
+      "directorCultScore": 284,
+      "topFilm": {
+        "title": "The Evil Dead",
+        "year": 1981,
+        "cultConfidenceScore": 88
+      }
+    },
+    {
+      "rank": 8,
+      "director": "Brian De Palma",
+      "filmCount": 4,
+      "directorCultScore": 275,
+      "topFilm": {
+        "title": "Phantom of the Paradise",
+        "year": 1974,
+        "cultConfidenceScore": 74
+      }
+    },
+    {
+      "rank": 9,
+      "director": "Terry Gilliam",
+      "filmCount": 4,
+      "directorCultScore": 273,
+      "topFilm": {
+        "title": "Brazil",
+        "year": 1985,
+        "cultConfidenceScore": 83
+      }
+    },
+    {
+      "rank": 10,
+      "director": "Robert Rodriguez",
+      "filmCount": 5,
+      "directorCultScore": 255,
+      "topFilm": {
+        "title": "From Dusk Till Dawn",
+        "year": 1996,
+        "cultConfidenceScore": 60
+      }
+    },
+    {
+      "rank": 11,
+      "director": "David Lynch",
+      "filmCount": 3,
+      "directorCultScore": 252,
+      "topFilm": {
+        "title": "Mulholland Drive",
+        "year": 2001,
+        "cultConfidenceScore": 91
+      }
+    },
+    {
+      "rank": 12,
+      "director": "Darren Aronofsky",
+      "filmCount": 4,
+      "directorCultScore": 245,
+      "topFilm": {
+        "title": "Pi",
+        "year": 1998,
+        "cultConfidenceScore": 64
+      }
+    },
+    {
+      "rank": 13,
+      "director": "John Woo",
+      "filmCount": 3,
+      "directorCultScore": 241,
+      "topFilm": {
+        "title": "The Killer",
+        "year": 1989,
+        "cultConfidenceScore": 85
+      }
+    },
+    {
+      "rank": 14,
+      "director": "Alejandro Jodorowsky",
+      "filmCount": 3,
+      "directorCultScore": 238,
+      "topFilm": {
+        "title": "El Topo",
+        "year": 1970,
+        "cultConfidenceScore": 92
+      }
+    },
+    {
+      "rank": 15,
+      "director": "Don Coscarelli",
+      "filmCount": 4,
+      "directorCultScore": 208,
+      "topFilm": {
+        "title": "Phantasm",
+        "year": 1979,
+        "cultConfidenceScore": 62
+      }
+    },
+    {
+      "rank": 16,
+      "director": "Russ Meyer",
+      "filmCount": 3,
+      "directorCultScore": 205,
+      "topFilm": {
+        "title": "Faster, Pussycat! Kill! Kill!",
+        "year": 1965,
+        "cultConfidenceScore": 70
+      }
+    },
+    {
+      "rank": 17,
+      "director": "Penelope Spheeris",
+      "filmCount": 4,
+      "directorCultScore": 204,
+      "topFilm": {
+        "title": "The Decline of Western Civilization",
+        "year": 1981,
+        "cultConfidenceScore": 62
+      }
+    },
+    {
+      "rank": 18,
+      "director": "Stuart Gordon",
+      "filmCount": 3,
+      "directorCultScore": 200,
+      "topFilm": {
+        "title": "Re-Animator",
+        "year": 1985,
+        "cultConfidenceScore": 87
+      }
+    },
+    {
+      "rank": 19,
+      "director": "Ken Russell",
+      "filmCount": 3,
+      "directorCultScore": 194,
+      "topFilm": {
+        "title": "The Devils",
+        "year": 1971,
+        "cultConfidenceScore": 79
+      }
+    },
+    {
+      "rank": 20,
+      "director": "Ridley Scott",
+      "filmCount": 3,
+      "directorCultScore": 194,
+      "topFilm": {
+        "title": "Blade Runner",
+        "year": 1982,
+        "cultConfidenceScore": 78
+      }
+    },
+    {
+      "rank": 21,
+      "director": "Peter Greenaway",
+      "filmCount": 3,
+      "directorCultScore": 189,
+      "topFilm": {
+        "title": "The Draughtsman's Contract",
+        "year": 1982,
+        "cultConfidenceScore": 67
+      }
+    },
+    {
+      "rank": 22,
+      "director": "Lucio Fulci",
+      "filmCount": 3,
+      "directorCultScore": 187,
+      "topFilm": {
+        "title": "The Beyond",
+        "year": 1981,
+        "cultConfidenceScore": 71
+      }
+    },
+    {
+      "rank": 23,
+      "director": "Krzysztof Kieślowski",
+      "filmCount": 3,
+      "directorCultScore": 181,
+      "topFilm": {
+        "title": "Three Colors: Red",
+        "year": 1994,
+        "cultConfidenceScore": 63
+      }
+    },
+    {
+      "rank": 24,
+      "director": "Nicolas Roeg",
+      "filmCount": 3,
+      "directorCultScore": 181,
+      "topFilm": {
+        "title": "Don't Look Now",
+        "year": 1973,
+        "cultConfidenceScore": 66
+      }
+    },
+    {
+      "rank": 25,
+      "director": "George A. Romero",
+      "filmCount": 2,
+      "directorCultScore": 179,
+      "topFilm": {
+        "title": "Night of the Living Dead",
+        "year": 1968,
+        "cultConfidenceScore": 90
+      }
+    },
+    {
+      "rank": 26,
+      "director": "Antonio Margheriti",
+      "filmCount": 3,
+      "directorCultScore": 170,
+      "topFilm": {
+        "title": "The Long Hair of Death",
+        "year": 1964,
+        "cultConfidenceScore": 61
+      }
+    },
+    {
+      "rank": 27,
+      "director": "Edgar Wright",
+      "filmCount": 3,
+      "directorCultScore": 168,
+      "topFilm": {
+        "title": "Shaun of the Dead",
+        "year": 2004,
+        "cultConfidenceScore": 57
+      }
+    },
+    {
+      "rank": 28,
+      "director": "Wes Craven",
+      "filmCount": 3,
+      "directorCultScore": 154,
+      "topFilm": {
+        "title": "The Hills Have Eyes",
+        "year": 1977,
+        "cultConfidenceScore": 54
+      }
+    },
+    {
+      "rank": 29,
+      "director": "Tobe Hooper",
+      "filmCount": 2,
+      "directorCultScore": 150,
+      "topFilm": {
+        "title": "The Texas Chain Saw Massacre",
+        "year": 1974,
+        "cultConfidenceScore": 82
+      }
+    },
+    {
+      "rank": 30,
+      "director": "Mario Bava",
+      "filmCount": 2,
+      "directorCultScore": 143,
+      "topFilm": {
+        "title": "Black Sunday",
+        "year": 1960,
+        "cultConfidenceScore": 75
+      }
+    }
+  ],
+  "decadeDistribution": [
+    {
+      "decade": "1920s",
+      "count": 3,
+      "coreCount": 3,
+      "extendedCount": 0
+    },
+    {
+      "decade": "1930s",
+      "count": 4,
+      "coreCount": 4,
+      "extendedCount": 0
+    },
+    {
+      "decade": "1940s",
+      "count": 5,
+      "coreCount": 5,
+      "extendedCount": 0
+    },
+    {
+      "decade": "1950s",
+      "count": 17,
+      "coreCount": 16,
+      "extendedCount": 1
+    },
+    {
+      "decade": "1960s",
+      "count": 46,
+      "coreCount": 21,
+      "extendedCount": 25
+    },
+    {
+      "decade": "1970s",
+      "count": 106,
+      "coreCount": 59,
+      "extendedCount": 47
+    },
+    {
+      "decade": "1980s",
+      "count": 156,
+      "coreCount": 40,
+      "extendedCount": 116
+    },
+    {
+      "decade": "1990s",
+      "count": 110,
+      "coreCount": 21,
+      "extendedCount": 89
+    },
+    {
+      "decade": "2000s",
+      "count": 106,
+      "coreCount": 8,
+      "extendedCount": 98
+    },
+    {
+      "decade": "2010s",
+      "count": 16,
+      "coreCount": 0,
+      "extendedCount": 16
+    }
+  ]
+}

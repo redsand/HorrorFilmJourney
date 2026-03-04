@@ -91,6 +91,7 @@ export const zMovieCardVM = z
     codex: z
       .object({
         whyImportant: z.string(),
+        watchReason: z.string().max(140).optional(),
         whatItTeaches: z.string(),
         watchFor: z.tuple([z.string(), z.string(), z.string()]),
         historicalContext: z.string(),

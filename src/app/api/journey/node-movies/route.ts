@@ -1,6 +1,7 @@
 import { fail, ok } from '@/lib/api-envelope';
 import { requireAuth } from '@/lib/auth/guards';
 import { prisma } from '@/lib/prisma';
+import { buildWatchReason, resolveWatchReasonForFilm } from '@/lib/journey/watch-reason';
 
 function normalizeNodeSlug(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '');
@@ -22,7 +23,15 @@ export async function GET(request: Request): Promise<Response> {
 
   const profile = await prisma.userProfile.findUnique({
     where: { userId: auth.userId },
-    select: { selectedPackId: true },
+    select: {
+      selectedPackId: true,
+      selectedPack: {
+        select: {
+          slug: true,
+          season: { select: { slug: true } },
+        },
+      },
+    },
   });
   if (!profile?.selectedPackId) {
     return fail({ code: 'NOT_FOUND', message: 'No selected pack' }, 404);
@@ -41,21 +50,60 @@ export async function GET(request: Request): Promise<Response> {
       coreRank: true,
       finalScore: true,
       journeyScore: true,
+      node: {
+        select: {
+          slug: true,
+          name: true,
+          whatToNotice: true,
+          eraSubgenreFocus: true,
+        },
+      },
       movie: {
         select: {
           tmdbId: true,
           title: true,
           year: true,
           posterUrl: true,
+          country: true,
+          director: true,
         },
       },
     },
   });
 
-  const core = assignments
-    .filter((row) => row.tier === 'CORE')
-    .slice(0, limit)
-    .map((row) => ({
+  const seasonSlug = profile.selectedPack?.season.slug ?? null;
+  const packSlug = profile.selectedPack?.slug ?? null;
+
+  const coreRows = assignments.filter((row) => row.tier === 'CORE').slice(0, limit);
+  const coreWatchReasons = await Promise.all(coreRows.map(async (row) => {
+    if (!seasonSlug || !packSlug) {
+      return buildWatchReason({
+        seasonSlug: 'unknown',
+        nodeSlug: row.node.slug,
+        movieMeta: {
+          title: row.movie.title,
+          year: row.movie.year,
+          country: row.movie.country,
+          director: row.movie.director,
+        },
+        nodeMeta: {
+          name: row.node.name,
+          whatToNotice: row.node.whatToNotice,
+          subgenres: row.node.eraSubgenreFocus
+            .split(/[;,]/g)
+            .map((entry) => entry.trim())
+            .filter((entry) => entry.length > 0),
+        },
+      });
+    }
+    return resolveWatchReasonForFilm({
+      seasonSlug,
+      packSlug,
+      nodeSlug: row.node.slug,
+      tmdbId: row.movie.tmdbId,
+    });
+  }));
+  const core = coreRows.map((row, index) => ({
       tmdbId: row.movie.tmdbId,
       title: row.movie.title,
       year: row.movie.year,
@@ -63,17 +111,45 @@ export async function GET(request: Request): Promise<Response> {
       coreRank: row.coreRank,
       finalScore: row.finalScore,
       journeyScore: row.journeyScore,
+      watchReason: coreWatchReasons[index] ?? undefined,
     }));
-  const extended = assignments
-    .filter((row) => row.tier === 'EXTENDED')
-    .slice(0, limit)
-    .map((row) => ({
+  const extendedRows = assignments.filter((row) => row.tier === 'EXTENDED').slice(0, limit);
+  const extendedWatchReasons = await Promise.all(extendedRows.map(async (row) => {
+    if (!seasonSlug || !packSlug) {
+      return buildWatchReason({
+        seasonSlug: 'unknown',
+        nodeSlug: row.node.slug,
+        movieMeta: {
+          title: row.movie.title,
+          year: row.movie.year,
+          country: row.movie.country,
+          director: row.movie.director,
+        },
+        nodeMeta: {
+          name: row.node.name,
+          whatToNotice: row.node.whatToNotice,
+          subgenres: row.node.eraSubgenreFocus
+            .split(/[;,]/g)
+            .map((entry) => entry.trim())
+            .filter((entry) => entry.length > 0),
+        },
+      });
+    }
+    return resolveWatchReasonForFilm({
+      seasonSlug,
+      packSlug,
+      nodeSlug: row.node.slug,
+      tmdbId: row.movie.tmdbId,
+    });
+  }));
+  const extended = extendedRows.map((row, index) => ({
       tmdbId: row.movie.tmdbId,
       title: row.movie.title,
       year: row.movie.year,
       posterUrl: row.movie.posterUrl,
       finalScore: row.finalScore,
       journeyScore: row.journeyScore,
+      watchReason: extendedWatchReasons[index] ?? undefined,
     }));
 
   return ok({

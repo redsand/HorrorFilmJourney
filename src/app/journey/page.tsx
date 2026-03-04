@@ -2,10 +2,17 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
-import { JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
+import { JourneyMap, JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
+import { CinematicContextCard } from '@/components/context/CinematicContextCard';
+import { ReasonPanel } from '@/components/context/ReasonPanel';
 import { BottomNav, Button, Card } from '@/components/ui';
 import { getPackSubgenreOptions, MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 import { getPackCopy } from '@/lib/packs/pack-copy';
+import { buildFilmContextExplanation } from '@/lib/context/build-film-context-explanation';
+import type { FilmContextExplanation } from '@/lib/context/build-film-context-explanation';
+import { buildSeasonReasonPanel } from '@/lib/context/build-season-reason-panel';
+import type { SeasonReasonPanel } from '@/lib/context/build-season-reason-panel';
+import { resolveWatchReasonForFilm } from '@/lib/journey/watch-reason';
 
 type ExperienceResponse = {
   state: 'PACK_SELECTION_NEEDED' | 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
@@ -89,8 +96,14 @@ type WatchlistResponse = {
 
 type NodeMoviesResponse = {
   nodeSlug: string;
-  core: Array<{ tmdbId: number; title: string; year: number | null }>;
-  extended: Array<{ tmdbId: number; title: string; year: number | null }>;
+  core: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
+  extended: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
+};
+type JourneyMapResponse = {
+  seasonSlug: string;
+  packSlug: string;
+  nodes: Array<{ slug: string; name: string; order: number; coreCount?: number; extendedCount?: number }>;
+  progress?: { completedNodeSlugs: string[]; currentNodeSlug?: string };
 };
 
 function toWatchForTuple(watchFor: unknown): [string, string, string] {
@@ -267,7 +280,7 @@ async function submitPackSelection(formData: FormData): Promise<void> {
   revalidatePath('/');
 }
 
-export default async function HomePage({ searchParams }: { searchParams?: { watchlistPage?: string } }) {
+export default async function HomePage({ searchParams }: { searchParams?: { watchlistPage?: string; nodeSlug?: string } }) {
   const experienceResponse = await apiJson<ExperienceResponse>('/api/experience', { method: 'GET' });
   const experience = experienceResponse.status === 200 ? experienceResponse.data : null;
   const unauthenticated = experienceResponse.status === 401;
@@ -282,10 +295,54 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
   const watchlist = !unauthenticated
     ? (await apiJson<WatchlistResponse>(`/api/watchlist?page=${watchlistPage}&pageSize=6`, { method: 'GET' })).data
     : null;
-  const activeJourneyNodeSlug = (experience?.bundle?.journeyNode ?? '').split('#')[0] ?? '';
+  const requestedNodeSlug = searchParams?.nodeSlug?.trim() ?? '';
+  const activeJourneyNodeSlug = (
+    requestedNodeSlug.length > 0
+      ? requestedNodeSlug
+      : (((experience?.bundle?.journeyNode ?? '').split('#')[0]) ?? '')
+  ).toLowerCase();
   const nodeMovies = (!unauthenticated && activeJourneyNodeSlug)
     ? (await apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(activeJourneyNodeSlug)}&limit=12`, { method: 'GET' })).data
     : null;
+  const journeyMap = !unauthenticated
+    ? (await apiJson<JourneyMapResponse>('/api/journey/map', { method: 'GET' })).data
+    : null;
+  const selectedPackSlug = watchlist?.packSlug
+    ?? packs?.packs.find((pack) => pack.isEnabled)?.slug
+    ?? 'horror';
+  const selectedSeasonSlug = packs?.packs.find((pack) => pack.slug === selectedPackSlug)?.seasonSlug
+    ?? packs?.activeSeason.slug
+    ?? 'season-1';
+  const compactContextTmdbIds = nodeMovies
+    ? [...nodeMovies.core.slice(0, 2), ...nodeMovies.extended.slice(0, 1)].map((entry) => entry.tmdbId)
+    : [];
+  const compactContextRows = await Promise.all(compactContextTmdbIds.map(async (tmdbId) => {
+    const [context, reasonPanel] = await Promise.all([
+      buildFilmContextExplanation({
+        seasonSlug: selectedSeasonSlug,
+        packSlug: selectedPackSlug,
+        nodeSlug: nodeMovies?.nodeSlug ?? null,
+        tmdbId,
+      }),
+      buildSeasonReasonPanel({
+        seasonSlug: selectedSeasonSlug,
+        packSlug: selectedPackSlug,
+        nodeSlug: nodeMovies?.nodeSlug ?? null,
+        tmdbId,
+      }),
+    ]);
+    return { tmdbId, context, reasonPanel };
+  }));
+  const compactContextByTmdbId = new Map<number, FilmContextExplanation>();
+  const compactReasonByTmdbId = new Map<number, SeasonReasonPanel>();
+  for (const row of compactContextRows) {
+    if (row.context) {
+      compactContextByTmdbId.set(row.tmdbId, row.context);
+    }
+    if (row.reasonPanel) {
+      compactReasonByTmdbId.set(row.tmdbId, row.reasonPanel);
+    }
+  }
   const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
   const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
   const onboardingPackCopy = getPackCopy(onboardingPackSlug);
@@ -296,10 +353,27 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
     const mappedCards = (experience.bundle?.cards ?? [])
       .map((card) => toMovieCardFromExperienceCard(card, experience.bundle?.journeyNode))
       .filter((card): card is MovieCardVM => card !== null);
+    const cardsWithWatchReason = await Promise.all(mappedCards.map(async (card) => {
+      const watchReason = await resolveWatchReasonForFilm({
+        seasonSlug: selectedSeasonSlug,
+        packSlug: selectedPackSlug,
+        nodeSlug: activeJourneyNodeSlug || null,
+        tmdbId: card.movie.tmdbId,
+      });
+      return watchReason
+        ? {
+          ...card,
+          codex: {
+            ...card.codex,
+            watchReason,
+          },
+        }
+        : card;
+    }));
     if (mappedCards.length > 0) {
       recommendations = {
         batchId: experience.bundle?.id ?? 'current',
-        cards: mappedCards,
+        cards: cardsWithWatchReason,
         interactionContext: (experience.bundle?.cards ?? []).map((card) => ({
           tmdbId: card.movie.tmdbId,
           recommendationItemId: card.id,
@@ -362,6 +436,17 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
+      {journeyMap && experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' ? (
+        <Card>
+          <JourneyMap
+            baseHref="/journey"
+            currentNodeSlug={activeJourneyNodeSlug}
+            data={journeyMap}
+            packSlug={journeyMap.packSlug ?? selectedPackSlug}
+            seasonSlug={journeyMap.seasonSlug ?? selectedSeasonSlug}
+          />
+        </Card>
+      ) : null}
 
       {experience?.state === 'PACK_SELECTION_NEEDED' && (
         <Card>
@@ -548,6 +633,17 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
                         </svg>
                         {movie.title} {movie.year ? `(${movie.year})` : ''}
                       </Link>
+                      {movie.watchReason ? (
+                        <p className="mt-1 text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                      ) : null}
+                      <div className="mt-2">
+                        <CinematicContextCard compact data={compactContextByTmdbId.get(movie.tmdbId) ?? null} />
+                        {compactReasonByTmdbId.get(movie.tmdbId) ? (
+                          <div className="mt-2">
+                            <ReasonPanel {...compactReasonByTmdbId.get(movie.tmdbId)!} />
+                          </div>
+                        ) : null}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -571,6 +667,17 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
                         >
                           {movie.title} {movie.year ? `(${movie.year})` : ''}
                         </Link>
+                        {movie.watchReason ? (
+                          <p className="mt-1 text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                        ) : null}
+                        <div className="w-full">
+                          <CinematicContextCard compact data={compactContextByTmdbId.get(movie.tmdbId) ?? null} />
+                          {compactReasonByTmdbId.get(movie.tmdbId) ? (
+                            <div className="mt-2">
+                              <ReasonPanel {...compactReasonByTmdbId.get(movie.tmdbId)!} />
+                            </div>
+                          ) : null}
+                        </div>
                       </li>
                     ))}
                   </ul>

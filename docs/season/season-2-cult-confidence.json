@@ -1,0 +1,4556 @@
+{
+  "films": [
+    {
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 90,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Cabinet of Dr. Caligari",
+      "year": 1920,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Häxan",
+      "year": 1922,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Un Chien Andalou",
+      "year": 1929,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Freaks",
+      "year": 1932,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Vampyr",
+      "year": 1932,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Dawn Patrol",
+      "year": 1938,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Brief Encounter",
+      "year": 1945,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Lost Weekend",
+      "year": 1945,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Strange Love of Martha Ivers",
+      "year": 1946,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Red Shoes",
+      "year": 1948,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Night of the Hunter",
+      "year": 1955,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Run of the Arrow",
+      "year": 1957,
+      "node": "origins-of-cult-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Black Sunday",
+      "year": 1960,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Eyes Without a Face",
+      "year": 1960,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Peeping Tom",
+      "year": 1960,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "One-Eyed Jacks",
+      "year": 1961,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Viridiana",
+      "year": 1961,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Carnival of Souls",
+      "year": 1962,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "La Jetée",
+      "year": 1962,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Loneliness of the Long Distance Runner",
+      "year": 1962,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Trial",
+      "year": 1962,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Walk on the Wild Side",
+      "year": 1962,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Servant",
+      "year": 1963,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Onibaba",
+      "year": 1964,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Repulsion",
+      "year": 1965,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Hill",
+      "year": 1965,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Persona",
+      "year": 1966,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Seconds",
+      "year": 1966,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "A Bullet for the General",
+      "year": 1967,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Requiescant",
+      "year": 1967,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Flesh",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hour of the Wolf",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Kuroneko",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Girl on a Motorcycle",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Killing of Sister George",
+      "year": 1968,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Cremator",
+      "year": 1969,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Kill and Pray",
+      "year": 1967,
+      "node": "origins-of-cult-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "El Topo",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 92,
+      "confidenceTier": "Canonical Cult Classic"
+    },
+    {
+      "title": "Pink Flamingos",
+      "year": 1972,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 80,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Eraserhead",
+      "year": 1977,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 90,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Warriors",
+      "year": 1979,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 81,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Liquid Sky",
+      "year": 1982,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Repo Man",
+      "year": 1984,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Performance",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Soldier Blue",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Boys in the Band",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Spider's Stratagem",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Too Late the Hero",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Valerie and Her Week of Wonders",
+      "year": 1970,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "A Clockwork Orange",
+      "year": 1971,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Harold and Maude",
+      "year": 1971,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last Movie",
+      "year": 1971,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Wake in Fright",
+      "year": 1971,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Ulzana's Raid",
+      "year": 1972,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Don't Look Now",
+      "year": 1973,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Cockfighter",
+      "year": 1974,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Lenny",
+      "year": 1974,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Phantom of the Paradise",
+      "year": 1974,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Salò, or the 120 Days of Sodom",
+      "year": 1975,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Man Who Would Be King",
+      "year": 1975,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Carrie",
+      "year": 1976,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "In the Realm of the Senses",
+      "year": 1976,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tracks",
+      "year": 1976,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Duellists",
+      "year": 1977,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Big Wednesday",
+      "year": 1978,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Rock 'n' Roll High School",
+      "year": 1979,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Blue Velvet",
+      "year": 1986,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Society",
+      "year": 1989,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Cook, the Thief, His Wife & Her Lover",
+      "year": 1989,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Hausu",
+      "year": 1977,
+      "node": "midnight-movies",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Killer",
+      "year": 1989,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 85,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Hard Boiled",
+      "year": 1992,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 85,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Battle Royale",
+      "year": 2000,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Blood Feast",
+      "year": 1963,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Faster, Pussycat! Kill! Kill!",
+      "year": 1965,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Spider Baby",
+      "year": 1967,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 80,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Swimmer",
+      "year": 1968,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "I Drink Your Blood",
+      "year": 1971,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Last House on the Left",
+      "year": 1972,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sisters",
+      "year": 1972,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Street Mobster",
+      "year": 1972,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tombs of the Blind Dead",
+      "year": 1972,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Lady Snowblood",
+      "year": 1973,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last House on Dead End Street",
+      "year": 1973,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Thriller: A Cruel Picture",
+      "year": 1973,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Stone",
+      "year": 1974,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ilsa: She Wolf of the SS",
+      "year": 1975,
+      "node": "grindhouse-exploitation",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Picnic at Hanging Rock",
+      "year": 1975,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Shivers",
+      "year": 1975,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Rabid",
+      "year": 1977,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "I Spit on Your Grave",
+      "year": 1978,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Long Weekend",
+      "year": 1978,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Maniac",
+      "year": 1980,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Shogun Assassin",
+      "year": 1980,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ms .45",
+      "year": 1981,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Road Games",
+      "year": 1981,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pieces",
+      "year": 1982,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Razorback",
+      "year": 1984,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "A Better Tomorrow",
+      "year": 1986,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Blob",
+      "year": 1988,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Intruder",
+      "year": 1989,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "964 Pinocchio",
+      "year": 1991,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Dead Alive",
+      "year": 1992,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Full Contact",
+      "year": 1992,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Run and Kill",
+      "year": 1993,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "From Dusk Till Dawn",
+      "year": 1996,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Naked Blood",
+      "year": 1996,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Night Watch",
+      "year": 2004,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Planet Terror",
+      "year": 2007,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tokyo Gore Police",
+      "year": 2008,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Carny",
+      "year": 2009,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Machete",
+      "year": 2010,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Braindead",
+      "year": 1992,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last House on the Left",
+      "year": 1972,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sisters",
+      "year": 1973,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Fun House",
+      "year": 1977,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Day of the Woman",
+      "year": 1978,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Long Weekend",
+      "year": 1979,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Zombie Flesh Eaters",
+      "year": 1979,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Roadgames",
+      "year": 1981,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tenebre",
+      "year": 1982,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Splatter: Naked Blood",
+      "year": 1996,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Audition",
+      "year": 2000,
+      "node": "grindhouse-exploitation",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Audition",
+      "year": 1999,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Ichi the Killer",
+      "year": 2001,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 92,
+      "confidenceTier": "Canonical Cult Classic"
+    },
+    {
+      "title": "Suspiria",
+      "year": 1977,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 89,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "A Bay of Blood",
+      "year": 1971,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Devils",
+      "year": 1971,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 79,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Wicker Man",
+      "year": 1973,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Living Dead at Manchester Morgue",
+      "year": 1974,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Night Porter",
+      "year": 1974,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Deep Red",
+      "year": 1975,
+      "node": "eurocult",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "House",
+      "year": 1977,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 64,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Zombie",
+      "year": 1979,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Cannibal Holocaust",
+      "year": 1980,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Inferno",
+      "year": 1980,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Cannibal Ferox",
+      "year": 1981,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Possession",
+      "year": 1981,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Beyond",
+      "year": 1981,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Tenebrae",
+      "year": 1982,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The New York Ripper",
+      "year": 1982,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Demons",
+      "year": 1985,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Opera",
+      "year": 1987,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Santa Sangre",
+      "year": 1989,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Tetsuo: The Iron Man",
+      "year": 1989,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Riki-Oh: The Story of Ricky",
+      "year": 1991,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Suicide Club",
+      "year": 2001,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Visitor Q",
+      "year": 2001,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gozu",
+      "year": 2003,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Wicker Man",
+      "year": 2006,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Salò, or the 120 Days of Sodom",
+      "year": 1976,
+      "node": "eurocult",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Basket Case",
+      "year": 1982,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Room",
+      "year": 2003,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Reefer Madness",
+      "year": 1936,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Robot Monster",
+      "year": 1953,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Giant Claw",
+      "year": 1957,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Plan 9 from Outer Space",
+      "year": 1959,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Beast of Yucca Flats",
+      "year": 1961,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Santa Claus Conquers the Martians",
+      "year": 1964,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Creeping Terror",
+      "year": 1964,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Horror of Party Beach",
+      "year": 1964,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+      "year": 1964,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Manos: The Hands of Fate",
+      "year": 1966,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Star Wars Holiday Special",
+      "year": 1978,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Cannibal Apocalypse",
+      "year": 1980,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Apple",
+      "year": 1980,
+      "node": "psychotronic-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Turkey Shoot",
+      "year": 1982,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Yor: The Hunter from the Future",
+      "year": 1983,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gymkata",
+      "year": 1985,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Class of Nuke 'Em High",
+      "year": 1986,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Wraith",
+      "year": 1986,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hard Ticket to Hawaii",
+      "year": 1987,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Miami Connection",
+      "year": 1987,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Over the Top",
+      "year": 1987,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Silent Night, Deadly Night Part 2",
+      "year": 1987,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Street Trash",
+      "year": 1987,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hobgoblins",
+      "year": 1988,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Mac and Me",
+      "year": 1988,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "No Holds Barred",
+      "year": 1989,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Robot Jox",
+      "year": 1989,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Troll 2",
+      "year": 1990,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Cool as Ice",
+      "year": 1991,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Samurai Cop",
+      "year": 1991,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Showdown in Little Tokyo",
+      "year": 1991,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Street Fighter",
+      "year": 1994,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Showgirls",
+      "year": 1995,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Batman & Robin",
+      "year": 1997,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Double Team",
+      "year": 1997,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Battlefield Earth",
+      "year": 2000,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ben & Arthur",
+      "year": 2002,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Core",
+      "year": 2003,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Suburban Sasquatch",
+      "year": 2004,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Happening",
+      "year": 2008,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Birdemic: Shock and Terror",
+      "year": 2010,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Who Killed Captain Alex?",
+      "year": 2010,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Plan 9 from Outer Space",
+      "year": 1957,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Robot Jox",
+      "year": 1990,
+      "node": "psychotronic-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Thing",
+      "year": 1982,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 87,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Sleepaway Camp",
+      "year": 1983,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Texas Chain Saw Massacre",
+      "year": 1974,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 82,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 89,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Evil Dead",
+      "year": 1981,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 88,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Re-Animator",
+      "year": 1985,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 87,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Return of the Living Dead",
+      "year": 1985,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 79,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Hellraiser",
+      "year": 1987,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Near Dark",
+      "year": 1987,
+      "node": "cult-horror",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Black Christmas",
+      "year": 1974,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Hills Have Eyes",
+      "year": 1977,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "From Beyond",
+      "year": 1986,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Prince of Darkness",
+      "year": 1987,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Killer Klowns from Outer Space",
+      "year": 1988,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Phantasm II",
+      "year": 1988,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pet Sematary",
+      "year": 1989,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Army of Darkness",
+      "year": 1992,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Candyman",
+      "year": 1992,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Phantasm III: Lord of the Dead",
+      "year": 1994,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Cube",
+      "year": 1997,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Event Horizon",
+      "year": 1997,
+      "node": "cult-horror",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Akira",
+      "year": 1988,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 82,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Ghost in the Shell",
+      "year": 1995,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 80,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Perfect Blue",
+      "year": 1997,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Escape from New York",
+      "year": 1981,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 87,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Heavy Metal",
+      "year": 1981,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Blade Runner",
+      "year": 1982,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Videodrome",
+      "year": 1983,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 87,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Brazil",
+      "year": 1985,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 83,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "They Live",
+      "year": 1988,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 86,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Dark City",
+      "year": 1998,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Donnie Darko",
+      "year": 2001,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Orpheus",
+      "year": 1950,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The 7th Voyage of Sinbad",
+      "year": 1958,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Barbarella",
+      "year": 1968,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "200 Motels",
+      "year": 1971,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "THX 1138",
+      "year": 1971,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Fritz the Cat",
+      "year": 1972,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Silent Running",
+      "year": 1972,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Solaris",
+      "year": 1972,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Belladonna of Sadness",
+      "year": 1973,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Fantastic Planet",
+      "year": 1973,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Dark Star",
+      "year": 1974,
+      "node": "cult-science-fiction",
+      "tier": "core",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Zardoz",
+      "year": 1974,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "A Boy and His Dog",
+      "year": 1975,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Rollerball",
+      "year": 1975,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Man Who Fell to Earth",
+      "year": 1976,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Close Encounters of the Third Kind",
+      "year": 1977,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 64,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last Wave",
+      "year": 1977,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Watership Down",
+      "year": 1978,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Mad Max",
+      "year": 1979,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Stalker",
+      "year": 1979,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 64,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Altered States",
+      "year": 1980,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Scanners",
+      "year": 1981,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Time Bandits",
+      "year": 1981,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Dark Crystal",
+      "year": 1982,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last Unicorn",
+      "year": 1982,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Secret of NIMH",
+      "year": 1982,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tron",
+      "year": 1982,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Krull",
+      "year": 1983,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Keep",
+      "year": 1983,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Nausicaä of the Valley of the Wind",
+      "year": 1984,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Brother from Another Planet",
+      "year": 1984,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Last Starfighter",
+      "year": 1984,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Legend",
+      "year": 1985,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Quiet Earth",
+      "year": 1985,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Vampire Hunter D",
+      "year": 1985,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Highlander",
+      "year": 1986,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Labyrinth",
+      "year": 1986,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "RoboCop",
+      "year": 1987,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Running Man",
+      "year": 1987,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Wicked City",
+      "year": 1987,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Adventures of Baron Munchausen",
+      "year": 1988,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Navigator: A Medieval Odyssey",
+      "year": 1988,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Urotsukidoji: Legend of the Overfiend",
+      "year": 1989,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hardware",
+      "year": 1990,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Prospero's Books",
+      "year": 1991,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Demolition Man",
+      "year": 1993,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ninja Scroll",
+      "year": 1993,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Johnny Mnemonic",
+      "year": 1995,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Strange Days",
+      "year": 1995,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The City of Lost Children",
+      "year": 1995,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gattaca",
+      "year": 1997,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Princess Mononoke",
+      "year": 1997,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Fifth Element",
+      "year": 1997,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pi",
+      "year": 1998,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 64,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "eXistenZ",
+      "year": 1999,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Thirteenth Floor",
+      "year": 1999,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Cell",
+      "year": 2000,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Equilibrium",
+      "year": 2002,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+      "year": 2003,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Primer",
+      "year": 2004,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Serenity",
+      "year": 2005,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Renaissance",
+      "year": 2006,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sunshine",
+      "year": 2007,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "District 9",
+      "year": 2009,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Moon",
+      "year": 2009,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pandorum",
+      "year": 2009,
+      "node": "cult-science-fiction",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Heathers",
+      "year": 1988,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Velvet Goldmine",
+      "year": 1998,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Hedwig and the Angry Inch",
+      "year": 2001,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Female Trouble",
+      "year": 1974,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 89,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "D.O.A.",
+      "year": 1949,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Prowler",
+      "year": 1951,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Narrow Margin",
+      "year": 1952,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Blackboard Jungle",
+      "year": 1955,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Big Combo",
+      "year": 1955,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Phenix City Story",
+      "year": 1955,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "A Man Escaped",
+      "year": 1956,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "High School Confidential!",
+      "year": 1958,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Hush... Hush, Sweet Charlotte",
+      "year": 1964,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Naked Kiss",
+      "year": 1964,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Tokyo Drifter",
+      "year": 1966,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 71,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Le Samouraï",
+      "year": 1967,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 70,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Cisco Pike",
+      "year": 1971,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Grissom Gang",
+      "year": 1971,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Harder They Come",
+      "year": 1972,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Dillinger",
+      "year": 1973,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Holy Mountain",
+      "year": 1973,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 77,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Day of the Locust",
+      "year": 1975,
+      "node": "outsider-cinema",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Twilight's Last Gleaming",
+      "year": 1977,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Jubilee",
+      "year": 1978,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Long Riders",
+      "year": 1980,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Christiane F.",
+      "year": 1981,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Diva",
+      "year": 1981,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Decline of Western Civilization",
+      "year": 1981,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Postman Always Rings Twice",
+      "year": 1981,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Smithereens",
+      "year": 1982,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Fabulous Stains",
+      "year": 1982,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Scarface",
+      "year": 1983,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Suburbia",
+      "year": 1983,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Hunger",
+      "year": 1983,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Wild Style",
+      "year": 1983,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Toxic Avenger",
+      "year": 1984,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Come and See",
+      "year": 1985,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Subway",
+      "year": 1985,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "River's Edge",
+      "year": 1986,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sid and Nancy",
+      "year": 1986,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hairspray",
+      "year": 1988,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Decline of Western Civilization Part II: The Metal Years",
+      "year": 1988,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Paris Is Burning",
+      "year": 1990,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Slacker",
+      "year": 1990,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Poison",
+      "year": 1991,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Man Bites Dog",
+      "year": 1992,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Romper Stomper",
+      "year": 1992,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Three Colors: Blue",
+      "year": 1993,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Natural Born Killers",
+      "year": 1994,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pulp Fiction",
+      "year": 1994,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Doom Generation",
+      "year": 1995,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Kids",
+      "year": 1995,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Doom Generation",
+      "year": 1995,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "SubUrbia",
+      "year": 1996,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Craft",
+      "year": 1996,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Trainspotting",
+      "year": 1996,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gummo",
+      "year": 1997,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Nowhere",
+      "year": 1997,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "SLC Punk",
+      "year": 1998,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Decline of Western Civilization Part III",
+      "year": 1998,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Go",
+      "year": 1999,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Bully",
+      "year": 2001,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ghost World",
+      "year": 2001,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "24 Hour Party People",
+      "year": 2002,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Metallica: Some Kind of Monster",
+      "year": 2004,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Brick",
+      "year": 2005,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Southland Tales",
+      "year": 2006,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Control",
+      "year": 2007,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Beyond the Black Rainbow",
+      "year": 2010,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Scott Pilgrim vs. the World",
+      "year": 2010,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ladies and Gentlemen, the Fabulous Stains",
+      "year": 1982,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Wild Style",
+      "year": 1982,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Suburbia",
+      "year": 1984,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Heathers",
+      "year": 1989,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Paris Is Burning",
+      "year": 1991,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Slacker",
+      "year": 1991,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "SubUrbia",
+      "year": 1997,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 42,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Brick",
+      "year": 2006,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Southland Tales",
+      "year": 2007,
+      "node": "outsider-cinema",
+      "tier": "extended",
+      "cultConfidenceScore": 39,
+      "confidenceTier": "Weak Cult Inclusion"
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 80,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "This Is Spinal Tap",
+      "year": 1984,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Withnail & I",
+      "year": 1987,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 77,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Clerks",
+      "year": 1994,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 76,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Big Lebowski",
+      "year": 1998,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Office Space",
+      "year": 1999,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 74,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Teaserama",
+      "year": 1955,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Loved One",
+      "year": 1965,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Cul-de-sac",
+      "year": 1966,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Weekend",
+      "year": 1967,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "They Might Be Giants",
+      "year": 1971,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Going Places",
+      "year": 1974,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Inserts",
+      "year": 1975,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Monty Python and the Holy Grail",
+      "year": 1975,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Up!",
+      "year": 1976,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Kentucky Fried Movie",
+      "year": 1977,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The End",
+      "year": 1978,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Jerk",
+      "year": 1979,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Wise Blood",
+      "year": 1979,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Gods Must Be Crazy",
+      "year": 1980,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Polyester",
+      "year": 1981,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Cannonball Run",
+      "year": 1981,
+      "node": "camp-cult-comedy",
+      "tier": "core",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Draughtsman's Contract",
+      "year": 1982,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Breakin'",
+      "year": 1984,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gremlins",
+      "year": 1984,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Adventures of Buckaroo Banzai Across the 8th Dimension",
+      "year": 1984,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Top Secret!",
+      "year": 1984,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Evil Dead II",
+      "year": 1987,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Princess Bride",
+      "year": 1987,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Beetlejuice",
+      "year": 1988,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "UHF",
+      "year": 1989,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Jamon Jamon",
+      "year": 1992,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sonatine",
+      "year": 1993,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Spanking the Monkey",
+      "year": 1994,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Adventures of Priscilla, Queen of the Desert",
+      "year": 1994,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Three Colors: White",
+      "year": 1994,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Mystery Science Theater 3000: The Movie",
+      "year": 1996,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Cable Guy",
+      "year": 1996,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "In the Company of Men",
+      "year": 1997,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Happiness",
+      "year": 1998,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Taxi",
+      "year": 1998,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Idiots",
+      "year": 1998,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Drop Dead Gorgeous",
+      "year": 1999,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Galaxy Quest",
+      "year": 1999,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Mystery Men",
+      "year": 1999,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "South Park: Bigger, Longer & Uncut",
+      "year": 1999,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Best in Show",
+      "year": 2000,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Together",
+      "year": 2000,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Super Troopers",
+      "year": 2001,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Happiness of the Katakuris",
+      "year": 2001,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Wet Hot American Summer",
+      "year": 2001,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Bubba Ho-tep",
+      "year": 2002,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Death to Smoochy",
+      "year": 2002,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Funny Ha Ha",
+      "year": 2002,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Kung Pow: Enter the Fist",
+      "year": 2002,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Harold & Kumar Go to White Castle",
+      "year": 2004,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Kung Fu Hustle",
+      "year": 2004,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Napoleon Dynamite",
+      "year": 2004,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Shaun of the Dead",
+      "year": 2004,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Team America: World Police",
+      "year": 2004,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Grandma's Boy",
+      "year": 2006,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Idiocracy",
+      "year": 2006,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Poultrygeist: Night of the Chicken Dead",
+      "year": 2006,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Foot Fist Way",
+      "year": 2006,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hot Fuzz",
+      "year": 2007,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hot Rod",
+      "year": 2007,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Walk Hard: The Dewey Cox Story",
+      "year": 2007,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Repo! The Genetic Opera",
+      "year": 2008,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Black Dynamite",
+      "year": 2009,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "MacGruber",
+      "year": 2010,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Rubber",
+      "year": 2010,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tucker and Dale vs. Evil",
+      "year": 2010,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Happiness of the Katakuris",
+      "year": 2002,
+      "node": "camp-cult-comedy",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Clue",
+      "year": 1985,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 78,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Stuff",
+      "year": 1985,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Fly",
+      "year": 1986,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 86,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Glen or Glenda",
+      "year": 1953,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Long Hair of Death",
+      "year": 1964,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Mudhoney",
+      "year": 1965,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 69,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Countess Dracula",
+      "year": 1971,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Shock Waves",
+      "year": 1977,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Howling",
+      "year": 1981,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Poltergeist",
+      "year": 1982,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 68,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Night of the Comet",
+      "year": 1984,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Fright Night",
+      "year": 1985,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last Dragon",
+      "year": 1985,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Big Trouble in Little China",
+      "year": 1986,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 75,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Chopping Mall",
+      "year": 1986,
+      "node": "video-store-era",
+      "tier": "core",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gothic",
+      "year": 1986,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Night of the Creeps",
+      "year": 1986,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Gate",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Hidden",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Lost Boys",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Monster Squad",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Video Dead",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "976-EVIL",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Brain Damage",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Dead Heat",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Hellbound: Hellraiser II",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pumpkinhead",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Return of the Killer Tomatoes!",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Waxwork",
+      "year": 1988,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 51,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Warlock",
+      "year": 1989,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Darkman",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Grim Prairie Tales",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Nightbreed",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Gate II: Trespassers",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Tremors",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 61,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The People Under the Stairs",
+      "year": 1991,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Crow",
+      "year": 1994,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Addiction",
+      "year": 1995,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Relic",
+      "year": 1997,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Deep Rising",
+      "year": 1998,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Faculty",
+      "year": 1998,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "House on Haunted Hill",
+      "year": 1999,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 48,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gothic",
+      "year": 1987,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Gate II",
+      "year": 1990,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Cube",
+      "year": 1998,
+      "node": "video-store-era",
+      "tier": "extended",
+      "cultConfidenceScore": 53,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Mulholland Drive",
+      "year": 2001,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 91,
+      "confidenceTier": "Canonical Cult Classic"
+    },
+    {
+      "title": "Grey Gardens",
+      "year": 1975,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 66,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Crumb",
+      "year": 1994,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "American Movie",
+      "year": 1999,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Fight Club",
+      "year": 1999,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 76,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "The Boondock Saints",
+      "year": 1999,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 73,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Virgin Suicides",
+      "year": 1999,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "American Psycho",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 72,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Blair Witch Project",
+      "year": 1999,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Oldboy",
+      "year": 2003,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 77,
+      "confidenceTier": "Strong Cult Film"
+    },
+    {
+      "title": "Phantasm",
+      "year": 1979,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Gimme Shelter",
+      "year": 1970,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Loveless",
+      "year": 1981,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "House of Games",
+      "year": 1987,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 65,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Apartment Zero",
+      "year": 1988,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Ghosts... of the Civil Dead",
+      "year": 1988,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Light Sleeper",
+      "year": 1992,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 58,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Reservoir Dogs",
+      "year": 1992,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 64,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "The Last Seduction",
+      "year": 1994,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Three Colors: Red",
+      "year": 1994,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 63,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "When We Were Kings",
+      "year": 1996,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Fear and Loathing in Las Vegas",
+      "year": 1998,
+      "node": "modern-cult-phenomena",
+      "tier": "core",
+      "cultConfidenceScore": 67,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Baise-moi",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Chopper",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Memento",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Requiem for a Dream",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 62,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Snatch",
+      "year": 2000,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Dogtown and Z-Boys",
+      "year": 2001,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 46,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Experiment",
+      "year": 2001,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Royal Tenenbaums",
+      "year": 2001,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 57,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Infernal Affairs",
+      "year": 2002,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Irreversible",
+      "year": 2002,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Touching the Void",
+      "year": 2003,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Eternal Sunshine of the Spotless Mind",
+      "year": 2004,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Garden State",
+      "year": 2004,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Caché",
+      "year": 2005,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Sin City",
+      "year": 2005,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Descent",
+      "year": 2005,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 56,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "V for Vendetta",
+      "year": 2005,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 45,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Children of Men",
+      "year": 2006,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pan's Labyrinth",
+      "year": 2006,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Fall",
+      "year": 2006,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Fountain",
+      "year": 2006,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Recognized Cult Film"
+    },
+    {
+      "title": "Funny Games",
+      "year": 2007,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Paranormal Activity",
+      "year": 2007,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Mist",
+      "year": 2007,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Trick 'r Treat",
+      "year": 2007,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Zodiac",
+      "year": 2007,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 60,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "In Bruges",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Let the Right One In",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Martyrs",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 55,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pontypool",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "A Serious Man",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Antichrist",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Enter the Void",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Exam",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Jennifer's Body",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Triangle",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Black Swan",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 59,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Inception",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 52,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Kick-Ass",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 54,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Monsters",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Rare Exports",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "The Crazies",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Grey Gardens",
+      "year": 1976,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 47,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "84C MoPic",
+      "year": 1989,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Apartment Zero",
+      "year": 1989,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 43,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Naked Tango",
+      "year": 1990,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Crumb",
+      "year": 1995,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 42,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Dogtown and Z-Boys",
+      "year": 2002,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 40,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "V for Vendetta",
+      "year": 2006,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 50,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Funny Games",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 39,
+      "confidenceTier": "Weak Cult Inclusion"
+    },
+    {
+      "title": "Synecdoche, New York",
+      "year": 2008,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 44,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Pontypool",
+      "year": 2009,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 38,
+      "confidenceTier": "Weak Cult Inclusion"
+    },
+    {
+      "title": "Enter the Void",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 49,
+      "confidenceTier": "Borderline Cult"
+    },
+    {
+      "title": "Rare Exports: A Christmas Tale",
+      "year": 2010,
+      "node": "modern-cult-phenomena",
+      "tier": "extended",
+      "cultConfidenceScore": 38,
+      "confidenceTier": "Weak Cult Inclusion"
+    }
+  ]
+}

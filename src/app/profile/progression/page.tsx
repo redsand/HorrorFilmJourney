@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { JourneyMap } from '@/components/journey';
 import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 import { getPackCopy } from '@/lib/packs/pack-copy';
 
@@ -17,11 +18,19 @@ type PreferenceData = {
   selectedPackSlug?: string;
 };
 
+type JourneyMapResponse = {
+  seasonSlug: string;
+  packSlug: string;
+  nodes: Array<{ slug: string; name: string; order: number; coreCount?: number; extendedCount?: number }>;
+  progress?: { completedNodeSlugs: string[]; currentNodeSlug?: string };
+};
+
 export default function ProgressionPage() {
   const [data, setData] = useState<ProgressionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPackSlug, setSelectedPackSlug] = useState<string>('horror');
+  const [journeyMap, setJourneyMap] = useState<JourneyMapResponse | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -46,6 +55,14 @@ export default function ProgressionPage() {
           if (typeof preferenceData.selectedPackSlug === 'string' && preferenceData.selectedPackSlug.trim().length > 0) {
             setSelectedPackSlug(preferenceData.selectedPackSlug);
           }
+        }
+        const mapResponse = await fetch('/api/journey/map', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (mapResponse.ok) {
+          const mapPayload = await mapResponse.json();
+          setJourneyMap((mapPayload?.data ?? null) as JourneyMapResponse | null);
         }
       } catch {
         setError('Unable to load progression.');
@@ -94,6 +111,17 @@ export default function ProgressionPage() {
                 : <Chip>No themes unlocked yet</Chip>}
             </div>
           </Card>
+          {journeyMap ? (
+            <Card>
+              <JourneyMap
+                baseHref="/journey"
+                currentNodeSlug={data.currentNode}
+                data={journeyMap}
+                packSlug={journeyMap.packSlug}
+                seasonSlug={journeyMap.seasonSlug}
+              />
+            </Card>
+          ) : null}
         </>
       ) : null}
 

@@ -1,0 +1,12 @@
+{
+  "title": "The Exorcist",
+  "year": 1973,
+  "tier": "Core",
+  "nodeName": "Supernatural Horror",
+  "whyParagraph": "Placed in Supernatural Horror (Core) for season-1/horror. What to notice: religious ritual, possession arc, and practical terror craft. Journey-worthiness 0.78 vs threshold 0.60.",
+  "signals": [
+    { "label": "Prototype Similarity", "value": "0.88 (The Exorcist)" },
+    { "label": "Journey Worthiness", "value": "0.78 (min 0.60)" },
+    { "label": "Governance", "value": "Credits coverage available (director and principal cast)." }
+  ]
+}

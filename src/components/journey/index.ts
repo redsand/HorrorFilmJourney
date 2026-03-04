@@ -3,3 +3,5 @@ export { JourneyMasteryCard } from './JourneyMasteryCard';
 export { QuickPoll } from './QuickPoll';
 export { RecommendationBundle } from './RecommendationBundle';
 export { RefreshRecommendationsButton } from './RefreshRecommendationsButton';
+export { JourneyMap } from './JourneyMap';
+export { NextInJourney } from './NextInJourney';

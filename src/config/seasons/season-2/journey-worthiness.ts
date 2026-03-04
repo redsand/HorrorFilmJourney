@@ -9,7 +9,7 @@ export const SEASON_2_JOURNEY_WORTHINESS_CONFIG: JourneyWorthinessConfig = {
     minVoteCount: 1500,
     minPopularity: 12,
     minMetadataCompleteness: 0.7,
-    minRuntimeMinutes: 60,
+    minRuntimeMinutes: 41,
     maxRuntimeMinutes: 240,
     minYear: 1900,
     maxFutureYears: 1,
@@ -23,4 +23,3 @@ export const SEASON_2_JOURNEY_WORTHINESS_CONFIG: JourneyWorthinessConfig = {
     runtimeYearSanity: 0.05,
   },
 };
-

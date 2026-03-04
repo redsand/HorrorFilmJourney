@@ -178,6 +178,12 @@ export function MovieCard({
           ) : null}
 
           <div className="space-y-3">
+            {card.codex.watchReason ? (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Watch reason</p>
+                <p className="mt-1 text-sm leading-relaxed">{card.codex.watchReason}</p>
+              </div>
+            ) : null}
             <div>
               <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Why it matters</p>
               <p className="mt-1 text-sm leading-relaxed">{card.codex.whyImportant}</p>

@@ -1,0 +1,490 @@
+{
+  "clusters": [
+    {
+      "cluster": "Hong Kong Category III and Heroic Bloodshed Fringe",
+      "description": "The cult ecosystem around Hong Kong heroic bloodshed, Category III extremity, and late-night export tapes.",
+      "films": [
+        {
+          "title": "The Boxers Omen",
+          "year": 1983,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Dangerous Encounters of the First Kind",
+          "year": 1980,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Seventh Curse",
+          "year": 1986,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Mr. Vampire",
+          "year": 1985,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "A Chinese Ghost Story",
+          "year": 1987,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Ebola Syndrome",
+          "year": 1996,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Untold Story",
+          "year": 1993,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Sex and Zen",
+          "year": 1991,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Dr. Lamb",
+          "year": 1992,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Heroic Trio",
+          "year": 1993,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Bride with White Hair",
+          "year": 1993,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "A Better Tomorrow",
+          "year": 1986,
+          "status": "already-present"
+        },
+        {
+          "title": "The Killer",
+          "year": 1989,
+          "status": "already-present"
+        },
+        {
+          "title": "Hard Boiled",
+          "year": 1992,
+          "status": "already-present"
+        },
+        {
+          "title": "The Story of Ricky",
+          "year": 1991,
+          "status": "candidate-addition"
+        }
+      ]
+    },
+    {
+      "cluster": "Japanese Pinku, Ero-Guro, and Delinquent Cult",
+      "description": "Japanese pink film and exploitation-adjacent cult traditions tied to underground theaters and home-video fandom.",
+      "films": [
+        {
+          "title": "Female Prisoner Scorpion 701s Grudge Song",
+          "year": 1973,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Female Prisoner #701 Scorpion",
+          "year": 1972,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Female Prisoner Scorpion Jailhouse 41",
+          "year": 1972,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Sex and Fury",
+          "year": 1973,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "School of the Holy Beast",
+          "year": 1974,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Terrifying Girls High School Lynch Law Classroom",
+          "year": 1973,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Branded to Kill",
+          "year": 1967,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Violent Virgin",
+          "year": 1969,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Ecstasy of the Angels",
+          "year": 1972,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Go Go Second Time Virgin",
+          "year": 1969,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Funeral Parade of Roses",
+          "year": 1969,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Throw Away Your Books Rally in the Streets",
+          "year": 1971,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Emperor Tomato Ketchup",
+          "year": 1971,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Entrails of a Virgin",
+          "year": 1986,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Wicked City",
+          "year": 1987,
+          "status": "already-present"
+        }
+      ]
+    },
+    {
+      "cluster": "Italian Post-Giallo Exploitation and Video-Nasty Adjacent",
+      "description": "The broader Italian exploitation continuum beyond flagship giallo and a few canonical zombie films.",
+      "films": [
+        {
+          "title": "Burial Ground",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "City of the Living Dead",
+          "year": 1980,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The House by the Cemetery",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Cannibal Holocaust",
+          "year": 1980,
+          "status": "already-present"
+        },
+        {
+          "title": "Cannibal Ferox",
+          "year": 1981,
+          "status": "already-present"
+        },
+        {
+          "title": "Nightmare City",
+          "year": 1980,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Rats Night of Terror",
+          "year": 1984,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "StageFright",
+          "year": 1987,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Demons 2",
+          "year": 1986,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Zombie Holocaust",
+          "year": 1980,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Church",
+          "year": 1989,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "2019 After the Fall of New York",
+          "year": 1983,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Strip Nude for Your Killer",
+          "year": 1975,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Beyond",
+          "year": 1981,
+          "status": "already-present"
+        },
+        {
+          "title": "Tenebre",
+          "year": 1982,
+          "status": "already-present"
+        }
+      ]
+    },
+    {
+      "cluster": "VHS Sword-and-Sorcery and Fantasy Cult",
+      "description": "Rental-era fantasy and sword-and-sorcery films whose cult lives were built in video stores and cable rotation.",
+      "films": [
+        {
+          "title": "Krull",
+          "year": 1983,
+          "status": "already-present"
+        },
+        {
+          "title": "Ladyhawke",
+          "year": 1985,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Beastmaster",
+          "year": 1982,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Hawk the Slayer",
+          "year": 1980,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Sword and the Sorcerer",
+          "year": 1982,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Excalibur",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Conan the Barbarian",
+          "year": 1982,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Red Sonja",
+          "year": 1985,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Masters of the Universe",
+          "year": 1987,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The NeverEnding Story",
+          "year": 1984,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Legend",
+          "year": 1985,
+          "status": "already-present"
+        },
+        {
+          "title": "Willow",
+          "year": 1988,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Dragonslayer",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Fire and Ice",
+          "year": 1983,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Dark Crystal",
+          "year": 1982,
+          "status": "already-present"
+        }
+      ]
+    },
+    {
+      "cluster": "Global Adult Cult Animation and Psychedelic Animation",
+      "description": "Adult-oriented animated cult traditions spanning Europe, Japan, and North America.",
+      "films": [
+        {
+          "title": "Fantastic Planet",
+          "year": 1973,
+          "status": "already-present"
+        },
+        {
+          "title": "Belladonna of Sadness",
+          "year": 1973,
+          "status": "already-present"
+        },
+        {
+          "title": "Heavy Metal",
+          "year": 1981,
+          "status": "already-present"
+        },
+        {
+          "title": "Wizards",
+          "year": 1977,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Rock and Rule",
+          "year": 1983,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Son of the White Mare",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Plague Dogs",
+          "year": 1982,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "When the Wind Blows",
+          "year": 1986,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Felidae",
+          "year": 1994,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "American Pop",
+          "year": 1981,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Tune",
+          "year": 1992,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Perfect Blue",
+          "year": 1997,
+          "status": "already-present"
+        },
+        {
+          "title": "Akira",
+          "year": 1988,
+          "status": "already-present"
+        },
+        {
+          "title": "Ghost in the Shell",
+          "year": 1995,
+          "status": "already-present"
+        },
+        {
+          "title": "Fritz the Cat",
+          "year": 1972,
+          "status": "already-present"
+        }
+      ]
+    },
+    {
+      "cluster": "Mexican Gothic, Lucha, and Borderline Exploitation Cult",
+      "description": "Mexican cult traditions from luchador cinema to gothic/occult regional horror and VHS-era local exploitation.",
+      "films": [
+        {
+          "title": "Santo vs the Vampire Women",
+          "year": 1962,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The World of the Vampires",
+          "year": 1961,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Batwoman",
+          "year": 1968,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Alucarda",
+          "year": 1977,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Cemetery of Terror",
+          "year": 1985,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Grave Robbers",
+          "year": 1989,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Cronos",
+          "year": 1993,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Even the Wind Is Afraid",
+          "year": 1968,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Book of Stone",
+          "year": 1969,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Santa Sangre",
+          "year": 1989,
+          "status": "already-present"
+        },
+        {
+          "title": "Poison for the Fairies",
+          "year": 1986,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Brainiac",
+          "year": 1962,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "Rapiña",
+          "year": 1975,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Invasion of the Dead",
+          "year": 1972,
+          "status": "candidate-addition"
+        },
+        {
+          "title": "The Curse of the Doll People",
+          "year": 1961,
+          "status": "candidate-addition"
+        }
+      ]
+    }
+  ]
+}

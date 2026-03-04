@@ -19,7 +19,7 @@ function parseCliArgs(): CliOptions {
 async function main(): Promise<void> {
   const options = parseCliArgs();
   const prisma = new PrismaClient();
-  const taxonomyVersion = process.env.SEASON2_TAXONOMY_VERSION?.trim() || 'legacy';
+  const taxonomyVersion = process.env.SEASON2_TAXONOMY_VERSION?.trim() || 'season-2-cult-v3';
   const runId = process.env.SEASON2_ASSIGNMENT_RUN_ID?.trim() || `season2-curated-${new Date().toISOString()}`;
 
   try {
@@ -71,8 +71,8 @@ async function main(): Promise<void> {
       },
     });
 
-    if (nodes.length !== 8 && !options.force) {
-      throw new Error(`Expected 8 JourneyNodes for cult-classics, found ${nodes.length}. Use --force to override.`);
+    if (nodes.length === 0 && !options.force) {
+      throw new Error('Expected at least one JourneyNode for cult-classics, found none. Use --force to override.');
     }
 
     const nodeCounts = nodes.map((node) => ({

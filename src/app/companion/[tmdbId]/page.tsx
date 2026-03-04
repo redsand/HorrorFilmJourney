@@ -2,8 +2,13 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { CompanionActions } from '@/components/companion/CompanionActions';
 import { FurtherReadingSection } from '@/components/companion/FurtherReadingSection';
+import { CinematicContextCard } from '@/components/context/CinematicContextCard';
+import { ReasonPanel } from '@/components/context/ReasonPanel';
+import { JourneyMap, NextInJourney } from '@/components/journey';
 import { BottomNav, Card, Chip, LogoutIconButton, PosterImage, RatingBadges } from '@/components/ui';
 import type { ExternalReading } from '@/lib/contracts/companion-contract';
+import type { FilmContextExplanation } from '@/lib/context/build-film-context-explanation';
+import type { SeasonReasonPanel } from '@/lib/context/build-season-reason-panel';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 type MeResponse = {
@@ -64,9 +69,24 @@ type CompanionResponse = {
 
 type NodeMoviesResponse = {
   nodeSlug: string;
-  core: Array<{ tmdbId: number; title: string; year: number | null }>;
-  extended: Array<{ tmdbId: number; title: string; year: number | null }>;
+  core: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
+  extended: Array<{ tmdbId: number; title: string; year: number | null; watchReason?: string }>;
 };
+type FilmContextApiPayload = {
+  context: FilmContextExplanation | null;
+  reasonPanel: SeasonReasonPanel | null;
+};
+type JourneyMapResponse = {
+  seasonSlug: string;
+  packSlug: string;
+  nodes: Array<{ slug: string; name: string; order: number; coreCount?: number; extendedCount?: number }>;
+  progress?: { completedNodeSlugs: string[]; currentNodeSlug?: string };
+};
+type NextInJourneyResponse = {
+  nextCore: Array<{ tmdbId: number; title: string; year: number | null }>;
+  nextExtended: Array<{ tmdbId: number; title: string; year: number | null }>;
+  reason: string;
+} | null;
 
 const spoilerPolicyLabel: Record<SpoilerPolicy, string> = {
   NO_SPOILERS: 'No Spoilers!',
@@ -153,9 +173,24 @@ export default async function CompanionPage({
     payload = response.status === 200 ? response.data : null;
   }
   const primaryNodeSlug = payload?.metadata.nodes?.[0]?.slug ?? '';
-  const nodeMovies = primaryNodeSlug
-    ? (await apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(primaryNodeSlug)}&limit=10`, { method: 'GET' })).data
-    : null;
+  const [nodeMovies, filmContext, journeyMap, nextInJourney] = payload
+    ? await Promise.all([
+      primaryNodeSlug
+        ? apiJson<NodeMoviesResponse>(`/api/journey/node-movies?nodeSlug=${encodeURIComponent(primaryNodeSlug)}&limit=10`, { method: 'GET' })
+        : Promise.resolve({ data: null, error: null, status: 200 }),
+      apiJson<FilmContextApiPayload>(
+        `/api/films/context?tmdbId=${payload.movie.tmdbId}${primaryNodeSlug ? `&nodeSlug=${encodeURIComponent(primaryNodeSlug)}` : ''}`,
+        { method: 'GET' },
+      ),
+      apiJson<JourneyMapResponse>('/api/journey/map', { method: 'GET' }),
+      apiJson<NextInJourneyResponse>(`/api/journey/next-steps?tmdbId=${payload.movie.tmdbId}`, { method: 'GET' }),
+    ])
+    : [
+      { data: null, error: null, status: 200 },
+      { data: null, error: null, status: 200 },
+      { data: null, error: null, status: 200 },
+      { data: null, error: null, status: 200 },
+    ];
 
   const spoilerTabs: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
   const summaryLine = payload ? extractSummaryLine(payload.sections.productionNotes) : null;
@@ -320,27 +355,51 @@ export default async function CompanionPage({
               </div>
 
               <FurtherReadingSection externalReadings={payload.externalReadings} />
+              <CinematicContextCard data={filmContext.data?.context ?? null} />
+              {filmContext.data?.reasonPanel ? (
+                <ReasonPanel {...filmContext.data.reasonPanel} />
+              ) : null}
+              {journeyMap.data && filmContext.data?.context ? (
+                <JourneyMap
+                  baseHref="/journey"
+                  currentNodeSlug={primaryNodeSlug}
+                  data={journeyMap.data}
+                  packSlug={journeyMap.data.packSlug}
+                  seasonSlug={journeyMap.data.seasonSlug}
+                />
+              ) : null}
+              <NextInJourney data={nextInJourney.data} />
 
-              {nodeMovies ? (
+              {nodeMovies.data ? (
                 <div className="space-y-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
                   <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Core Journey</p>
-                  {nodeMovies.core.length > 0 ? (
+                  {nodeMovies.data.core.length > 0 ? (
                     <ul className="space-y-1 text-sm">
-                      {nodeMovies.core.slice(0, 6).map((movie) => (
-                        <li key={`core-${movie.tmdbId}`}>{movie.title} {movie.year ? `(${movie.year})` : ''}</li>
+                      {nodeMovies.data.core.slice(0, 6).map((movie) => (
+                        <li key={`core-${movie.tmdbId}`}>
+                          {movie.title} {movie.year ? `(${movie.year})` : ''}
+                          {movie.watchReason ? (
+                            <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                          ) : null}
+                        </li>
                       ))}
                     </ul>
                   ) : (
                     <p className="text-sm text-[var(--text-muted)]">No core titles available.</p>
                   )}
-                  {nodeMovies.extended.length > 0 ? (
+                  {nodeMovies.data.extended.length > 0 ? (
                     <details className="rounded border border-[var(--border)] px-2 py-1">
                       <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                        Deep Cuts ({nodeMovies.extended.length})
+                        Deep Cuts ({nodeMovies.data.extended.length})
                       </summary>
                       <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
-                        {nodeMovies.extended.slice(0, 6).map((movie) => (
-                          <li key={`extended-${movie.tmdbId}`}>{movie.title} {movie.year ? `(${movie.year})` : ''}</li>
+                        {nodeMovies.data.extended.slice(0, 6).map((movie) => (
+                          <li key={`extended-${movie.tmdbId}`}>
+                            {movie.title} {movie.year ? `(${movie.year})` : ''}
+                            {movie.watchReason ? (
+                              <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                            ) : null}
+                          </li>
                         ))}
                       </ul>
                     </details>
