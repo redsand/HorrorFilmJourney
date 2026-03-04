@@ -1,5 +1,5 @@
 import { computeReceptionCount, type ReceptionRating } from '@/lib/movie/reception';
-import { resolveCanonicalMovieSignals } from '@/lib/movie/canonical-metrics';
+import { resolveCanonicalMovieSignals, type CanonicalRating } from '@/lib/movie/canonical-metrics';
 
 export interface NormalizedSignals {
   voteCount: number;
@@ -40,13 +40,32 @@ function toFiniteOrNull(value: number | null | undefined): number | null {
   return Number.isFinite(value) ? (value as number) : null;
 }
 
+function toCanonicalRatings(ratings: ReceptionRating[] | null | undefined): CanonicalRating[] {
+  if (!Array.isArray(ratings) || ratings.length === 0) {
+    return [];
+  }
+  const canonicalRatings: CanonicalRating[] = [];
+  for (const rating of ratings) {
+    const value = toFiniteOrNull(rating.value);
+    if (value === null) {
+      continue;
+    }
+    canonicalRatings.push({
+      source: rating.source,
+      value,
+      scale: null,
+    });
+  }
+  return canonicalRatings;
+}
+
 export function normalizeMovieSignals(input: NormalizedSignalsInput): NormalizedSignals {
   const canonical = resolveCanonicalMovieSignals({
     runtime: input.runtime ?? input.runtimeMinutes,
     tmdbVoteCount: input.tmdbVoteCount ?? input.voteCount,
     tmdbVoteAverage: input.tmdbVoteAverage ?? input.rating,
     popularity: input.popularity,
-    ratings: input.ratings ?? [],
+    ratings: toCanonicalRatings(input.ratings),
   });
 
   const voteCountRaw = toFiniteOrNull(canonical.tmdbVoteCount ?? input.voteCount);

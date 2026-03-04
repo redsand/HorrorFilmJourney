@@ -1,6 +1,6 @@
-import { computeReceptionCount } from '../movie/reception.ts';
-import { computeCanonicalRuntimeVoteCoverage } from '../movie/canonical-metrics.ts';
-import { computeVoteCountCoverageBreakdown } from '../metrics/catalog-coverage.ts';
+import { computeReceptionCount } from '../movie/reception';
+import { computeCanonicalRuntimeVoteCoverage } from '../movie/canonical-metrics';
+import { computeVoteCountCoverageBreakdown } from '../metrics/catalog-coverage';
 
 export type CoverageGateThresholds = {
   runtimeCoverageMin: number;
