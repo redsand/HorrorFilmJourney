@@ -303,10 +303,11 @@ export default function ProfilePage() {
           </div>
           <div className="space-y-3 border-t border-[var(--border)] pt-4">
             <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Onboarding preferences</p>
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">{packCopy.onboardingIntro}</p>
             <div>
-              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Intensity</p>
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">{packCopy.onboardingIntensityLabel}</p>
               <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
-                Lower values favor atmospheric tension. Higher values allow heavier violence and shock.
+                {packCopy.onboardingIntensityHint}
               </p>
               <div className="grid grid-cols-5 gap-2">
                 {[1, 2, 3, 4, 5].map((value) => (
@@ -327,16 +328,12 @@ export default function ProfilePage() {
               </div>
             </div>
             <div>
-              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">Pace</p>
+              <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">{packCopy.onboardingPaceLabel}</p>
               <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
-                Slowburn builds dread, balanced mixes tension and release, shock emphasizes immediate impact.
+                {packCopy.onboardingPaceHint}
               </p>
               <div className="grid grid-cols-3 gap-2">
-                {([
-                  { id: 'slowburn', label: 'Slowburn' },
-                  { id: 'balanced', label: 'Balanced' },
-                  { id: 'shock', label: 'Shock' },
-                ] as const).map((item) => (
+                {packCopy.onboardingPaceOptions.map((item) => (
                   <button
                     className={`rounded-lg border px-2 py-2 text-center text-sm ${
                       pacePreference === item.id
@@ -355,10 +352,10 @@ export default function ProfilePage() {
             </div>
             <div>
               <p className="mb-2 pt-1 text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                Subgenres (up to {MAX_SELECTED_SUBGENRES})
+                {packCopy.onboardingSubgenreLabel} (up to {MAX_SELECTED_SUBGENRES})
               </p>
               <p className="mb-3 text-xs leading-relaxed text-[var(--text-muted)]">
-                Selected subgenres bias your first recommendations in this season.
+                {packCopy.onboardingSubgenreHint}
               </p>
               {availableSubgenres.length > 0 ? (
                 <div className="grid grid-cols-2 gap-2">

@@ -5,6 +5,7 @@ import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
 import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
 import { getPackSubgenreOptions, MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
+import { getPackCopy } from '@/lib/packs/pack-copy';
 
 type ExperienceResponse = {
   state: 'PACK_SELECTION_NEEDED' | 'ONBOARDING_NEEDED' | 'SHOW_RECOMMENDATION_BUNDLE' | 'SHOW_QUICK_POLL' | 'SHOW_HISTORY';
@@ -277,6 +278,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
     : null;
   const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
   const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
+  const onboardingPackCopy = getPackCopy(onboardingPackSlug);
 
   let recommendations: RecommendationResponse | null = null;
   if (!unauthenticated && (experience?.state === 'SHOW_RECOMMENDATION_BUNDLE' || experience?.state === 'SHOW_QUICK_POLL')) {
@@ -379,7 +381,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
               </div>
             </div>
             <Button className="w-full py-3 text-base" type="submit">
-              Start Horror Season
+              {onboardingPackCopy.startSeasonLabel}
             </Button>
           </form>
         </Card>
@@ -389,13 +391,13 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
         <Card>
           <h2 className="text-lg font-semibold">Onboarding</h2>
           <p className="mt-1 text-sm text-[var(--text-muted)]">
-            Tune your next recommendations with two quick taps.
+            {onboardingPackCopy.onboardingIntro}
           </p>
           <form action={submitOnboarding} className="mt-4 space-y-4">
             <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Intensity</p>
+              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">{onboardingPackCopy.onboardingIntensityLabel}</p>
               <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                Sets how extreme your recommendations get: lower values favor atmospheric tension, higher values allow heavier violence and shock.
+                {onboardingPackCopy.onboardingIntensityHint}
               </p>
               <div className="grid grid-cols-5 gap-2">
                 {[1, 2, 3, 4, 5].map((value) => (
@@ -434,16 +436,12 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
               ) : null}
             </div>
             <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Pace</p>
+              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">{onboardingPackCopy.onboardingPaceLabel}</p>
               <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                Controls story rhythm: slowburn builds dread, balanced mixes tension and release, shock emphasizes immediate high-impact moments.
+                {onboardingPackCopy.onboardingPaceHint}
               </p>
               <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: 'slowburn', label: 'Slowburn' },
-                  { id: 'balanced', label: 'Balanced' },
-                  { id: 'shock', label: 'Shock' },
-                ].map((item) => (
+                {onboardingPackCopy.onboardingPaceOptions.map((item) => (
                   <label key={item.id} className="cursor-pointer">
                     <input className="peer sr-only" type="radio" name="pacePreference" value={item.id} defaultChecked={item.id === 'balanced'} />
                     <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
@@ -455,10 +453,10 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
             </div>
             <div>
               <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                Subgenres (choose up to {MAX_SELECTED_SUBGENRES})
+                {onboardingPackCopy.onboardingSubgenreLabel} (choose up to {MAX_SELECTED_SUBGENRES})
               </p>
               <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                We start with your chosen niches, then broaden based on feedback.
+                {onboardingPackCopy.onboardingSubgenreHint}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {onboardingSubgenres.map((subgenre, index) => (

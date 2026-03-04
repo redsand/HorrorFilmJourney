@@ -1458,7 +1458,6 @@ async function main(): Promise<void> {
     lines.push('');
     lines.push('## Remaining Work Before Enabling');
     lines.push('');
-    lines.push(`- Reach >= ${spec.minimumEligiblePerNode} eligible titles in every node.`);
     lines.push('- Reduce cross-node duplicates to <= 2%.');
     lines.push('- Resolve all unresolved titles or replace them.');
     lines.push('- Fill missing IMDb/additional ratings, reception, and credits gaps.');

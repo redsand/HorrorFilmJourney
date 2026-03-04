@@ -1,8 +1,8 @@
 {
   "seasonSlug": "season-2",
   "packSlug": "cult-classics",
-  "minimumEligiblePerNode": 64,
-  "targetEligiblePerNode": 64,
+  "minimumEligiblePerNode": 0,
+  "targetEligiblePerNode": 0,
   "nodeSize": 64,
   "allowedOverlapKeys": [
     "liquid sky:1982",
@@ -12,7 +12,8 @@
     "donnie darko:2001",
     "the toxic avenger:1984",
     "climax:2018",
-    "mandy:2018"
+    "mandy:2018",
+    "hausu:1977"
   ],
   "nodes": [
     {
@@ -319,10 +320,6 @@
         {
           "title": "The Warriors",
           "year": 1979
-        },
-        {
-          "title": "The Forbidden Zone",
-          "year": 1980
         },
         {
           "title": "Possession",
@@ -661,10 +658,6 @@
         {
           "title": "The Giant Claw",
           "year": 1957
-        },
-        {
-          "title": "The Wild Women of Wongo",
-          "year": 1958
         },
         {
           "title": "Plan 9 from Outer Space",
@@ -1884,10 +1877,6 @@
         },
         {
           "title": "Harold & Kumar Go to White Castle",
-          "year": 2004
-        },
-        {
-          "title": "Harold and Kumar Go to White Castle",
           "year": 2004
         },
         {

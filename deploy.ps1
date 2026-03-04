@@ -15,7 +15,9 @@ param(
   [string]$LetsEncryptEmail = ""
   ,
   [string]$Season2MasteredFile = "",
-  [switch]$ImportSeason2Mastered
+  [switch]$ImportSeason2Mastered,
+  [switch]$UpdateSeasons,
+  [switch]$PublishSeason2
 )
 
 $ErrorActionPreference = "Stop"
@@ -126,6 +128,12 @@ if ($ImportSeason2Mastered.IsPresent) {
   Exec-OrThrow "scp -i `"$resolvedKey`" `"$Season2MasteredFile`" ${User}@${HostName}:$season2RemotePath"
   Write-Host "Importing Season 2 mastered file on remote"
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season2:cult -- --input $season2RemotePath`""
+}
+
+if ($UpdateSeasons.IsPresent) {
+  Write-Host "Running season update pipeline on remote"
+  $publishFlag = if ($PublishSeason2.IsPresent) { "PUBLISH_SEASON2_ON_UPDATE=true" } else { "PUBLISH_SEASON2_ON_UPDATE=false" }
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; $publishFlag npm run update:seasons`""
 }
 
 Write-Host "Cleaning local archive"

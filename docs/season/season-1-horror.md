@@ -4,7 +4,7 @@
 
 Season 1 is a guided horror canon: users progress from foundations to contemporary forms while learning how craft, subgenre, and audience expectations evolved. The promise is intentional progression, not random picks.
 
-## Node map (8 units)
+## Node map (10 units)
 
 ### 1) Foundations: Silent and Early Horror
 - Learning objective: recognize the visual grammar that shaped modern horror language.
@@ -78,6 +78,24 @@ Season 1 is a guided horror canon: users progress from foundations to contempora
 - Era/subgenre focus: 2010s-2020s, psychological/social/supernatural.
 - Default spoiler policy: `NO_SPOILERS`.
 
+### 9) Zombie and Infection Nightmares
+- Learning objective: track contagion storytelling and social-collapse pressure.
+- What you'll notice:
+  - outbreak escalation rhythms
+  - group dynamics under survival stress
+  - infection-rule storytelling
+- Era/subgenre focus: 1960s-2010s, zombie and infection survival horror.
+- Default spoiler policy: `NO_SPOILERS`.
+
+### 10) Hauntings and Cursed Objects
+- Learning objective: identify ghost-story structure and curse-logic patterns.
+- What you'll notice:
+  - haunting escalation beats
+  - curse rules and payoffs
+  - sound/silence contrast for dread
+- Era/subgenre focus: 1970s-2020s, supernatural, occult, gothic, urban legend.
+- Default spoiler policy: `NO_SPOILERS`.
+
 ## Curation constraints
 
 - Each node targets 8-15 core titles.
@@ -89,3 +107,9 @@ Season 1 is a guided horror canon: users progress from foundations to contempora
 - Recommendation engine behavior in Season 1:
   - pull from current node list first
   - top up from pack-level horror pool only when node inventory is exhausted
+
+## Subgenre source of truth
+
+- Required subgenre baseline list: `docs/season/season-1-horror-subgenre-curriculum.json`
+- Seed command: `npm run seed:season1:subgenres`
+- Readiness output: `docs/season/season-1-horror-subgenre-readiness.md`

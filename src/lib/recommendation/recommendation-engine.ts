@@ -444,6 +444,30 @@ function resolvePackSubgenrePreferences(horrorDna: unknown, packId: string | nul
     .filter((value) => value.length > 0))];
 }
 
+const HORROR_SUBGENRE_PREFERENCE_ALIASES: Record<string, string[]> = {
+  supernatural: ['supernatural', 'occult', 'paranormal', 'demonic', 'haunting', 'ghost'],
+  'psychological': ['psychological', 'paranoia', 'surreal', 'lynchian', 'existential'],
+  'slasher-serial-killer': ['slasher', 'serial-killer', 'stalker', 'masked-killer', 'home-invasion'],
+  'creature-monster': ['monster', 'creature-feature', 'animal-attack', 'cryptid', 'kaiju'],
+  'body-horror': ['body-horror', 'mutation', 'infection', 'parasite', 'medical'],
+  'cosmic-horror': ['cosmic-horror', 'eldritch', 'forbidden-knowledge', 'reality-breakdown'],
+  'folk-horror': ['folk-horror', 'pagan', 'rural', 'village-cult', 'mythic-folklore'],
+  'sci-fi-horror': ['sci-fi', 'sci-fi-horror', 'space-horror', 'alien', 'tech-horror', 'ai-horror'],
+  'found-footage': ['found-footage', 'mockumentary', 'screenlife', 'analog-horror', 'surveillance'],
+  'survival-horror': ['survival', 'wilderness', 'siege', 'escape', 'island'],
+  'apocalyptic-horror': ['apocalyptic-horror', 'zombie-apocalypse', 'viral-apocalypse', 'end-of-world'],
+  'gothic-horror': ['gothic', 'gothic-horror', 'victorian', 'haunted-castle'],
+  'horror-comedy': ['horror-comedy', 'parody', 'satire', 'absurdist', 'dark-comedy'],
+  'splatter-extreme': ['splatter', 'gore', 'extreme', 'torture', 'transgressive'],
+  'social-domestic-horror': ['social-horror', 'domestic-horror', 'social-thriller', 'family-trauma', 'class-horror'],
+  'experimental-horror': ['experimental-horror', 'surreal', 'dream-logic', 'lost-media'],
+};
+
+function expandHorrorSubgenrePreference(value: string): string[] {
+  const normalized = value.trim().toLowerCase();
+  return HORROR_SUBGENRE_PREFERENCE_ALIASES[normalized] ?? [normalized];
+}
+
 type UserTasteProfileLike = {
   intensityPreference: number;
   pacingPreference: number;
@@ -994,11 +1018,14 @@ export class HeuristicRerankerV1 implements Reranker {
       const tolerancePenalty = typeof profile?.tolerance === 'number' && profile.tolerance <= 2
         ? (genres.includes('body-horror') ? -0.2 : 0)
         : 0;
-      const preferredSubgenreMatches = preferredSubgenres.length > 0
-        ? preferredSubgenres.filter((subgenre) => genres.includes(subgenre)).length
+      const matchedPreferences = preferredSubgenres.length > 0
+        ? preferredSubgenres.filter((subgenre) => {
+          const aliases = expandHorrorSubgenrePreference(subgenre);
+          return aliases.some((alias) => genres.includes(alias));
+        }).length
         : 0;
       const preferredSubgenreScore = preferredSubgenres.length > 0
-        ? (preferredSubgenreMatches / preferredSubgenres.length) * 0.5
+        ? (matchedPreferences / preferredSubgenres.length) * 0.5
         : 0;
       const paceTarget = profile?.pacePreference === 'slowburn'
         ? 0.25

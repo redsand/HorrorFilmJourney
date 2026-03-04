@@ -79,3 +79,22 @@ Use this when promoting a curated Season 2 dataset from local to production.
    - `ssh -i ~/.ssh/djvalet.key root@cinemacodex.com "set -a; . /opt/cinemacodex/shared/.env; set +a; cd /opt/cinemacodex/current; npm run import:season2:cult -- --input /opt/cinemacodex/shared/backups/season-2-cult-classics-mastered.json"`
 4. Optional activation after import:
    - `ssh -i ~/.ssh/djvalet.key root@cinemacodex.com "set -a; . /opt/cinemacodex/shared/.env; set +a; cd /opt/cinemacodex/current; npm run publish:season2 -- --apply"`
+
+## 7) Season updates (Season 1 + Season 2)
+
+Use this after deployment to refresh both season datasets consistently.
+
+1. Local/remote command:
+   - `npm run update:seasons`
+2. Publish Season 2 during update (optional):
+   - `PUBLISH_SEASON2_ON_UPDATE=true npm run update:seasons`
+3. Via deploy helper (runs remotely after code deploy):
+   - `.\deploy.ps1 -HostName cinemacodex.com -User root -KeyPath ~/.ssh/djvalet.key -EnvFile .\.env.production -UpdateSeasons`
+4. Via deploy helper and publish Season 2:
+   - `.\deploy.ps1 -HostName cinemacodex.com -User root -KeyPath ~/.ssh/djvalet.key -EnvFile .\.env.production -UpdateSeasons -PublishSeason2`
+
+Notes:
+- `update:seasons` runs:
+  - `seed:season1:subgenres`
+  - `seed:season2:cult`
+  - `publish:season2` (dry run by default, apply when `PUBLISH_SEASON2_ON_UPDATE=true`)

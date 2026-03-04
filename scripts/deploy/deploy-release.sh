@@ -34,9 +34,17 @@ fi
 
 npx prisma generate
 npx prisma migrate deploy
+if [[ "${SEED_SEASON1_SUBGENRES_ON_DEPLOY:-false}" == "true" ]]; then
+  echo "Seeding Season 1 required subgenre curriculum..."
+  npm run seed:season1:subgenres
+fi
 if [[ "${SEED_SEASON2_CULT_ON_DEPLOY:-false}" == "true" ]]; then
   echo "Seeding Season 2 Cult Classics curriculum..."
   npm run seed:season2:cult
+fi
+if [[ "${PUBLISH_SEASON2_ON_DEPLOY:-false}" == "true" ]]; then
+  echo "Publishing Season 2 (apply)..."
+  npm run publish:season2 -- --apply
 fi
 npm run build
 

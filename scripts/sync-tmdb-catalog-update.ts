@@ -12,7 +12,7 @@ type TmdbMovieDetails = {
   popularity?: number;
 };
 
-const DEFAULT_GENRES = [27, 53, 9648]; // horror, thriller, mystery
+const DEFAULT_GENRES = [27, 53, 9648, 878, 14, 18, 35, 12]; // broaden horror-adjacent discovery
 const DEFAULT_CONCURRENCY = 8;
 const DEFAULT_MAX_SCAN_IDS = 5000;
 const FETCH_TIMEOUT_MS = 12_000;
@@ -24,6 +24,10 @@ const GENRE_NAME_BY_ID: Record<number, string> = {
   14: 'fantasy',
   878: 'sci-fi',
   80: 'crime',
+  18: 'drama',
+  35: 'comedy',
+  12: 'adventure',
+  16: 'animation',
 };
 
 function parseIntEnv(name: string, fallback: number): number {
@@ -113,7 +117,30 @@ function toGenres(genreIds: number[]): string[] {
   const mapped = genreIds
     .map((id) => GENRE_NAME_BY_ID[id])
     .filter((value): value is string => typeof value === 'string');
-  return mapped.length > 0 ? [...new Set(mapped)] : ['horror'];
+  const derived = new Set(mapped.length > 0 ? mapped : ['horror']);
+  if (genreIds.includes(878)) {
+    derived.add('sci-fi-horror');
+  }
+  if (genreIds.includes(53) || genreIds.includes(9648)) {
+    derived.add('psychological');
+  }
+  if (genreIds.includes(35)) {
+    derived.add('horror-comedy');
+  }
+  if (genreIds.includes(18)) {
+    derived.add('social-domestic-horror');
+  }
+  return [...derived];
+}
+
+function parseJsonStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .filter((entry): entry is string => typeof entry === 'string')
+    .map((entry) => entry.trim().toLowerCase())
+    .filter((entry) => entry.length > 0);
 }
 
 function matchesGenreFilter(movie: TmdbMovieDetails, allowGenreIds: number[]): boolean {
@@ -240,6 +267,12 @@ async function main(): Promise<void> {
 
         const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
         const genreIds = toGenreIds(movie);
+        const existing = await prisma.movie.findUnique({
+          where: { tmdbId: movie.id },
+          select: { genres: true },
+        });
+        const existingGenres = parseJsonStringArray(existing?.genres);
+        const mergedGenres = [...new Set([...existingGenres, ...toGenres(genreIds)])];
 
         const persisted = await prisma.movie.upsert({
           where: { tmdbId: movie.id },
@@ -249,14 +282,14 @@ async function main(): Promise<void> {
             year: toYear(movie.release_date),
             posterUrl,
             posterLastValidatedAt: new Date(),
-            genres: toGenres(genreIds),
+            genres: mergedGenres,
           },
           update: {
             title: movie.title.trim(),
             year: toYear(movie.release_date),
             posterUrl,
             posterLastValidatedAt: new Date(),
-            genres: toGenres(genreIds),
+            genres: mergedGenres,
           },
           select: { id: true },
         });
