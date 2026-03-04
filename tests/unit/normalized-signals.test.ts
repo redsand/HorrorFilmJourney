@@ -78,4 +78,21 @@ describe('normalizeMovieSignals', () => {
     });
     expect(result.receptionCount).toBe(3);
   });
+
+  it('prefers canonical DB fields over legacy aliases', () => {
+    const result = normalizeMovieSignals({
+      tmdbVoteCount: 1000,
+      voteCount: 50,
+      tmdbVoteAverage: 8,
+      rating: 3,
+      popularity: 40,
+      runtime: 120,
+      runtimeMinutes: 60,
+    });
+
+    expect(result.voteCount).toBe(3.000434);
+    expect(result.rating).toBe(0.8);
+    expect(result.popularity).toBe(0.4);
+    expect(result.runtime).toBe(1);
+  });
 });

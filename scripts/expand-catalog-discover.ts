@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { ensureLocalDatabaseOrThrow, parseOption } from './catalog-release-utils';
 import {
   parseCastTop,
@@ -50,11 +52,14 @@ type Counters = {
   pagesFetched: number;
   discoverMoviesSeen: number;
   uniqueTmdbIdsFromDiscover: number;
+  minimalUpsertedMovies: number;
+  minimalSkippedNoTitle: number;
+  minimalSkippedNoPoster: number;
   detailsFetched: number;
-  upsertedMovies: number;
+  enrichedMovies: number;
   upsertedRatings: number;
-  skippedNoTitle: number;
-  skippedNoPoster: number;
+  enrichSkippedNoTitle: number;
+  enrichSkippedNoPoster: number;
 };
 
 const FETCH_TIMEOUT_MS = 12_000;
@@ -146,21 +151,27 @@ async function main(): Promise<void> {
   const startPage = parseIntOption(parseOption(process.argv.slice(2), '--startPage'), DEFAULT_START_PAGE);
   const maxPages = Math.min(parseIntOption(parseOption(process.argv.slice(2), '--maxPages'), DEFAULT_MAX_PAGES), 2000);
   const dryRun = process.argv.includes('--dryRun');
+  const outputDir = parseOption(process.argv.slice(2), '--outputDir')
+    ?? resolve('artifacts/catalog-expansion', new Date().toISOString().replace(/[:.]/g, '-'));
 
   const prisma = new PrismaClient();
   const counters: Counters = {
     pagesFetched: 0,
     discoverMoviesSeen: 0,
     uniqueTmdbIdsFromDiscover: 0,
+    minimalUpsertedMovies: 0,
+    minimalSkippedNoTitle: 0,
+    minimalSkippedNoPoster: 0,
     detailsFetched: 0,
-    upsertedMovies: 0,
+    enrichedMovies: 0,
     upsertedRatings: 0,
-    skippedNoTitle: 0,
-    skippedNoPoster: 0,
+    enrichSkippedNoTitle: 0,
+    enrichSkippedNoPoster: 0,
   };
 
   try {
-    const seenTmdbIds = new Set<number>();
+    await mkdir(outputDir, { recursive: true });
+    const discoverByTmdbId = new Map<number, TmdbDiscoverMovie>();
     let hardStopPage = startPage + maxPages - 1;
 
     for (let page = startPage; page <= hardStopPage; page += 1) {
@@ -185,26 +196,85 @@ async function main(): Promise<void> {
 
       for (const movie of results) {
         const tmdbId = movie.id;
-        if (!tmdbId || !Number.isInteger(tmdbId) || tmdbId <= 0 || seenTmdbIds.has(tmdbId)) {
+        if (!tmdbId || !Number.isInteger(tmdbId) || tmdbId <= 0 || discoverByTmdbId.has(tmdbId)) {
           continue;
         }
-        seenTmdbIds.add(tmdbId);
+        discoverByTmdbId.set(tmdbId, movie);
         counters.uniqueTmdbIdsFromDiscover += 1;
       }
     }
 
-    for (const tmdbId of [...seenTmdbIds].sort((a, b) => a - b)) {
+    // Phase 1: Store minimal records from discover results.
+    const sortedTmdbIds = [...discoverByTmdbId.keys()].sort((a, b) => a - b);
+    if (!dryRun) {
+      for (const tmdbId of sortedTmdbIds) {
+        const discover = discoverByTmdbId.get(tmdbId);
+        if (!discover) continue;
+        const title = discover.title?.trim();
+        if (!title) {
+          counters.minimalSkippedNoTitle += 1;
+          continue;
+        }
+        const posterPath = discover.poster_path?.trim();
+        if (!posterPath) {
+          counters.minimalSkippedNoPoster += 1;
+          continue;
+        }
+        const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+        const incomingGenres = toGenreNames(discover.genre_ids ?? []);
+
+        // eslint-disable-next-line no-await-in-loop
+        const existing = await prisma.movie.findUnique({
+          where: { tmdbId },
+          select: { genres: true, synopsis: true, country: true, director: true, castTop: true, keywords: true },
+        });
+        const mergedGenres = [...new Set([...parseJsonStringArray(existing?.genres), ...incomingGenres])];
+        const synopsis = (existing?.synopsis && existing.synopsis.trim().length > 0)
+          ? existing.synopsis
+          : `${title} (${toYear(discover.release_date) ?? 'n/a'})`;
+
+        // eslint-disable-next-line no-await-in-loop
+        await prisma.movie.upsert({
+          where: { tmdbId },
+          create: {
+            tmdbId,
+            title,
+            year: toYear(discover.release_date),
+            synopsis,
+            posterUrl,
+            posterLastValidatedAt: new Date(),
+            genres: mergedGenres,
+            keywords: parseKeywords({ keywords: { keywords: [] } }),
+            country: existing?.country ?? 'Unknown',
+            director: existing?.director ?? null,
+            castTop: existing?.castTop ?? [],
+          },
+          update: {
+            title,
+            year: toYear(discover.release_date),
+            synopsis,
+            posterUrl,
+            posterLastValidatedAt: new Date(),
+            genres: mergedGenres,
+          },
+        });
+        counters.minimalUpsertedMovies += 1;
+      }
+    }
+
+    // Phase 2: Enrich records via detail fetch.
+    for (const tmdbId of sortedTmdbIds) {
       // eslint-disable-next-line no-await-in-loop
       const details = await fetchMovieDetails(apiKey, tmdbId);
       counters.detailsFetched += 1;
       if (!details?.id || !details.title || details.title.trim().length === 0) {
-        counters.skippedNoTitle += 1;
+        counters.enrichSkippedNoTitle += 1;
         continue;
       }
 
       const posterPath = details.poster_path?.trim();
       if (!posterPath) {
-        counters.skippedNoPoster += 1;
+        counters.enrichSkippedNoPoster += 1;
         continue;
       }
       const title = details.title.trim();
@@ -262,7 +332,7 @@ async function main(): Promise<void> {
         },
         select: { id: true },
       });
-      counters.upsertedMovies += 1;
+      counters.enrichedMovies += 1;
 
       const imdb = imdbApprox(details.vote_average);
       const tmdb = imdbApprox(details.vote_average);
@@ -324,13 +394,15 @@ async function main(): Promise<void> {
     }
 
     const movieCount = dryRun ? null : await prisma.movie.count();
-    console.log(JSON.stringify({
+    const summary = {
       generatedAt: new Date().toISOString(),
-      options: { startPage, maxPages, dryRun },
+      options: { startPage, maxPages, dryRun, outputDir },
       counters,
       dbMovieCount: movieCount,
       note: 'No Season 1 assignment operations are performed by this script.',
-    }, null, 2));
+    };
+    await writeFile(resolve(outputDir, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+    console.log(JSON.stringify(summary, null, 2));
   } finally {
     await prisma.$disconnect();
   }

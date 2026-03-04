@@ -49,4 +49,21 @@ describe('journey worthiness', () => {
     expect(defaultSeason.reasons).not.toContain('low_vote_count');
     expect(defaultSeason.score).toBeCloseTo(season1.score, 6);
   });
+
+  it('uses canonical runtime/tmdb vote fields when provided', () => {
+    const candidate: JourneyWorthinessMovieInput = {
+      ...fixture.high_quality,
+      runtime: 98,
+      runtimeMinutes: 10,
+      tmdbVoteCount: 9000,
+      voteCount: 10,
+      tmdbVoteAverage: 7.6,
+      ratings: [{ source: 'TMDB', value: 2.1, scale: '10' }],
+    };
+
+    const result = computeJourneyWorthiness(candidate, 'season-1', { nowYear: 2026 });
+    expect(result.reasons).not.toContain('runtime_outlier');
+    expect(result.reasons).not.toContain('low_vote_count');
+    expect(result.evidence.normalizedRating).toBeCloseTo(0.76, 6);
+  });
 });

@@ -16,6 +16,7 @@ import {
 } from '../src/lib/audit/season1-node-audit.ts';
 import { TMDB_GENRE_NAME_BY_ID, TMDB_HORROR_GENRE_ID } from '../src/lib/tmdb/tmdb-normalization.ts';
 import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
+import { resolveCanonicalMovieSignals } from '../src/lib/movie/canonical-metrics.ts';
 
 type CurriculumSpec = {
   seasonSlug: string;
@@ -107,23 +108,22 @@ function parseCastNames(value: unknown): string[] {
 }
 
 function getPopularity(ratings: CoverageMovie['ratings']): number {
-  return ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
+  return resolveCanonicalMovieSignals({ ratings }).popularity ?? 0;
 }
 
 function getVoteCount(ratings: CoverageMovie['ratings']): number {
-  return (
-    ratings.find((rating) => rating.source === 'TMDB_VOTE_COUNT')?.value
-    ?? ratings.find((rating) => rating.source === 'TMDB_VOTES')?.value
-    ?? 0
-  );
+  return resolveCanonicalMovieSignals({ ratings }).tmdbVoteCount ?? 0;
 }
 
 function toJourneyWorthinessInput(movie: CoverageMovie): JourneyWorthinessMovieInput {
+  const canonical = resolveCanonicalMovieSignals({ ratings: movie.ratings });
   return {
     year: movie.year,
-    runtimeMinutes: null,
-    popularity: getPopularity(movie.ratings),
-    voteCount: getVoteCount(movie.ratings),
+    runtime: canonical.runtime,
+    runtimeMinutes: canonical.runtime,
+    tmdbVoteCount: canonical.tmdbVoteCount,
+    tmdbVoteAverage: canonical.tmdbVoteAverage,
+    popularity: canonical.popularity,
     posterUrl: movie.posterUrl,
     synopsis: movie.synopsis,
     director: movie.director,
