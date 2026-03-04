@@ -24,7 +24,7 @@ describe('Season 2 required title and animation guards', () => {
     expect(titles.has(normalize('Pulp Fiction'))).toBe(true);
   });
 
-  it('excludes known animated titles from the curated source list', () => {
+  it('includes canonical cult animation while excluding mainstream animation outliers', () => {
     const spec = loadSpec();
     const titles = new Set(
       spec.nodes.flatMap((node) => node.titles.map((entry) => normalize(entry.title))),
@@ -32,9 +32,13 @@ describe('Season 2 required title and animation guards', () => {
     [
       'Akira',
       'Fantastic Planet',
-      'Wizards',
       'Heavy Metal',
+    ].forEach((required) => {
+      expect(titles.has(normalize(required))).toBe(true);
+    });
+    [
       'Who Framed Roger Rabbit',
+      'Toy Story',
     ].forEach((forbidden) => {
       expect(titles.has(normalize(forbidden))).toBe(false);
     });

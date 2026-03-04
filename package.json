@@ -43,6 +43,7 @@
     "sync:tmdb:update": "node --experimental-strip-types scripts/sync-tmdb-catalog-update.ts",
     "expand:catalog:discover": "tsx scripts/expand-catalog-discover.ts",
     "smoke:prod": "node --experimental-strip-types scripts/smoke-prod.ts",
+    "check:season1:health": "node --experimental-strip-types scripts/check-season1-health.ts",
     "eval:recs:offline": "node --experimental-strip-types scripts/eval-recommendations.ts",
     "audit:cult:controls": "node --experimental-strip-types scripts/audit-cult-controls.ts",
     "audit:season1:nodes": "tsx scripts/audit-season1-node-population.ts",
