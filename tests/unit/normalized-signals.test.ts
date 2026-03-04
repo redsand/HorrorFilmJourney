@@ -17,6 +17,7 @@ describe('normalizeMovieSignals', () => {
       rating: 0.75,
       popularity: 0.8,
       runtime: 0.833333,
+      receptionCount: 0,
       ratingsConfidence: 0.9,
       metadataCompleteness: 0.8,
       confidenceScore: 0.7525,
@@ -35,6 +36,7 @@ describe('normalizeMovieSignals', () => {
     expect(result.rating).toBe(0);
     expect(result.popularity).toBe(0.4);
     expect(result.runtime).toBe(0);
+    expect(result.receptionCount).toBe(0);
     expect(result.ratingsConfidence).toBe(0);
     expect(result.metadataCompleteness).toBe(0.25);
     expect(result.confidenceScore).toBe(0.05);
@@ -54,8 +56,26 @@ describe('normalizeMovieSignals', () => {
     expect(result.rating).toBe(1);
     expect(result.popularity).toBe(1);
     expect(result.runtime).toBe(1);
+    expect(result.receptionCount).toBe(0);
     expect(result.ratingsConfidence).toBe(1);
     expect(result.metadataCompleteness).toBe(0);
     expect(result.confidenceScore).toBe(0.5);
+  });
+
+  it('derives receptionCount from distinct non-null rating sources', () => {
+    const result = normalizeMovieSignals({
+      voteCount: 12000,
+      rating: 7.2,
+      popularity: 55,
+      runtimeMinutes: 102,
+      ratings: [
+        { source: 'IMDB', value: 7.2 },
+        { source: 'TMDB', value: 7.1 },
+        { source: 'ROTTEN_TOMATOES', value: 81 },
+        { source: 'TMDB_POPULARITY', value: 55 }, // excluded from reception sources
+        { source: 'IMDB', value: 7.2 }, // duplicate source
+      ],
+    });
+    expect(result.receptionCount).toBe(3);
   });
 });

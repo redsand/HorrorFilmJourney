@@ -1,4 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
+import { buildTmdbMovieDetailsUrl } from './request-builders';
+import { parseCastTop, parseDirector, type TmdbCredits } from './tmdb-normalization';
+import { mergeCreditsWithGuard } from './credits-guard';
 
 type TmdbDiscoverMovie = {
   id: number;
@@ -13,6 +16,10 @@ type TmdbDiscoverMovie = {
 
 type TmdbDiscoverResponse = {
   results?: TmdbDiscoverMovie[];
+};
+
+type TmdbMovieDetails = {
+  credits?: TmdbCredits;
 };
 
 const GENRE_NAME_BY_ID: Record<number, string> = {
@@ -150,6 +157,36 @@ export async function syncTmdbHorrorCandidates(prisma: PrismaClient): Promise<vo
         }
 
         const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+        const existing = await prisma.movie.findUnique({
+          where: { tmdbId },
+          select: { director: true, castTop: true },
+        });
+
+        let details: TmdbMovieDetails | null = null;
+        try {
+          const detailsUrl = buildTmdbMovieDetailsUrl({
+            tmdbId,
+            apiKey,
+            appendToResponse: 'credits',
+          });
+          const detailsResponse = await fetch(detailsUrl.toString(), {
+            method: 'GET',
+            signal: AbortSignal.timeout(TMDB_FETCH_TIMEOUT_MS),
+          });
+          if (detailsResponse.ok) {
+            details = await detailsResponse.json() as TmdbMovieDetails;
+          }
+        } catch {
+          details = null;
+        }
+
+        const mergedCredits = mergeCreditsWithGuard({
+          existingDirector: existing?.director,
+          existingCastTop: existing?.castTop,
+          incomingDirector: parseDirector(details?.credits),
+          incomingCastTop: parseCastTop(details?.credits, 8),
+        });
+
         const persisted = await prisma.movie.upsert({
           where: { tmdbId },
           create: {
@@ -159,6 +196,8 @@ export async function syncTmdbHorrorCandidates(prisma: PrismaClient): Promise<vo
             posterUrl,
             posterLastValidatedAt: new Date(),
             genres: toGenres(movie.genre_ids),
+            director: mergedCredits.director,
+            castTop: mergedCredits.castTop,
           },
           update: {
             title,
@@ -166,6 +205,8 @@ export async function syncTmdbHorrorCandidates(prisma: PrismaClient): Promise<vo
             posterUrl,
             posterLastValidatedAt: new Date(),
             genres: toGenres(movie.genre_ids),
+            director: mergedCredits.director,
+            castTop: mergedCredits.castTop,
           },
           select: { id: true },
         });

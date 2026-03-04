@@ -1,6 +1,10 @@
 import type { JourneyWorthinessConfig } from '@/lib/journey/journeyWorthiness';
 
 export const SEASON_1_JOURNEY_WORTHINESS_CONFIG: JourneyWorthinessConfig = {
+  gates: {
+    journeyMinCore: 0.6,
+    journeyMinExtended: 0.5,
+  },
   thresholds: {
     minVoteCount: 3500,
     minPopularity: 20,
@@ -19,4 +23,3 @@ export const SEASON_1_JOURNEY_WORTHINESS_CONFIG: JourneyWorthinessConfig = {
     runtimeYearSanity: 0.05,
   },
 };
-

@@ -153,6 +153,27 @@ const TARGETED_RECALL_LF_RULES: Record<string, TargetedKeywordRule[]> = {
       baseConfidence: 0.64,
     },
   ],
+  'social-domestic-horror': [
+    {
+      lfName: 'LF_social_horror_patterns',
+      keywords: ['social thriller', 'class horror', 'family trauma', 'domestic horror', 'racial paranoia', 'suburban'],
+      baseConfidence: 0.65,
+    },
+  ],
+  'supernatural-horror': [
+    {
+      lfName: 'LF_supernatural_franchise_patterns',
+      keywords: ['conjuring', 'insidious', 'paranormal', 'haunting', 'possession', 'exorcism'],
+      baseConfidence: 0.65,
+    },
+  ],
+  'slasher-serial-killer': [
+    {
+      lfName: 'LF_slasher_franchise_patterns',
+      keywords: ['ghostface', 'final girl', 'masked killer', 'slasher', 'stalker'],
+      baseConfidence: 0.65,
+    },
+  ],
 };
 
 function createTargetedKeywordLf(nodeSlug: string, rule: TargetedKeywordRule): LabelingFunction {

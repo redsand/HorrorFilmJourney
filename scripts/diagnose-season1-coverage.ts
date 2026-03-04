@@ -418,6 +418,10 @@ async function main(): Promise<void> {
       tier: row.tier,
       finalScore: row.finalScore,
     }));
+    const coreUniqueMovieIds = new Set(tieredRows.filter((row) => row.tier === 'CORE').map((row) => row.movieId));
+    const extendedUniqueMovieIds = new Set(tieredRows.filter((row) => row.tier === 'EXTENDED').map((row) => row.movieId));
+    const extendedUniqueOnlyMovieIds = new Set([...extendedUniqueMovieIds].filter((id) => !coreUniqueMovieIds.has(id)));
+    const totalUniqueMovieIds = new Set([...coreUniqueMovieIds, ...extendedUniqueMovieIds]);
 
     const totalCatalog = movies.length;
     const withTmdbId = movies.filter((movie) => movie.tmdbId > 0);
@@ -615,6 +619,11 @@ async function main(): Promise<void> {
           uniqueMovies: selectedSnapshotMovieIds.size,
         }
         : null,
+      snapshotTierUniques: {
+        coreUnique: coreUniqueMovieIds.size,
+        extendedUniqueOnly: extendedUniqueOnlyMovieIds.size,
+        totalUnique: totalUniqueMovieIds.size,
+      },
       funnel,
       journeyWorthinessDiagnosticPass,
       journeyWorthinessSelectionGatePass,

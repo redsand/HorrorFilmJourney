@@ -15,6 +15,9 @@ export type SeasonNodeGovernanceConfig = {
     threshold: number;
     qualityFloor: number;
     coreThreshold: number;
+    coreMinScoreAbsolute: number;
+    corePickPercentile: number;
+    coreMaxPerNode: number;
     targetSize: number;
     minEligible: number;
     maxNodesPerMovie: number;
@@ -24,6 +27,9 @@ export type SeasonNodeGovernanceConfig = {
     threshold?: number;
     qualityFloor?: number;
     coreThreshold?: number;
+    coreMinScoreAbsolute?: number;
+    corePickPercentile?: number;
+    coreMaxPerNode?: number;
     targetSize?: number;
     minEligible?: number;
     maxExtendedPerNode?: number | null;
@@ -95,6 +101,18 @@ export function resolvePerNodeCoreThreshold(config: SeasonNodeGovernanceConfig, 
   return config.nodes[nodeSlug]?.coreThreshold ?? config.defaults.coreThreshold;
 }
 
+export function resolvePerNodeCoreMinScoreAbsolute(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
+  return config.nodes[nodeSlug]?.coreMinScoreAbsolute ?? config.defaults.coreMinScoreAbsolute;
+}
+
+export function resolvePerNodeCorePickPercentile(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
+  return config.nodes[nodeSlug]?.corePickPercentile ?? config.defaults.corePickPercentile;
+}
+
+export function resolvePerNodeCoreMaxPerNode(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
+  return config.nodes[nodeSlug]?.coreMaxPerNode ?? config.defaults.coreMaxPerNode;
+}
+
 export function resolvePerNodeTargetSize(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
   return config.nodes[nodeSlug]?.targetSize ?? config.defaults.targetSize;
 }
@@ -122,6 +140,9 @@ export function applySeason1GovernanceEnvOverrides(config: SeasonNodeGovernanceC
   const thresholdOverride = parseFloatEnv('SEASON1_DEFAULT_THRESHOLD');
   const qualityFloorOverride = parseFloatEnv('SEASON1_DEFAULT_QUALITY_FLOOR');
   const coreThresholdOverride = parseFloatEnv('SEASON1_DEFAULT_CORE_THRESHOLD');
+  const coreMinAbsOverride = parseFloatEnv('SEASON1_CORE_MIN_SCORE_ABSOLUTE');
+  const corePickPercentileOverride = parseFloatEnv('SEASON1_CORE_PICK_PERCENTILE');
+  const coreMaxPerNodeOverride = parseIntEnv('SEASON1_CORE_MAX_PER_NODE');
   const targetOverride = parseIntEnv('SEASON1_TARGET_PER_NODE');
   const minOverride = parseIntEnv('SEASON1_MIN_ELIGIBLE_PER_NODE');
   const maxNodesOverride = parseIntEnv('SEASON1_MAX_NODES_PER_MOVIE');
@@ -137,6 +158,9 @@ export function applySeason1GovernanceEnvOverrides(config: SeasonNodeGovernanceC
       threshold: thresholdOverride === null ? config.defaults.threshold : clamp01(thresholdOverride),
       qualityFloor: qualityFloorOverride === null ? config.defaults.qualityFloor : clamp01(qualityFloorOverride),
       coreThreshold: coreThresholdOverride === null ? config.defaults.coreThreshold : clamp01(coreThresholdOverride),
+      coreMinScoreAbsolute: coreMinAbsOverride === null ? config.defaults.coreMinScoreAbsolute : clamp01(coreMinAbsOverride),
+      corePickPercentile: corePickPercentileOverride === null ? config.defaults.corePickPercentile : clamp01(corePickPercentileOverride),
+      coreMaxPerNode: coreMaxPerNodeOverride === null ? config.defaults.coreMaxPerNode : Math.max(1, coreMaxPerNodeOverride),
       targetSize: targetOverride === null ? config.defaults.targetSize : Math.max(1, targetOverride),
       minEligible: minOverride === null ? config.defaults.minEligible : Math.max(1, minOverride),
       maxNodesPerMovie: maxNodesOverride === null ? config.defaults.maxNodesPerMovie : Math.max(1, maxNodesOverride),

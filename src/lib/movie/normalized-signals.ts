@@ -1,8 +1,11 @@
+import { computeReceptionCount, type ReceptionRating } from '@/lib/movie/reception';
+
 export interface NormalizedSignals {
   voteCount: number;
   rating: number;
   popularity: number;
   runtime: number;
+  receptionCount: number;
   ratingsConfidence: number;
   metadataCompleteness: number;
   confidenceScore: number;
@@ -13,6 +16,7 @@ export interface NormalizedSignalsInput {
   rating?: number | null;
   popularity?: number | null;
   runtimeMinutes?: number | null;
+  ratings?: ReceptionRating[] | null;
   ratingsConfidence?: number | null;
   metadataCompleteness?: number | null;
 }
@@ -44,6 +48,7 @@ export function normalizeMovieSignals(input: NormalizedSignalsInput): Normalized
   const ratingScore = ratingRaw === null ? 0 : clamp01(ratingRaw / 10);
   const popularityScore = popularityRaw === null ? 0 : clamp01(popularityRaw / 100);
   const runtimeScore = runtimeRaw === null ? 0 : clamp01(runtimeRaw / 120);
+  const receptionCount = computeReceptionCount(input.ratings);
 
   const providedRatingsConfidence = toFiniteOrNull(input.ratingsConfidence);
   const ratingsConfidenceScore = providedRatingsConfidence === null
@@ -72,6 +77,7 @@ export function normalizeMovieSignals(input: NormalizedSignalsInput): Normalized
     rating: round6(ratingScore),
     popularity: round6(popularityScore),
     runtime: round6(runtimeScore),
+    receptionCount,
     ratingsConfidence: round6(ratingsConfidenceScore),
     metadataCompleteness: round6(metadataCompletenessScore),
     confidenceScore: round6(clamp01(confidenceScore)),

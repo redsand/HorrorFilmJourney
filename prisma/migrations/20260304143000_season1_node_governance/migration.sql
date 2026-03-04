@@ -1,10 +1,31 @@
-ALTER TABLE "JourneyNode"
-ADD COLUMN IF NOT EXISTS "taxonomyVersion" TEXT NOT NULL DEFAULT 'legacy';
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'JourneyNode'
+  ) THEN
+    ALTER TABLE "JourneyNode"
+    ADD COLUMN IF NOT EXISTS "taxonomyVersion" TEXT NOT NULL DEFAULT 'legacy';
+  END IF;
 
-ALTER TABLE "NodeMovie"
-ADD COLUMN IF NOT EXISTS "taxonomyVersion" TEXT NOT NULL DEFAULT 'legacy';
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'NodeMovie'
+  ) THEN
+    ALTER TABLE "NodeMovie"
+    ADD COLUMN IF NOT EXISTS "taxonomyVersion" TEXT NOT NULL DEFAULT 'legacy';
 
-CREATE INDEX IF NOT EXISTS "NodeMovie_taxonomyVersion_idx" ON "NodeMovie"("taxonomyVersion");
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_indexes WHERE schemaname = 'public' AND indexname = 'NodeMovie_taxonomyVersion_idx'
+    ) THEN
+      CREATE INDEX "NodeMovie_taxonomyVersion_idx" ON "NodeMovie"("taxonomyVersion");
+    END IF;
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS "SeasonNodeRelease" (
   "id" TEXT NOT NULL,
@@ -52,7 +73,12 @@ ON "SeasonNodeReleaseItem"("movieId");
 
 DO $$
 BEGIN
-  IF NOT EXISTS (
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'Season'
+  ) AND NOT EXISTS (
     SELECT 1 FROM pg_constraint WHERE conname = 'SeasonNodeRelease_seasonId_fkey'
   ) THEN
     ALTER TABLE "SeasonNodeRelease"
@@ -63,7 +89,12 @@ END $$;
 
 DO $$
 BEGIN
-  IF NOT EXISTS (
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'GenrePack'
+  ) AND NOT EXISTS (
     SELECT 1 FROM pg_constraint WHERE conname = 'SeasonNodeRelease_packId_fkey'
   ) THEN
     ALTER TABLE "SeasonNodeRelease"

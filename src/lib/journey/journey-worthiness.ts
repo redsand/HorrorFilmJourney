@@ -1,1 +1,1 @@
-export * from './journeyWorthiness';
+export * from './journeyWorthiness.ts';

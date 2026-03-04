@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { fail, ok } from '@/lib/api-envelope';
 import { requireAdmin } from '@/lib/auth/guards';
 import { prisma } from '@/lib/prisma';
+import { mergeCreditsWithGuard } from '@/lib/tmdb/credits-guard';
 
 const addNodeMovieSchema = z.object({
   nodeId: z.string().min(1, 'nodeId is required'),
@@ -135,6 +136,16 @@ export async function POST(request: Request): Promise<Response> {
     if (!tmdbDetails || typeof tmdbDetails.title !== 'string' || tmdbDetails.title.trim().length === 0) {
       return fail({ code: 'NOT_FOUND', message: 'Movie not found locally and TMDB details could not be resolved' }, 404);
     }
+    const existing = await prisma.movie.findUnique({
+      where: { tmdbId: parsed.data.tmdbId },
+      select: { director: true, castTop: true },
+    });
+    const mergedCredits = mergeCreditsWithGuard({
+      existingDirector: existing?.director,
+      existingCastTop: existing?.castTop,
+      incomingDirector: resolveDirector(tmdbDetails.credits),
+      incomingCastTop: buildCastTop(tmdbDetails.credits),
+    });
 
     const created = await prisma.movie.upsert({
       where: { tmdbId: parsed.data.tmdbId },
@@ -149,8 +160,8 @@ export async function POST(request: Request): Promise<Response> {
         genres: normalizeGenres(tmdbDetails.genres),
         keywords: normalizeKeywords(tmdbDetails.keywords),
         country: resolveCountry(tmdbDetails.production_countries),
-        director: resolveDirector(tmdbDetails.credits),
-        castTop: buildCastTop(tmdbDetails.credits),
+        director: mergedCredits.director,
+        castTop: mergedCredits.castTop,
       },
       update: {
         title: tmdbDetails.title.trim(),
@@ -162,8 +173,8 @@ export async function POST(request: Request): Promise<Response> {
         genres: normalizeGenres(tmdbDetails.genres),
         keywords: normalizeKeywords(tmdbDetails.keywords),
         country: resolveCountry(tmdbDetails.production_countries),
-        director: resolveDirector(tmdbDetails.credits),
-        castTop: buildCastTop(tmdbDetails.credits),
+        director: mergedCredits.director,
+        castTop: mergedCredits.castTop,
       },
       select: { id: true, tmdbId: true, title: true },
     });

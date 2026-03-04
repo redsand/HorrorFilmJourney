@@ -6,6 +6,7 @@ import {
   parseKeywords,
   toGenreNames,
 } from '../src/lib/tmdb/tmdb-normalization.ts';
+import { mergeCreditsWithGuard } from '../src/lib/tmdb/credits-guard.ts';
 
 type TmdbDiscoverMovie = {
   id?: number;
@@ -183,11 +184,17 @@ async function upsertMovie(
   const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
   const existing = await prisma.movie.findUnique({
     where: { tmdbId },
-    select: { genres: true },
+    select: { genres: true, director: true, castTop: true },
   });
   const existingGenres = parseJsonStringArray(existing?.genres);
   const mergedGenres = [...new Set([...existingGenres, ...toGenres(movie.genre_ids)])];
   const details = await fetchMovieDetails(apiKey, tmdbId);
+  const mergedCredits = mergeCreditsWithGuard({
+    existingDirector: existing?.director,
+    existingCastTop: existing?.castTop,
+    incomingDirector: parseDirector(details?.credits),
+    incomingCastTop: parseCastTop(details?.credits, 8),
+  });
   const keywords = parseKeywords(details);
   const country = parseCountry(details);
   const synopsis = typeof details?.overview === 'string' && details.overview.trim().length > 0
@@ -205,8 +212,8 @@ async function upsertMovie(
       genres: mergedGenres,
       keywords,
       country,
-      director: parseDirector(details?.credits),
-      castTop: parseCastTop(details?.credits, 8),
+      director: mergedCredits.director,
+      castTop: mergedCredits.castTop,
     },
     update: {
       title,
@@ -217,8 +224,8 @@ async function upsertMovie(
       genres: mergedGenres,
       keywords,
       country,
-      director: parseDirector(details?.credits),
-      castTop: parseCastTop(details?.credits, 8),
+      director: mergedCredits.director,
+      castTop: mergedCredits.castTop,
     },
     select: { id: true },
   });

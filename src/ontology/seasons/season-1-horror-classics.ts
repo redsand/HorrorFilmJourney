@@ -50,7 +50,7 @@ export const SEASON_1_HORROR_CLASSICS_ONTOLOGY: SeasonOntology = {
       name: 'Cosmic Horror',
       description: 'Existential terror from incomprehensible entities, indifferent universes, and reality breakdown.',
       canonicalThemes: ['insignificance', 'forbidden knowledge', 'madness', 'non-human ontology'],
-      commonKeywords: ['eldritch', 'cosmic', 'ancient god', 'void', 'incomprehensible', 'existential dread'],
+      commonKeywords: ['eldritch', 'cosmic', 'ancient god', 'void', 'incomprehensible', 'existential dread', 'lovecraftian', 'reality collapse', 'forbidden knowledge', 'otherworldly'],
       negativeSignals: ['grounded serial-killer motive realism', 'rom-com tonal framing'],
     },
     {
@@ -66,7 +66,7 @@ export const SEASON_1_HORROR_CLASSICS_ONTOLOGY: SeasonOntology = {
       name: 'Sci-Fi Horror',
       description: 'Fear emerging from science, technology, space, and engineered life.',
       canonicalThemes: ['technological hubris', 'alien encounter', 'biotech risk', 'containment failure'],
-      commonKeywords: ['alien', 'space horror', 'experiment', 'lab', 'technology', 'bioengineered'],
+      commonKeywords: ['alien', 'space horror', 'experiment', 'lab', 'technology', 'bioengineered', 'containment breach', 'xenomorph', 'signal from space', 'mutation outbreak'],
       negativeSignals: ['strictly folkloric period setting', 'whimsical parody framing'],
     },
     {
@@ -90,7 +90,7 @@ export const SEASON_1_HORROR_CLASSICS_ONTOLOGY: SeasonOntology = {
       name: 'Apocalyptic Horror',
       description: 'Horror structured around societal collapse, outbreak spread, and end-state dread.',
       canonicalThemes: ['collapse', 'contagion', 'mass panic', 'post-apocalypse'],
-      commonKeywords: ['outbreak', 'zombie', 'apocalypse', 'pandemic', 'collapse', 'end of world'],
+      commonKeywords: ['outbreak', 'zombie', 'apocalypse', 'pandemic', 'collapse', 'end of world', 'quarantine', 'societal breakdown', 'post-collapse', 'mass extinction'],
       negativeSignals: ['single-location intimate ghost story only', 'slice-of-life domestic comedy'],
     },
     {
@@ -106,7 +106,7 @@ export const SEASON_1_HORROR_CLASSICS_ONTOLOGY: SeasonOntology = {
       name: 'Horror Comedy',
       description: 'Intentional blend of fear and comedic release through parody, satire, or absurd escalation.',
       canonicalThemes: ['tonal duality', 'parody', 'satire', 'comic catharsis'],
-      commonKeywords: ['horror comedy', 'parody', 'satire', 'absurd', 'dark comedy'],
+      commonKeywords: ['horror comedy', 'parody', 'satire', 'absurd', 'dark comedy', 'camp', 'comedic gore', 'zom-com', 'meta-horror', 'deadpan'],
       negativeSignals: ['unrelenting grim-serious tone', 'solemn prestige drama pacing'],
     },
     {
@@ -130,9 +130,8 @@ export const SEASON_1_HORROR_CLASSICS_ONTOLOGY: SeasonOntology = {
       name: 'Experimental Horror',
       description: 'Non-traditional horror language using abstraction, formal disruption, and surreal structure.',
       canonicalThemes: ['formal experimentation', 'surreal dread', 'nonlinearity', 'symbolic imagery'],
-      commonKeywords: ['experimental horror', 'avant-garde', 'nonlinear', 'surreal', 'dream logic', 'abstract'],
+      commonKeywords: ['experimental horror', 'avant-garde', 'nonlinear', 'surreal', 'dream logic', 'abstract', 'oneiric', 'formal disruption', 'symbolic imagery', 'psychedelic dread'],
       negativeSignals: ['formulaic slasher beat structure', 'conventional procedural plotting'],
     },
   ],
 };
-

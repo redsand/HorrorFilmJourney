@@ -15,6 +15,13 @@ type KeywordRule = {
   patterns: RegExp[];
 };
 
+type Season1TargetedPatternRule = {
+  nodeSlug: string;
+  name: string;
+  patterns: RegExp[];
+  confidence: number;
+};
+
 const CLASSIFIER_BY_NODE: Record<string, NodeClassifier> = {
   'supernatural-horror': {
     strongTags: ['supernatural-horror', 'supernatural', 'occult', 'paranormal', 'ghost', 'haunting', 'demonic', 'possession'],
@@ -131,6 +138,147 @@ const EXCLUSIVITY_RULES: NodeExclusivityRule[] = [
   { a: 'experimental-horror', b: 'slasher-serial-killer', strictness: 'hard', reason: 'formal experimentation rarely follows slasher schema' },
 ];
 
+const TARGETED_OMISSION_RULES: Season1TargetedPatternRule[] = [
+  {
+    nodeSlug: 'social-domestic-horror',
+    name: 'social-domestic-horror.targeted.get-out-social-thriller',
+    patterns: [/\bget out\b/i, /\bsocial thriller\b/i, /\brace|racial\b/i, /\bclass\b/i, /\bsuburban\b/i],
+    confidence: 0.84,
+  },
+  {
+    nodeSlug: 'slasher-serial-killer',
+    name: 'slasher-serial-killer.targeted.scream-franchise',
+    patterns: [/\bscream\b/i, /\bghostface\b/i, /\bfinal girl\b/i],
+    confidence: 0.83,
+  },
+  {
+    nodeSlug: 'slasher-serial-killer',
+    name: 'slasher-serial-killer.targeted.fnaf-and-giallo',
+    patterns: [/\bfive nights at freddy'?s\b/i, /\bdeep red\b/i, /\bgiallo\b/i, /\bmasked killer\b/i],
+    confidence: 0.81,
+  },
+  {
+    nodeSlug: 'supernatural-horror',
+    name: 'supernatural-horror.targeted.conjuring-universe',
+    patterns: [/\bconjuring\b/i, /\binsidious\b/i, /\bparanormal\b/i, /\bexorcism\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'sci-fi-horror',
+    name: 'sci-fi-horror.targeted.infection-collapse',
+    patterns: [/\b28 days later\b/i, /\b28 weeks later\b/i, /\boutbreak\b/i, /\binfected\b/i, /\bquarantine\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'sci-fi-horror',
+    name: 'sci-fi-horror.targeted.space-lab-containment',
+    patterns: [/\bspace\b/i, /\bspaceship\b/i, /\blab\b/i, /\bexperiment\b/i, /\bcontainment\b/i, /\borganism\b/i],
+    confidence: 0.79,
+  },
+  {
+    nodeSlug: 'survival-horror',
+    name: 'survival-horror.targeted.outbreak-siege',
+    patterns: [/\b28 years later\b/i, /\bbone temple\b/i, /\boutbreak\b/i, /\binfected\b/i, /\bquarantine\b/i, /\bsiege\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'survival-horror',
+    name: 'survival-horror.targeted.isolation-trap',
+    patterns: [/\bfrom dusk till dawn\b/i, /\bstranded\b/i, /\btrapped\b/i, /\bescape\b/i, /\bnight siege\b/i],
+    confidence: 0.79,
+  },
+  {
+    nodeSlug: 'apocalyptic-horror',
+    name: 'apocalyptic-horror.targeted.collapse-signals',
+    patterns: [/\boutbreak\b/i, /\bpandemic\b/i, /\bend of the world\b/i, /\bpost-apocalyptic\b/i, /\bcollapse\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'apocalyptic-horror',
+    name: 'apocalyptic-horror.targeted.zombie-collapse',
+    patterns: [/\bzombie\b/i, /\bquarantine\b/i, /\bmass panic\b/i, /\bevacuat/i, /\binfected city\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'apocalyptic-horror',
+    name: 'apocalyptic-horror.targeted.years-later-franchise',
+    patterns: [/\b28 years later\b/i, /\b28 years later: the bone temple\b/i, /\bcollapse\b/i, /\bviral\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'supernatural-horror',
+    name: 'supernatural-horror.targeted.curse-and-hellgate',
+    patterns: [/\breturn to silent hill\b/i, /\bconstantine\b/i, /\bthe omen\b/i, /\bcursed town\b/i, /\bdemonic\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'supernatural-horror',
+    name: 'supernatural-horror.targeted.possessed-animatronic',
+    patterns: [/\bfive nights at freddy'?s\b/i, /\bpossessed\b/i, /\bhaunted attraction\b/i, /\banimatronic\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'gothic-horror',
+    name: 'gothic-horror.targeted.modern-gothic-icons',
+    patterns: [/\bdracula\b/i, /\bthe crow\b/i, /\bromantic gothic\b/i, /\bgothic revenge\b/i],
+    confidence: 0.81,
+  },
+  {
+    nodeSlug: 'psychological-horror',
+    name: 'psychological-horror.targeted.family-manipulation',
+    patterns: [/\borphan\b/i, /\bspeak no evil\b/i, /\bstonehearst asylum\b/i, /\bgaslighting\b/i, /\bpsychological abuse\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'splatter-extreme',
+    name: 'splatter-extreme.targeted.trap-gore-death',
+    patterns: [/\bfinal destination\b/i, /\bbloodlines\b/i, /\bgore set piece\b/i, /\bgraphic death\b/i, /\bextreme violence\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'creature-monster',
+    name: 'creature-monster.targeted.vampire-predator',
+    patterns: [/\bsinners\b/i, /\bvampire\b/i, /\bpredatory creature\b/i, /\bnight creature\b/i, /\bmonster\b/i],
+    confidence: 0.79,
+  },
+  {
+    nodeSlug: 'cosmic-horror',
+    name: 'cosmic-horror.targeted.eldritch-unknown',
+    patterns: [/\beldritch\b/i, /\blovecraft/i, /\bancient god\b/i, /\bforbidden knowledge\b/i, /\breality (?:collapse|warps?)\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'cosmic-horror',
+    name: 'cosmic-horror.targeted.void-dimensional',
+    patterns: [/\bvoid\b/i, /\bdimensional\b/i, /\bnon[- ]euclidean\b/i, /\bincomprehensible\b/i, /\botherworldly\b/i],
+    confidence: 0.81,
+  },
+  {
+    nodeSlug: 'horror-comedy',
+    name: 'horror-comedy.targeted.zom-com-meta',
+    patterns: [/\bzom[- ]?com\b/i, /\bmeta[- ]horror\b/i, /\bparody\b/i, /\bsatire\b/i, /\bcamp\b/i],
+    confidence: 0.81,
+  },
+  {
+    nodeSlug: 'horror-comedy',
+    name: 'horror-comedy.targeted.deadpan-absurd',
+    patterns: [/\bdark comedy\b/i, /\bdeadpan\b/i, /\babsurd\b/i, /\bcomedic gore\b/i, /\bhorror comedy\b/i],
+    confidence: 0.8,
+  },
+  {
+    nodeSlug: 'experimental-horror',
+    name: 'experimental-horror.targeted.formal-disruption',
+    patterns: [/\bavant[- ]garde\b/i, /\bnonlinear\b/i, /\bformal (?:experiment|disruption)\b/i, /\babstract\b/i, /\boneiric\b/i],
+    confidence: 0.82,
+  },
+  {
+    nodeSlug: 'experimental-horror',
+    name: 'experimental-horror.targeted.surreal-structure',
+    patterns: [/\bsurreal\b/i, /\bdream logic\b/i, /\bsymbolic\b/i, /\bpsychedelic\b/i, /\bfragmented narrative\b/i],
+    confidence: 0.81,
+  },
+];
+
 function clamp01(value: number): number {
   if (!Number.isFinite(value)) {
     return 0;
@@ -139,7 +287,12 @@ function clamp01(value: number): number {
 }
 
 function corpus(movie: WeakSupervisionMovie): string {
-  return [movie.title, ...movie.genres.map((tag) => tag.replace(/-/g, ' '))].join(' ').toLowerCase();
+  return [
+    movie.title,
+    ...movie.genres.map((tag) => tag.replace(/-/g, ' ')),
+    ...(movie.keywords ?? []),
+    movie.synopsis ?? '',
+  ].join(' ').toLowerCase();
 }
 
 function hitTags(movie: WeakSupervisionMovie, tags: string[]): string[] {
@@ -201,6 +354,21 @@ function createKeywordLf(nodeSlug: string, patterns: RegExp[]): LabelingFunction
         return result(0, 0);
       }
       return result(1, 0.7, matches.slice(0, 3).map((pattern) => `keyword:${pattern.source}`));
+    },
+  };
+}
+
+function createTargetedPatternLf(rule: Season1TargetedPatternRule): LabelingFunction {
+  return {
+    name: rule.name,
+    nodeSlug: rule.nodeSlug,
+    apply: (movie) => {
+      const text = corpus(movie);
+      const matches = rule.patterns.filter((pattern) => pattern.test(text));
+      if (matches.length === 0) {
+        return result(0, 0);
+      }
+      return result(1, rule.confidence, matches.slice(0, 3).map((pattern) => `targeted:${pattern.source}`));
     },
   };
 }
@@ -281,6 +449,13 @@ function buildLegacySeason1Lfs(nodeSlugs?: Set<string>): LabelingFunction[] {
     lfs.push(...createObviousNegativeLf(nodeSlug));
   }
 
+  for (const rule of TARGETED_OMISSION_RULES) {
+    if (nodeSlugs && !nodeSlugs.has(rule.nodeSlug)) {
+      continue;
+    }
+    lfs.push(createTargetedPatternLf(rule));
+  }
+
   return lfs;
 }
 
@@ -294,4 +469,3 @@ export const season1WeakSupervisionPlugin: SeasonWeakSupervisionPlugin = {
   defaultNodeThresholds: SEASON_1_DEFAULT_NODE_THRESHOLDS,
   exclusivityRules: EXCLUSIVITY_RULES,
 };
-

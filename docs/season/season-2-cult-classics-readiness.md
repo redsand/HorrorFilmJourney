@@ -1,6 +1,6 @@
 # Season 2 Cult Classics Readiness
 
-Generated: 2026-03-04T02:41:10.148Z
+Generated: 2026-03-04T05:02:52.089Z
 
 ## Coverage
 
@@ -29,7 +29,7 @@ Generated: 2026-03-04T02:41:10.148Z
 | so-bad-its-good | 0 | 0 | 0 | 0 | 41 |
 | cult-sci-fi-fantasy | 0 | 0 | 0 | 0 | 51 |
 | punk-counterculture | 0 | 0 | 0 | 0 | 70 |
-| vhs-video-store-era | 0 | 0 | 0 | 0 | 59 |
+| vhs-video-store-era | 0 | 0 | 0 | 0 | 58 |
 | cult-comedy-absurdism | 0 | 0 | 0 | 0 | 71 |
 | modern-cult-phenomena | 0 | 0 | 0 | 0 | 71 |
 

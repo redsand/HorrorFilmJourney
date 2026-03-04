@@ -1,5 +1,6 @@
 import { loadSeasonJourneyWorthinessConfig } from '@/config/seasons/journey-worthiness';
 import { normalizeMovieSignals } from '@/lib/movie/normalized-signals';
+import { computeReceptionCount } from '@/lib/movie/reception';
 
 export type JourneyWorthinessRating = {
   source: string;
@@ -29,6 +30,10 @@ export type JourneyWorthinessReason =
   | 'low_rating';
 
 export type JourneyWorthinessConfig = {
+  gates?: {
+    journeyMinCore?: number;
+    journeyMinExtended?: number;
+  };
   thresholds: {
     minVoteCount: number;
     minPopularity: number;
@@ -187,16 +192,11 @@ function computeReceptionPresence(input: JourneyWorthinessMovieInput): number {
   if (Array.isArray(input.receptionSources) && input.receptionSources.length > 0) {
     return 1;
   }
-  const ratingSources = new Set((input.ratings ?? []).map((rating) => rating.source.toUpperCase()));
-  if (
-    ratingSources.has('ROTTEN_TOMATOES')
-    || ratingSources.has('METACRITIC')
-    || ratingSources.has('TMDB_AUDIENCE_PROXY')
-    || ratingSources.has('TMDB')
-  ) {
-    return 1;
-  }
-  return 0;
+  const receptionCount = computeReceptionCount((input.ratings ?? []).map((rating) => ({
+    source: rating.source,
+    value: rating.value,
+  })));
+  return receptionCount > 0 ? 1 : 0;
 }
 
 function computeRuntimeYearSanity(
@@ -233,6 +233,10 @@ export function computeJourneyWorthiness(
     rating: toRatingOutOf10(movie.ratings),
     popularity: movie.popularity,
     runtimeMinutes: movie.runtimeMinutes,
+    ratings: (movie.ratings ?? []).map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+    })),
     metadataCompleteness: computeMetadataCompleteness(movie),
   });
   const normalizedRating = normalizedSignals.rating;

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -13,6 +13,9 @@ import {
 import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
 import {
   applySeason1GovernanceEnvOverrides,
+  resolvePerNodeCoreMaxPerNode,
+  resolvePerNodeCoreMinScoreAbsolute,
+  resolvePerNodeCorePickPercentile,
   loadSeason1NodeGovernanceConfig,
   resolvePerNodeCoreThreshold,
   resolvePerNodeMaxExtended,
@@ -23,8 +26,10 @@ import {
 } from '../src/lib/nodes/governance/season1-governance.ts';
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
 import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
-import { evaluateJourneyWorthinessSelectionGate, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
+import { computeJourneyWorthiness, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
 import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
+import { getSeason1MustIncludeForNode } from '../src/config/seasons/season1-must-include.ts';
+import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
 
 type CurriculumTitle = {
   title: string;
@@ -86,8 +91,10 @@ type WeakCandidate = {
   adjustedProbability: number;
   qualityFloor: number;
   coreThreshold: number;
+  prototypeScore: number;
   finalScore: number;
   journeyScore: number;
+  journeyPassCore: boolean;
   firedLfNames: string[];
   evidenceSummary: string[];
   positiveWeight: number;
@@ -108,10 +115,38 @@ type NodeSummary = {
   minEligible: number;
   qualityFloor: number;
   coreThreshold: number;
+  coreMinScoreUsed: number;
+  pickedPercentileActual: number;
   eligibleWeak: number;
   excludedOnlyByOverlapForCore: number;
   belowMinFloor: boolean;
   unresolved: number;
+};
+
+type ExclusionReason =
+  | 'eligibility_fail'
+  | 'journey_fail_extended'
+  | 'journey_fail_core'
+  | 'node_score_below_floor'
+  | 'dropped_due_max_extended_cap'
+  | 'dropped_due_node_target'
+  | 'dropped_due_max_nodes_per_movie'
+  | 'dropped_due_disallowed_overlap'
+  | 'dropped_due_core_threshold';
+
+type ExclusionExample = {
+  movieId: string;
+  tmdbId: number;
+  title: string;
+  year: number | null;
+  nodeSlug?: string;
+  details?: string[];
+};
+
+type ExclusionBucket = {
+  count: number;
+  examples: ExclusionExample[];
+  seen: Set<string>;
 };
 
 const SPEC_PATH = resolve('docs/season/season-1-horror-subgenre-curriculum.json');
@@ -277,6 +312,61 @@ function parseBooleanEnv(name: string, fallback: boolean): boolean {
   return raw === '1' || raw === 'true' || raw === 'yes';
 }
 
+function toEligibilityFailReason(input: {
+  missingPoster: boolean;
+  missingRatings: boolean;
+  missingReception: boolean;
+  missingCredits: boolean;
+}): string {
+  if (input.missingCredits) return 'missing_credits';
+  if (input.missingRatings) return 'missing_ratings';
+  if (input.missingPoster) return 'missing_poster';
+  if (input.missingReception) return 'missing_reception';
+  return 'other';
+}
+
+function createExclusionCollector(enabled: boolean): {
+  record: (reason: ExclusionReason, example: ExclusionExample) => void;
+  toJson: () => Record<string, { count: number; examples: ExclusionExample[] }>;
+} {
+  const buckets = new Map<ExclusionReason, ExclusionBucket>();
+  const record = (reason: ExclusionReason, example: ExclusionExample): void => {
+    if (!enabled) return;
+    const bucket = buckets.get(reason) ?? { count: 0, examples: [], seen: new Set<string>() };
+    bucket.count += 1;
+    const key = `${example.movieId}::${example.nodeSlug ?? '-'}`;
+    if (!bucket.seen.has(key) && bucket.examples.length < 50) {
+      bucket.examples.push(example);
+      bucket.seen.add(key);
+    }
+    buckets.set(reason, bucket);
+  };
+  const toJson = (): Record<string, { count: number; examples: ExclusionExample[] }> => {
+    const output: Record<string, { count: number; examples: ExclusionExample[] }> = {};
+    const reasons: ExclusionReason[] = [
+      'eligibility_fail',
+      'journey_fail_extended',
+      'journey_fail_core',
+      'node_score_below_floor',
+      'dropped_due_max_extended_cap',
+      'dropped_due_node_target',
+      'dropped_due_max_nodes_per_movie',
+      'dropped_due_disallowed_overlap',
+      'dropped_due_core_threshold',
+    ];
+    for (const reason of reasons) {
+      const bucket = buckets.get(reason) ?? { count: 0, examples: [], seen: new Set<string>() };
+      output[reason] = {
+        count: bucket.count,
+        examples: [...bucket.examples].sort((a, b) =>
+          a.title.localeCompare(b.title) || (a.year ?? -1) - (b.year ?? -1) || a.tmdbId - b.tmdbId),
+      };
+    }
+    return output;
+  };
+  return { record, toJson };
+}
+
 function normalizeTitle(value: string): string {
   return value
     .toLowerCase()
@@ -288,6 +378,35 @@ function normalizeTitle(value: string): string {
 
 function makeLookupKey(title: string, year: number | null): string {
   return `${normalizeTitle(title)}::${year ?? -1}`;
+}
+
+function mergeRequestedTitles(base: CurriculumTitle[], mustInclude: CurriculumTitle[]): CurriculumTitle[] {
+  const merged: CurriculumTitle[] = [];
+  const seen = new Set<string>();
+  for (const title of [...base, ...mustInclude]) {
+    const key = makeLookupKey(title.altTitle ?? title.title, title.year);
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    merged.push(title);
+  }
+  return merged;
+}
+
+function clamp01(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, value));
+}
+
+function compareWeakCandidate(a: WeakCandidate, b: WeakCandidate): number {
+  return (b.finalScore - a.finalScore)
+    || (b.journeyScore - a.journeyScore)
+    || (b.prototypeScore - a.prototypeScore)
+    || (b.movie.popularity - a.movie.popularity)
+    || (a.movie.tmdbId - b.movie.tmdbId);
 }
 
 function buildJourneyInput(movie: CatalogMovie): JourneyWorthinessMovieInput {
@@ -332,11 +451,17 @@ async function main(): Promise<void> {
   const publishSnapshot = parseBooleanEnv('SEASON1_PUBLISH_SNAPSHOT', false);
   const classifierAssistEnabled = parseBooleanEnv('SEASON1_CLASSIFIER_ASSIST_ENABLED', false);
   const classifierAssistWeight = Math.max(0, Math.min(0.8, parseFloatEnv('SEASON1_CLASSIFIER_ASSIST_WEIGHT', 0.25)));
+  const buildDebugExclusions = parseBooleanEnv('SEASON1_BUILD_DEBUG_EXCLUSIONS', false);
+  const debugOutputRoot = resolve(process.env.SEASON1_BUILD_DEBUG_DIR?.trim() || 'artifacts/season1/build-debug');
+  const exclusionCollector = createExclusionCollector(buildDebugExclusions);
 
   try {
     const spec = await loadSpec();
     const configRaw = await loadSeason1NodeGovernanceConfig();
     const config = applySeason1GovernanceEnvOverrides(configRaw, spec.nodes.map((n) => n.slug));
+    const journeyConfig = loadSeasonJourneyWorthinessConfig('season-1');
+    const journeyMinCore = journeyConfig.gates?.journeyMinCore ?? 0.6;
+    const journeyMinExtended = journeyConfig.gates?.journeyMinExtended ?? journeyMinCore;
     const classifierPath = resolve(
       process.env.SEASON1_CLASSIFIER_ARTIFACT_PATH?.trim()
         || `artifacts/season1-node-classifier/${config.taxonomyVersion}/model.json`,
@@ -408,6 +533,15 @@ async function main(): Promise<void> {
         hasStreamingData: false,
       });
       const popularity = movie.ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
+      if (genres.includes('horror') && !eligibility.isEligible) {
+        exclusionCollector.record('eligibility_fail', {
+          movieId: movie.id,
+          tmdbId: movie.tmdbId,
+          title: movie.title,
+          year: movie.year,
+          details: [toEligibilityFailReason(eligibility)],
+        });
+      }
       return {
         id: movie.id,
         tmdbId: movie.tmdbId,
@@ -479,7 +613,14 @@ async function main(): Promise<void> {
 
       nodeBySlug.set(node.slug, { id: upsertedNode.id, name: node.name });
 
-      const requestedTitles = node.titles.slice(0, limitPerNode);
+      const requestedTitles = mergeRequestedTitles(
+        node.titles.slice(0, limitPerNode),
+        getSeason1MustIncludeForNode(node.slug).map((entry) => ({
+          title: entry.title,
+          year: entry.year,
+          ...(entry.altTitle ? { altTitle: entry.altTitle } : {}),
+        })),
+      );
       const curatedAssignments: NodeAssignmentData[] = [];
       const curatedMovieIds = new Set<string>();
 
@@ -545,7 +686,6 @@ async function main(): Promise<void> {
         .map((movie) => {
           const scored = scoreMovieForNodes({
             seasonId: 'season-1',
-            taxonomyVersion: config.taxonomyVersion,
             movie: {
               id: movie.id,
               tmdbId: movie.tmdbId,
@@ -563,7 +703,29 @@ async function main(): Promise<void> {
           const assistProbability = classifierProbability === null
             ? scored.finalScore
             : ((1 - classifierAssistWeight) * scored.finalScore) + (classifierAssistWeight * classifierProbability);
-          const journeyGate = evaluateJourneyWorthinessSelectionGate(buildJourneyInput(movie), 'season-1');
+          const journeyResult = computeJourneyWorthiness(buildJourneyInput(movie), 'season-1');
+          const journeyPassExtended = journeyResult.score >= journeyMinExtended;
+          const journeyPassCore = journeyResult.score >= journeyMinCore;
+          if (!journeyPassExtended) {
+            exclusionCollector.record('journey_fail_extended', {
+              movieId: movie.id,
+              tmdbId: movie.tmdbId,
+              title: movie.title,
+              year: movie.year,
+              nodeSlug: node.slug,
+              details: [`journeyScore=${journeyResult.score}`, `journeyMinExtended=${journeyMinExtended}`],
+            });
+          }
+          if (scored.finalScore < qualityFloor) {
+            exclusionCollector.record('node_score_below_floor', {
+              movieId: movie.id,
+              tmdbId: movie.tmdbId,
+              title: movie.title,
+              year: movie.year,
+              nodeSlug: node.slug,
+              details: [`finalScore=${scored.finalScore}`, `qualityFloor=${qualityFloor}`],
+            });
+          }
           return {
             movie,
             rawProbability: scored.weakScore,
@@ -571,17 +733,19 @@ async function main(): Promise<void> {
             assistProbability,
             qualityFloor,
             coreThreshold,
+            prototypeScore: scored.prototypeScore,
             finalScore: scored.finalScore,
-            journeyScore: journeyGate.result.score,
-            journeyPass: journeyGate.pass,
+            journeyScore: journeyResult.score,
+            journeyPassExtended,
+            journeyPassCore,
             firedLfNames: scored.evidence.weak.firedLfNames.slice(0, 8),
             evidenceSummary: scored.evidence.weak.firedLfNames.slice(0, 4),
             positiveWeight: Number(scored.evidence.weak.positiveWeight.toFixed(4)),
             negativeWeight: Number(scored.evidence.weak.negativeWeight.toFixed(4)),
           };
         })
-        .filter((entry) => entry.finalScore >= qualityFloor && entry.journeyPass)
-        .sort((a, b) => (b.finalScore - a.finalScore) || (b.journeyScore - a.journeyScore) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
+        .filter((entry) => entry.finalScore >= qualityFloor && entry.journeyPassExtended)
+        .sort((a, b) => (b.finalScore - a.finalScore) || (b.journeyScore - a.journeyScore) || (b.prototypeScore - a.prototypeScore) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
         .map((entry) => ({
           nodeSlug: node.slug,
           nodeId: upsertedNode.id,
@@ -592,8 +756,10 @@ async function main(): Promise<void> {
           adjustedProbability: Number(entry.finalScore.toFixed(6)),
           qualityFloor: entry.qualityFloor,
           coreThreshold: entry.coreThreshold,
+          prototypeScore: Number(entry.prototypeScore.toFixed(6)),
           finalScore: Number(entry.finalScore.toFixed(6)),
           journeyScore: Number(entry.journeyScore.toFixed(6)),
+          journeyPassCore: entry.journeyPassCore,
           firedLfNames: entry.firedLfNames,
           evidenceSummary: entry.evidenceSummary,
           positiveWeight: entry.positiveWeight,
@@ -614,13 +780,24 @@ async function main(): Promise<void> {
 
     const nodeSelectedWeak = new Map<string, WeakCandidate[]>();
     const nodeExtendedPool = new Map<string, WeakCandidate[]>();
+    const corePickedPercentileActualByNode = new Map<string, number>();
+    const coreMinScoreUsedByNode = new Map<string, number>();
     for (const nodeSlug of specNodeSlugs) {
       const pool = (weakCandidatesByNode.get(nodeSlug) ?? [])
-        .sort((a, b) => (b.finalScore - a.finalScore)
-          || (b.journeyScore - a.journeyScore)
-          || (b.movie.popularity - a.movie.popularity)
-          || (a.movie.tmdbId - b.movie.tmdbId));
+        .sort(compareWeakCandidate);
       const maxExtended = resolvePerNodeMaxExtended(config, nodeSlug);
+      if (typeof maxExtended === 'number' && pool.length > maxExtended) {
+        for (const dropped of pool.slice(maxExtended)) {
+          exclusionCollector.record('dropped_due_max_extended_cap', {
+            movieId: dropped.movie.id,
+            tmdbId: dropped.movie.tmdbId,
+            title: dropped.movie.title,
+            year: dropped.movie.year,
+            nodeSlug,
+            details: [`maxExtended=${maxExtended}`],
+          });
+        }
+      }
       nodeExtendedPool.set(nodeSlug, maxExtended === null ? pool : pool.slice(0, maxExtended));
     }
 
@@ -629,69 +806,156 @@ async function main(): Promise<void> {
     const targetByNode = new Map<string, number>(
       specNodeSlugs.map((slug) => [slug, resolvePerNodeTargetSize(config, slug)] as const),
     );
+    const RELAXATION_DELTA = 0.03;
+    const RELAXATION_MIN_PROTOTYPE = 0.72;
 
-    const corePasses: Array<{ requireCoreThreshold: boolean; candidates: WeakCandidate[] }> = [
-      {
-        requireCoreThreshold: true,
-        candidates: [...nodeExtendedPool.values()].flat()
-          .filter((candidate) => candidate.finalScore >= candidate.coreThreshold),
-      },
-      {
-        requireCoreThreshold: false,
-        candidates: [...nodeExtendedPool.values()].flat(),
-      },
-    ];
+    for (const nodeSlug of specNodeSlugs) {
+      const extendedPool = nodeExtendedPool.get(nodeSlug) ?? [];
+      const target = targetByNode.get(nodeSlug) ?? 0;
+      const coreMaxPerNode = resolvePerNodeCoreMaxPerNode(config, nodeSlug);
+      const curatedCount = curatedByNode.get(nodeSlug)?.length ?? 0;
+      const weakTarget = Math.max(0, Math.min(target, coreMaxPerNode) - curatedCount);
+      const nodeList = nodeSelectedWeak.get(nodeSlug) ?? [];
+      if (weakTarget <= 0 || extendedPool.length === 0) {
+        corePickedPercentileActualByNode.set(nodeSlug, 0);
+        coreMinScoreUsedByNode.set(nodeSlug, resolvePerNodeCoreMinScoreAbsolute(config, nodeSlug));
+        continue;
+      }
 
-    for (const pass of corePasses) {
-      const flattened = [...pass.candidates].sort((a, b) => (b.finalScore - a.finalScore)
-        || (b.journeyScore - a.journeyScore)
-        || (b.movie.popularity - a.movie.popularity)
-        || a.nodeSlug.localeCompare(b.nodeSlug)
-        || (a.movie.tmdbId - b.movie.tmdbId));
+      for (const candidate of extendedPool) {
+        if (candidate.journeyPassCore && candidate.journeyScore >= journeyMinCore) {
+          continue;
+        }
+        exclusionCollector.record('journey_fail_core', {
+          movieId: candidate.movie.id,
+          tmdbId: candidate.movie.tmdbId,
+          title: candidate.movie.title,
+          year: candidate.movie.year,
+          nodeSlug: candidate.nodeSlug,
+          details: [`journeyScore=${candidate.journeyScore}`, `journeyMinCore=${journeyMinCore}`],
+        });
+      }
 
-      for (const candidate of flattened) {
+      const coreCandidates = extendedPool
+        .filter((candidate) => candidate.journeyPassCore && candidate.journeyScore >= journeyMinCore)
+        .sort(compareWeakCandidate);
+      const pickPercentile = clamp01(resolvePerNodeCorePickPercentile(config, nodeSlug));
+      const absoluteFloor = resolvePerNodeCoreMinScoreAbsolute(config, nodeSlug);
+      const percentileRank = Math.max(1, Math.ceil(coreCandidates.length * pickPercentile));
+      const percentileFloor = coreCandidates[Math.min(coreCandidates.length, percentileRank) - 1]?.finalScore ?? 1;
+      const calibratedFloor = Math.max(absoluteFloor, percentileFloor);
+      const relaxedFloor = Math.max(0, absoluteFloor - RELAXATION_DELTA);
+      const scarceNode = coreCandidates.filter((candidate) => candidate.finalScore >= calibratedFloor).length < weakTarget;
+
+      let minScoreUsedForPicks = calibratedFloor;
+
+      const trySelectCandidate = (candidate: WeakCandidate): boolean => {
         const key = `${candidate.nodeSlug}::${candidate.movie.id}`;
         if (coreSelectedKey.has(key)) {
-          continue;
+          return false;
         }
-        const target = targetByNode.get(candidate.nodeSlug) ?? 0;
-        const curatedCount = curatedByNode.get(candidate.nodeSlug)?.length ?? 0;
-        const nodeList = nodeSelectedWeak.get(candidate.nodeSlug) ?? [];
-        if ((curatedCount + nodeList.length) >= target) {
-          continue;
+        if ((curatedCount + nodeList.length) >= Math.min(target, coreMaxPerNode)) {
+          exclusionCollector.record('dropped_due_node_target', {
+            movieId: candidate.movie.id,
+            tmdbId: candidate.movie.tmdbId,
+            title: candidate.movie.title,
+            year: candidate.movie.year,
+            nodeSlug: candidate.nodeSlug,
+            details: [`target=${Math.min(target, coreMaxPerNode)}`],
+          });
+          return false;
         }
-        if (pass.requireCoreThreshold && candidate.finalScore < candidate.coreThreshold) {
-          continue;
-        }
-
         const movieSet = workingAssignmentsByMovie.get(candidate.movie.id) ?? new Set<string>();
         if (movieSet.has(candidate.nodeSlug)) {
-          continue;
+          return false;
         }
         if (movieSet.size >= maxNodesPerMovie) {
-          continue;
+          exclusionCollector.record('dropped_due_max_nodes_per_movie', {
+            movieId: candidate.movie.id,
+            tmdbId: candidate.movie.tmdbId,
+            title: candidate.movie.title,
+            year: candidate.movie.year,
+            nodeSlug: candidate.nodeSlug,
+            details: [`maxNodesPerMovie=${maxNodesPerMovie}`],
+          });
+          return false;
         }
         const disallowedConflict = [...movieSet].some((existingSlug) =>
           disallowed.some(([a, b]) => isPairMatch(a, b, existingSlug, candidate.nodeSlug)));
         if (disallowedConflict) {
+          exclusionCollector.record('dropped_due_disallowed_overlap', {
+            movieId: candidate.movie.id,
+            tmdbId: candidate.movie.tmdbId,
+            title: candidate.movie.title,
+            year: candidate.movie.year,
+            nodeSlug: candidate.nodeSlug,
+          });
           coreOverlapExcludedByNode.set(
             candidate.nodeSlug,
             (coreOverlapExcludedByNode.get(candidate.nodeSlug) ?? 0) + 1,
           );
-          continue;
+          return false;
         }
-
-        const accepted: WeakCandidate = {
+        nodeList.push({
           ...candidate,
           penalties: [],
           adjustedProbability: candidate.finalScore,
-        };
-        nodeList.push(accepted);
+        });
         nodeSelectedWeak.set(candidate.nodeSlug, nodeList);
         movieSet.add(candidate.nodeSlug);
         workingAssignmentsByMovie.set(candidate.movie.id, movieSet);
         coreSelectedKey.add(key);
+        return true;
+      };
+
+      for (const candidate of coreCandidates) {
+        if (nodeList.length >= weakTarget) {
+          break;
+        }
+        if (candidate.finalScore < calibratedFloor) {
+          exclusionCollector.record('dropped_due_core_threshold', {
+            movieId: candidate.movie.id,
+            tmdbId: candidate.movie.tmdbId,
+            title: candidate.movie.title,
+            year: candidate.movie.year,
+            nodeSlug: candidate.nodeSlug,
+            details: [
+              `finalScore=${candidate.finalScore}`,
+              `coreMinScoreAbsolute=${absoluteFloor}`,
+              `percentileFloor=${percentileFloor}`,
+              `calibratedFloor=${calibratedFloor}`,
+            ],
+          });
+          continue;
+        }
+        trySelectCandidate(candidate);
       }
+
+      if (scarceNode && nodeList.length < weakTarget) {
+        for (const candidate of coreCandidates) {
+          if (nodeList.length >= weakTarget) {
+            break;
+          }
+          if (candidate.finalScore >= calibratedFloor) {
+            continue;
+          }
+          if (candidate.finalScore < relaxedFloor) {
+            continue;
+          }
+          if (candidate.prototypeScore < RELAXATION_MIN_PROTOTYPE) {
+            continue;
+          }
+          const selected = trySelectCandidate(candidate);
+          if (selected) {
+            minScoreUsedForPicks = Math.min(minScoreUsedForPicks, candidate.finalScore);
+          }
+        }
+      }
+
+      const selectedWeakCoreCount = nodeList.length;
+      const denominator = Math.max(1, coreCandidates.length);
+      corePickedPercentileActualByNode.set(nodeSlug, Number((selectedWeakCoreCount / denominator).toFixed(6)));
+      coreMinScoreUsedByNode.set(nodeSlug, Number(minScoreUsedForPicks.toFixed(6)));
     }
 
     const summaries: NodeSummary[] = [];
@@ -796,7 +1060,14 @@ async function main(): Promise<void> {
         await prisma.nodeMovie.createMany({ data: assignments, skipDuplicates: true });
       }
 
-      const requestedTitles = node.titles.slice(0, limitPerNode);
+      const requestedTitles = mergeRequestedTitles(
+        node.titles.slice(0, limitPerNode),
+        getSeason1MustIncludeForNode(node.slug).map((entry) => ({
+          title: entry.title,
+          year: entry.year,
+          ...(entry.altTitle ? { altTitle: entry.altTitle } : {}),
+        })),
+      );
       totalRequested += requestedTitles.length;
       totalAssigned += assignments.length;
 
@@ -813,6 +1084,8 @@ async function main(): Promise<void> {
         minEligible: resolvePerNodeMinEligible(config, node.slug),
         qualityFloor: resolvePerNodeQualityFloor(config, node.slug),
         coreThreshold: resolvePerNodeCoreThreshold(config, node.slug),
+        coreMinScoreUsed: coreMinScoreUsedByNode.get(node.slug) ?? resolvePerNodeCoreMinScoreAbsolute(config, node.slug),
+        pickedPercentileActual: corePickedPercentileActualByNode.get(node.slug) ?? 0,
         eligibleWeak: nodeExtendedPool.get(node.slug)?.length ?? 0,
         excludedOnlyByOverlapForCore: coreOverlapExcludedByNode.get(node.slug) ?? 0,
         unresolved: unresolved.filter((row) => row.nodeSlug === node.slug).length,
@@ -833,6 +1106,11 @@ async function main(): Promise<void> {
         nodeCount: summaries.length,
         maxNodesPerMovie,
         defaultMaxExtendedPerNode: config.defaults.maxExtendedPerNode ?? null,
+        defaultCoreMinScoreAbsolute: config.defaults.coreMinScoreAbsolute,
+        defaultCorePickPercentile: config.defaults.corePickPercentile,
+        defaultCoreMaxPerNode: config.defaults.coreMaxPerNode,
+        journeyMinCore,
+        journeyMinExtended,
         publishSnapshot,
       },
     });
@@ -853,11 +1131,11 @@ async function main(): Promise<void> {
     lines.push('');
     lines.push('## Per-node');
     lines.push('');
-    lines.push('| Node | Requested | Curated Core | Weak Core | Extended | Assigned | Target Core | Min Core | Quality Floor | Core Threshold | Eligible Extended | Overlap Excl. | Below min | Unresolved |');
-    lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |');
+    lines.push('| Node | Requested | Curated Core | Weak Core | Extended | Assigned | Target Core | Min Core | Quality Floor | Core Threshold | Core Min Used | Picked % | Eligible Extended | Overlap Excl. | Below min | Unresolved |');
+    lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |');
     summaries.forEach((summary) => {
       lines.push(
-        `| ${summary.slug} | ${summary.requested} | ${summary.curatedAssigned} | ${summary.weakCoreAssigned} | ${summary.extendedCount} | ${summary.assigned} | ${summary.targetSize} | ${summary.minEligible} | ${summary.qualityFloor.toFixed(2)} | ${summary.coreThreshold.toFixed(2)} | ${summary.eligibleWeak} | ${summary.excludedOnlyByOverlapForCore} | ${summary.belowMinFloor ? 'YES' : 'NO'} | ${summary.unresolved} |`,
+        `| ${summary.slug} | ${summary.requested} | ${summary.curatedAssigned} | ${summary.weakCoreAssigned} | ${summary.extendedCount} | ${summary.assigned} | ${summary.targetSize} | ${summary.minEligible} | ${summary.qualityFloor.toFixed(2)} | ${summary.coreThreshold.toFixed(2)} | ${summary.coreMinScoreUsed.toFixed(2)} | ${(summary.pickedPercentileActual * 100).toFixed(1)}% | ${summary.eligibleWeak} | ${summary.excludedOnlyByOverlapForCore} | ${summary.belowMinFloor ? 'YES' : 'NO'} | ${summary.unresolved} |`,
       );
     });
     lines.push('');
@@ -872,6 +1150,23 @@ async function main(): Promise<void> {
     }
 
     await writeFile(READINESS_PATH, `${lines.join('\n')}\n`, 'utf8');
+
+    if (buildDebugExclusions) {
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const outputDir = resolve(debugOutputRoot, stamp);
+      await mkdir(outputDir, { recursive: true });
+      const payload = {
+        generatedAt: new Date().toISOString(),
+        runId,
+        taxonomyVersion: config.taxonomyVersion,
+        journeyMinCore,
+        journeyMinExtended,
+        reasons: exclusionCollector.toJson(),
+      };
+      const outPath = resolve(outputDir, 'exclusion-reasons.json');
+      await writeFile(outPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+      console.log(`Build debug exclusions written: ${outPath}`);
+    }
 
     console.log(
       `Season 1 weak-supervision seed complete: taxonomyVersion=${config.taxonomyVersion} nodes=${summaries.length} requested=${totalRequested} assigned=${totalAssigned} unresolved=${unresolved.length} runId=${runId}`,
