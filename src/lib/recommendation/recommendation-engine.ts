@@ -500,6 +500,18 @@ function resolveSeason1NodeMinConfidence(): number {
   return Math.max(0, Math.min(1, parsed));
 }
 
+function resolveRecommendationLlmMaxTokens(): number {
+  const raw = process.env.REC_LLM_MAX_TOKENS?.trim();
+  if (!raw) {
+    return 16_000;
+  }
+  const parsed = Number.parseInt(raw, 10);
+  if (!Number.isInteger(parsed)) {
+    return 16_000;
+  }
+  return Math.max(256, Math.min(32_000, parsed));
+}
+
 function traitMatch(a: number, b: number): number {
   return 1 - Math.abs(clamp01(a) - clamp01(b));
 }
@@ -762,7 +774,7 @@ export async function composeCardNarrative(input: {
         evidence: evidenceSummary.map((e, index) => ({ id: `E${index + 1}`, ...e })),
       }),
       temperature: 0.2,
-      maxTokens: 1600,
+      maxTokens: resolveRecommendationLlmMaxTokens(),
     });
 
     const parsed = recommendationCardNarrativeSchema.safeParse(generated);

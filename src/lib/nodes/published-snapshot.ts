@@ -29,13 +29,13 @@ function rationaleFor(source: string, score: number | null): string {
   return 'Approved assignment.';
 }
 
-export async function getPublishedSeason1NodesForMovie(
+export async function getPublishedNodesForMovie(
   prisma: PrismaClient,
-  input: { packId: string; movieId: string },
+  input: { packId: string; seasonSlug: string; movieId: string },
 ): Promise<PublishedMovieNode[]> {
   const releaseId = await getPublishedSeasonNodeReleaseId(prisma, {
     packId: input.packId,
-    seasonSlug: 'season-1',
+    seasonSlug: input.seasonSlug,
   });
   if (!releaseId) {
     return [];
@@ -70,7 +70,7 @@ export async function getPublishedSeason1NodesForMovie(
   }));
 }
 
-export async function getPublishedSeason1ReleaseSummaries(prisma: PrismaClient, input: { packId: string; limit?: number }): Promise<Array<{
+export async function getPublishedReleaseSummaries(prisma: PrismaClient, input: { packId: string; limit?: number }): Promise<Array<{
   id: string;
   taxonomyVersion: string;
   runId: string;
@@ -93,4 +93,28 @@ export async function getPublishedSeason1ReleaseSummaries(prisma: PrismaClient, 
   });
 
   return rows;
+}
+
+export async function getPublishedSeason1NodesForMovie(
+  prisma: PrismaClient,
+  input: { packId: string; movieId: string },
+): Promise<PublishedMovieNode[]> {
+  return getPublishedNodesForMovie(prisma, {
+    ...input,
+    seasonSlug: 'season-1',
+  });
+}
+
+export async function getPublishedSeason1ReleaseSummaries(
+  prisma: PrismaClient,
+  input: { packId: string; limit?: number },
+): Promise<Array<{
+  id: string;
+  taxonomyVersion: string;
+  runId: string;
+  isPublished: boolean;
+  createdAt: Date;
+  publishedAt: Date | null;
+}>> {
+  return getPublishedReleaseSummaries(prisma, input);
 }

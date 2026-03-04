@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { createSeasonNodeReleaseFromNodeMovie, publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
 
 type CliOptions = {
   apply: boolean;
@@ -18,6 +19,8 @@ function parseCliArgs(): CliOptions {
 async function main(): Promise<void> {
   const options = parseCliArgs();
   const prisma = new PrismaClient();
+  const taxonomyVersion = process.env.SEASON2_TAXONOMY_VERSION?.trim() || 'legacy';
+  const runId = process.env.SEASON2_ASSIGNMENT_RUN_ID?.trim() || `season2-curated-${new Date().toISOString()}`;
 
   try {
     const season2 = await prisma.season.findUnique({
@@ -88,6 +91,9 @@ async function main(): Promise<void> {
     }
 
     const assignmentTotal = nodeCounts.reduce((sum, node) => sum + node.count, 0);
+    if (assignmentTotal === 0 && !options.force) {
+      throw new Error('Season 2 has zero assignments. Seed/import node movies before publish, or use --force.');
+    }
     console.log(
       `[season2.publish] readiness: nodes=${nodes.length} assignments=${assignmentTotal} enforceBalance=${options.enforceBalance} spread=${spread}`,
     );
@@ -96,9 +102,29 @@ async function main(): Promise<void> {
     });
 
     if (!options.apply) {
-      console.log('[season2.publish] dry run only. Re-run with --apply to activate season-2 and enable cult-classics.');
+      console.log(`[season2.publish] dry run only. Re-run with --apply to activate season-2, enable cult-classics, and publish snapshot (taxonomyVersion=${taxonomyVersion}).`);
       return;
     }
+
+    const release = await createSeasonNodeReleaseFromNodeMovie(prisma, {
+      seasonId: season2.id,
+      packId: cultPack.id,
+      taxonomyVersion,
+      runId,
+      publish: false,
+      metadata: {
+        source: 'publish-season2',
+        mode: 'curation-first',
+        assignmentTotal,
+      },
+    });
+
+    const published = await publishSeasonNodeRelease(prisma, {
+      seasonSlug: 'season-2',
+      packSlug: 'cult-classics',
+      taxonomyVersion,
+      runId,
+    });
 
     await prisma.$transaction(async (tx) => {
       await tx.season.updateMany({
@@ -141,7 +167,7 @@ async function main(): Promise<void> {
     }
 
     console.log(
-      `[season2.publish] published: activeSeason=season-2 pack=cult-classics profilesUpdated=${updatedProfiles}`,
+      `[season2.publish] published: activeSeason=season-2 pack=cult-classics profilesUpdated=${updatedProfiles} releaseId=${published.releaseId} runId=${published.runId} taxonomyVersion=${published.taxonomyVersion} coreItems=${release.itemCount}`,
     );
   } finally {
     await prisma.$disconnect();
