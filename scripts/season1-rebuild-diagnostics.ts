@@ -11,6 +11,7 @@ import {
 } from '../src/lib/journey/journey-worthiness';
 import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes';
 import {
+  resolvePerNodeCoreThreshold,
   resolvePerNodeTargetSize,
   resolvePerNodeThreshold,
   toPairKey,
@@ -578,10 +579,45 @@ async function main(): Promise<void> {
       },
       nodes: Object.fromEntries(nodeSlugs.map((nodeSlug) => {
         const assignedItems = latestItems.filter((item) => item.nodeSlug === nodeSlug);
+        const tiered = nodeMovieAssignments.filter((item) => item.nodeSlug === nodeSlug);
+        const core = tiered.filter((item) => item.tier === 'CORE');
+        const extended = tiered.filter((item) => item.tier === 'EXTENDED');
+        const targetSize = resolvePerNodeTargetSize(SEASON1_NODE_GOVERNANCE_CONFIG, nodeSlug);
+        const coreThreshold = resolvePerNodeCoreThreshold(SEASON1_NODE_GOVERNANCE_CONFIG, nodeSlug);
+        const byScore = [...tiered].sort((a, b) =>
+          (b.finalScore - a.finalScore)
+          || (b.journeyScore - a.journeyScore)
+          || (a.movieId.localeCompare(b.movieId)));
+        const boundaryAtTarget = byScore[targetSize - 1]?.finalScore ?? null;
+        const boundaryAfterTarget = byScore[targetSize]?.finalScore ?? null;
+        const overlapExcludedOnly = extended.filter((entry) => {
+          if (entry.finalScore < coreThreshold) {
+            return false;
+          }
+          const coreNodesForMovie = new Set(
+            nodeMovieAssignments
+              .filter((row) => row.movieId === entry.movieId && row.tier === 'CORE')
+              .map((row) => row.nodeSlug),
+          );
+          if (coreNodesForMovie.size === 0) {
+            return false;
+          }
+          return SEASON1_NODE_GOVERNANCE_CONFIG.overlapConstraints.disallowedPairs.some(([a, b]) =>
+            (entry.nodeSlug === a && coreNodesForMovie.has(b))
+            || (entry.nodeSlug === b && coreNodesForMovie.has(a)));
+        }).length;
         const finalScores = assignedItems.map((item) => scoreByMovieNode.get(`${item.movieId}::${nodeSlug}`)?.finalScore ?? 0);
         const journeyScores = assignedItems.map((item) => movieQualityCache.get(item.movieId)?.score ?? 0);
         return [nodeSlug, {
           assignedCount: assignedItems.length,
+          coreCount: core.length,
+          extendedCount: extended.length,
+          boundaryScores: {
+            atTargetSize: boundaryAtTarget,
+            atTargetSizePlusOne: boundaryAfterTarget,
+          },
+          excludedOnlyDueToOverlapConstraints: overlapExcludedOnly,
+          capPressure: extended.filter((entry) => entry.finalScore >= coreThreshold).length - core.length,
           avgFinalScore: round6(avg(finalScores)),
           avgJourneyWorthiness: round6(avg(journeyScores)),
           topAssignedTitles: topAssignedByNode[nodeSlug],

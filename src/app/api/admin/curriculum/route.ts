@@ -35,9 +35,13 @@ export async function GET(request: Request): Promise<Response> {
               learningObjective: true,
               eraSubgenreFocus: true,
               movies: {
-                orderBy: { rank: 'asc' },
+                orderBy: [{ tier: 'asc' }, { coreRank: 'asc' }, { rank: 'asc' }],
                 select: {
                   rank: true,
+                  tier: true,
+                  coreRank: true,
+                  finalScore: true,
+                  journeyScore: true,
                   movie: {
                     select: {
                       id: true,
@@ -173,6 +177,10 @@ export async function GET(request: Request): Promise<Response> {
         return {
           id: assignment.movie.id,
           rank: assignment.rank,
+          tier: assignment.tier.toLowerCase(),
+          coreRank: assignment.coreRank,
+          finalScore: assignment.finalScore,
+          journeyScore: assignment.journeyScore,
           tmdbId: assignment.movie.tmdbId,
           title: assignment.movie.title,
           posterUrl: assignment.movie.posterUrl,

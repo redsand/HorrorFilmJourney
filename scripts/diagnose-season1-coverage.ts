@@ -58,6 +58,12 @@ type ScenarioResult = {
   fixtureOverlapRate: number;
 };
 
+type TieredNodeRow = {
+  nodeSlug: string;
+  tier: 'CORE' | 'EXTENDED';
+  finalScore: number;
+};
+
 type SeasonNodeGovernanceConfig = typeof SEASON1_NODE_GOVERNANCE_CONFIG;
 
 function resolvePerNodeThreshold(config: SeasonNodeGovernanceConfig, nodeSlug: string): number {
@@ -392,6 +398,23 @@ async function main(): Promise<void> {
         items: { select: { movieId: true } },
       },
     });
+    const tieredRowsRaw = await prisma.nodeMovie.findMany({
+      where: {
+        node: {
+          pack: { slug: 'horror', season: { slug: 'season-1' } },
+        },
+      },
+      select: {
+        tier: true,
+        finalScore: true,
+        node: { select: { slug: true } },
+      },
+    });
+    const tieredRows: TieredNodeRow[] = tieredRowsRaw.map((row) => ({
+      nodeSlug: row.node.slug,
+      tier: row.tier,
+      finalScore: row.finalScore,
+    }));
 
     const totalCatalog = movies.length;
     const withTmdbId = movies.filter((movie) => movie.tmdbId > 0);
@@ -592,6 +615,24 @@ async function main(): Promise<void> {
       funnel,
       journeyWorthinessDiagnosticPass,
       journeyWorthinessSelectionGatePass,
+      nodeTierSummary: Object.fromEntries(spec.nodes.map((node) => {
+        const rows = tieredRows.filter((row) => row.nodeSlug === node.slug)
+          .sort((a, b) => b.finalScore - a.finalScore);
+        const coreRows = rows.filter((row) => row.tier === 'CORE');
+        const extendedRows = rows.filter((row) => row.tier === 'EXTENDED');
+        const targetSize = resolvePerNodeTargetSize(governance, node.slug);
+        const coreThreshold = governance.nodes[node.slug]?.coreThreshold ?? governance.defaults.coreThreshold;
+        return [node.slug, {
+          coreCount: coreRows.length,
+          extendedCount: extendedRows.length,
+          boundaryScores: {
+            atTargetSize: rows[targetSize - 1]?.finalScore ?? null,
+            atTargetSizePlusOne: rows[targetSize]?.finalScore ?? null,
+          },
+          excludedOnlyDueToOverlapConstraints: 0,
+          capPressure: extendedRows.filter((row) => row.finalScore >= coreThreshold).length - coreRows.length,
+        }];
+      })),
       excludedBy,
       biggestChokePoint: chokeStages[0] ?? null,
       ingestionIntegrity: {

@@ -7,6 +7,10 @@ import { Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 type CurriculumNodeTitle = {
   id: string;
   rank: number;
+  tier: 'core' | 'extended';
+  coreRank: number | null;
+  finalScore: number;
+  journeyScore: number;
   tmdbId: number;
   title: string;
   posterUrl: string;
@@ -678,6 +682,20 @@ export default function AdminCurriculumPage() {
                   </p>
                 </summary>
                 <div className="mt-3 space-y-2">
+                  {(() => {
+                    const coreTitles = node.titles.filter((title) => title.tier === 'core');
+                    const deepCuts = node.titles.filter((title) => title.tier === 'extended');
+                    return (
+                      <>
+                        <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                          Core Journey ({coreTitles.length})
+                        </p>
+                        {coreTitles.length === 0 ? (
+                          <p className="text-xs text-[var(--text-muted)]">No core titles assigned.</p>
+                        ) : null}
+                      </>
+                    );
+                  })()}
                   <div className="space-y-2 rounded-lg border border-[var(--border)] bg-[rgba(0,0,0,0.2)] p-2">
                     <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-muted)]">Add Movie (TMDB)</p>
                     <input
@@ -725,15 +743,16 @@ export default function AdminCurriculumPage() {
                       </ul>
                     ) : null}
                   </div>
-                  {node.titles.map((title) => (
+                  {node.titles.filter((title) => title.tier === 'core').map((title) => (
                     <div className="flex gap-3 rounded-lg border border-[var(--border)] p-2" key={title.id}>
                       <div
                         className="h-16 w-12 shrink-0 rounded bg-[var(--bg)] bg-cover bg-center"
                         style={{ backgroundImage: `url(${title.posterUrl})` }}
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{title.rank}. {title.title}</p>
+                        <p className="truncate text-sm font-medium">{title.coreRank ?? title.rank}. {title.title}</p>
                         <p className="text-xs text-[var(--text-muted)]">TMDB {title.tmdbId}</p>
+                        <p className="text-xs text-[var(--text-muted)]">score {title.finalScore.toFixed(3)} · journey {title.journeyScore.toFixed(3)}</p>
                         <p className="text-xs text-[var(--text-muted)]">{title.completenessTier}</p>
                         <p className="text-xs text-[var(--text-muted)]">
                           {title.isEligible
@@ -853,6 +872,28 @@ export default function AdminCurriculumPage() {
                       </div>
                     </div>
                   ))}
+                  {node.titles.some((title) => title.tier === 'extended') ? (
+                    <details className="rounded-lg border border-[var(--border)] bg-[rgba(255,255,255,0.02)] p-2">
+                      <summary className="cursor-pointer text-xs uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                        Deep Cuts ({node.titles.filter((title) => title.tier === 'extended').length})
+                      </summary>
+                      <div className="mt-2 space-y-2">
+                        {node.titles.filter((title) => title.tier === 'extended').slice(0, 60).map((title) => (
+                          <div className="flex gap-3 rounded-lg border border-[var(--border)] p-2" key={`${title.id}-extended`}>
+                            <div
+                              className="h-16 w-12 shrink-0 rounded bg-[var(--bg)] bg-cover bg-center"
+                              style={{ backgroundImage: `url(${title.posterUrl})` }}
+                            />
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium">{title.title}</p>
+                              <p className="text-xs text-[var(--text-muted)]">TMDB {title.tmdbId}</p>
+                              <p className="text-xs text-[var(--text-muted)]">score {title.finalScore.toFixed(3)} · journey {title.journeyScore.toFixed(3)}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  ) : null}
                 </div>
               </details>
             ))}
