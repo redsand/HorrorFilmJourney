@@ -121,15 +121,6 @@ function toGenres(genreIds: number[]): string[] {
   if (genreIds.includes(878)) {
     derived.add('sci-fi-horror');
   }
-  if (genreIds.includes(53) || genreIds.includes(9648)) {
-    derived.add('psychological');
-  }
-  if (genreIds.includes(35)) {
-    derived.add('horror-comedy');
-  }
-  if (genreIds.includes(18)) {
-    derived.add('social-domestic-horror');
-  }
   return [...derived];
 }
 

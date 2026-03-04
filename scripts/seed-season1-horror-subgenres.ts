@@ -70,6 +70,25 @@ type NodeSummary = {
   unresolved: number;
 };
 
+type CatalogMovie = {
+  id: string;
+  tmdbId: number;
+  title: string;
+  year: number | null;
+  genres: string[];
+  popularity: number;
+  eligible: boolean;
+};
+
+type NodeClassifier = {
+  strongTags: string[];
+  mediumTags: string[];
+  weakTags?: string[];
+  excludeTags?: string[];
+  titlePatterns?: RegExp[];
+  minScore: number;
+};
+
 const SPEC_PATH = resolve('docs/season/season-1-horror-subgenre-curriculum.json');
 const READINESS_PATH = resolve('docs/season/season-1-horror-subgenre-readiness.md');
 const FETCH_TIMEOUT_MS = 12_000;
@@ -188,31 +207,184 @@ function parseTargetPerNode(requiredFloor: number): number | 'all' {
   return Math.max(requiredFloor, parsed);
 }
 
-const NODE_MATCH_TAGS: Record<string, string[]> = {
-  'supernatural-horror': ['supernatural', 'occult', 'paranormal', 'ghost', 'haunting', 'demonic'],
-  'psychological-horror': ['psychological', 'thriller', 'mystery', 'surreal'],
-  'slasher-serial-killer': ['slasher', 'serial-killer', 'stalker', 'home-invasion'],
-  'creature-monster': ['monster', 'creature-feature', 'animal-attack', 'kaiju', 'werewolf', 'vampire'],
-  'body-horror': ['body-horror', 'mutation', 'infection', 'parasite', 'medical'],
-  'cosmic-horror': ['cosmic-horror', 'eldritch', 'existential', 'sci-fi-horror'],
-  'folk-horror': ['folk-horror', 'pagan', 'ritual', 'rural', 'village-cult'],
-  'sci-fi-horror': ['sci-fi-horror', 'sci-fi', 'alien', 'tech-horror'],
-  'found-footage': ['found-footage', 'mockumentary', 'screenlife', 'surveillance'],
-  'survival-horror': ['survival-horror', 'survival', 'wilderness', 'siege', 'escape'],
-  'apocalyptic-horror': ['apocalyptic-horror', 'zombie', 'outbreak', 'end-of-world'],
-  'gothic-horror': ['gothic-horror', 'gothic', 'victorian', 'period'],
-  'horror-comedy': ['horror-comedy', 'comedy', 'satire', 'parody'],
-  'splatter-extreme': ['splatter-extreme', 'gore', 'extreme', 'transgressive'],
-  'social-domestic-horror': ['social-domestic-horror', 'social-thriller', 'family-trauma', 'domestic-horror'],
-  'experimental-horror': ['experimental-horror', 'surreal', 'avant-garde', 'dream-logic'],
+function parseMinEligiblePerNode(fallback: number): number {
+  const raw = process.env.SEASON1_MIN_ELIGIBLE_PER_NODE?.trim();
+  if (!raw) {
+    return fallback;
+  }
+  const parsed = Number.parseInt(raw, 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return fallback;
+  }
+  return parsed;
+}
+
+const CLASSIFIER_BY_NODE: Record<string, NodeClassifier> = {
+  'supernatural-horror': {
+    strongTags: ['supernatural-horror', 'supernatural', 'occult', 'paranormal', 'ghost', 'haunting', 'demonic', 'possession'],
+    mediumTags: ['mystery', 'fantasy', 'horror', 'religious-dread'],
+    titlePatterns: [/\bghost\b/i, /\bhaunt/i, /\bconjuring\b/i, /\bparanormal\b/i, /\bexorcist\b/i, /\bgrudge\b/i, /\bring\b/i, /\binsidious\b/i, /\bamityville\b/i],
+    minScore: 2.4,
+  },
+  'psychological-horror': {
+    strongTags: ['psychological-horror', 'paranoia', 'surreal', 'dream-logic', 'lynchian', 'identity-horror'],
+    mediumTags: ['mystery', 'horror'],
+    weakTags: ['psychological'],
+    titlePatterns: [/\bpsycho\b/i, /\bshining\b/i, /\blighthouse\b/i, /\bpossession\b/i, /\bmaud\b/i],
+    minScore: 3.4,
+  },
+  'slasher-serial-killer': {
+    strongTags: ['slasher-serial-killer', 'slasher', 'serial-killer', 'masked-killer', 'stalker', 'home-invasion'],
+    mediumTags: ['thriller', 'crime', 'horror'],
+    titlePatterns: [/\bhalloween\b/i, /\bfriday the 13th\b/i, /\bnightmare\b/i, /\bscream\b/i, /\bmaniac\b/i],
+    minScore: 2.8,
+  },
+  'creature-monster': {
+    strongTags: ['creature-monster', 'monster', 'creature-feature', 'animal-attack', 'kaiju', 'werewolf', 'vampire', 'mutant'],
+    mediumTags: ['sci-fi', 'fantasy', 'horror'],
+    titlePatterns: [/\bgodzilla\b/i, /\bking kong\b/i, /\bjaws\b/i, /\bpredator\b/i, /\btremors\b/i],
+    minScore: 2.8,
+  },
+  'body-horror': {
+    strongTags: ['body-horror', 'mutation', 'infection', 'parasite', 'medical', 'metamorphosis'],
+    mediumTags: ['sci-fi-horror', 'sci-fi', 'horror'],
+    titlePatterns: [/\bfly\b/i, /\bvideodrome\b/i, /\btetsuo\b/i, /\brabid\b/i, /\bcrimes of the future\b/i],
+    minScore: 2.9,
+  },
+  'cosmic-horror': {
+    strongTags: ['cosmic-horror', 'eldritch', 'existential', 'forbidden-knowledge', 'ancient-gods'],
+    mediumTags: ['sci-fi-horror', 'sci-fi', 'horror', 'mystery'],
+    weakTags: ['supernatural-horror'],
+    titlePatterns: [/\bevent horizon\b/i, /\bannihilation\b/i, /\bmouth of madness\b/i, /\bcthulhu\b/i, /\bvoid\b/i],
+    minScore: 2.6,
+  },
+  'folk-horror': {
+    strongTags: ['folk-horror', 'pagan', 'ritual', 'rural', 'village-cult', 'witchcraft', 'occult'],
+    mediumTags: ['fantasy', 'horror', 'mystery'],
+    titlePatterns: [/\bwicker man\b/i, /\bwitch\b/i, /\bmidsommar\b/i, /\bapostle\b/i, /\bwailing\b/i],
+    minScore: 2.9,
+  },
+  'sci-fi-horror': {
+    strongTags: ['alien', 'tech-horror', 'cybernetic', 'genetic-experiment', 'space-horror'],
+    mediumTags: ['horror', 'thriller', 'mystery', 'sci-fi'],
+    titlePatterns: [/\balien\b/i, /\bthing\b/i, /\bannihilation\b/i, /\bscanners\b/i, /\binvisible man\b/i],
+    weakTags: ['sci-fi-horror', 'sci-fi'],
+    minScore: 3.4,
+  },
+  'found-footage': {
+    strongTags: ['found-footage', 'mockumentary', 'screenlife', 'surveillance', 'analog-horror', 'lost-media'],
+    mediumTags: ['horror', 'thriller', 'mystery'],
+    titlePatterns: [/\bblair witch\b/i, /\bparanormal activity\b/i, /\brec\b/i, /\bv\/h\/s\b/i, /\blake mungo\b/i],
+    minScore: 2.8,
+  },
+  'survival-horror': {
+    strongTags: ['survival-horror', 'survival', 'wilderness', 'siege', 'escape', 'isolation'],
+    mediumTags: ['thriller', 'horror', 'adventure'],
+    titlePatterns: [/\bdescent\b/i, /\bhills have eyes\b/i, /\bwrong turn\b/i, /\bcrawl\b/i, /\bshallows\b/i],
+    minScore: 2.8,
+  },
+  'apocalyptic-horror': {
+    strongTags: ['apocalyptic-horror', 'zombie', 'outbreak', 'end-of-world', 'post-apocalyptic', 'viral-apocalypse'],
+    mediumTags: ['sci-fi-horror', 'sci-fi', 'horror'],
+    titlePatterns: [/\b28 days later\b/i, /\bdawn of the dead\b/i, /\bnight of the living dead\b/i, /\btrain to busan\b/i, /\bpontypool\b/i],
+    minScore: 2.9,
+  },
+  'gothic-horror': {
+    strongTags: ['gothic-horror', 'gothic', 'victorian', 'period-gothic', 'haunted-house'],
+    mediumTags: ['fantasy', 'horror', 'drama'],
+    titlePatterns: [/\bdracula\b/i, /\bfrankenstein\b/i, /\bnosferatu\b/i, /\bcrimson peak\b/i, /\bwoman in black\b/i],
+    minScore: 2.8,
+  },
+  'horror-comedy': {
+    strongTags: ['satire', 'parody', 'absurdist-horror', 'dark-comedy-horror'],
+    mediumTags: ['comedy', 'horror', 'fantasy'],
+    weakTags: ['horror-comedy', 'fantasy'],
+    titlePatterns: [/\bshaun of the dead\b/i, /\bwhat we do in the shadows\b/i, /\btucker and dale\b/i, /\bre-animator\b/i, /\barmy of darkness\b/i],
+    minScore: 3.5,
+  },
+  'splatter-extreme': {
+    strongTags: ['splatter-extreme', 'gore', 'extreme', 'transgressive', 'new-french-extremity', 'shock-cinema'],
+    mediumTags: ['horror', 'thriller', 'crime'],
+    titlePatterns: [/\bmartyrs\b/i, /\bhostel\b/i, /\bsaw\b/i, /\bterrifier\b/i, /\bcannibal\b/i],
+    minScore: 2.8,
+  },
+  'social-domestic-horror': {
+    strongTags: ['social-allegory-horror', 'class-horror', 'family-horror', 'domestic-horror'],
+    mediumTags: ['horror', 'thriller', 'drama'],
+    weakTags: ['social-domestic-horror', 'drama'],
+    titlePatterns: [/\bget out\b/i, /\bstepford\b/i, /\bhereditary\b/i, /\bus\b/i, /\bparasite\b/i],
+    minScore: 3.0,
+  },
+  'experimental-horror': {
+    strongTags: ['experimental-horror', 'avant-garde', 'surreal', 'dream-logic', 'lynchian'],
+    mediumTags: ['horror', 'drama', 'fantasy'],
+    weakTags: ['psychological'],
+    excludeTags: ['horror-comedy', 'slasher'],
+    titlePatterns: [/\beraserhead\b/i, /\bbegotten\b/i, /\bskinamarink\b/i, /\bhausu\b/i, /\bbeyond the black rainbow\b/i],
+    minScore: 2.6,
+  },
 };
 
-function matchesNodeByGenre(nodeSlug: string, genres: string[]): boolean {
-  const tags = NODE_MATCH_TAGS[nodeSlug] ?? [];
-  if (tags.length === 0) {
-    return genres.includes('horror');
+function computeNodeScore(nodeSlug: string, movie: CatalogMovie): number {
+  if (!movie.genres.includes('horror')) {
+    return Number.NEGATIVE_INFINITY;
   }
-  return genres.some((genre) => tags.includes(genre));
+  const classifier = CLASSIFIER_BY_NODE[nodeSlug];
+  if (!classifier) {
+    return movie.genres.includes(nodeSlug) ? 10 : 1;
+  }
+
+  const genreSet = new Set(movie.genres);
+  let score = 0;
+  let strongHits = 0;
+  for (const tag of classifier.strongTags) {
+    if (genreSet.has(tag)) {
+      strongHits += 1;
+    }
+  }
+  score += Math.min(strongHits, 3) * 2;
+
+  let mediumHits = 0;
+  for (const tag of classifier.mediumTags) {
+    if (genreSet.has(tag)) {
+      mediumHits += 1;
+    }
+  }
+  score += Math.min(mediumHits, 3) * 0.8;
+
+  let weakHits = 0;
+  for (const tag of classifier.weakTags ?? []) {
+    if (genreSet.has(tag)) {
+      weakHits += 1;
+    }
+  }
+  score += Math.min(weakHits, 2) * 0.35;
+
+  let excludeHits = 0;
+  for (const tag of classifier.excludeTags ?? []) {
+    if (genreSet.has(tag)) {
+      excludeHits += 1;
+    }
+  }
+  score -= excludeHits * 0.7;
+
+  const title = movie.title.toLowerCase();
+  const titleHits = (classifier.titlePatterns ?? []).filter((pattern) => pattern.test(title)).length;
+  score += Math.min(titleHits, 2) * 1.8;
+
+  return score;
+}
+
+function scoreMovieForNode(nodeSlug: string, movie: CatalogMovie): number {
+  const classifier = CLASSIFIER_BY_NODE[nodeSlug];
+  const raw = computeNodeScore(nodeSlug, movie);
+  if (!Number.isFinite(raw)) {
+    return raw;
+  }
+  if (!classifier) {
+    return raw;
+  }
+  return raw >= classifier.minScore ? raw : Number.NEGATIVE_INFINITY;
 }
 
 function mapDiscoverGenres(genreIds: number[], nodeSlug: string): string[] {
@@ -410,6 +582,7 @@ async function main(): Promise<void> {
   const apiKey = process.env.TMDB_API_KEY ?? null;
   const limitPerNode = parseIntEnv('SEASON1_REQUIRED_LIMIT_PER_NODE', 20);
   const targetPerNode = parseTargetPerNode(limitPerNode);
+  const minEligiblePerNode = parseMinEligiblePerNode(64);
   try {
     const spec = await loadSpec();
     const season = await prisma.season.upsert({
@@ -437,10 +610,12 @@ async function main(): Promise<void> {
     let totalRequested = 0;
     let totalAssigned = 0;
 
-    const catalogPool = (await prisma.movie.findMany({
+    const catalogPool: CatalogMovie[] = (await prisma.movie.findMany({
       select: {
         id: true,
         tmdbId: true,
+        title: true,
+        year: true,
         posterUrl: true,
         genres: true,
         director: true,
@@ -461,6 +636,8 @@ async function main(): Promise<void> {
         return {
           id: movie.id,
           tmdbId: movie.tmdbId,
+          title: movie.title,
+          year: movie.year,
           genres,
           popularity,
           eligible: eligibility.isEligible,
@@ -525,19 +702,47 @@ async function main(): Promise<void> {
         const assignedIds = new Set(assignments.map((entry) => entry.movieId));
         const topupPool = catalogPool
           .filter((movie) => !assignedIds.has(movie.id))
-          .filter((movie) => matchesNodeByGenre(node.slug, movie.genres))
-          .sort((a, b) => (b.popularity - a.popularity) || (a.tmdbId - b.tmdbId));
+          .map((movie) => ({
+            movie,
+            score: scoreMovieForNode(node.slug, movie),
+          }))
+          .filter((entry) => Number.isFinite(entry.score))
+          .sort((a, b) => (b.score - a.score) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId));
         const topup = (targetPerNode === 'all'
           ? topupPool
           : topupPool.slice(0, Math.max(0, targetPerNode - assignments.length)))
-          .map((movie, i) => ({
+          .map((entry, i) => ({
             nodeId: upsertedNode.id,
-            movieId: movie.id,
+            movieId: entry.movie.id,
             rank: rank + i,
           }));
         if (topup.length > 0) {
           await prisma.nodeMovie.createMany({ data: topup, skipDuplicates: true });
           assignments.push(...topup);
+        }
+
+        if (assignments.length < minEligiblePerNode) {
+          const relaxedThreshold = node.slug === 'experimental-horror' ? 1.2 : 2.1;
+          const relaxedPool = catalogPool
+            .filter((movie) => !assignedIds.has(movie.id))
+            .map((movie) => ({
+              movie,
+              strictScore: scoreMovieForNode(node.slug, movie),
+              rawScore: computeNodeScore(node.slug, movie),
+            }))
+            .filter((entry) => !Number.isFinite(entry.strictScore))
+            .filter((entry) => Number.isFinite(entry.rawScore) && entry.rawScore >= relaxedThreshold)
+            .sort((a, b) => (b.rawScore - a.rawScore) || (b.movie.popularity - a.movie.popularity) || (a.movie.tmdbId - b.movie.tmdbId))
+            .slice(0, Math.max(0, minEligiblePerNode - assignments.length))
+            .map((entry, i) => ({
+              nodeId: upsertedNode.id,
+              movieId: entry.movie.id,
+              rank: rank + topup.length + i,
+            }));
+          if (relaxedPool.length > 0) {
+            await prisma.nodeMovie.createMany({ data: relaxedPool, skipDuplicates: true });
+            assignments.push(...relaxedPool);
+          }
         }
       }
 
@@ -557,6 +762,7 @@ async function main(): Promise<void> {
     lines.push('');
     lines.push(`Requested titles: ${totalRequested}`);
     lines.push(`Target titles per node: ${targetPerNode === 'all' ? 'all eligible matches' : targetPerNode}`);
+    lines.push(`Minimum eligible per node floor: ${minEligiblePerNode}`);
     lines.push(`Assigned titles: ${totalAssigned}`);
     lines.push(`Unresolved titles: ${unresolved.length}`);
     lines.push('');
