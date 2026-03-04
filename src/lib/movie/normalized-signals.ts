@@ -1,4 +1,5 @@
 import { computeReceptionCount, type ReceptionRating } from '@/lib/movie/reception';
+import { resolveCanonicalMovieSignals } from '@/lib/movie/canonical-metrics';
 
 export interface NormalizedSignals {
   voteCount: number;
@@ -12,6 +13,9 @@ export interface NormalizedSignals {
 }
 
 export interface NormalizedSignalsInput {
+  runtime?: number | null;
+  tmdbVoteCount?: number | null;
+  tmdbVoteAverage?: number | null;
   voteCount?: number | null;
   rating?: number | null;
   popularity?: number | null;
@@ -37,10 +41,18 @@ function toFiniteOrNull(value: number | null | undefined): number | null {
 }
 
 export function normalizeMovieSignals(input: NormalizedSignalsInput): NormalizedSignals {
-  const voteCountRaw = toFiniteOrNull(input.voteCount);
-  const ratingRaw = toFiniteOrNull(input.rating);
-  const popularityRaw = toFiniteOrNull(input.popularity);
-  const runtimeRaw = toFiniteOrNull(input.runtimeMinutes);
+  const canonical = resolveCanonicalMovieSignals({
+    runtime: input.runtime ?? input.runtimeMinutes,
+    tmdbVoteCount: input.tmdbVoteCount ?? input.voteCount,
+    tmdbVoteAverage: input.tmdbVoteAverage ?? input.rating,
+    popularity: input.popularity,
+    ratings: input.ratings ?? [],
+  });
+
+  const voteCountRaw = toFiniteOrNull(canonical.tmdbVoteCount ?? input.voteCount);
+  const ratingRaw = toFiniteOrNull(canonical.tmdbVoteAverage ?? input.rating);
+  const popularityRaw = toFiniteOrNull(canonical.popularity ?? input.popularity);
+  const runtimeRaw = toFiniteOrNull(canonical.runtime ?? input.runtimeMinutes);
 
   const voteCountScore = voteCountRaw === null
     ? 0

@@ -10,6 +10,10 @@ import {
 import { scoreMovieForNodes, type NodeScore } from '../src/lib/nodes/scoring/scoreMovieForNodes';
 import { computeReceptionCount } from '../src/lib/movie/reception';
 import {
+  computeCanonicalRuntimeVoteCoverage,
+  resolveCanonicalMovieSignals,
+} from '../src/lib/movie/canonical-metrics';
+import {
   resolvePerNodeCoreThreshold,
   resolvePerNodeQualityFloor,
   resolvePerNodeTargetSize,
@@ -117,28 +121,19 @@ function getRating(ratings: ParsedMovie['ratings']): number {
 }
 
 function getRuntimeMinutes(ratings: ParsedMovie['ratings']): number | null {
-  const runtime = ratings.find((rating) => rating.source === 'TMDB_RUNTIME')?.value ?? null;
-  if (typeof runtime !== 'number' || !Number.isFinite(runtime) || runtime <= 0) {
-    return null;
-  }
-  return Math.round(runtime);
+  return resolveCanonicalMovieSignals({ ratings }).runtime;
 }
 
 function getVoteCount(ratings: ParsedMovie['ratings']): number {
-  const value = ratings.find((rating) => rating.source === 'TMDB_VOTE_COUNT')?.value
-    ?? ratings.find((rating) => rating.source === 'TMDB_VOTES')?.value
-    ?? 0;
-  return Number.isFinite(value) && value > 0 ? value : 0;
+  return resolveCanonicalMovieSignals({ ratings }).tmdbVoteCount ?? 0;
 }
 
 function getTmdbVoteAverage(ratings: ParsedMovie['ratings']): number {
-  const value = ratings.find((rating) => rating.source === 'TMDB')?.value ?? 0;
-  return Number.isFinite(value) && value > 0 ? value : 0;
+  return resolveCanonicalMovieSignals({ ratings }).tmdbVoteAverage ?? 0;
 }
 
 function getPopularity(ratings: ParsedMovie['ratings']): number {
-  const value = ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
-  return Number.isFinite(value) && value > 0 ? value : 0;
+  return resolveCanonicalMovieSignals({ ratings }).popularity ?? 0;
 }
 
 function hasHorrorAdjacentSignals(movie: ParsedMovie): boolean {
@@ -161,9 +156,11 @@ function hasStrictHorrorSignals(movie: ParsedMovie): boolean {
 function toJourneyInput(movie: ParsedMovie): JourneyWorthinessMovieInput {
   return {
     year: movie.year,
+    runtime: movie.runtimeMinutes,
     runtimeMinutes: movie.runtimeMinutes,
+    tmdbVoteCount: getVoteCount(movie.ratings),
+    tmdbVoteAverage: getTmdbVoteAverage(movie.ratings),
     popularity: getPopularity(movie.ratings),
-    voteCount: getVoteCount(movie.ratings),
     posterUrl: movie.posterUrl,
     synopsis: movie.synopsis,
     director: movie.director,
@@ -702,8 +699,11 @@ async function main(): Promise<void> {
       })),
     };
 
-    const runtimePresent = horrorPool.filter((row) => (row.movie.runtimeMinutes ?? 0) > 0).length;
-    const votePresent = horrorPool.filter((row) => row.metrics.voteCount > 0).length;
+    const canonicalCoverage = computeCanonicalRuntimeVoteCoverage(
+      horrorPool.map((row) => ({ tmdbId: row.movie.tmdbId, ratings: row.movie.ratings })),
+    );
+    const runtimePresent = canonicalCoverage.runtimePresent;
+    const votePresent = canonicalCoverage.voteCountPresent;
     const ratingPresent = horrorPool.filter((row) => row.metrics.rating > 0).length;
     const creditsPresent = horrorPool.filter((row) => {
       const hasDirector = typeof row.movie.director === 'string' && row.movie.director.trim().length > 0;

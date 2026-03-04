@@ -1158,6 +1158,29 @@ async function main(): Promise<void> {
       },
     });
 
+    const runRows = await prisma.nodeMovie.findMany({
+      where: {
+        runId,
+        taxonomyVersion: config.taxonomyVersion,
+        node: { packId: pack.id },
+      },
+      select: {
+        movieId: true,
+        tier: true,
+      },
+    });
+    const coreRows = runRows.filter((row) => row.tier === 'CORE');
+    const extendedRows = runRows.filter((row) => row.tier === 'EXTENDED');
+    const coreMovieIds = new Set(coreRows.map((row) => row.movieId));
+    const extendedMovieIds = new Set(extendedRows.map((row) => row.movieId));
+    const totalUniqueMovieIds = new Set(runRows.map((row) => row.movieId));
+    let extendedUniqueOnly = 0;
+    for (const movieId of extendedMovieIds) {
+      if (!coreMovieIds.has(movieId)) {
+        extendedUniqueOnly += 1;
+      }
+    }
+
     const lines: string[] = [];
     lines.push('# Season 1 Horror Required Subgenre Readiness');
     lines.push('');
@@ -1214,7 +1237,12 @@ async function main(): Promise<void> {
     console.log(
       `Season 1 weak-supervision seed complete: taxonomyVersion=${config.taxonomyVersion} nodes=${summaries.length} requested=${totalRequested} assigned=${totalAssigned} unresolved=${unresolved.length} runId=${runId}`,
     );
-    console.log(`Snapshot release created: ${release.releaseId} items=${release.itemCount} published=${publishSnapshot}`);
+    console.log(
+      `Assignment summary: coreAssignments=${coreRows.length} extendedAssignments=${extendedRows.length} totalAssignments=${runRows.length} coreUnique=${coreMovieIds.size} extendedUniqueOnly=${extendedUniqueOnly} totalUnique=${totalUniqueMovieIds.size}`,
+    );
+    console.log(
+      `Snapshot release created: ${release.releaseId} coreItems=${release.itemCount} published=${publishSnapshot}`,
+    );
     console.log(`Readiness report updated: ${READINESS_PATH}`);
   } finally {
     await prisma.$disconnect();

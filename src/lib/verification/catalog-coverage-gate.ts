@@ -1,4 +1,5 @@
 import { computeReceptionCount } from '../movie/reception.ts';
+import { computeCanonicalRuntimeVoteCoverage } from '../movie/canonical-metrics.ts';
 
 export type CoverageGateThresholds = {
   runtimeCoverageMin: number;
@@ -47,16 +48,6 @@ function parseCastNames(value: unknown): string[] {
     .filter((entry) => entry.length > 0);
 }
 
-function hasRuntimeRating(ratings: CoverageMovieInput['ratings']): boolean {
-  const runtime = ratings.find((rating) => rating.source.toUpperCase() === 'TMDB_RUNTIME')?.value ?? 0;
-  return Number.isFinite(runtime) && runtime > 0;
-}
-
-function hasVoteCountRating(ratings: CoverageMovieInput['ratings']): boolean {
-  const voteCount = ratings.find((rating) => rating.source.toUpperCase() === 'TMDB_VOTE_COUNT')?.value ?? 0;
-  return Number.isFinite(voteCount) && voteCount > 0;
-}
-
 function hasDirectorAndCast(movie: CoverageMovieInput): boolean {
   const hasDirector = Boolean(movie.director && movie.director.trim().length > 0);
   const hasCast = parseCastNames(movie.castTop).length > 0;
@@ -72,14 +63,15 @@ export function computeCoverageGateMetrics(
   sampleSize = 10,
 ): CoverageGateMetrics {
   const tmdbMovies = movies.filter((movie) => Number.isInteger(movie.tmdbId) && movie.tmdbId > 0);
-  const missingRuntime: number[] = [];
-  const missingVoteCount: number[] = [];
+  const canonicalCoverage = computeCanonicalRuntimeVoteCoverage(
+    tmdbMovies.map((movie) => ({ tmdbId: movie.tmdbId, ratings: movie.ratings })),
+  );
+  const missingRuntime = canonicalCoverage.missingRuntimeIds;
+  const missingVoteCount = canonicalCoverage.missingVoteCountIds;
   const missingDirectorOrCast: number[] = [];
   const missingReception: number[] = [];
 
   for (const movie of tmdbMovies) {
-    if (!hasRuntimeRating(movie.ratings)) missingRuntime.push(movie.tmdbId);
-    if (!hasVoteCountRating(movie.ratings)) missingVoteCount.push(movie.tmdbId);
     if (!hasDirectorAndCast(movie)) missingDirectorOrCast.push(movie.tmdbId);
     if (!hasReception(movie)) missingReception.push(movie.tmdbId);
   }
@@ -87,8 +79,8 @@ export function computeCoverageGateMetrics(
   const total = tmdbMovies.length;
   return {
     totalTmdbMovies: total,
-    runtimeCoverage: toPct(total - missingRuntime.length, total),
-    voteCountCoverage: toPct(total - missingVoteCount.length, total),
+    runtimeCoverage: canonicalCoverage.runtimeCoverage,
+    voteCountCoverage: canonicalCoverage.voteCountCoverage,
     directorAndCastTopCoverage: toPct(total - missingDirectorOrCast.length, total),
     receptionCountCoverage: toPct(total - missingReception.length, total),
     sampleIds: {

@@ -1,6 +1,7 @@
 import { loadSeasonJourneyWorthinessConfig } from '@/config/seasons/journey-worthiness';
 import { normalizeMovieSignals } from '@/lib/movie/normalized-signals';
 import { computeReceptionCount } from '@/lib/movie/reception';
+import { resolveCanonicalMovieSignals } from '@/lib/movie/canonical-metrics';
 
 export type JourneyWorthinessRating = {
   source: string;
@@ -10,7 +11,10 @@ export type JourneyWorthinessRating = {
 
 export type JourneyWorthinessMovieInput = {
   year?: number | null;
+  runtime?: number | null;
   runtimeMinutes?: number | null;
+  tmdbVoteCount?: number | null;
+  tmdbVoteAverage?: number | null;
   popularity?: number | null;
   voteCount?: number | null;
   posterUrl?: string | null;
@@ -200,17 +204,18 @@ function computeReceptionPresence(input: JourneyWorthinessMovieInput): number {
 }
 
 function computeRuntimeYearSanity(
-  input: JourneyWorthinessMovieInput,
+  runtimeMinutes: number | null,
+  year: number | null | undefined,
   config: JourneyWorthinessConfig,
   nowYear: number,
 ): number {
-  const runtimeOk = Number.isFinite(input.runtimeMinutes)
-    && (input.runtimeMinutes as number) >= config.thresholds.minRuntimeMinutes
-    && (input.runtimeMinutes as number) <= config.thresholds.maxRuntimeMinutes;
+  const runtimeOk = Number.isFinite(runtimeMinutes)
+    && (runtimeMinutes as number) >= config.thresholds.minRuntimeMinutes
+    && (runtimeMinutes as number) <= config.thresholds.maxRuntimeMinutes;
   const maxYear = nowYear + config.thresholds.maxFutureYears;
-  const yearOk = Number.isFinite(input.year)
-    && (input.year as number) >= config.thresholds.minYear
-    && (input.year as number) <= maxYear;
+  const yearOk = Number.isFinite(year)
+    && (year as number) >= config.thresholds.minYear
+    && (year as number) <= maxYear;
   if (runtimeOk && yearOk) {
     return 1;
   }
@@ -227,12 +232,27 @@ export function computeJourneyWorthiness(
 ): JourneyWorthinessResult {
   const config = loadSeasonJourneyWorthinessConfig(seasonId);
   const nowYear = options?.nowYear ?? new Date().getUTCFullYear();
+  const canonical = resolveCanonicalMovieSignals({
+    runtime: movie.runtime ?? movie.runtimeMinutes,
+    tmdbVoteCount: movie.tmdbVoteCount ?? movie.voteCount,
+    tmdbVoteAverage: movie.tmdbVoteAverage ?? toRatingOutOf10(movie.ratings),
+    popularity: movie.popularity,
+    ratings: (movie.ratings ?? []).map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+      scale: rating.scale ?? null,
+    })),
+  });
+  const runtimeMinutes = canonical.runtime;
+  const voteCount = canonical.tmdbVoteCount;
+  const tmdbVoteAverage = canonical.tmdbVoteAverage;
+  const popularityValue = canonical.popularity;
 
   const normalizedSignals = normalizeMovieSignals({
-    voteCount: movie.voteCount,
-    rating: toRatingOutOf10(movie.ratings),
-    popularity: movie.popularity,
-    runtimeMinutes: movie.runtimeMinutes,
+    runtime: runtimeMinutes,
+    tmdbVoteCount: voteCount,
+    tmdbVoteAverage,
+    popularity: popularityValue,
     ratings: (movie.ratings ?? []).map((rating) => ({
       source: rating.source,
       value: rating.value,
@@ -244,7 +264,7 @@ export function computeJourneyWorthiness(
   const popularity = normalizedSignals.popularity;
   const metadataCompleteness = computeMetadataCompleteness(movie);
   const receptionPresence = computeReceptionPresence(movie);
-  const runtimeYearSanity = computeRuntimeYearSanity(movie, config, nowYear);
+  const runtimeYearSanity = computeRuntimeYearSanity(runtimeMinutes, movie.year, config, nowYear);
   const directorSignal = typeof movie.director === 'string' && movie.director.trim().length > 0 ? 1 : 0;
 
   const weighted = {
@@ -263,16 +283,16 @@ export function computeJourneyWorthiness(
   ).toFixed(6));
 
   const reasons: JourneyWorthinessReason[] = [];
-  if (!Number.isFinite(movie.voteCount) || (movie.voteCount as number) < config.thresholds.minVoteCount || voteConfidence < 0.45) {
+  if (!Number.isFinite(voteCount) || (voteCount as number) < config.thresholds.minVoteCount || voteConfidence < 0.45) {
     reasons.push('low_vote_count');
   }
   if (metadataCompleteness < config.thresholds.minMetadataCompleteness) {
     reasons.push('missing_metadata');
   }
   if (
-    !Number.isFinite(movie.runtimeMinutes)
-    || (movie.runtimeMinutes as number) < config.thresholds.minRuntimeMinutes
-    || (movie.runtimeMinutes as number) > config.thresholds.maxRuntimeMinutes
+    !Number.isFinite(runtimeMinutes)
+    || (runtimeMinutes as number) < config.thresholds.minRuntimeMinutes
+    || (runtimeMinutes as number) > config.thresholds.maxRuntimeMinutes
   ) {
     reasons.push('runtime_outlier');
   }
