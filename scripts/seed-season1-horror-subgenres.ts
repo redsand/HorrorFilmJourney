@@ -581,7 +581,6 @@ async function main(): Promise<void> {
       const isCuratedAnchor = curatedLookup.has(makeLookupKey(movie.title, movie.year));
       const scoredNodes = scoreMovieForNodes({
         seasonId: 'season-1',
-        taxonomyVersion: config.taxonomyVersion,
         movie: {
           id: movie.id,
           tmdbId: movie.tmdbId,

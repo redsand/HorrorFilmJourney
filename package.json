@@ -35,6 +35,8 @@
     "export:season2:cult": "node --experimental-strip-types scripts/export-season2-mastered.ts",
     "export:season2:canonical": "node --experimental-strip-types scripts/export-season2-canonical.ts",
     "import:season2:cult": "node --experimental-strip-types scripts/import-season2-mastered.ts",
+    "export:season1:snapshot": "node --experimental-strip-types scripts/export-season1-snapshot.ts",
+    "import:season1:snapshot": "node --experimental-strip-types scripts/import-season1-snapshot.ts",
     "catalog:backup": "node --experimental-strip-types scripts/catalog-backup.ts",
     "catalog:restore": "node --experimental-strip-types scripts/catalog-restore.ts",
     "sync:tmdb:catalog": "node --experimental-strip-types scripts/sync-tmdb-catalog.ts",

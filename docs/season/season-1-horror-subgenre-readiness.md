@@ -1,75 +1,367 @@
 # Season 1 Horror Required Subgenre Readiness
 
-Generated: 2026-03-04T18:40:02.885Z
-Run ID: season1-weak-supervision-2026-03-04T18:36:52.513Z
-Taxonomy version: season-1-horror-v3.5
+Generated: 2026-03-04T19:05:52.601Z
+Run ID: season1-published-snapshot-test-run
+Taxonomy version: season-1-horror-test-v3.5
 Max nodes per movie: 3
 Classifier assist: disabled
-Snapshot release: cmmcdszbv01r4yl47ro9g6fd6 (published)
+Snapshot release: cmmceq75s003tnfe2mh5p6qyr (published)
 
 Requested curated titles: 371
-Assigned titles: 2235
-Unresolved curated titles: 39
+Assigned titles: 40
+Unresolved curated titles: 331
 
 ## Per-node
 
 | Node | Requested | Curated Core | Weak Core | Extended | Assigned | Target Core | Min Core | Quality Floor | Core Threshold | Core Min Used | Picked % | Eligible Extended | Overlap Excl. | Below min | Unresolved |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :---: | ---: |
-| supernatural-horror | 30 | 30 | 6 | 114 | 150 | 120 | 80 | 0.70 | 0.78 | 0.71 | 54.5% | 120 | 0 | YES | 0 |
-| psychological-horror | 23 | 18 | 3 | 28 | 49 | 120 | 80 | 0.70 | 0.78 | 0.70 | 100.0% | 31 | 0 | YES | 5 |
-| slasher-serial-killer | 29 | 28 | 0 | 46 | 74 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 46 | 0 | YES | 1 |
-| creature-monster | 22 | 22 | 8 | 83 | 113 | 120 | 80 | 0.70 | 0.78 | 0.73 | 80.0% | 91 | 0 | YES | 0 |
-| body-horror | 21 | 19 | 2 | 32 | 53 | 120 | 80 | 0.70 | 0.78 | 0.70 | 100.0% | 34 | 0 | YES | 2 |
-| cosmic-horror | 21 | 15 | 7 | 21 | 43 | 120 | 80 | 0.68 | 0.76 | 0.70 | 70.0% | 28 | 0 | YES | 6 |
-| folk-horror | 21 | 19 | 4 | 44 | 67 | 120 | 80 | 0.70 | 0.78 | 0.72 | 100.0% | 48 | 0 | YES | 2 |
-| sci-fi-horror | 25 | 23 | 52 | 264 | 339 | 120 | 80 | 0.68 | 0.76 | 0.69 | 58.4% | 316 | 0 | YES | 2 |
-| found-footage | 20 | 18 | 1 | 9 | 28 | 120 | 80 | 0.70 | 0.78 | 0.73 | 100.0% | 10 | 0 | YES | 2 |
-| survival-horror | 25 | 22 | 15 | 122 | 159 | 120 | 80 | 0.70 | 0.78 | 0.70 | 75.0% | 137 | 0 | YES | 3 |
-| apocalyptic-horror | 24 | 23 | 14 | 109 | 146 | 120 | 80 | 0.68 | 0.76 | 0.70 | 66.7% | 123 | 0 | YES | 1 |
-| gothic-horror | 22 | 20 | 3 | 24 | 47 | 120 | 80 | 0.70 | 0.78 | 0.71 | 100.0% | 27 | 0 | YES | 2 |
-| horror-comedy | 21 | 20 | 22 | 373 | 415 | 120 | 80 | 0.68 | 0.75 | 0.70 | 66.7% | 395 | 0 | YES | 1 |
-| splatter-extreme | 23 | 16 | 6 | 64 | 86 | 120 | 80 | 0.70 | 0.78 | 0.70 | 85.7% | 70 | 0 | YES | 7 |
-| social-domestic-horror | 22 | 20 | 14 | 371 | 405 | 120 | 80 | 0.70 | 0.78 | 0.75 | 43.8% | 385 | 0 | YES | 2 |
-| experimental-horror | 22 | 19 | 11 | 31 | 61 | 120 | 80 | 0.68 | 0.75 | 0.70 | 91.7% | 42 | 0 | YES | 3 |
+| supernatural-horror | 30 | 5 | 0 | 0 | 5 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 25 |
+| psychological-horror | 23 | 2 | 0 | 0 | 2 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 21 |
+| slasher-serial-killer | 29 | 4 | 0 | 0 | 4 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 25 |
+| creature-monster | 22 | 5 | 0 | 0 | 5 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 17 |
+| body-horror | 21 | 3 | 0 | 0 | 3 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 18 |
+| cosmic-horror | 21 | 1 | 0 | 0 | 1 | 120 | 80 | 0.68 | 0.76 | 0.72 | 0.0% | 0 | 0 | YES | 20 |
+| folk-horror | 21 | 1 | 0 | 0 | 1 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 20 |
+| sci-fi-horror | 25 | 4 | 0 | 0 | 4 | 120 | 80 | 0.68 | 0.76 | 0.72 | 0.0% | 0 | 0 | YES | 21 |
+| found-footage | 20 | 2 | 0 | 0 | 2 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 18 |
+| survival-horror | 25 | 2 | 0 | 0 | 2 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 23 |
+| apocalyptic-horror | 24 | 4 | 0 | 0 | 4 | 120 | 80 | 0.68 | 0.76 | 0.72 | 0.0% | 0 | 0 | YES | 20 |
+| gothic-horror | 22 | 2 | 0 | 0 | 2 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 20 |
+| horror-comedy | 21 | 1 | 0 | 0 | 1 | 120 | 80 | 0.68 | 0.75 | 0.72 | 0.0% | 0 | 0 | YES | 20 |
+| splatter-extreme | 23 | 0 | 0 | 0 | 0 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 23 |
+| social-domestic-horror | 22 | 4 | 0 | 0 | 4 | 120 | 80 | 0.70 | 0.78 | 0.72 | 0.0% | 0 | 0 | YES | 18 |
+| experimental-horror | 22 | 0 | 0 | 0 | 0 | 120 | 80 | 0.68 | 0.75 | 0.72 | 0.0% | 0 | 0 | YES | 22 |
 
 ## Unresolved curated titles
 
+- supernatural-horror: Poltergeist (1982) - not found in local catalog
+- supernatural-horror: The Sixth Sense (1999) - not found in local catalog
+- supernatural-horror: The Ring (2002) - not found in local catalog
+- supernatural-horror: Paranormal Activity (2007) - not found in local catalog
+- supernatural-horror: The Haunting (1963) - not found in local catalog
+- supernatural-horror: The Innocents (1961) - not found in local catalog
+- supernatural-horror: The Amityville Horror (1979) - not found in local catalog
+- supernatural-horror: Sinister (2012) - not found in local catalog
+- supernatural-horror: The Grudge (2004) - not found in local catalog
+- supernatural-horror: Ju-On: The Grudge (2002) - not found in local catalog
+- supernatural-horror: Drag Me to Hell (2009) - not found in local catalog
+- supernatural-horror: The Changeling (1980) - not found in local catalog
+- supernatural-horror: The Autopsy of Jane Doe (2016) - not found in local catalog
+- supernatural-horror: The Babadook (2014) - not found in local catalog
+- supernatural-horror: The Witch in the Window (2018) - not found in local catalog
+- supernatural-horror: The Conjuring 2 (2016) - not found in local catalog
+- supernatural-horror: The Conjuring: The Devil Made Me Do It (2021) - not found in local catalog
+- supernatural-horror: The Nun (2018) - not found in local catalog
+- supernatural-horror: Insidious: Chapter 2 (2013) - not found in local catalog
+- supernatural-horror: Princess Mononoke (1997) - not found in local catalog
+- supernatural-horror: Constantine (2005) - not found in local catalog
+- supernatural-horror: Five Nights at Freddy's (2023) - not found in local catalog
+- supernatural-horror: The Omen (1976) - not found in local catalog
+- supernatural-horror: Triangle (2009) - not found in local catalog
+- supernatural-horror: Ninja Scroll (1993) - not found in local catalog
+- psychological-horror: Black Swan (2010) - not found in local catalog
+- psychological-horror: Repulsion (1965) - not found in local catalog
+- psychological-horror: Rosemary's Baby (1968) - not found in local catalog
+- psychological-horror: The Lighthouse (2019) - not found in local catalog
 - psychological-horror: Saint Maud (2019) - not found in local catalog
+- psychological-horror: Jacob's Ladder (1990) - not found in local catalog
+- psychological-horror: Session 9 (2001) - not found in local catalog
+- psychological-horror: The Tenant (1976) - not found in local catalog
+- psychological-horror: The Machinist (2004) - not found in local catalog
+- psychological-horror: Possession (1981) - not found in local catalog
+- psychological-horror: Don't Look Now (1973) - not found in local catalog
 - psychological-horror: Perfect Blue (1997) - not found in local catalog
-- psychological-horror: Enemy (2013) - fails hard eligibility
+- psychological-horror: Enemy (2013) - not found in local catalog
 - psychological-horror: The Invitation (2015) - not found in local catalog
+- psychological-horror: It Comes at Night (2017) - not found in local catalog
 - psychological-horror: The Night House (2020) - not found in local catalog
+- psychological-horror: Mother! (2017) - not found in local catalog
+- psychological-horror: Lost Highway (1997) - not found in local catalog
+- psychological-horror: Orphan (2009) - not found in local catalog
+- psychological-horror: Stonehearst Asylum (2014) - not found in local catalog
+- psychological-horror: Speak No Evil (2024) - not found in local catalog
+- slasher-serial-killer: Friday the 13th (1980) - not found in local catalog
+- slasher-serial-killer: The Texas Chain Saw Massacre (1974) - not found in local catalog
+- slasher-serial-killer: Black Christmas (1974) - not found in local catalog
+- slasher-serial-killer: My Bloody Valentine (1981) - not found in local catalog
+- slasher-serial-killer: The Burning (1981) - not found in local catalog
+- slasher-serial-killer: Sleepaway Camp (1983) - not found in local catalog
+- slasher-serial-killer: Maniac (1980) - not found in local catalog
+- slasher-serial-killer: Peeping Tom (1960) - not found in local catalog
+- slasher-serial-killer: The House That Jack Built (2018) - not found in local catalog
+- slasher-serial-killer: Henry: Portrait of a Serial Killer (1986) - not found in local catalog
+- slasher-serial-killer: American Psycho (2000) - not found in local catalog
+- slasher-serial-killer: Behind the Mask: The Rise of Leslie Vernon (2006) - not found in local catalog
+- slasher-serial-killer: Hatchet (2006) - not found in local catalog
+- slasher-serial-killer: The Town That Dreaded Sundown (1976) - not found in local catalog
+- slasher-serial-killer: Psycho II (1983) - not found in local catalog
 - slasher-serial-killer: Terrifier (2016) - not found in local catalog
+- slasher-serial-killer: Scream (2022) - not found in local catalog
+- slasher-serial-killer: Scream VI (2023) - not found in local catalog
+- slasher-serial-killer: Halloween (2018) - not found in local catalog
+- slasher-serial-killer: Halloween Kills (2021) - not found in local catalog
+- slasher-serial-killer: Halloween Ends (2022) - not found in local catalog
+- slasher-serial-killer: Candyman (2021) - not found in local catalog
+- slasher-serial-killer: Scream 7 (2026) - not found in local catalog
+- slasher-serial-killer: Deep Red (1975) - not found in local catalog
+- slasher-serial-killer: Five Nights at Freddy's 2 (2025) - not found in local catalog
+- creature-monster: Jaws (1975) - not found in local catalog
+- creature-monster: Predator (1987) - not found in local catalog
+- creature-monster: Godzilla (1954) - not found in local catalog
+- creature-monster: King Kong (1933) - not found in local catalog
+- creature-monster: The Host (2006) - not found in local catalog
+- creature-monster: Tremors (1990) - not found in local catalog
+- creature-monster: Cloverfield (2008) - not found in local catalog
+- creature-monster: The Mist (2007) - not found in local catalog
+- creature-monster: Gremlins (1984) - not found in local catalog
+- creature-monster: Pumpkinhead (1988) - not found in local catalog
+- creature-monster: Lake Placid (1999) - not found in local catalog
+- creature-monster: The Ritual (2017) - not found in local catalog
+- creature-monster: The Relic (1997) - not found in local catalog
+- creature-monster: Jeepers Creepers (2001) - not found in local catalog
+- creature-monster: Attack the Block (2011) - not found in local catalog
+- creature-monster: Sinners (2025) - not found in local catalog
+- creature-monster: Highlander (1986) - not found in local catalog
+- body-horror: Videodrome (1983) - not found in local catalog
+- body-horror: Tetsuo: The Iron Man (1989) - not found in local catalog
+- body-horror: Possessor (2020) - not found in local catalog
+- body-horror: Crimes of the Future (2022) - not found in local catalog
 - body-horror: Raw (2016) - not found in local catalog
+- body-horror: Titane (2021) - not found in local catalog
+- body-horror: Society (1989) - not found in local catalog
+- body-horror: The Brood (1979) - not found in local catalog
+- body-horror: Rabid (1977) - not found in local catalog
+- body-horror: Altered States (1980) - not found in local catalog
+- body-horror: Antiviral (2012) - not found in local catalog
+- body-horror: The Skin I Live In (2011) - not found in local catalog
+- body-horror: Bite (2015) - not found in local catalog
+- body-horror: Contracted (2013) - not found in local catalog
+- body-horror: Slither (2006) - not found in local catalog
 - body-horror: American Mary (2012) - not found in local catalog
+- body-horror: The Substance (2024) - not found in local catalog
+- body-horror: The Cabinet of Dr. Caligari (1920) - not found in local catalog
+- cosmic-horror: Annihilation (2018) - not found in local catalog
 - cosmic-horror: In the Mouth of Madness (1994) - not found in local catalog
+- cosmic-horror: Event Horizon (1997) - not found in local catalog
+- cosmic-horror: The Void (2016) - not found in local catalog
 - cosmic-horror: Color Out of Space (2019) - not found in local catalog
+- cosmic-horror: The Endless (2017) - not found in local catalog
+- cosmic-horror: Prince of Darkness (1987) - not found in local catalog
+- cosmic-horror: The Lighthouse (2019) - not found in local catalog
+- cosmic-horror: The Mist (2007) - not found in local catalog
+- cosmic-horror: Under the Skin (2013) - not found in local catalog
 - cosmic-horror: Resolution (2012) - not found in local catalog
+- cosmic-horror: The Beyond (1981) - not found in local catalog
+- cosmic-horror: Dagon (2001) - not found in local catalog
+- cosmic-horror: Banshee Chapter (2013) - not found in local catalog
 - cosmic-horror: The Call of Cthulhu (2005) - not found in local catalog
+- cosmic-horror: Glorious (2022) - not found in local catalog
+- cosmic-horror: Mandy (2018) - not found in local catalog
 - cosmic-horror: The Borderlands (2013) - not found in local catalog
 - cosmic-horror: Coherence (2013) - not found in local catalog
+- cosmic-horror: Freaks (1932) - not found in local catalog
+- folk-horror: The Wicker Man (1973) - not found in local catalog
+- folk-horror: Midsommar (2019) - not found in local catalog
+- folk-horror: The Blood on Satan's Claw (1971) - not found in local catalog
+- folk-horror: Witchfinder General (1968) - not found in local catalog
+- folk-horror: Kill List (2011) - not found in local catalog
+- folk-horror: The Ritual (2017) - not found in local catalog
+- folk-horror: A Field in England (2013) - not found in local catalog
+- folk-horror: Apostle (2018) - not found in local catalog
+- folk-horror: The Medium (2021) - not found in local catalog
 - folk-horror: Wake Wood (2009) - not found in local catalog
 - folk-horror: Hagazussa (2017) - not found in local catalog
+- folk-horror: November (2017) - not found in local catalog
+- folk-horror: The Hallow (2015) - not found in local catalog
+- folk-horror: The Wailing (2016) - not found in local catalog
+- folk-horror: Lamb (2021) - not found in local catalog
+- folk-horror: Robin Redbreast (1970) - not found in local catalog
+- folk-horror: The Hole in the Ground (2019) - not found in local catalog
+- folk-horror: Picnic at Hanging Rock (1975) - not found in local catalog
+- folk-horror: The Witch in the Window (2018) - not found in local catalog
+- folk-horror: Weapons (2025) - not found in local catalog
+- sci-fi-horror: Event Horizon (1997) - not found in local catalog
+- sci-fi-horror: Annihilation (2018) - not found in local catalog
+- sci-fi-horror: Under the Skin (2013) - not found in local catalog
+- sci-fi-horror: Sunshine (2007) - not found in local catalog
+- sci-fi-horror: Pitch Black (2000) - not found in local catalog
+- sci-fi-horror: Species (1995) - not found in local catalog
+- sci-fi-horror: Pandorum (2009) - not found in local catalog
+- sci-fi-horror: Life (2017) - not found in local catalog
+- sci-fi-horror: Possessor (2020) - not found in local catalog
+- sci-fi-horror: Upgrade (2018) - not found in local catalog
 - sci-fi-horror: Cube (1997) - not found in local catalog
+- sci-fi-horror: The Invisible Man (2020) - not found in local catalog
+- sci-fi-horror: Scanners (1981) - not found in local catalog
+- sci-fi-horror: Invasion of the Body Snatchers (1978) - not found in local catalog
+- sci-fi-horror: The Faculty (1998) - not found in local catalog
 - sci-fi-horror: Splice (2009) - not found in local catalog
+- sci-fi-horror: Virus (1999) - not found in local catalog
+- sci-fi-horror: 28 Weeks Later (2007) - not found in local catalog
+- sci-fi-horror: Aliens (1986) - not found in local catalog
+- sci-fi-horror: Cube (1998) - not found in local catalog
+- sci-fi-horror: The Rocky Horror Picture Show (1975) - not found in local catalog
+- found-footage: Paranormal Activity (2007) - not found in local catalog
+- found-footage: Cloverfield (2008) - not found in local catalog
+- found-footage: The Last Exorcism (2010) - not found in local catalog
+- found-footage: As Above, So Below (2014) - not found in local catalog
+- found-footage: Hell House LLC (2015) - not found in local catalog
+- found-footage: The Taking of Deborah Logan (2014) - not found in local catalog
+- found-footage: Host (2020) - not found in local catalog
+- found-footage: Creep (2014) - not found in local catalog
+- found-footage: Creep 2 (2017) - not found in local catalog
+- found-footage: Grave Encounters (2011) - not found in local catalog
+- found-footage: The Bay (2012) - not found in local catalog
+- found-footage: Noroi: The Curse (2005) - not found in local catalog
+- found-footage: The Poughkeepsie Tapes (2007) - not found in local catalog
 - found-footage: The Borderlands (2013) - not found in local catalog
+- found-footage: Gonjiam: Haunted Asylum (2018) - not found in local catalog
 - found-footage: Lake Mungo (2008) - not found in local catalog
+- found-footage: V/H/S (2012) - not found in local catalog
+- found-footage: V/H/S/2 (2013) - not found in local catalog
+- survival-horror: The Texas Chain Saw Massacre (1974) - not found in local catalog
+- survival-horror: The Shallows (2016) - not found in local catalog
+- survival-horror: Crawl (2019) - not found in local catalog
+- survival-horror: The Ruins (2008) - not found in local catalog
+- survival-horror: Frozen (2010) - not found in local catalog
+- survival-horror: The Edge (1997) - not found in local catalog
 - survival-horror: Backcountry (2014) - not found in local catalog
 - survival-horror: The Grey (2011) - not found in local catalog
+- survival-horror: Deliverance (1972) - not found in local catalog
+- survival-horror: The Ritual (2017) - not found in local catalog
+- survival-horror: The Hills Have Eyes (1977) - not found in local catalog
+- survival-horror: Wrong Turn (2003) - not found in local catalog
+- survival-horror: The Reef (2010) - not found in local catalog
 - survival-horror: The Descent Part II (2009) - not found in local catalog
+- survival-horror: Predator (1987) - not found in local catalog
+- survival-horror: A Quiet Place (2018) - not found in local catalog
+- survival-horror: The Silence (2019) - not found in local catalog
+- survival-horror: Eden Lake (2008) - not found in local catalog
+- survival-horror: 28 Years Later: The Bone Temple (2026) - not found in local catalog
+- survival-horror: From Dusk Till Dawn (1996) - not found in local catalog
+- survival-horror: Carrie (1976) - not found in local catalog
+- survival-horror: Send Help (2026) - not found in local catalog
+- survival-horror: 28 Years Later (2025) - not found in local catalog
+- apocalyptic-horror: Dawn of the Dead (1978) - not found in local catalog
+- apocalyptic-horror: The Road (2009) - not found in local catalog
+- apocalyptic-horror: World War Z (2013) - not found in local catalog
+- apocalyptic-horror: I Am Legend (2007) - not found in local catalog
+- apocalyptic-horror: The Girl with All the Gifts (2016) - not found in local catalog
+- apocalyptic-horror: The Crazies (2010) - not found in local catalog
+- apocalyptic-horror: A Quiet Place (2018) - not found in local catalog
+- apocalyptic-horror: Children of Men (2006) - not found in local catalog
+- apocalyptic-horror: The Last Man on Earth (1964) - not found in local catalog
 - apocalyptic-horror: Pontypool (2008) - not found in local catalog
+- apocalyptic-horror: Carriers (2009) - not found in local catalog
+- apocalyptic-horror: Bird Box (2018) - not found in local catalog
+- apocalyptic-horror: The Mist (2007) - not found in local catalog
+- apocalyptic-horror: The Sadness (2021) - not found in local catalog
+- apocalyptic-horror: Cargo (2017) - not found in local catalog
+- apocalyptic-horror: Zombieland (2009) - not found in local catalog
+- apocalyptic-horror: The Battery (2012) - not found in local catalog
+- apocalyptic-horror: 28 Weeks Later (2007) - not found in local catalog
+- apocalyptic-horror: Dawn of the Dead (2004) - not found in local catalog
+- apocalyptic-horror: Return to Silent Hill (2026) - not found in local catalog
+- gothic-horror: Dracula (1931) - not found in local catalog
+- gothic-horror: Frankenstein (1931) - not found in local catalog
+- gothic-horror: Bride of Frankenstein (1935) - not found in local catalog
+- gothic-horror: The Haunting (1963) - not found in local catalog
+- gothic-horror: The Innocents (1961) - not found in local catalog
+- gothic-horror: Crimson Peak (2015) - not found in local catalog
+- gothic-horror: Bram Stoker's Dracula (1992) - not found in local catalog
+- gothic-horror: Rebecca (1940) - not found in local catalog
+- gothic-horror: Sleepy Hollow (1999) - not found in local catalog
+- gothic-horror: The Woman in Black (2012) - not found in local catalog
+- gothic-horror: The Uninvited (1944) - not found in local catalog
 - gothic-horror: The Fall of the House of Usher (1960) - not found in local catalog
 - gothic-horror: The Lodger (1927) - not found in local catalog
+- gothic-horror: Interview with the Vampire (1994) - not found in local catalog
+- gothic-horror: The Pit and the Pendulum (1961) - not found in local catalog
+- gothic-horror: The Devil's Backbone (2001) - not found in local catalog
+- gothic-horror: The Orphanage (2007) - not found in local catalog
+- gothic-horror: Black Sunday (1960) - not found in local catalog
+- gothic-horror: The Crow (1994) - not found in local catalog
+- gothic-horror: Dracula (2025) - not found in local catalog
+- horror-comedy: Shaun of the Dead (2004) - not found in local catalog
+- horror-comedy: Evil Dead II (1987) - not found in local catalog
+- horror-comedy: What We Do in the Shadows (2014) - not found in local catalog
+- horror-comedy: Tucker and Dale vs Evil (2010) - not found in local catalog
+- horror-comedy: Gremlins (1984) - not found in local catalog
+- horror-comedy: Beetlejuice (1988) - not found in local catalog
+- horror-comedy: Zombieland (2009) - not found in local catalog
+- horror-comedy: Re-Animator (1985) - not found in local catalog
+- horror-comedy: Army of Darkness (1992) - not found in local catalog
+- horror-comedy: Young Frankenstein (1974) - not found in local catalog
 - horror-comedy: Return of the Living Dead (1985) - not found in local catalog
+- horror-comedy: Braindead (1992) - not found in local catalog
+- horror-comedy: Little Shop of Horrors (1986) - not found in local catalog
+- horror-comedy: Happy Death Day (2017) - not found in local catalog
+- horror-comedy: The Frighteners (1996) - not found in local catalog
+- horror-comedy: Slither (2006) - not found in local catalog
+- horror-comedy: Scary Movie (2000) - not found in local catalog
+- horror-comedy: Bubba Ho-Tep (2002) - not found in local catalog
+- horror-comedy: The Menu (2022) - not found in local catalog
+- horror-comedy: Ready or Not (2019) - not found in local catalog
+- splatter-extreme: Cannibal Holocaust (1980) - not found in local catalog
+- splatter-extreme: Martyrs (2008) - not found in local catalog
+- splatter-extreme: Inside (2007) - not found in local catalog
+- splatter-extreme: A Serbian Film (2010) - not found in local catalog
+- splatter-extreme: Ichi the Killer (2001) - not found in local catalog
+- splatter-extreme: Dead Alive (1992) - not found in local catalog
 - splatter-extreme: Hostel (2005) - not found in local catalog
+- splatter-extreme: Saw (2004) - not found in local catalog
+- splatter-extreme: The Sadness (2021) - not found in local catalog
+- splatter-extreme: Terrifier 2 (2022) - not found in local catalog
+- splatter-extreme: August Underground (2001) - not found in local catalog
 - splatter-extreme: Nekromantik (1987) - not found in local catalog
+- splatter-extreme: Grotesque (2009) - not found in local catalog
+- splatter-extreme: High Tension (2003) - not found in local catalog
 - splatter-extreme: Guinea Pig: Flower of Flesh and Blood (1985) - not found in local catalog
+- splatter-extreme: The Green Inferno (2013) - not found in local catalog
 - splatter-extreme: Frontiers (2007) - not found in local catalog
 - splatter-extreme: The Human Centipede (2009) - not found in local catalog
 - splatter-extreme: The Human Centipede 2 (2011) - not found in local catalog
 - splatter-extreme: Terrifier (2016) - not found in local catalog
+- splatter-extreme: Final Destination Bloodlines (2025) - not found in local catalog
+- splatter-extreme: Antichrist (2009) - not found in local catalog
+- splatter-extreme: Primate (2026) - not found in local catalog
+- social-domestic-horror: The Stepford Wives (1975) - not found in local catalog
+- social-domestic-horror: The Babadook (2014) - not found in local catalog
+- social-domestic-horror: Us (2019) - not found in local catalog
 - social-domestic-horror: The Invitation (2015) - not found in local catalog
+- social-domestic-horror: Funny Games (1997) - not found in local catalog
+- social-domestic-horror: Mother! (2017) - not found in local catalog
+- social-domestic-horror: Speak No Evil (2022) - not found in local catalog
+- social-domestic-horror: The Purge (2013) - not found in local catalog
+- social-domestic-horror: Rosemary's Baby (1968) - not found in local catalog
+- social-domestic-horror: His House (2020) - not found in local catalog
 - social-domestic-horror: The Lodge (2019) - not found in local catalog
+- social-domestic-horror: The People Under the Stairs (1991) - not found in local catalog
+- social-domestic-horror: Barbarian (2022) - not found in local catalog
+- social-domestic-horror: Parasite (2019) - not found in local catalog
+- social-domestic-horror: The Menu (2022) - not found in local catalog
+- social-domestic-horror: The Strangers (2008) - not found in local catalog
+- social-domestic-horror: We Need to Talk About Kevin (2011) - not found in local catalog
+- social-domestic-horror: Frankenstein (2025) - not found in local catalog
+- experimental-horror: Eraserhead (1977) - not found in local catalog
 - experimental-horror: Begotten (1989) - not found in local catalog
+- experimental-horror: The Lighthouse (2019) - not found in local catalog
 - experimental-horror: Skinamarink (2022) - not found in local catalog
+- experimental-horror: Mandy (2018) - not found in local catalog
+- experimental-horror: The Reflecting Skin (1990) - not found in local catalog
+- experimental-horror: Possession (1981) - not found in local catalog
+- experimental-horror: Climax (2018) - not found in local catalog
+- experimental-horror: Santa Sangre (1989) - not found in local catalog
 - experimental-horror: Hausu (1977) - not found in local catalog
+- experimental-horror: Tetsuo: The Iron Man (1989) - not found in local catalog
+- experimental-horror: The Strange Color of Your Body's Tears (2013) - not found in local catalog
+- experimental-horror: Beyond the Black Rainbow (2010) - not found in local catalog
+- experimental-horror: The Color of Pomegranates (1969) - not found in local catalog
+- experimental-horror: Under the Skin (2013) - not found in local catalog
+- experimental-horror: The Forbidden Room (2015) - not found in local catalog
+- experimental-horror: Valhalla Rising (2009) - not found in local catalog
+- experimental-horror: A Field in England (2013) - not found in local catalog
+- experimental-horror: In Fabric (2018) - not found in local catalog
+- experimental-horror: The Wolf House (2018) - not found in local catalog
+- experimental-horror: Suspiria (1977) - not found in local catalog
+- experimental-horror: Perfect Blue (1998) - not found in local catalog

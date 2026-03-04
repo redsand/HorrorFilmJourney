@@ -16,6 +16,8 @@ param(
   ,
   [string]$Season2MasteredFile = "",
   [switch]$ImportSeason2Mastered,
+  [string]$Season1SnapshotFile = "",
+  [switch]$ImportSeason1Snapshot,
   [switch]$UpdateSeasons,
   [switch]$PublishSeason2
 )
@@ -44,6 +46,10 @@ if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile) -and -not $Bootstrap.I
 
 if ($ImportSeason2Mastered.IsPresent -and [string]::IsNullOrWhiteSpace($Season2MasteredFile)) {
   throw "ImportSeason2Mastered requires -Season2MasteredFile."
+}
+
+if ($ImportSeason1Snapshot.IsPresent -and [string]::IsNullOrWhiteSpace($Season1SnapshotFile)) {
+  throw "ImportSeason1Snapshot requires -Season1SnapshotFile."
 }
 
 Write-Host "Creating release archive: $archivePath"
@@ -128,6 +134,20 @@ if ($ImportSeason2Mastered.IsPresent) {
   Exec-OrThrow "scp -i `"$resolvedKey`" `"$Season2MasteredFile`" ${User}@${HostName}:$season2RemotePath"
   Write-Host "Importing Season 2 mastered file on remote"
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season2:cult -- --input $season2RemotePath`""
+}
+
+if ($ImportSeason1Snapshot.IsPresent) {
+  if (-not (Test-Path $Season1SnapshotFile)) {
+    throw "Season 1 snapshot file not found: $Season1SnapshotFile"
+  }
+  $season1Name = [System.IO.Path]::GetFileName($Season1SnapshotFile)
+  $season1RemoteDir = "$RemoteAppRoot/shared/backups"
+  $season1RemotePath = "$season1RemoteDir/$season1Name"
+  Write-Host "Uploading Season 1 snapshot file to remote: $season1Name"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"mkdir -p $season1RemoteDir`""
+  Exec-OrThrow "scp -i `"$resolvedKey`" `"$Season1SnapshotFile`" ${User}@${HostName}:$season1RemotePath"
+  Write-Host "Importing Season 1 snapshot file on remote"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season1:snapshot -- --input $season1RemotePath`""
 }
 
 if ($UpdateSeasons.IsPresent) {
