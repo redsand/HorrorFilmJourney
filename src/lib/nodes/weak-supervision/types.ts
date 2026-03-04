@@ -6,6 +6,8 @@ export type WeakSupervisionMovie = {
   title: string;
   year: number | null;
   genres: string[];
+  keywords?: string[];
+  synopsis?: string | null;
   popularity?: number;
 };
 

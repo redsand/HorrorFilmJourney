@@ -1,0 +1,35 @@
+{
+  "high_quality": {
+    "year": 2018,
+    "runtimeMinutes": 112,
+    "popularity": 72,
+    "voteCount": 18000,
+    "posterUrl": "https://image.tmdb.org/t/p/w500/example.jpg",
+    "synopsis": "A critically acclaimed horror story with layered themes and strong craft.",
+    "director": "A. Director",
+    "castTop": [{ "name": "Lead Performer" }, { "name": "Supporting Performer" }],
+    "genres": ["horror", "folk-horror"],
+    "keywords": ["ritual", "dread", "village"],
+    "ratings": [
+      { "source": "IMDB", "value": 7.8, "scale": "10" },
+      { "source": "ROTTEN_TOMATOES", "value": 91, "scale": "100" },
+      { "source": "METACRITIC", "value": 82, "scale": "100" }
+    ],
+    "receptionSources": ["imdb", "rotten_tomatoes", "metacritic"]
+  },
+  "low_quality": {
+    "year": 1880,
+    "runtimeMinutes": 35,
+    "popularity": 8,
+    "voteCount": 120,
+    "posterUrl": "",
+    "synopsis": "",
+    "director": "",
+    "castTop": [],
+    "genres": [],
+    "keywords": [],
+    "ratings": [],
+    "receptionSources": []
+  }
+}
+

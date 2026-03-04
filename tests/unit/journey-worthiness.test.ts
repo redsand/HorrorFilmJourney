@@ -1,0 +1,52 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { computeJourneyWorthiness, type JourneyWorthinessMovieInput } from '@/lib/journey/journeyWorthiness';
+
+type Fixture = {
+  high_quality: JourneyWorthinessMovieInput;
+  low_quality: JourneyWorthinessMovieInput;
+};
+
+const fixture = JSON.parse(
+  readFileSync(resolve(process.cwd(), 'tests', 'fixtures', 'journey-worthiness-movies.json'), 'utf8'),
+) as Fixture;
+
+describe('journey worthiness', () => {
+  it('scores fixture movies deterministically', () => {
+    const first = computeJourneyWorthiness(fixture.high_quality, 'season-1', { nowYear: 2026 });
+    const second = computeJourneyWorthiness(fixture.high_quality, 'season-1', { nowYear: 2026 });
+    const low = computeJourneyWorthiness(fixture.low_quality, 'season-1', { nowYear: 2026 });
+
+    expect(second).toEqual(first);
+    expect(first.score).toBeCloseTo(0.863598, 6);
+    expect(low.score).toBeCloseTo(0.116139, 6);
+    expect(low.reasons).toEqual(expect.arrayContaining([
+      'low_vote_count',
+      'missing_metadata',
+      'runtime_outlier',
+      'low_rating',
+    ]));
+    expect(first.evidence).toEqual(expect.objectContaining({
+      normalizedRating: expect.any(Number),
+      voteConfidence: expect.any(Number),
+      popularity: expect.any(Number),
+      metadataCompleteness: expect.any(Number),
+      directorSignal: expect.any(Number),
+    }));
+  });
+
+  it('applies per-season config overrides', () => {
+    const candidate: JourneyWorthinessMovieInput = {
+      ...fixture.high_quality,
+      voteCount: 3000,
+    };
+
+    const season1 = computeJourneyWorthiness(candidate, 'season-1', { nowYear: 2026 });
+    const defaultSeason = computeJourneyWorthiness(candidate, 'season-999', { nowYear: 2026 });
+
+    expect(season1.reasons).toContain('low_vote_count');
+    expect(defaultSeason.reasons).not.toContain('low_vote_count');
+    expect(defaultSeason.score).toBeCloseTo(season1.score, 6);
+  });
+});

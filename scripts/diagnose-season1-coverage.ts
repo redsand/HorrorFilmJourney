@@ -3,6 +3,11 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
+import {
+  journeyWorthinessDiagnosticPass as isJourneyWorthinessDiagnosticPass,
+  journeyWorthinessSelectionGatePass as isJourneyWorthinessSelectionGatePass,
+  type JourneyWorthinessMovieInput,
+} from '../src/lib/journey/journey-worthiness.ts';
 import { buildSeason1LabelingFunctions, inferNodeProbabilities, type LabelingFunction } from '../src/lib/nodes/weak-supervision/index.ts';
 import {
   evaluateGoldSample,
@@ -33,7 +38,7 @@ type CoverageMovie = {
   country: string | null;
   director: string | null;
   castTop: unknown;
-  ratings: Array<{ source: string; value: number }>;
+  ratings: Array<{ source: string; value: number; scale: string | null }>;
   posterUrl: string;
 };
 
@@ -92,6 +97,39 @@ function parseCastNames(value: unknown): string[] {
       return '';
     })
     .filter((entry) => entry.length > 0);
+}
+
+function getPopularity(ratings: CoverageMovie['ratings']): number {
+  return ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
+}
+
+function getVoteCount(ratings: CoverageMovie['ratings']): number {
+  return (
+    ratings.find((rating) => rating.source === 'TMDB_VOTE_COUNT')?.value
+    ?? ratings.find((rating) => rating.source === 'TMDB_VOTES')?.value
+    ?? 0
+  );
+}
+
+function toJourneyWorthinessInput(movie: CoverageMovie): JourneyWorthinessMovieInput {
+  return {
+    year: movie.year,
+    runtimeMinutes: null,
+    popularity: getPopularity(movie.ratings),
+    voteCount: getVoteCount(movie.ratings),
+    posterUrl: movie.posterUrl,
+    synopsis: movie.synopsis,
+    director: movie.director,
+    castTop: movie.castTop,
+    genres: movie.genres,
+    keywords: movie.keywords,
+    ratings: movie.ratings.map((rating) => ({
+      source: rating.source,
+      value: rating.value,
+      scale: rating.scale ?? undefined,
+    })),
+    receptionSources: [],
+  };
 }
 
 function makeLookupKey(title: string, year: number | null): string {
@@ -322,7 +360,7 @@ async function main(): Promise<void> {
         director: true,
         castTop: true,
         posterUrl: true,
-        ratings: { select: { source: true, value: true } },
+        ratings: { select: { source: true, value: true, scale: true } },
       },
     });
     const movies: CoverageMovie[] = moviesRaw.map((movie) => ({
@@ -372,6 +410,10 @@ async function main(): Promise<void> {
       }),
     }));
     const eligibleBeforeScoring = eligibilityRows.filter((row) => row.eval.isEligible).map((row) => row.movie);
+    const journeyWorthinessDiagnosticPass = eligibleBeforeScoring.filter((movie) =>
+      isJourneyWorthinessDiagnosticPass(toJourneyWorthinessInput(movie), 'season-1')).length;
+    const journeyWorthinessSelectionGatePass = eligibleBeforeScoring.filter((movie) =>
+      isJourneyWorthinessSelectionGatePass(toJourneyWorthinessInput(movie), 'season-1')).length;
 
     const baselineSelection = runSelection({
       movies,
@@ -393,6 +435,8 @@ async function main(): Promise<void> {
       { stage: 'Movies with Horror genre tag', count: withHorrorGenre.length },
       { stage: 'Movies with any horror-adjacent signals', count: withAnyHorrorSignal.length },
       { stage: 'Eligible for Season 1 assignment before scoring', count: baselineSelection.eligibleBeforeScoring },
+      { stage: 'Journey worthiness diagnostic pass', count: journeyWorthinessDiagnosticPass },
+      { stage: 'Journey worthiness selection-gate pass', count: journeyWorthinessSelectionGatePass },
       { stage: 'Curated anchor movies resolved in catalog', count: baselineSelection.curatedAnchorsMatched },
       { stage: 'Weak-supervision scoring above threshold for >=1 node', count: baselineSelection.scoringAboveAnyNode },
       { stage: 'Selected into published snapshot', count: selectedSnapshotMovieIds.size },
@@ -546,6 +590,8 @@ async function main(): Promise<void> {
         }
         : null,
       funnel,
+      journeyWorthinessDiagnosticPass,
+      journeyWorthinessSelectionGatePass,
       excludedBy,
       biggestChokePoint: chokeStages[0] ?? null,
       ingestionIntegrity: {

@@ -1,0 +1,12 @@
+{
+  "movie": {
+    "id": "fixture-season1-001",
+    "title": "Ritual in the Pines",
+    "year": 2019,
+    "genres": ["horror", "folk-horror", "ritual"],
+    "keywords": ["pagan", "village", "ritual"]
+  },
+  "movieEmbedding": [0.48, 0.62, 0.325, 0.73],
+  "nodeSlugs": ["folk-horror", "slasher-serial-killer"]
+}
+
