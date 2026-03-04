@@ -35,6 +35,7 @@ import {
 import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
 import { getSeason1MustIncludeForNode } from '../src/config/seasons/season1-must-include.ts';
 import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
+import { isSeason1HorrorScope, scopeReasons } from '../src/lib/seasons/season1/scope.ts';
 
 type CurriculumTitle = {
   title: string;
@@ -69,6 +70,9 @@ type CatalogMovie = {
   popularity: number;
   ratings: Array<{ source: string; value: number; scale?: string }>;
   eligible: boolean;
+  inSeasonScope: boolean;
+  scopeReasons: string[];
+  maxNodeScore: number;
 };
 
 type NodeAssignmentData = {
@@ -456,6 +460,7 @@ async function main(): Promise<void> {
   const publishSnapshot = parseBooleanEnv('SEASON1_PUBLISH_SNAPSHOT', false);
   const classifierAssistEnabled = parseBooleanEnv('SEASON1_CLASSIFIER_ASSIST_ENABLED', false);
   const classifierAssistWeight = Math.max(0, Math.min(0.8, parseFloatEnv('SEASON1_CLASSIFIER_ASSIST_WEIGHT', 0.25)));
+  const scopeNodeMin = parseFloatEnv('SEASON1_SCOPE_NODE_MIN', 0.7);
   const buildDebugExclusions = parseBooleanEnv('SEASON1_BUILD_DEBUG_EXCLUSIONS', false);
   const debugOutputRoot = resolve(process.env.SEASON1_BUILD_DEBUG_DIR?.trim() || 'artifacts/season1/build-debug');
   const exclusionCollector = createExclusionCollector(buildDebugExclusions);
@@ -501,6 +506,15 @@ async function main(): Promise<void> {
     });
 
     const specNodeSlugs = spec.nodes.map((node) => node.slug);
+    const curatedLookup = new Set<string>();
+    for (const node of spec.nodes) {
+      for (const title of node.titles) {
+        curatedLookup.add(makeLookupKey(title.altTitle ?? title.title, title.year));
+      }
+      for (const entry of getSeason1MustIncludeForNode(node.slug)) {
+        curatedLookup.add(makeLookupKey(entry.altTitle ?? entry.title, entry.year));
+      }
+    }
     await prisma.journeyNode.deleteMany({
       where: {
         packId: pack.id,
@@ -560,14 +574,45 @@ async function main(): Promise<void> {
         ratings: movie.ratings.map((rating) => ({ source: rating.source })),
         hasStreamingData: false,
       });
+      const isCuratedAnchor = curatedLookup.has(makeLookupKey(movie.title, movie.year));
+      const scoredNodes = scoreMovieForNodes({
+        seasonId: 'season-1',
+        taxonomyVersion: config.taxonomyVersion,
+        movie: {
+          id: movie.id,
+          tmdbId: movie.tmdbId,
+          title: movie.title,
+          year: movie.year,
+          genres,
+          keywords,
+          synopsis: movie.synopsis,
+        },
+        movieEmbedding: embeddingVector,
+        nodeSlugs: specNodeSlugs,
+      });
+      const maxNodeScore = scoredNodes[0]?.finalScore ?? 0;
+      const scopeReasonList = scopeReasons({
+        genres,
+        keywords,
+        isCuratedAnchor,
+        maxNodeScore,
+        scopeNodeMin,
+      });
+      const inSeasonScope = isSeason1HorrorScope({
+        genres,
+        keywords,
+        isCuratedAnchor,
+        maxNodeScore,
+        scopeNodeMin,
+      });
       const popularity = movie.ratings.find((rating) => rating.source === 'TMDB_POPULARITY')?.value ?? 0;
-      if (genres.includes('horror') && !eligibility.isEligible) {
+      if (inSeasonScope && !eligibility.isEligible) {
         exclusionCollector.record('eligibility_fail', {
           movieId: movie.id,
           tmdbId: movie.tmdbId,
           title: movie.title,
           year: movie.year,
-          details: [toEligibilityFailReason(eligibility)],
+          details: [toEligibilityFailReason(eligibility), ...scopeReasonList],
         });
       }
       return {
@@ -589,6 +634,9 @@ async function main(): Promise<void> {
           scale: rating.scale ?? undefined,
         })),
         eligible: eligibility.isEligible,
+        inSeasonScope,
+        scopeReasons: scopeReasonList,
+        maxNodeScore: Number(maxNodeScore.toFixed(6)),
       };
     });
 
@@ -609,7 +657,7 @@ async function main(): Promise<void> {
       });
     }
 
-    const eligibleHorrorPool = allMovies.filter((movie) => movie.eligible && movie.genres.includes('horror'));
+    const eligibleHorrorPool = allMovies.filter((movie) => movie.eligible && movie.inSeasonScope);
     const movieByLookup = new Map(allMovies.map((movie) => [makeLookupKey(movie.title, movie.year), movie] as const));
     const classifierByMovie = new Map<string, Map<string, number>>();
     if (classifierArtifact) {

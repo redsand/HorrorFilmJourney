@@ -77,6 +77,11 @@ export function scopeReasons(movie: Season1ScopeMovie): string[] {
   const scopeNodeMin = Number.isFinite(movie.scopeNodeMin) ? (movie.scopeNodeMin as number) : DEFAULT_SCOPE_NODE_MIN;
 
   const reasons: string[] = [];
+  if (movie.isCuratedAnchor) {
+    reasons.push('curated_anchor_or_must_include');
+    return reasons;
+  }
+
   const hardNegatives = isHardNegative({ genres, keywords, mediaType });
   if (hardNegatives.length > 0) {
     reasons.push(...hardNegatives);
@@ -85,10 +90,6 @@ export function scopeReasons(movie: Season1ScopeMovie): string[] {
 
   if (hasHorrorGenre(genres)) {
     reasons.push('genre:horror');
-    return reasons;
-  }
-  if (movie.isCuratedAnchor) {
-    reasons.push('curated_anchor_or_must_include');
     return reasons;
   }
   if (Number.isFinite(movie.maxNodeScore) && (movie.maxNodeScore as number) >= scopeNodeMin) {

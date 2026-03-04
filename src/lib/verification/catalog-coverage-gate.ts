@@ -1,9 +1,10 @@
 import { computeReceptionCount } from '../movie/reception.ts';
 import { computeCanonicalRuntimeVoteCoverage } from '../movie/canonical-metrics.ts';
+import { computeVoteCountCoverageBreakdown } from '../metrics/catalog-coverage.ts';
 
 export type CoverageGateThresholds = {
   runtimeCoverageMin: number;
-  voteCountCoverageMin: number;
+  voteCountFieldPresenceMin: number;
   directorAndCastTopCoverageMin: number;
   receptionCountCoverageMin: number;
   sampleSize: number;
@@ -19,12 +20,16 @@ export type CoverageMovieInput = {
 export type CoverageGateMetrics = {
   totalTmdbMovies: number;
   runtimeCoverage: number;
-  voteCountCoverage: number;
+  voteCountFieldPresence: number;
+  voteCountPositiveCoverage: number;
+  voteCountZeroRate: number;
+  voteCountNullRate: number;
   directorAndCastTopCoverage: number;
   receptionCountCoverage: number;
   sampleIds: {
     missingRuntime: number[];
-    missingVoteCount: number[];
+    missingVoteCountField: number[];
+    zeroVoteCount: number[];
     missingDirectorOrCast: number[];
     missingReception: number[];
   };
@@ -66,8 +71,12 @@ export function computeCoverageGateMetrics(
   const canonicalCoverage = computeCanonicalRuntimeVoteCoverage(
     tmdbMovies.map((movie) => ({ tmdbId: movie.tmdbId, ratings: movie.ratings })),
   );
+  const voteCoverage = computeVoteCountCoverageBreakdown(
+    tmdbMovies.map((movie) => ({ tmdbId: movie.tmdbId, ratings: movie.ratings })),
+  );
   const missingRuntime = canonicalCoverage.missingRuntimeIds;
-  const missingVoteCount = canonicalCoverage.missingVoteCountIds;
+  const missingVoteCountField = voteCoverage.nullTmdbIds;
+  const zeroVoteCount = voteCoverage.zeroTmdbIds;
   const missingDirectorOrCast: number[] = [];
   const missingReception: number[] = [];
 
@@ -80,12 +89,16 @@ export function computeCoverageGateMetrics(
   return {
     totalTmdbMovies: total,
     runtimeCoverage: canonicalCoverage.runtimeCoverage,
-    voteCountCoverage: canonicalCoverage.voteCountCoverage,
+    voteCountFieldPresence: voteCoverage.voteCountFieldPresence,
+    voteCountPositiveCoverage: voteCoverage.voteCountPositiveCoverage,
+    voteCountZeroRate: voteCoverage.voteCountZeroRate,
+    voteCountNullRate: voteCoverage.voteCountNullRate,
     directorAndCastTopCoverage: toPct(total - missingDirectorOrCast.length, total),
     receptionCountCoverage: toPct(total - missingReception.length, total),
     sampleIds: {
       missingRuntime: missingRuntime.slice(0, sampleSize),
-      missingVoteCount: missingVoteCount.slice(0, sampleSize),
+      missingVoteCountField: missingVoteCountField.slice(0, sampleSize),
+      zeroVoteCount: zeroVoteCount.slice(0, sampleSize),
       missingDirectorOrCast: missingDirectorOrCast.slice(0, sampleSize),
       missingReception: missingReception.slice(0, sampleSize),
     },
@@ -95,16 +108,22 @@ export function computeCoverageGateMetrics(
 export function evaluateCoverageGate(
   metrics: CoverageGateMetrics,
   thresholds: CoverageGateThresholds,
-): { pass: boolean; details: string; failures: string[] } {
+): { pass: boolean; details: string; failures: string[]; warnings: string[] } {
   const failures: string[] = [];
+  const warnings: string[] = [];
   if (metrics.runtimeCoverage < thresholds.runtimeCoverageMin) {
     failures.push(
       `runtimeCoverage ${(metrics.runtimeCoverage * 100).toFixed(2)}% < ${(thresholds.runtimeCoverageMin * 100).toFixed(2)}% sampleTmdbIds=[${metrics.sampleIds.missingRuntime.join(',')}]`,
     );
   }
-  if (metrics.voteCountCoverage < thresholds.voteCountCoverageMin) {
+  if (metrics.voteCountFieldPresence < thresholds.voteCountFieldPresenceMin) {
     failures.push(
-      `voteCountCoverage ${(metrics.voteCountCoverage * 100).toFixed(2)}% < ${(thresholds.voteCountCoverageMin * 100).toFixed(2)}% sampleTmdbIds=[${metrics.sampleIds.missingVoteCount.join(',')}]`,
+      `voteCountFieldPresence ${(metrics.voteCountFieldPresence * 100).toFixed(2)}% < ${(thresholds.voteCountFieldPresenceMin * 100).toFixed(2)}% sampleTmdbIds=[${metrics.sampleIds.missingVoteCountField.join(',')}]`,
+    );
+  }
+  if (metrics.voteCountZeroRate > 0.2) {
+    warnings.push(
+      `voteCountZeroRate ${(metrics.voteCountZeroRate * 100).toFixed(2)}% > 20.00% sampleTmdbIds=[${metrics.sampleIds.zeroVoteCount.join(',')}]`,
     );
   }
   if (metrics.directorAndCastTopCoverage < thresholds.directorAndCastTopCoverageMin) {
@@ -120,8 +139,9 @@ export function evaluateCoverageGate(
   return {
     pass: failures.length === 0,
     details: failures.length === 0
-      ? `runtime=${(metrics.runtimeCoverage * 100).toFixed(2)} voteCount=${(metrics.voteCountCoverage * 100).toFixed(2)} directorCast=${(metrics.directorAndCastTopCoverage * 100).toFixed(2)} reception=${(metrics.receptionCountCoverage * 100).toFixed(2)}`
+      ? `runtime=${(metrics.runtimeCoverage * 100).toFixed(2)} voteField=${(metrics.voteCountFieldPresence * 100).toFixed(2)} votePositive=${(metrics.voteCountPositiveCoverage * 100).toFixed(2)} voteZeroRate=${(metrics.voteCountZeroRate * 100).toFixed(2)} directorCast=${(metrics.directorAndCastTopCoverage * 100).toFixed(2)} reception=${(metrics.receptionCountCoverage * 100).toFixed(2)}`
       : failures.join(' | '),
     failures,
+    warnings,
   };
 }

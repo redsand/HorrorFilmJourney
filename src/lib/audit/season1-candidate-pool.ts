@@ -1,3 +1,5 @@
+import { isSeason1HorrorScope, scopeReasons } from '@/lib/seasons/season1/scope';
+
 export type Season1AuditCandidateMovie = {
   id: string;
   tmdbId: number;
@@ -5,6 +7,10 @@ export type Season1AuditCandidateMovie = {
   year: number | null;
   genres: string[];
   keywords: string[];
+  isCuratedAnchor?: boolean;
+  maxNodeScore?: number;
+  scopeNodeMin?: number;
+  mediaType?: string | null;
   metrics: {
     voteCount: number;
     hybridScore: number;
@@ -23,23 +29,28 @@ function normalize(values: string[]): string[] {
   return values.map((v) => v.trim().toLowerCase()).filter((v) => v.length > 0);
 }
 
-export function classifySeason1HorrorScope(movie: Pick<Season1AuditCandidateMovie, 'genres' | 'keywords'>): Season1ScopeDecision {
+export function classifySeason1HorrorScope(movie: Pick<Season1AuditCandidateMovie, 'genres' | 'keywords' | 'isCuratedAnchor' | 'maxNodeScore' | 'scopeNodeMin' | 'mediaType'>): Season1ScopeDecision {
   const genres = normalize(movie.genres);
   const keywords = normalize(movie.keywords);
-  const reasons: string[] = [];
-
-  const hasHorrorGenre = genres.some((genre) => genre === 'horror' || genre.includes('horror'));
-  if (hasHorrorGenre) {
-    reasons.push('genre:horror');
-    return { inScope: true, reasons };
-  }
-
-  if (keywords.some((kw) => kw === 'horror' || kw.includes('horror'))) {
-    reasons.push('keyword:horror_only_without_genre');
-  } else {
-    reasons.push('no_horror_genre');
-  }
-  return { inScope: false, reasons };
+  const reasons = scopeReasons({
+    genres,
+    keywords,
+    isCuratedAnchor: movie.isCuratedAnchor,
+    maxNodeScore: movie.maxNodeScore,
+    scopeNodeMin: movie.scopeNodeMin,
+    mediaType: movie.mediaType,
+  });
+  return {
+    inScope: isSeason1HorrorScope({
+      genres,
+      keywords,
+      isCuratedAnchor: movie.isCuratedAnchor,
+      maxNodeScore: movie.maxNodeScore,
+      scopeNodeMin: movie.scopeNodeMin,
+      mediaType: movie.mediaType,
+    }),
+    reasons,
+  };
 }
 
 export type Season1CandidatePoolRow = Season1AuditCandidateMovie & {

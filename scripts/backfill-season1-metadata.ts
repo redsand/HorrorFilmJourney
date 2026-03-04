@@ -9,6 +9,7 @@ import {
   type TmdbMetadataBackfillPayload,
 } from '../src/lib/tmdb/metadata-backfill';
 import { computeCoverageGateMetrics } from '../src/lib/verification/catalog-coverage-gate';
+import { computeVoteCountCoverageBreakdown } from '../src/lib/metrics/catalog-coverage';
 
 type BackfillProgress = {
   schemaVersion: 1;
@@ -167,13 +168,17 @@ async function gatherCoverage(prisma: PrismaClient): Promise<{
   totalTmdbMovies: number;
   creditsCoveragePct: number;
   runtimeCoveragePct: number;
-  voteCountCoveragePct: number;
+  voteCountFieldPresencePct: number;
+  voteCountPositiveCoveragePct: number;
+  voteCountZeroRatePct: number;
+  voteCountNullRatePct: number;
   overviewCoveragePct: number;
   keywordsCoveragePct: number;
   sampleMissingTmdbIds: {
     credits: number[];
     runtime: number[];
-    voteCount: number[];
+    voteCountNull: number[];
+    voteCountZero: number[];
     overview: number[];
     keywords: number[];
   };
@@ -195,8 +200,12 @@ async function gatherCoverage(prisma: PrismaClient): Promise<{
     !(movie.director && movie.director.trim().length > 0) || parseCastNames(movie.castTop).length === 0);
   const missingRuntime = movies.filter((movie) =>
     !movie.ratings.some((rating) => rating.source === 'TMDB_RUNTIME' && rating.value > 0));
-  const missingVoteCount = movies.filter((movie) =>
-    !movie.ratings.some((rating) => rating.source === 'TMDB_VOTE_COUNT' && rating.value > 0));
+  const voteCoverage = computeVoteCountCoverageBreakdown(
+    movies.map((movie) => ({
+      tmdbId: movie.tmdbId,
+      ratings: movie.ratings.map((rating) => ({ source: rating.source, value: rating.value })),
+    })),
+  );
   const missingOverview = movies.filter((movie) =>
     !(typeof movie.synopsis === 'string' && movie.synopsis.trim().length > 0));
   const missingKeywords = movies.filter((movie) => parseJsonStringArray(movie.keywords).length === 0);
@@ -207,13 +216,17 @@ async function gatherCoverage(prisma: PrismaClient): Promise<{
     totalTmdbMovies: total,
     creditsCoveragePct: toPct(total - missingCredits.length),
     runtimeCoveragePct: toPct(total - missingRuntime.length),
-    voteCountCoveragePct: toPct(total - missingVoteCount.length),
+    voteCountFieldPresencePct: Number((voteCoverage.voteCountFieldPresence * 100).toFixed(6)),
+    voteCountPositiveCoveragePct: Number((voteCoverage.voteCountPositiveCoverage * 100).toFixed(6)),
+    voteCountZeroRatePct: Number((voteCoverage.voteCountZeroRate * 100).toFixed(6)),
+    voteCountNullRatePct: Number((voteCoverage.voteCountNullRate * 100).toFixed(6)),
     overviewCoveragePct: toPct(total - missingOverview.length),
     keywordsCoveragePct: toPct(total - missingKeywords.length),
     sampleMissingTmdbIds: {
       credits: missingCredits.slice(0, 10).map((movie) => movie.tmdbId),
       runtime: missingRuntime.slice(0, 10).map((movie) => movie.tmdbId),
-      voteCount: missingVoteCount.slice(0, 10).map((movie) => movie.tmdbId),
+      voteCountNull: voteCoverage.nullTmdbIds.slice(0, 10),
+      voteCountZero: voteCoverage.zeroTmdbIds.slice(0, 10),
       overview: missingOverview.slice(0, 10).map((movie) => movie.tmdbId),
       keywords: missingKeywords.slice(0, 10).map((movie) => movie.tmdbId),
     },
@@ -418,7 +431,8 @@ async function main(): Promise<void> {
       deltaPct: {
         credits: Number((after.creditsCoveragePct - before.creditsCoveragePct).toFixed(6)),
         runtime: Number((after.runtimeCoveragePct - before.runtimeCoveragePct).toFixed(6)),
-        voteCount: Number((after.voteCountCoveragePct - before.voteCountCoveragePct).toFixed(6)),
+        voteCountFieldPresence: Number((after.voteCountFieldPresencePct - before.voteCountFieldPresencePct).toFixed(6)),
+        voteCountPositiveCoverage: Number((after.voteCountPositiveCoveragePct - before.voteCountPositiveCoveragePct).toFixed(6)),
         overview: Number((after.overviewCoveragePct - before.overviewCoveragePct).toFixed(6)),
         keywords: Number((after.keywordsCoveragePct - before.keywordsCoveragePct).toFixed(6)),
       },

@@ -144,14 +144,6 @@ function getPopularity(ratings: ParsedMovie['ratings']): number {
   return resolveCanonicalMovieSignals({ ratings }).popularity ?? 0;
 }
 
-function hasStrictHorrorSignals(movie: ParsedMovie): boolean {
-  if (movie.genres.some((genre) => genre === 'horror' || genre.includes('horror'))) {
-    return true;
-  }
-  const keywordText = movie.keywords.join(' ');
-  return /\bhorror\b|\bslasher\b|\bzombie\b|\bghost\b|\bhaunt|\bdemon\b|\boccult\b|\bmonster\b|\bsupernatural\b/i.test(keywordText);
-}
-
 function getSeason1CandidatePool(rows: ScoredMovie[], scopeNodeMin: number): ScopedSeason1Movie[] {
   return rows
     .map((row) => ({ row, reasons: row.scopeReasons }))
@@ -475,25 +467,25 @@ async function main(): Promise<void> {
     };
 
     const topByVotes: TopListEntry[] = season1CandidatePoolRows
-      .filter((row) => row.metrics.rating >= 6.5)
-      .sort((a, b) => (b.metrics.voteCount - a.metrics.voteCount)
-        || (b.metrics.rating - a.metrics.rating)
-        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
+      .filter((entry) => entry.row.metrics.rating >= 6.5)
+      .sort((a, b) => (b.row.metrics.voteCount - a.row.metrics.voteCount)
+        || (b.row.metrics.rating - a.row.metrics.rating)
+        || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.voteCount }));
+      .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.voteCount }));
     const topByRating: TopListEntry[] = season1CandidatePoolRows
-      .filter((row) => row.metrics.voteCount >= 10_000)
-      .sort((a, b) => (b.metrics.rating - a.metrics.rating)
-        || (b.metrics.voteCount - a.metrics.voteCount)
-        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
+      .filter((entry) => entry.row.metrics.voteCount >= 10_000)
+      .sort((a, b) => (b.row.metrics.rating - a.row.metrics.rating)
+        || (b.row.metrics.voteCount - a.row.metrics.voteCount)
+        || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.rating }));
+      .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.rating }));
     const topByHybrid: TopListEntry[] = season1CandidatePoolRows
-      .sort((a, b) => (b.metrics.hybridScore - a.metrics.hybridScore)
-        || (b.metrics.voteCount - a.metrics.voteCount)
-        || stableTieBreak(cli.seed, a.id).localeCompare(stableTieBreak(cli.seed, b.id)))
+      .sort((a, b) => (b.row.metrics.hybridScore - a.row.metrics.hybridScore)
+        || (b.row.metrics.voteCount - a.row.metrics.voteCount)
+        || stableTieBreak(cli.seed, a.row.movie.id).localeCompare(stableTieBreak(cli.seed, b.row.movie.id)))
       .slice(0, 500)
-      .map((row, idx) => ({ movieId: row.id, rank: idx + 1, score: row.metrics.hybridScore }));
+      .map((entry, idx) => ({ movieId: entry.row.movie.id, rank: idx + 1, score: entry.row.metrics.hybridScore }));
 
     const coverageForList = (name: string, list: TopListEntry[]) => {
       const inCore = list.filter((entry) => coreMovieIds.has(entry.movieId)).length;
@@ -650,19 +642,24 @@ async function main(): Promise<void> {
             triageReason: 'movie_not_found_in_catalog_rows',
           };
         }
-        const strictHorror = hasStrictHorrorSignals(row.movie);
+        const inScope = isSeason1HorrorScope({
+          genres: row.movie.genres,
+          keywords: row.movie.keywords,
+          maxNodeScore: row.bestNodeMaxScore,
+          scopeNodeMin,
+        });
         const missingMeta = hasMissingCreditsOrMetadata(row);
         const missingEligibility = !row.eligibility.isEligible && (
           row.eligibility.missingCredits || row.eligibility.missingPoster || row.eligibility.missingRatings || row.eligibility.missingReception
         );
         const journeyMetadataFail = entry.exclusionReason.includes('journey_gate_fail:missing_metadata');
 
-        if (!strictHorror) {
+        if (!inScope) {
           return {
             ...entry,
             triageClass: 'A',
             triageLabel: 'not_horror_or_out_of_scope',
-            triageReason: 'no_strict_horror_genre_or_keyword_signals',
+            triageReason: row.scopeReasons.join(',') || 'out_of_scope',
           };
         }
         if (missingEligibility || missingMeta || journeyMetadataFail) {
@@ -790,28 +787,56 @@ async function main(): Promise<void> {
     const toplistCandidatePoolExamples = {
       snapshot: snapshotSummary,
       top50ByVotes: [...season1CandidatePoolRows]
-        .sort((a, b) => (b.metrics.voteCount - a.metrics.voteCount) || (b.metrics.hybridScore - a.metrics.hybridScore) || (a.tmdbId - b.tmdbId))
+        .sort((a, b) => (b.row.metrics.voteCount - a.row.metrics.voteCount)
+          || (b.row.metrics.hybridScore - a.row.metrics.hybridScore)
+          || (a.row.tmdbId - b.row.tmdbId))
         .slice(0, 50)
-        .map((row) => ({
-          tmdbId: row.tmdbId,
-          title: row.title,
-          year: row.year,
-          genres: row.genres.slice(0, 6),
-          scopeReasons: row.scope.reasons,
-          voteCount: row.metrics.voteCount,
-          hybridScore: row.metrics.hybridScore,
+        .map((entry) => ({
+          tmdbId: entry.row.movie.tmdbId,
+          title: entry.row.movie.title,
+          year: entry.row.movie.year,
+          genres: entry.row.movie.genres.slice(0, 6),
+          scopeReasons: entry.reasons,
+          voteCount: entry.row.metrics.voteCount,
+          hybridScore: entry.row.metrics.hybridScore,
         })),
       top50ByHybrid: [...season1CandidatePoolRows]
-        .sort((a, b) => (b.metrics.hybridScore - a.metrics.hybridScore) || (b.metrics.voteCount - a.metrics.voteCount) || (a.tmdbId - b.tmdbId))
+        .sort((a, b) => (b.row.metrics.hybridScore - a.row.metrics.hybridScore)
+          || (b.row.metrics.voteCount - a.row.metrics.voteCount)
+          || (a.row.tmdbId - b.row.tmdbId))
+        .slice(0, 50)
+        .map((entry) => ({
+          tmdbId: entry.row.movie.tmdbId,
+          title: entry.row.movie.title,
+          year: entry.row.movie.year,
+          genres: entry.row.movie.genres.slice(0, 6),
+          scopeReasons: entry.reasons,
+          voteCount: entry.row.metrics.voteCount,
+          hybridScore: entry.row.metrics.hybridScore,
+        })),
+    };
+    const scopeFilteredOut = {
+      snapshot: snapshotSummary,
+      scopeNodeMin,
+      totalFilteredOut: scoredMovies.length - season1CandidatePoolRows.length,
+      topFilteredByVotes: scoredMovies
+        .filter((row) => !season1CandidatePoolIds.has(row.movie.id))
+        .sort((a, b) => (b.metrics.voteCount - a.metrics.voteCount)
+          || (b.metrics.hybridScore - a.metrics.hybridScore)
+          || (a.movie.tmdbId - b.movie.tmdbId))
         .slice(0, 50)
         .map((row) => ({
-          tmdbId: row.tmdbId,
-          title: row.title,
-          year: row.year,
-          genres: row.genres.slice(0, 6),
-          scopeReasons: row.scope.reasons,
+          movieId: row.movie.id,
+          tmdbId: row.movie.tmdbId,
+          title: row.movie.title,
+          year: row.movie.year,
+          genres: row.movie.genres.slice(0, 6),
+          keywords: row.movie.keywords.slice(0, 8),
           voteCount: row.metrics.voteCount,
+          rating: row.metrics.rating,
           hybridScore: row.metrics.hybridScore,
+          bestNodeMaxScore: row.bestNodeMaxScore,
+          scopeReasons: row.scopeReasons,
         })),
     };
 
@@ -849,6 +874,7 @@ async function main(): Promise<void> {
       ['snapshot-summary.json', snapshotSummary],
       ['toplistCandidatePoolSize.json', toplistCandidatePoolSize],
       ['toplistCandidatePoolExamples.json', toplistCandidatePoolExamples],
+      ['scope-filtered-out.json', scopeFilteredOut],
       ['node-core-boundaries.json', nodeCoreBoundaries],
       ['omissions-toplists.json', omissionsToplists],
       ['omission-triage.json', omissionTriagePayload],
@@ -911,6 +937,7 @@ async function main(): Promise<void> {
       '- `snapshot-summary.json`',
       '- `toplistCandidatePoolSize.json`',
       '- `toplistCandidatePoolExamples.json`',
+      '- `scope-filtered-out.json`',
       '- `node-core-boundaries.json`',
       '- `omissions-toplists.json`',
       '- `omission-triage.json`',

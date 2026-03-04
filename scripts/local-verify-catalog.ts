@@ -33,7 +33,7 @@ type CheckResult = {
 
 const COVERAGE_THRESHOLDS: CoverageGateThresholds = {
   runtimeCoverageMin: 0.9,
-  voteCountCoverageMin: 0.9,
+  voteCountFieldPresenceMin: 0.9,
   directorAndCastTopCoverageMin: 0.85,
   receptionCountCoverageMin: 0.8,
   sampleSize: 10,
@@ -392,6 +392,9 @@ async function main(): Promise<void> {
     });
     const coverageMetrics = computeCoverageGateMetrics(coverageMovies, COVERAGE_THRESHOLDS.sampleSize);
     const coverageGate = evaluateCoverageGate(coverageMetrics, COVERAGE_THRESHOLDS);
+    for (const warning of coverageGate.warnings) {
+      printWarning('vote-count-zero-rate', warning);
+    }
     if (coverageMetrics.directorAndCastTopCoverage < 0.9) {
       printWarning(
         'credits-coverage-recommended-threshold',

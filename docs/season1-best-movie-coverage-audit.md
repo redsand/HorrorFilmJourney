@@ -1,7 +1,7 @@
 # Season 1 Best-Movie Coverage Audit
 
-Generated: 2026-03-04T18:17:26.884Z
-Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifacts\season1\coverage-audit\2026-03-04T18-17-11Z`
+Generated: 2026-03-04T18:26:52.290Z
+Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifacts\season1\coverage-audit\2026-03-04T18-25-25-115Z`
 
 ## Snapshot Summary
 
@@ -17,9 +17,9 @@ Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifact
 
 | Top List | In Core | In Extended | Not In Snapshot | Core % | Total Snapshot % |
 |---|---:|---:|---:|---:|---:|
-| TopByVotes | 101 | 17 | 382 | 20.20 | 23.60 |
-| TopByRating | 16 | 1 | 123 | 11.43 | 12.14 |
-| TopByHybrid | 100 | 8 | 392 | 20.00 | 21.60 |
+| TopByVotes | 88 | 13 | 399 | 17.60 | 20.20 |
+| TopByRating | 16 | 1 | 138 | 10.32 | 10.97 |
+| TopByHybrid | 89 | 7 | 404 | 17.80 | 19.20 |
 
 ## Top 20 Omitted High-Quality Titles
 
@@ -32,17 +32,17 @@ Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifact
 7. Avengers: Infinity War (2018) - rating 8.2, votes 31548, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
 8. The Housemaid (2025) - rating 7.3, votes 1378, reason: `node_score_below_quality_floor`
 9. The Matrix (1999) - rating 8.2, votes 27457, reason: `node_score_below_quality_floor`
-10. Mercy (2026) - rating 7.1, votes 631, reason: `node_score_below_quality_floor`
-11. Spider-Man: Into the Spider-Verse (2018) - rating 8.4, votes 16923, reason: `node_score_below_quality_floor`
-12. Joker (2019) - rating 8.1, votes 27365, reason: `node_score_below_quality_floor`
-13. The Shadow's Edge (2025) - rating 7.2, votes 460, reason: `node_score_below_quality_floor`
-14. Shutter Island (2010) - rating 8.2, votes 25489, reason: `node_score_below_quality_floor`
-15. Avengers: Endgame (2019) - rating 8.2, votes 27320, reason: `node_score_below_quality_floor`
-16. Inglourious Basterds (2009) - rating 8.2, votes 23817, reason: `node_score_below_quality_floor`
-17. The Empire Strikes Back (1980) - rating 8.4, votes 18123, reason: `node_score_below_quality_floor`
-18. Star Wars (1977) - rating 8.2, votes 21998, reason: `node_score_below_quality_floor`
-19. Psycho (1960) - rating 8.4, votes 10838, reason: `node_score_below_quality_floor`
-20. Guardians of the Galaxy (2014) - rating 7.9, votes 29386, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
+10. Avatar (2009) - rating 7.6, votes 33544, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
+11. Mercy (2026) - rating 7.1, votes 631, reason: `node_score_below_quality_floor`
+12. Spider-Man: Into the Spider-Verse (2018) - rating 8.4, votes 16923, reason: `node_score_below_quality_floor`
+13. Joker (2019) - rating 8.1, votes 27365, reason: `node_score_below_quality_floor`
+14. The Shadow's Edge (2025) - rating 7.2, votes 460, reason: `node_score_below_quality_floor`
+15. History of the World: Part I (1981) - rating 6.8, votes 885, reason: `likely_excluded_by_extended_cap_or_overlap_constraints`
+16. Shutter Island (2010) - rating 8.2, votes 25489, reason: `node_score_below_quality_floor`
+17. Inglourious Basterds (2009) - rating 8.2, votes 23817, reason: `node_score_below_quality_floor`
+18. Avengers: Endgame (2019) - rating 8.2, votes 27320, reason: `node_score_below_quality_floor`
+19. The Empire Strikes Back (1980) - rating 8.4, votes 18123, reason: `node_score_below_quality_floor`
+20. Star Wars (1977) - rating 8.2, votes 21998, reason: `node_score_below_quality_floor`
 
 ## Omission Triage (Top 100)
 
@@ -54,9 +54,9 @@ Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifact
 ## Recommendations
 
 ### Must Fix Before Publish
-- low_snapshot_coverage_TopByVotes:23.6%
-- low_snapshot_coverage_TopByRating:12.142857%
-- low_snapshot_coverage_TopByHybrid:21.6%
+- low_snapshot_coverage_TopByVotes:20.2%
+- low_snapshot_coverage_TopByRating:10.967742%
+- low_snapshot_coverage_TopByHybrid:19.2%
 
 ### Nice To Improve
 - high_cap_pressure:supernatural-horror:delta=0.000462:pressure=23
@@ -90,23 +90,24 @@ Artifact directory: `C:\Users\TimShelton\source\repos\HorrorFilmJourney\artifact
 - Avengers: Infinity War (2018) - likely_excluded_by_extended_cap_or_overlap_constraints
 - The Housemaid (2025) - node_score_below_quality_floor
 - The Matrix (1999) - node_score_below_quality_floor
+- Avatar (2009) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Mercy (2026) - node_score_below_quality_floor
 - Spider-Man: Into the Spider-Verse (2018) - node_score_below_quality_floor
 - Joker (2019) - node_score_below_quality_floor
 - The Shadow's Edge (2025) - node_score_below_quality_floor
+- History of the World: Part I (1981) - likely_excluded_by_extended_cap_or_overlap_constraints
 - Shutter Island (2010) - node_score_below_quality_floor
-- Avengers: Endgame (2019) - node_score_below_quality_floor
 - Inglourious Basterds (2009) - node_score_below_quality_floor
+- Avengers: Endgame (2019) - node_score_below_quality_floor
 - The Empire Strikes Back (1980) - node_score_below_quality_floor
 - Star Wars (1977) - node_score_below_quality_floor
-- Psycho (1960) - node_score_below_quality_floor
-- Guardians of the Galaxy (2014) - likely_excluded_by_extended_cap_or_overlap_constraints
 
 ## Artifact Files
 
 - `snapshot-summary.json`
 - `toplistCandidatePoolSize.json`
 - `toplistCandidatePoolExamples.json`
+- `scope-filtered-out.json`
 - `node-core-boundaries.json`
 - `omissions-toplists.json`
 - `omission-triage.json`
