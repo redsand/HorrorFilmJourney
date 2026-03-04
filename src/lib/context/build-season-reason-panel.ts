@@ -389,7 +389,7 @@ const season2Builder: SeasonReasonBuilder = (context) => {
 
   const confidenceValue = confidence?.score;
   const bucket = typeof confidenceValue === 'number'
-    ? confidenceBucket(confidenceValue, confidence.tier)
+    ? confidenceBucket(confidenceValue, confidence?.tier)
     : 'Recognized';
   const tierLabel = context.assignment.tier === 'CORE' ? 'Core' : 'Extended';
   const bullets: string[] = [
