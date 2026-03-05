@@ -98,3 +98,4 @@ Notes:
   - `seed:season1:subgenres`
   - `seed:season2:cult`
   - `publish:season2` (dry run by default, apply when `PUBLISH_SEASON2_ON_UPDATE=true`)
+- `publish:season2 -- --apply` is library-only by default: it does not reassign `selectedPackId` for users and does not switch active season unless explicitly run with `--activate-season` and/or `--migrate-profiles`.

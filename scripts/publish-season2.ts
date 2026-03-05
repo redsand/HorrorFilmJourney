@@ -5,6 +5,8 @@ type CliOptions = {
   apply: boolean;
   force: boolean;
   enforceBalance: boolean;
+  activateSeason: boolean;
+  migrateProfiles: boolean;
 };
 
 function parseCliArgs(): CliOptions {
@@ -13,6 +15,8 @@ function parseCliArgs(): CliOptions {
     apply: args.has('--apply'),
     force: args.has('--force'),
     enforceBalance: process.env.SEASON2_ENFORCE_BALANCE === 'true',
+    activateSeason: args.has('--activate-season'),
+    migrateProfiles: args.has('--migrate-profiles'),
   };
 }
 
@@ -102,7 +106,7 @@ async function main(): Promise<void> {
     });
 
     if (!options.apply) {
-      console.log(`[season2.publish] dry run only. Re-run with --apply to activate season-2, enable cult-classics, and publish snapshot (taxonomyVersion=${taxonomyVersion}).`);
+      console.log(`[season2.publish] dry run only. Re-run with --apply to publish snapshot and enable cult-classics (taxonomyVersion=${taxonomyVersion}).`);
       return;
     }
 
@@ -126,48 +130,53 @@ async function main(): Promise<void> {
       runId,
     });
 
-    await prisma.$transaction(async (tx) => {
-      await tx.season.updateMany({
-        data: { isActive: false },
-      });
-      await tx.season.update({
-        where: { id: season2.id },
-        data: { isActive: true },
-      });
-      await tx.genrePack.update({
-        where: { id: cultPack.id },
-        data: { isEnabled: true },
-      });
+    await prisma.genrePack.update({
+      where: { id: cultPack.id },
+      data: { isEnabled: true },
     });
 
-    const profiles = await prisma.userProfile.findMany({
-      select: {
-        id: true,
-        selectedPackId: true,
-        selectedPack: {
-          select: {
-            id: true,
-            season: { select: { isActive: true } },
-          },
-        },
-      },
-    });
+    if (options.activateSeason) {
+      await prisma.$transaction(async (tx) => {
+        await tx.season.updateMany({
+          data: { isActive: false },
+        });
+        await tx.season.update({
+          where: { id: season2.id },
+          data: { isActive: true },
+        });
+      });
+    }
 
     let updatedProfiles = 0;
-    for (const profile of profiles) {
-      const shouldMove = !profile.selectedPackId || !profile.selectedPack || !profile.selectedPack.season.isActive;
-      if (!shouldMove) {
-        continue;
-      }
-      await prisma.userProfile.update({
-        where: { id: profile.id },
-        data: { selectedPackId: cultPack.id },
+    if (options.migrateProfiles) {
+      const profiles = await prisma.userProfile.findMany({
+        select: {
+          id: true,
+          selectedPackId: true,
+          selectedPack: {
+            select: {
+              id: true,
+              season: { select: { isActive: true } },
+            },
+          },
+        },
       });
-      updatedProfiles += 1;
+
+      for (const profile of profiles) {
+        const shouldMove = !profile.selectedPackId || !profile.selectedPack || !profile.selectedPack.season.isActive;
+        if (!shouldMove) {
+          continue;
+        }
+        await prisma.userProfile.update({
+          where: { id: profile.id },
+          data: { selectedPackId: cultPack.id },
+        });
+        updatedProfiles += 1;
+      }
     }
 
     console.log(
-      `[season2.publish] published: activeSeason=season-2 pack=cult-classics profilesUpdated=${updatedProfiles} releaseId=${published.releaseId} runId=${published.runId} taxonomyVersion=${published.taxonomyVersion} coreItems=${release.itemCount}`,
+      `[season2.publish] published: pack=cult-classics seasonActivated=${options.activateSeason} profilesUpdated=${updatedProfiles} releaseId=${published.releaseId} runId=${published.runId} taxonomyVersion=${published.taxonomyVersion} coreItems=${release.itemCount}`,
     );
   } finally {
     await prisma.$disconnect();

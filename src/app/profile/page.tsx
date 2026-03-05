@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
+import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
 import { getPackCopy } from '@/lib/packs/pack-copy';
 import { MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 
@@ -191,6 +191,8 @@ export default function ProfilePage() {
     });
   };
 
+  const roleLabel = me?.role === 'ADMIN' ? 'Admin' : 'User';
+
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
 
@@ -203,15 +205,11 @@ export default function ProfilePage() {
         </Card>
       ) : (
         <Card className="space-y-4">
-          <h2 className="text-lg font-semibold">{me.displayName}</h2>
+          <h2 className="text-lg font-semibold">{me.displayName} ({roleLabel})</h2>
           <p className="text-sm leading-6 text-[var(--text-muted)]">{me.email}</p>
           {themeMessage ? (
             <p className="text-xs text-[var(--text-muted)]">{themeMessage}</p>
           ) : null}
-          <div className="flex items-center gap-2">
-            <span className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Role</span>
-            <Chip tone={me.role === 'ADMIN' ? 'accent' : 'default'}>{me.role}</Chip>
-          </div>
           <div className="space-y-2">
             {packs?.packs?.length ? (
               <>
