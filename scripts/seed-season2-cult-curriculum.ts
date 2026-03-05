@@ -32,13 +32,13 @@ const ALLOWLIST_PATH = resolve('docs/season/season-2-cult-classics-allowlist.jso
 const BLOCKLIST_PATH = resolve('docs/season/season-2-cult-classics-blocklist.json');
 const REVIEW_QUEUE_PATH = resolve('docs/season/season-2-cult-candidates-needing-review.json');
 const DEFAULT_NODE_OBJECTIVES: Record<string, string> = {
-  'birth-of-midnight': 'Origins of cult fandom and underground screenings.',
+  'origins-of-cult-cinema': 'Origins of cult fandom and underground screenings.',
   'grindhouse-exploitation': 'Low-budget rebellion, shock cinema, and exploitation craft.',
-  'so-bad-its-good': 'Accidental masterpieces and outsider films with devoted fandom.',
-  'cult-sci-fi-fantasy': 'Visionary oddities, misunderstood epics, and speculative cults.',
-  'punk-counterculture': 'Anti-establishment cinema and transgressive film movements.',
-  'vhs-video-store-era': 'Rental-era discovery mechanics and shelf-driven cult canon.',
-  'cult-comedy-absurdism': 'Offbeat comedic language that built repeat-viewing communities.',
+  'psychotronic-cinema': 'Accidental masterpieces and outsider films with devoted fandom.',
+  'cult-science-fiction': 'Visionary oddities, misunderstood epics, and speculative cults.',
+  'outsider-cinema': 'Anti-establishment cinema and transgressive film movements.',
+  'video-store-era': 'Rental-era discovery mechanics and shelf-driven cult canon.',
+  'camp-cult-comedy': 'Offbeat comedic language that built repeat-viewing communities.',
   'modern-cult-phenomena': 'Internet-era cult formation, meme velocity, and revival loops.',
 };
 

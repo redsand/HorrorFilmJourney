@@ -17,7 +17,7 @@
   ],
   "nodes": [
     {
-      "slug": "birth-of-midnight",
+      "slug": "origins-of-cult-cinema",
       "name": "The Birth of Midnight Movies",
       "titles": [
         {
@@ -644,7 +644,7 @@
       ]
     },
     {
-      "slug": "so-bad-its-good",
+      "slug": "psychotronic-cinema",
       "name": "So-Bad-It's-Good",
       "titles": [
         {
@@ -818,7 +818,7 @@
       ]
     },
     {
-      "slug": "cult-sci-fi-fantasy",
+      "slug": "cult-science-fiction",
       "name": "Cult Sci-Fi & Fantasy",
       "titles": [
         {
@@ -1104,7 +1104,7 @@
       ]
     },
     {
-      "slug": "punk-counterculture",
+      "slug": "outsider-cinema",
       "name": "Punk & Counterculture Cinema",
       "titles": [
         {
@@ -1394,7 +1394,7 @@
       ]
     },
     {
-      "slug": "vhs-video-store-era",
+      "slug": "video-store-era",
       "name": "VHS & The Video Store Era",
       "titles": [
         {
@@ -1652,7 +1652,7 @@
       ]
     },
     {
-      "slug": "cult-comedy-absurdism",
+      "slug": "camp-cult-comedy",
       "name": "Cult Comedy & Absurdism",
       "titles": [
         {

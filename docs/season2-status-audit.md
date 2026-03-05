@@ -96,13 +96,13 @@ Scope: analysis-only audit of current Season 2 implementation in CinemaCodex.
 
 | order | slug | name | learning objective | node signals |
 | ---: | --- | --- | --- | --- |
-| 1 | `birth-of-midnight` | The Birth of Midnight Movies | Origins of cult fandom and underground screenings. | whatToNotice + subgenres |
+| 1 | `origins-of-cult-cinema` | The Birth of Midnight Movies | Origins of cult fandom and underground screenings. | whatToNotice + subgenres |
 | 2 | `grindhouse-exploitation` | Grindhouse & Exploitation | Low-budget rebellion and shock cinema. | whatToNotice + subgenres |
-| 3 | `so-bad-its-good` | So-Bad-It's-Good | Accidental masterpieces and ironic worship. | whatToNotice + subgenres |
-| 4 | `cult-sci-fi-fantasy` | Cult Sci-Fi & Fantasy | Visionary oddities and misunderstood epics. | whatToNotice + subgenres |
-| 5 | `punk-counterculture` | Punk & Counterculture Cinema | Anti-establishment film movements. | whatToNotice + subgenres |
-| 6 | `vhs-video-store-era` | VHS & The Video Store Era | Shelf discoveries and rental legends. | whatToNotice + subgenres |
-| 7 | `cult-comedy-absurdism` | Cult Comedy & Absurdism | Offbeat humor that found devoted fans. | whatToNotice + subgenres |
+| 3 | `psychotronic-cinema` | So-Bad-It's-Good | Accidental masterpieces and ironic worship. | whatToNotice + subgenres |
+| 4 | `cult-science-fiction` | Cult Sci-Fi & Fantasy | Visionary oddities and misunderstood epics. | whatToNotice + subgenres |
+| 5 | `outsider-cinema` | Punk & Counterculture Cinema | Anti-establishment film movements. | whatToNotice + subgenres |
+| 6 | `video-store-era` | VHS & The Video Store Era | Shelf discoveries and rental legends. | whatToNotice + subgenres |
+| 7 | `camp-cult-comedy` | Cult Comedy & Absurdism | Offbeat humor that found devoted fans. | whatToNotice + subgenres |
 | 8 | `modern-cult-phenomena` | Modern Cult Phenomena | Films that became cult in the internet age. | whatToNotice + subgenres |
 
 ### Keywords / LF signals status
@@ -127,13 +127,13 @@ Scope: analysis-only audit of current Season 2 implementation in CinemaCodex.
 
 | node_slug | prototype_count | example_titles |
 | --- | ---: | --- |
-| `birth-of-midnight` | 0 | n/a |
+| `origins-of-cult-cinema` | 0 | n/a |
 | `grindhouse-exploitation` | 0 | n/a |
-| `so-bad-its-good` | 0 | n/a |
-| `cult-sci-fi-fantasy` | 0 | n/a |
-| `punk-counterculture` | 0 | n/a |
-| `vhs-video-store-era` | 0 | n/a |
-| `cult-comedy-absurdism` | 0 | n/a |
+| `psychotronic-cinema` | 0 | n/a |
+| `cult-science-fiction` | 0 | n/a |
+| `outsider-cinema` | 0 | n/a |
+| `video-store-era` | 0 | n/a |
+| `camp-cult-comedy` | 0 | n/a |
 | `modern-cult-phenomena` | 0 | n/a |
 
 ### Embeddings + similarity status
@@ -245,26 +245,26 @@ Live DB distribution (current runtime state):
 
 | node_slug | core_count | extended_count | total_count |
 | --- | ---: | ---: | ---: |
-| `birth-of-midnight` | 0 | 0 | 0 |
+| `origins-of-cult-cinema` | 0 | 0 | 0 |
 | `grindhouse-exploitation` | 0 | 0 | 0 |
-| `so-bad-its-good` | 0 | 0 | 0 |
-| `cult-sci-fi-fantasy` | 0 | 0 | 0 |
-| `punk-counterculture` | 0 | 0 | 0 |
-| `vhs-video-store-era` | 0 | 0 | 0 |
-| `cult-comedy-absurdism` | 0 | 0 | 0 |
+| `psychotronic-cinema` | 0 | 0 | 0 |
+| `cult-science-fiction` | 0 | 0 | 0 |
+| `outsider-cinema` | 0 | 0 | 0 |
+| `video-store-era` | 0 | 0 | 0 |
+| `camp-cult-comedy` | 0 | 0 | 0 |
 | `modern-cult-phenomena` | 0 | 0 | 0 |
 
 Snapshot distribution (`season-2-cult-classics-mastered.json`, tier split not stored there):
 
 | node_slug | total_count |
 | --- | ---: |
-| `birth-of-midnight` | 85 |
+| `origins-of-cult-cinema` | 85 |
 | `grindhouse-exploitation` | 65 |
-| `so-bad-its-good` | 41 |
-| `cult-sci-fi-fantasy` | 53 |
-| `punk-counterculture` | 69 |
-| `vhs-video-store-era` | 61 |
-| `cult-comedy-absurdism` | 71 |
+| `psychotronic-cinema` | 41 |
+| `cult-science-fiction` | 53 |
+| `outsider-cinema` | 69 |
+| `video-store-era` | 61 |
+| `camp-cult-comedy` | 71 |
 | `modern-cult-phenomena` | 71 |
 
 ## 7. Governance rules

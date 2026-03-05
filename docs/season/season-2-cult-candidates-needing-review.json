@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-04T05:02:52.091Z",
+  "generatedAt": "2026-03-05T03:50:48.117Z",
   "count": 19,
   "items": [
     {
@@ -7,133 +7,133 @@
       "title": "Fantastic Planet",
       "year": 1973,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "birth-of-midnight"
+      "nodeSlug": "origins-of-cult-cinema"
     },
     {
       "tmdbId": 12593,
       "title": "Fritz the Cat",
       "year": 1972,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 64847,
       "title": "Belladonna of Sadness",
       "year": 1973,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 11837,
       "title": "Watership Down",
       "year": 1978,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 11827,
       "title": "Heavy Metal",
       "year": 1981,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 10150,
       "title": "The Last Unicorn",
       "year": 1982,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 11704,
       "title": "The Secret of NIMH",
       "year": 1982,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 81,
       "title": "Nausicaä of the Valley of the Wind",
       "year": 1984,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 9463,
       "title": "Vampire Hunter D",
       "year": 1985,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 21453,
       "title": "Wicked City",
       "year": 1987,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 149,
       "title": "Akira",
       "year": 1988,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 14282,
       "title": "Ninja Scroll",
       "year": 1993,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 9323,
       "title": "Ghost in the Shell",
       "year": 1995,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 10494,
       "title": "Perfect Blue",
       "year": 1998,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 128,
       "title": "Princess Mononoke",
       "year": 1997,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 11049,
       "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
       "year": 2003,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 9389,
       "title": "Renaissance",
       "year": 2006,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-sci-fi-fantasy"
+      "nodeSlug": "cult-science-fiction"
     },
     {
       "tmdbId": 48624,
       "title": "Urotsukidōji: Legend of the Overfiend",
       "year": 1989,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "vhs-video-store-era"
+      "nodeSlug": "video-store-era"
     },
     {
       "tmdbId": 9473,
       "title": "South Park: Bigger, Longer & Uncut",
       "year": 1999,
       "reason": "ANIMATION_EXCLUDED",
-      "nodeSlug": "cult-comedy-absurdism"
+      "nodeSlug": "camp-cult-comedy"
     }
   ]
 }

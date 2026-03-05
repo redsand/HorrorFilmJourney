@@ -279,7 +279,7 @@ const SEASON_2_CULT_SKELETON: Array<{
   spoilerPolicyDefault: 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 }> = [
   {
-    slug: 'birth-of-midnight',
+    slug: 'origins-of-cult-cinema',
     name: 'The Birth of Midnight Movies',
     learningObjective: 'Origins of cult fandom and underground screenings.',
     whatToNotice: ['Regional filmmaking fingerprints', 'DIY production energy', 'Audience ritual moments'],
@@ -295,7 +295,7 @@ const SEASON_2_CULT_SKELETON: Array<{
     spoilerPolicyDefault: 'LIGHT',
   },
   {
-    slug: 'so-bad-its-good',
+    slug: 'psychotronic-cinema',
     name: 'So-Bad-It\'s-Good',
     learningObjective: 'Accidental masterpieces and ironic worship.',
     whatToNotice: ['Unintended tonal comedy', 'Earnest performances vs odd craft', 'Audience quote culture'],
@@ -303,7 +303,7 @@ const SEASON_2_CULT_SKELETON: Array<{
     spoilerPolicyDefault: 'NO_SPOILERS',
   },
   {
-    slug: 'cult-sci-fi-fantasy',
+    slug: 'cult-science-fiction',
     name: 'Cult Sci-Fi & Fantasy',
     learningObjective: 'Visionary oddities and misunderstood epics.',
     whatToNotice: ['Production ambition vs budget', 'Lore density', 'World-building cult hooks'],
@@ -311,7 +311,7 @@ const SEASON_2_CULT_SKELETON: Array<{
     spoilerPolicyDefault: 'NO_SPOILERS',
   },
   {
-    slug: 'punk-counterculture',
+    slug: 'outsider-cinema',
     name: 'Punk & Counterculture Cinema',
     learningObjective: 'Anti-establishment film movements.',
     whatToNotice: ['DIY ethos', 'Political provocation', 'Subculture iconography'],
@@ -319,7 +319,7 @@ const SEASON_2_CULT_SKELETON: Array<{
     spoilerPolicyDefault: 'NO_SPOILERS',
   },
   {
-    slug: 'vhs-video-store-era',
+    slug: 'video-store-era',
     name: 'VHS & The Video Store Era',
     learningObjective: 'Shelf discoveries and rental legends.',
     whatToNotice: ['Cover-art attraction', 'Word-of-mouth discovery', 'Regional rental circulation'],
@@ -327,7 +327,7 @@ const SEASON_2_CULT_SKELETON: Array<{
     spoilerPolicyDefault: 'NO_SPOILERS',
   },
   {
-    slug: 'cult-comedy-absurdism',
+    slug: 'camp-cult-comedy',
     name: 'Cult Comedy & Absurdism',
     learningObjective: 'Offbeat humor that found devoted fans.',
     whatToNotice: ['Absurdist escalation', 'Deadpan delivery', 'Community in-jokes'],

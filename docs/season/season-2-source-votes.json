@@ -57,7 +57,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "vhs-video-store-era",
+      "suggestedNode": "video-store-era",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -75,7 +75,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "cult-sci-fi-fantasy",
+      "suggestedNode": "cult-science-fiction",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -93,7 +93,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "vhs-video-store-era",
+      "suggestedNode": "video-store-era",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -111,7 +111,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "vhs-video-store-era",
+      "suggestedNode": "video-store-era",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -129,7 +129,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "cult-comedy-absurdism",
+      "suggestedNode": "camp-cult-comedy",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -147,7 +147,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "vhs-video-store-era",
+      "suggestedNode": "video-store-era",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -165,7 +165,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "vhs-video-store-era",
+      "suggestedNode": "video-store-era",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -183,7 +183,7 @@
         "criterion_adjacent",
         "letterboxd_top250"
       ],
-      "suggestedNode": "cult-sci-fi-fantasy",
+      "suggestedNode": "cult-science-fiction",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -201,7 +201,7 @@
         "letterboxd_top250",
         "peary"
       ],
-      "suggestedNode": "punk-counterculture",
+      "suggestedNode": "outsider-cinema",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -273,7 +273,7 @@
         "criterion_adjacent",
         "letterboxd_top250"
       ],
-      "suggestedNode": "cult-sci-fi-fantasy",
+      "suggestedNode": "cult-science-fiction",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -291,7 +291,7 @@
         "criterion_adjacent",
         "letterboxd_top250"
       ],
-      "suggestedNode": "cult-sci-fi-fantasy",
+      "suggestedNode": "cult-science-fiction",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -309,7 +309,7 @@
         "criterion_adjacent",
         "letterboxd_top250"
       ],
-      "suggestedNode": "punk-counterculture",
+      "suggestedNode": "outsider-cinema",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",
@@ -435,7 +435,7 @@
         "criterion_adjacent",
         "letterboxd_top250"
       ],
-      "suggestedNode": "punk-counterculture",
+      "suggestedNode": "outsider-cinema",
       "inCurriculum": true,
       "sourceLabels": [
         "Alamo Drafthouse repertory programming archives",

@@ -13,19 +13,19 @@ Verification date: 2026-03-04 (America/Chicago)
 
 ## 8-Node Curriculum Arc
 
-1. `birth-of-midnight` — **The Birth of Midnight Movies**  
+1. `origins-of-cult-cinema` — **The Birth of Midnight Movies**  
    Objective: Origins of cult fandom and underground screenings.
 2. `grindhouse-exploitation` — **Grindhouse & Exploitation**  
    Objective: Low-budget rebellion and shock cinema.
-3. `so-bad-its-good` — **So-Bad-It's-Good**  
+3. `psychotronic-cinema` — **So-Bad-It's-Good**  
    Objective: Accidental masterpieces and ironic worship.
-4. `cult-sci-fi-fantasy` — **Cult Sci-Fi & Fantasy**  
+4. `cult-science-fiction` — **Cult Sci-Fi & Fantasy**  
    Objective: Visionary oddities and misunderstood epics.
-5. `punk-counterculture` — **Punk & Counterculture Cinema**  
+5. `outsider-cinema` — **Punk & Counterculture Cinema**  
    Objective: Anti-establishment film movements.
-6. `vhs-video-store-era` — **VHS & The Video Store Era**  
+6. `video-store-era` — **VHS & The Video Store Era**  
    Objective: Shelf discoveries and rental legends.
-7. `cult-comedy-absurdism` — **Cult Comedy & Absurdism**  
+7. `camp-cult-comedy` — **Cult Comedy & Absurdism**  
    Objective: Offbeat humor that found devoted fans.
 8. `modern-cult-phenomena` — **Modern Cult Phenomena**  
    Objective: Films that became cult in the internet age.

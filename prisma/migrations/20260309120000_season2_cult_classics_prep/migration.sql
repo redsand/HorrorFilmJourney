@@ -35,7 +35,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_foundations', cult_pack."id", 'birth-of-midnight', 'The Birth of Midnight Movies',
+SELECT 'node_cult_foundations', cult_pack."id", 'origins-of-cult-cinema', 'The Birth of Midnight Movies',
   'Identify the core grammar of cult cinema and why niche audiences canonize these films.',
   '["Regional filmmaking fingerprints","DIY production energy","Audience ritual moments"]'::jsonb,
   '1960s-1980s · midnight movies, outsider cinema', 'NO_SPOILERS', 1, NOW(), NOW()
@@ -73,7 +73,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_rebel_youth', cult_pack."id", 'so-bad-its-good', 'So-Bad-It''s-Good',
+SELECT 'node_cult_rebel_youth', cult_pack."id", 'psychotronic-cinema', 'So-Bad-It''s-Good',
   'Accidental masterpieces and ironic worship.',
   '["Unintended tonal comedy","Earnest performances vs odd craft","Audience quote culture"]'::jsonb,
   '1960s-2000s · outsider failures, ironic cult', 'NO_SPOILERS', 3, NOW(), NOW()
@@ -92,7 +92,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_occult_nightmare', cult_pack."id", 'cult-sci-fi-fantasy', 'Cult Sci-Fi & Fantasy',
+SELECT 'node_cult_occult_nightmare', cult_pack."id", 'cult-science-fiction', 'Cult Sci-Fi & Fantasy',
   'Visionary oddities and misunderstood epics.',
   '["Production ambition vs budget","Lore density","World-building cult hooks"]'::jsonb,
   '1970s-2000s · cult sci-fi, fantasy oddities', 'NO_SPOILERS', 4, NOW(), NOW()
@@ -111,7 +111,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_foreign_shockwaves', cult_pack."id", 'punk-counterculture', 'Punk & Counterculture Cinema',
+SELECT 'node_cult_foreign_shockwaves', cult_pack."id", 'outsider-cinema', 'Punk & Counterculture Cinema',
   'Anti-establishment film movements.',
   '["DIY ethos","Political provocation","Subculture iconography"]'::jsonb,
   '1970s-1990s · punk, counterculture, transgression', 'NO_SPOILERS', 5, NOW(), NOW()
@@ -130,7 +130,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_midnight_rituals', cult_pack."id", 'vhs-video-store-era', 'VHS & The Video Store Era',
+SELECT 'node_cult_midnight_rituals', cult_pack."id", 'video-store-era', 'VHS & The Video Store Era',
   'Shelf discoveries and rental legends.',
   '["Cover-art attraction","Word-of-mouth discovery","Regional rental circulation"]'::jsonb,
   '1980s-2000s · VHS cult, rental-era canon', 'NO_SPOILERS', 6, NOW(), NOW()
@@ -149,7 +149,7 @@ WITH cult_pack AS (
   SELECT "id" FROM "GenrePack" WHERE "slug" = 'cult-classics' LIMIT 1
 )
 INSERT INTO "JourneyNode" ("id", "packId", "slug", "name", "learningObjective", "whatToNotice", "eraSubgenreFocus", "spoilerPolicyDefault", "orderIndex", "createdAt", "updatedAt")
-SELECT 'node_cult_director_signatures', cult_pack."id", 'cult-comedy-absurdism', 'Cult Comedy & Absurdism',
+SELECT 'node_cult_director_signatures', cult_pack."id", 'camp-cult-comedy', 'Cult Comedy & Absurdism',
   'Offbeat humor that found devoted fans.',
   '["Absurdist escalation","Deadpan delivery","Community in-jokes"]'::jsonb,
   '1970s-present · absurdist cult comedy', 'NO_SPOILERS', 7, NOW(), NOW()

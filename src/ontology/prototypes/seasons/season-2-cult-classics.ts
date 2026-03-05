@@ -2,10 +2,10 @@ import type { SeasonPrototypePack } from '@/lib/ontology/prototype-types';
 
 export const SEASON_2_CULT_CLASSICS_PROTOTYPE_PACK: SeasonPrototypePack = {
   seasonId: 'season-2',
-  taxonomyVersion: 'season-2-cult-v1',
+  taxonomyVersion: 'season-2-cult-v3',
   nodes: [
     {
-      nodeSlug: 'birth-of-midnight',
+      nodeSlug: 'origins-of-cult-cinema',
       positivePrototypes: [[0.9, 0.2, 0.3, 0.6]],
       positiveTitles: ['Eraserhead', 'The Rocky Horror Picture Show', 'El Topo'],
     },
@@ -15,27 +15,27 @@ export const SEASON_2_CULT_CLASSICS_PROTOTYPE_PACK: SeasonPrototypePack = {
       positiveTitles: ['Cannibal Holocaust', 'The Beyond', 'I Spit on Your Grave'],
     },
     {
-      nodeSlug: 'so-bad-its-good',
+      nodeSlug: 'psychotronic-cinema',
       positivePrototypes: [[0.72, 0.45, 0.2, 0.22]],
       positiveTitles: ['The Room', 'Troll 2', 'Birdemic: Shock and Terror'],
     },
     {
-      nodeSlug: 'cult-sci-fi-fantasy',
+      nodeSlug: 'cult-science-fiction',
       positivePrototypes: [[0.8, 0.52, 0.88, 0.64]],
       positiveTitles: ['Blade Runner', 'Heavy Metal', 'Stalker'],
     },
     {
-      nodeSlug: 'punk-counterculture',
+      nodeSlug: 'outsider-cinema',
       positivePrototypes: [[0.78, 0.66, 0.35, 0.51]],
       positiveTitles: ['Repo Man', 'Sid and Nancy', 'Hedwig and the Angry Inch'],
     },
     {
-      nodeSlug: 'vhs-video-store-era',
+      nodeSlug: 'video-store-era',
       positivePrototypes: [[0.82, 0.34, 0.48, 0.29]],
       positiveTitles: ['Re-Animator', 'The Gate', 'Night of the Creeps'],
     },
     {
-      nodeSlug: 'cult-comedy-absurdism',
+      nodeSlug: 'camp-cult-comedy',
       positivePrototypes: [[0.65, 0.31, 0.24, 0.4]],
       positiveTitles: ['The Big Lebowski', 'Office Space', 'Wet Hot American Summer'],
     },
