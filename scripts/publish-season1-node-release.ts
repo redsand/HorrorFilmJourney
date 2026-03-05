@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
+import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
 
 type Cli = {
   taxonomyVersion?: string;
@@ -22,13 +23,22 @@ function parseCli(): Cli {
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   const cli = parseCli();
+  const taxonomyVersion = cli.taxonomyVersion ?? 'season-1-horror-v3.5';
 
   try {
     const published = await publishSeasonNodeRelease(prisma, {
       seasonSlug: 'season-1',
       packSlug: 'horror',
-      ...(cli.taxonomyVersion ? { taxonomyVersion: cli.taxonomyVersion } : {}),
+      taxonomyVersion,
       ...(cli.runId ? { runId: cli.runId } : {}),
+    });
+
+    await enforceSnapshotGuardrail(prisma, {
+      seasonSlug: 'season-1',
+      packSlug: 'horror',
+      taxonomyVersion,
+      releaseId: published.releaseId,
+      overrideEnv: false,
     });
 
     console.log(`[season1.publish] published release=${published.releaseId} taxonomyVersion=${published.taxonomyVersion} runId=${published.runId}`);
