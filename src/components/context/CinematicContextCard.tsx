@@ -19,7 +19,6 @@ export function CinematicContextCard({
     return null;
   }
 
-  const visibleSignals = compact ? data.signals.slice(0, 3) : data.signals;
   const titleClassName = compact ? 'text-sm font-semibold' : 'text-base font-semibold';
   const paragraphClassName = compact ? 'text-xs text-[var(--text-muted)]' : 'text-sm text-[var(--text-muted)]';
 
@@ -37,18 +36,6 @@ export function CinematicContextCard({
         {typeof data.year === 'number' ? ` (${data.year})` : ''}
       </p>
       <p className={paragraphClassName}>{data.whyParagraph}</p>
-      {visibleSignals.length > 0 ? (
-        <div className="space-y-1">
-          <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Signals</p>
-          <ul className={compact ? 'list-disc space-y-1 pl-4 text-xs' : 'list-disc space-y-1.5 pl-5 text-sm'}>
-            {visibleSignals.map((signal) => (
-              <li key={`${signal.label}:${signal.value}`}>
-                <span className="font-medium">{signal.label}:</span> {signal.value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </>
   );
 

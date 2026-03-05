@@ -25,7 +25,7 @@ describe('CinematicContextCard', () => {
 
     expect(html).toContain('Cinematic Context');
     expect(html).toContain('Supernatural Horror');
-    expect(html).toContain('Journey Worthiness');
+    expect(html).not.toContain('Signals');
     expect(html).toMatchSnapshot();
   });
 
@@ -34,8 +34,7 @@ describe('CinematicContextCard', () => {
     const html = renderToStaticMarkup(<CinematicContextCard compact data={fixture} />);
 
     expect(html).toContain('Midnight Movies');
-    expect(html).toContain('Confidence Score');
-    expect(html).toContain('Canon Rank');
+    expect(html).not.toContain('Signals');
     expect(html).toMatchSnapshot();
   });
 
