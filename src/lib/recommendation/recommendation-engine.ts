@@ -5,6 +5,7 @@ import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-cont
 import { recommendationCardNarrativeSchema } from '@/lib/contracts/narrative-contracts';
 import type { EvidencePacketVM, EvidenceRetriever } from '@/lib/evidence/evidence-retriever';
 import { packageEvidencePackets } from '@/lib/evidence/evidence-packager';
+import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
 import {
   buildNarrative,
   generateRecommendationBatchV1,
@@ -80,6 +81,7 @@ export type CandidateConstraints = {
   excludeRecentSkippedDays: number;
   packPrimaryGenre: string;
   packId?: string | null;
+  seasonSlug?: string;
   journeyNodeSlug?: string;
   minimumYear?: number | null;
 };
@@ -87,6 +89,7 @@ export type CandidateConstraints = {
 export type RecommendationContext = {
   targetCount: number;
   packId?: string | null;
+  seasonSlug?: string;
 };
 
 export type ExplorationContext = {
@@ -876,7 +879,10 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     });
     latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
     const publishedReleaseId = constraints.packId
-      ? await getPublishedSeasonNodeReleaseId(this.prisma, { packId: constraints.packId, seasonSlug: 'season-1' })
+      ? await getPublishedSeasonNodeReleaseId(this.prisma, {
+        packId: constraints.packId,
+        seasonSlug: constraints.seasonSlug ?? 'season-1',
+      })
       : null;
     const hasPackCatalog = constraints.packId
       ? (
@@ -1304,6 +1310,7 @@ async function resolveJourneyNodeWithCapacity(input: {
   prisma: PrismaClient;
   userId: string;
   packId: string | null | undefined;
+  seasonSlug: string;
   preferredJourneyNode: string;
   targetCount: number;
   excludeRecentSkippedDays: number;
@@ -1360,7 +1367,7 @@ async function resolveJourneyNodeWithCapacity(input: {
   ];
   const publishedReleaseId = await getPublishedSeasonNodeReleaseId(input.prisma, {
     packId: input.packId,
-    seasonSlug: 'season-1',
+    seasonSlug: input.seasonSlug,
   });
 
   for (const nodeSlug of orderedSlugs) {
@@ -1483,6 +1490,7 @@ export async function generateRecommendationBatchModern(
     prisma,
     userId,
     packId: options.packId,
+    seasonSlug: options.seasonSlug ?? 'season-1',
     preferredJourneyNode,
     targetCount,
     excludeRecentSkippedDays,
@@ -1515,6 +1523,7 @@ export async function generateRecommendationBatchModern(
     excludeRecentSkippedDays,
     packPrimaryGenre,
     packId: options.packId,
+    seasonSlug: options.seasonSlug ?? 'season-1',
     journeyNodeSlug: resolvedJourneyNode,
     minimumYear: resolvePackMinimumYearPreference(userProfile?.horrorDNA, options.packId ?? null),
   });
@@ -1527,6 +1536,7 @@ export async function generateRecommendationBatchModern(
   const rankedIds = await deps.reranker.rerank(userId, candidateIds, {
     targetCount,
     packId: options.packId ?? null,
+    seasonSlug: options.seasonSlug ?? 'season-1',
   });
   console.info('[recommendations.engine] modern rerank completed', {
     durationMs: elapsedMs(rerankStartedAt),
@@ -1601,7 +1611,12 @@ export async function generateRecommendationBatchModern(
   const itemData = await Promise.all(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
-      const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, 'US');
+      const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, {
+        region: 'US',
+        seasonSlug: options.seasonSlug ?? 'season-1',
+        packId: options.packId ?? null,
+        query: `${movie.title} ${resolvedJourneyNode} reception context`,
+      });
       const journeyNode = `${resolvedJourneyNode}#RANK_${rank}`;
       const ratings = movie.ratings;
       const inputHash = computeNarrativeHash({
@@ -1859,6 +1874,7 @@ export async function generateRecommendationBatch(
   const effectiveOptions: RecommendationEngineOptions = {
     ...options,
     packId: effectivePack.packId,
+    seasonSlug: effectivePack.seasonSlug,
     packPrimaryGenre: effectivePack.primaryGenre,
   };
   console.info('[recommendations.engine] mode selected', { mode });
@@ -1878,7 +1894,7 @@ export async function generateRecommendationBatch(
       candidateGenerator: new SqlCandidateGeneratorV1(prisma),
       reranker: new HeuristicRerankerV1(prisma),
       explorationPolicy: new NoExplorationPolicyV1(),
-      evidenceRetriever: new CachedEvidenceRetrieverV1(prisma),
+      evidenceRetriever: createConfiguredEvidenceRetriever(prisma),
       narrativeComposer: new TemplateNarrativeComposerV1(llmProvider),
     },
     effectiveOptions,

@@ -59,7 +59,7 @@ Legend:
 - [x] done
 
 ### Phase A: Contracts and Gates
-- [ ] Define `EvidenceRetrieverV2` contract (query, filters, topK, provenance, scores).
+- [x] Define `EvidenceRetrieverV2` contract (query, filters, topK, provenance, scores).
 - [ ] Define quality gates and thresholds (`recall@k`, citation-valid-rate, empty-hit-rate, duplicate-rate, p95 latency).
 - [ ] Add response contract for retrieval provenance in recommendation/companion payloads.
 
@@ -68,46 +68,46 @@ Exit criteria:
 
 ### Phase B: Data Model and Migration
 - [ ] Add corpus/chunk tables (movie-linked) + embedding metadata.
-- [ ] Add retrieval run + diagnostics persistence model.
-- [ ] Migration + Prisma generate/deploy verified.
+- [x] Add retrieval run + diagnostics persistence model.
+- [x] Migration + Prisma generate/deploy verified.
 
 Exit criteria:
 - New schema migrates cleanly in local + test DB.
 
 ### Phase C: Ingestion/Indexing Jobs
-- [ ] Build deterministic ingest adapters for approved local/curated sources.
-- [ ] Normalize + dedupe pipeline.
-- [ ] Chunking module with deterministic chunk IDs.
-- [ ] Embedding write path + index refresh job.
+- [~] Build deterministic ingest adapters for approved local/curated sources.
+- [~] Normalize + dedupe pipeline.
+- [x] Chunking module with deterministic chunk IDs.
+- [~] Embedding write path + index refresh job.
 - [ ] Idempotent run checkpoints and resume support.
 
 Exit criteria:
 - Re-running jobs yields stable outputs with same inputs.
 
 ### Phase D: Hybrid Retrieval
-- [ ] Implement lexical retriever.
-- [ ] Implement semantic retriever.
-- [ ] Implement fusion/rerank + metadata filters.
-- [ ] Implement governance layer (trust/freshness/diversity/source caps).
-- [ ] Add deterministic fallback mode.
+- [x] Implement lexical retriever.
+- [x] Implement semantic retriever.
+- [x] Implement fusion/rerank + metadata filters.
+- [x] Implement governance layer (trust/freshness/diversity/source caps).
+- [x] Add deterministic fallback mode.
 
 Exit criteria:
 - Retrieval returns stable top-k for fixed fixture + passes quality gates.
 
 ### Phase E: Runtime Integration
-- [ ] Wire `generateRecommendationBatchModern` to retriever V2.
-- [ ] Wire companion endpoint to retriever V2.
+- [x] Wire `generateRecommendationBatchModern` to retriever V2.
+- [x] Wire companion endpoint to retriever V2.
 - [ ] Keep feature flags:
-  - `EVIDENCE_RETRIEVAL_MODE=cache|hybrid`
-  - `EVIDENCE_RETRIEVAL_REQUIRE_INDEX=true|false`
+  - [x] `EVIDENCE_RETRIEVAL_MODE=cache|hybrid`
+  - [x] `EVIDENCE_RETRIEVAL_REQUIRE_INDEX=true|false`
 
 Exit criteria:
 - End-to-end retrieval is used in hybrid mode; cache mode still works.
 
 ### Phase F: CI + Observability
-- [ ] Add deterministic retrieval fixtures + regression tests.
-- [ ] Add diagnostics/metrics emission and admin visibility.
-- [ ] Add CI gates for overlap/citation/retrieval health.
+- [x] Add deterministic retrieval fixtures + regression tests.
+- [x] Add diagnostics/metrics emission and admin visibility.
+- [~] Add CI gates for overlap/citation/retrieval health.
 
 Exit criteria:
 - CI blocks regressions, metrics emitted consistently.
@@ -124,21 +124,21 @@ Exit criteria:
 
 ### Immediate Sprint (next implementation slice)
 - [ ] Add retrieval schema models and migration.
-- [ ] Create `src/lib/evidence/retrieval/` module scaffold:
-  - [ ] `types.ts`
-  - [ ] `lexical-retriever.ts`
-  - [ ] `semantic-retriever.ts`
-  - [ ] `fusion-reranker.ts`
-  - [ ] `governance.ts`
-  - [ ] `index.ts`
-- [ ] Implement `EvidenceRetrieverV2` adapter with fallback to existing cache retriever.
-- [ ] Add feature-flag wiring in recommendation engine + companion route.
-- [ ] Add first deterministic fixture tests.
+- [x] Create `src/lib/evidence/retrieval/` module scaffold:
+  - [x] `types.ts`
+  - [x] `lexical-retriever.ts`
+  - [x] `semantic-retriever.ts`
+  - [x] `fusion-reranker.ts`
+  - [x] `governance.ts`
+  - [x] `index.ts`
+- [x] Implement `EvidenceRetrieverV2` adapter with fallback to existing cache retriever.
+- [x] Add feature-flag wiring in recommendation engine + companion route.
+- [x] Add first deterministic fixture tests.
 
 ### Secondary Sprint
-- [ ] Build ingestion + chunking scripts in `scripts/`.
+- [~] Build ingestion + chunking scripts in `scripts/`.
 - [ ] Add offline eval command for retrieval quality.
-- [ ] Add admin debug endpoint for retrieval traces.
+- [x] Add admin debug endpoint for retrieval traces.
 
 ## 6) Acceptance Criteria (Definition of Done)
 
@@ -219,4 +219,8 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 
 ## 13) Change Log
 - 2026-03-03: Tracker created; initial phased plan and acceptance criteria defined.
+- 2026-03-04: Added retrieval V2 runtime scaffold (`src/lib/evidence/retrieval/*`) with lexical + semantic + RRF fusion + governance caps and deterministic fallback. Wired companion to retriever V2 and season-aware node lookup for active pack; added initial deterministic runtime tests.
+- 2026-03-04: Added retrieval diagnostics persistence model (`RetrievalRun`) with Prisma migration `20260311110000_retrieval_runs`, wired hybrid retriever run logging (success + fallback), and shipped admin endpoint `GET /api/admin/retrieval` with API tests.
+- 2026-03-04: Added evidence corpus schema (`EvidenceDocument`, `EvidenceChunk`) with migration `20260311121500_evidence_corpus`, deterministic chunking + idempotent ingestion module (`src/lib/evidence/ingestion/*`), retrieval fusion support for chunk corpus, and operator command `npm run ingest:evidence:corpus -- --input <file>`.
+- 2026-03-04: Added chunk embedding backfill module (`src/lib/evidence/ingestion/embed.ts`) + operator command `npm run backfill:evidence:embeddings`, and retrieval quality gate evaluator (`src/lib/evidence/retrieval/quality-gates.ts`) exposed in `GET /api/admin/retrieval`.
 

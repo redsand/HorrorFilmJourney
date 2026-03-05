@@ -286,7 +286,7 @@ export default async function HomePage({
     ?? packs?.activeSeason.slug
     ?? 'season-1';
   const compactContextTmdbIds = nodeMovies
-    ? [...nodeMovies.core.slice(0, 2), ...nodeMovies.extended.slice(0, 1)].map((entry) => entry.tmdbId)
+    ? nodeMovies.core.slice(0, 2).map((entry) => entry.tmdbId)
     : [];
   const compactContextRows = await Promise.all(compactContextTmdbIds.map(async (tmdbId) => {
     const [context, reasonPanel] = await Promise.all([
@@ -532,33 +532,19 @@ export default async function HomePage({
                 <p className="mt-2 text-sm text-[var(--text-muted)]">No core titles available for this node.</p>
               )}
               {nodeMovies.extended.length > 0 ? (
-                <details className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
+                <details className="mt-3 px-0 py-1">
                   <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
                     Deep Cuts ({nodeMovies.extended.length})
                   </summary>
-                  <ul className="mt-2 space-y-2">
+                  <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
                     {nodeMovies.extended.slice(0, 8).map((movie) => (
-                      <li
-                        className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[rgba(18,18,22,0.7)] px-2 py-1.5 text-sm text-[var(--text-muted)]"
-                        key={`extended-${movie.tmdbId}`}
-                      >
+                      <li key={`extended-${movie.tmdbId}`}>
                         <Link
-                          className="min-w-0 truncate text-[var(--text)] underline-offset-2 hover:underline"
+                          className="text-[var(--text)] underline-offset-2 hover:underline"
                           href={`/companion/${movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
                         >
                           {movie.title} {movie.year ? `(${movie.year})` : ''}
                         </Link>
-                        {movie.watchReason ? (
-                          <p className="mt-1 text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
-                        ) : null}
-                        <div className="w-full">
-                          <CinematicContextCard compact data={compactContextByTmdbId.get(movie.tmdbId) ?? null} />
-                          {compactReasonByTmdbId.get(movie.tmdbId) ? (
-                            <div className="mt-2">
-                              <ReasonPanel {...compactReasonByTmdbId.get(movie.tmdbId)!} />
-                            </div>
-                          ) : null}
-                        </div>
                       </li>
                     ))}
                   </ul>

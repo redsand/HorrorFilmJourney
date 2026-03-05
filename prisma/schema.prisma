@@ -162,13 +162,76 @@ model Movie {
   interactions     UserMovieInteraction[]
   recommendationItems RecommendationItem[]
   embedding        MovieEmbedding?
+  evidenceDocuments EvidenceDocument[]
   evidencePackets  EvidencePacket[]
   ratings          MovieRating[]
   streamingCache   MovieStreamingCache[]
   companionCache   CompanionCache[]
+  retrievalRuns   RetrievalRun[]
   nodeAssignments  NodeMovie[]
   releaseAssignments SeasonNodeReleaseItem[]
   externalReadings ExternalReadingCuration[]
+}
+
+model EvidenceDocument {
+  id          String   @id @default(cuid())
+  movieId     String
+  seasonSlug  String?
+  sourceName  String
+  url         String
+  title       String
+  content     String
+  contentHash String
+  publishedAt DateTime?
+  license     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  chunks EvidenceChunk[]
+
+  @@unique([sourceName, url])
+  @@index([movieId, createdAt])
+  @@index([seasonSlug, createdAt])
+}
+
+model EvidenceChunk {
+  id          String   @id
+  documentId  String
+  chunkIndex  Int
+  text        String
+  charCount   Int
+  embeddingModel String?
+  embeddingDim Int?
+  embeddingVector Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  document EvidenceDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, chunkIndex])
+  @@index([documentId, chunkIndex])
+}
+
+model RetrievalRun {
+  id            String   @id @default(cuid())
+  movieId       String
+  mode          String
+  fallbackUsed  Boolean  @default(false)
+  fallbackReason String?
+  seasonSlug    String?
+  packId        String?
+  queryText     String?
+  candidateCount Int
+  selectedCount Int
+  latencyMs     Int
+  createdAt     DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([mode, createdAt])
+  @@index([movieId, createdAt])
 }
 
 model ExternalReadingCuration {

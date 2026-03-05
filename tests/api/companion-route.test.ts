@@ -7,7 +7,8 @@ const {
   movieFindUniqueMock,
   evidenceFindManyMock,
   externalReadingFindManyMock,
-  userProfileFindUniqueMock,
+  resolveEffectivePackForUserMock,
+  getPublishedNodesForMovieMock,
   userTasteProfileFindUniqueMock,
   movieStreamingCacheFindUniqueMock,
   companionCacheFindUniqueMock,
@@ -20,7 +21,8 @@ const {
   movieFindUniqueMock: vi.fn(),
   evidenceFindManyMock: vi.fn(),
   externalReadingFindManyMock: vi.fn(),
-  userProfileFindUniqueMock: vi.fn(),
+  resolveEffectivePackForUserMock: vi.fn(),
+  getPublishedNodesForMovieMock: vi.fn(),
   userTasteProfileFindUniqueMock: vi.fn(),
   movieStreamingCacheFindUniqueMock: vi.fn(),
   companionCacheFindUniqueMock: vi.fn(),
@@ -34,7 +36,6 @@ vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: userFindUniqueMock },
     movie: { findUnique: movieFindUniqueMock },
-    userProfile: { findUnique: userProfileFindUniqueMock },
     userTasteProfile: { findUnique: userTasteProfileFindUniqueMock },
     evidencePacket: { findMany: evidenceFindManyMock },
     externalReadingCuration: { findMany: externalReadingFindManyMock },
@@ -47,6 +48,14 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
+vi.mock('@/lib/packs/pack-resolver', () => ({
+  resolveEffectivePackForUser: (...args: unknown[]) => resolveEffectivePackForUserMock(...args),
+}));
+
+vi.mock('@/lib/nodes/published-snapshot', () => ({
+  getPublishedNodesForMovie: (...args: unknown[]) => getPublishedNodesForMovieMock(...args),
+}));
+
 vi.mock('@/ai', () => ({
   getLlmProviderFromEnv: (...args: unknown[]) => getLlmProviderFromEnvMock(...args),
 }));
@@ -57,7 +66,8 @@ describe('GET /api/companion', () => {
     movieFindUniqueMock.mockReset();
     evidenceFindManyMock.mockReset();
     externalReadingFindManyMock.mockReset();
-    userProfileFindUniqueMock.mockReset();
+    resolveEffectivePackForUserMock.mockReset();
+    getPublishedNodesForMovieMock.mockReset();
     userTasteProfileFindUniqueMock.mockReset();
     movieStreamingCacheFindUniqueMock.mockReset();
     companionCacheFindUniqueMock.mockReset();
@@ -68,9 +78,13 @@ describe('GET /api/companion', () => {
     companionCacheFindUniqueMock.mockResolvedValue(null);
     movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
     userTasteProfileFindUniqueMock.mockResolvedValue(null);
-    userProfileFindUniqueMock.mockResolvedValue({
-      selectedPack: { seasonId: 'season-1' },
+    resolveEffectivePackForUserMock.mockResolvedValue({
+      packId: 'pack_horror',
+      packSlug: 'horror',
+      seasonSlug: 'season-1',
+      primaryGenre: 'horror',
     });
+    getPublishedNodesForMovieMock.mockResolvedValue([]);
     externalReadingFindManyMock.mockResolvedValue([]);
     companionCacheUpsertMock.mockResolvedValue(null);
     companionCacheDeleteManyMock.mockResolvedValue({ count: 0 });
@@ -163,8 +177,11 @@ describe('GET /api/companion', () => {
 
   it('includes externalReadings for a Season 1 film with a curated registry entry', async () => {
     userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
-    userProfileFindUniqueMock.mockResolvedValueOnce({
-      selectedPack: { seasonId: 'season-1' },
+    resolveEffectivePackForUserMock.mockResolvedValueOnce({
+      packId: 'pack_horror',
+      packSlug: 'horror',
+      seasonSlug: 'season-1',
+      primaryGenre: 'horror',
     });
     movieFindUniqueMock.mockResolvedValueOnce({
       id: 'movie_17',
@@ -192,8 +209,11 @@ describe('GET /api/companion', () => {
 
   it('returns no externalReadings for Season 2 when only Season 1 curated links exist', async () => {
     userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
-    userProfileFindUniqueMock.mockResolvedValueOnce({
-      selectedPack: { seasonId: 'season-2' },
+    resolveEffectivePackForUserMock.mockResolvedValueOnce({
+      packId: 'pack_cult',
+      packSlug: 'cult-classics',
+      seasonSlug: 'season-2',
+      primaryGenre: 'cult',
     });
     movieFindUniqueMock.mockResolvedValueOnce({
       id: 'movie_17',

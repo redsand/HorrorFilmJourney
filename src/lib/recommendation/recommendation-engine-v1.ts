@@ -40,6 +40,7 @@ export type RecommendationEngineOptions = {
   targetCount?: number;
   packPrimaryGenre?: string;
   packId?: string | null;
+  seasonSlug?: string;
   journeyNode?: string;
 };
 

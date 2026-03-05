@@ -6,7 +6,8 @@ import { zExternalReading } from '@/lib/contracts/companion-contract';
 import type { ExternalReading } from '@/lib/contracts/companion-contract';
 import { getExternalReadingsForFilm } from '@/lib/companion/external-reading-registry';
 import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
-import { getPublishedSeason1NodesForMovie } from '@/lib/nodes/published-snapshot';
+import { getPublishedNodesForMovie } from '@/lib/nodes/published-snapshot';
+import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
@@ -60,7 +61,7 @@ type CompanionResponsePayload = {
     }>;
   };
   spoilerPolicy: SpoilerPolicy;
-  evidence: Array<{ sourceName: string; url: string; snippet: string; retrievedAt: Date }>;
+  evidence: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>;
   externalReadings?: ExternalReading[];
 };
 type TmdbCreditPerson = { name?: string; job?: string; character?: string };
@@ -925,15 +926,15 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
 
-  const evidence = await prisma.evidencePacket.findMany({
-    where: { movieId: movie.id },
-    orderBy: { retrievedAt: 'desc' },
-    select: {
-      sourceName: true,
-      url: true,
-      snippet: true,
-      retrievedAt: true,
-    },
+  const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
+  const evidenceRetriever = createConfiguredEvidenceRetriever(prisma);
+  const evidence = await evidenceRetriever.getEvidenceForMovie(movie.id, {
+    region: 'US',
+    seasonSlug: effectivePack.seasonSlug,
+    packId: effectivePack.packId,
+    query: `${movie.title} production history reception influence`,
+    includeExternalReadings: true,
+    topK: 8,
   });
 
   const cast = parseCast(movie.castTop);
@@ -942,27 +943,16 @@ export async function GET(request: Request): Promise<Response> {
     title: movie.title,
     year: movie.year,
   });
-  const profileWithPack = await prisma.userProfile.findUnique({
-    where: { userId: auth.userId },
-    select: {
-      selectedPack: {
-        select: {
-          seasonId: true,
-        },
-      },
-    },
-  });
-  const seasonId = profileWithPack?.selectedPack?.seasonId ?? 'season-1';
-  const effectivePack = await resolveEffectivePackForUser(prisma, auth.userId);
   const publishedNodes = effectivePack.packId
-    ? await getPublishedSeason1NodesForMovie(prisma, {
+    ? await getPublishedNodesForMovie(prisma, {
       packId: effectivePack.packId,
+      seasonSlug: effectivePack.seasonSlug,
       movieId: movie.id,
     })
     : [];
   const externalReadings = await getExternalReadingsForFilm({
     filmId: String(movie.tmdbId),
-    seasonId,
+    seasonId: effectivePack.seasonSlug,
     prismaClient: prisma,
   });
   const streamingCache = await prisma.movieStreamingCache.findUnique({
