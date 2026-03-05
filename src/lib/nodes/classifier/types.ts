@@ -32,7 +32,7 @@ export type NodeModel = {
 };
 
 export type Season1NodeClassifierArtifact = {
-  artifactVersion: 'season1-node-classifier-v1';
+  artifactVersion: 'season1-node-classifier-v1' | 'season-node-classifier-v1';
   seasonSlug: string;
   packSlug: string;
   taxonomyVersion: string;
@@ -58,6 +58,8 @@ export type Season1NodeClassifierArtifact = {
     };
   };
 };
+
+export type SeasonNodeClassifierArtifact = Season1NodeClassifierArtifact;
 
 export type NodeProbability = {
   nodeSlug: string;

@@ -74,7 +74,8 @@
     "audit:canon:anchors": "node --experimental-strip-types scripts/audit-canon-anchors.ts",
     "seasons:doctor": "node --experimental-strip-types scripts/seasons-doctor.ts",
     "seasons:doctor:dry-run": "node --experimental-strip-types scripts/seasons-doctor.ts --dry-run",
-    "seasons:create-template": "node --experimental-strip-types scripts/create-season-template.ts"
+    "seasons:create-template": "node --experimental-strip-types scripts/create-season-template.ts",
+    "season3:harvest:sci-fi": "node --experimental-strip-types scripts/harvest-season3-sci-fi-candidates.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

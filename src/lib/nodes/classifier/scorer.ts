@@ -1,4 +1,4 @@
-import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact } from './types';
+import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
 import { vectorizeMovie } from './features';
 
 function sigmoid(value: number): number {
@@ -35,8 +35,8 @@ function cosineSimilarity(a?: number[], b?: number[]): number {
   return num / Math.sqrt(da * db);
 }
 
-export function scoreMovieWithSeason1Classifier(
-  artifact: Season1NodeClassifierArtifact,
+export function scoreMovieWithSeasonClassifier(
+  artifact: SeasonNodeClassifierArtifact,
   movie: ClassifierMovieInput,
   nodeSlugs?: string[],
 ): NodeProbability[] {
@@ -57,4 +57,20 @@ export function scoreMovieWithSeason1Classifier(
       };
     })
     .sort((a, b) => (b.probability - a.probability) || a.nodeSlug.localeCompare(b.nodeSlug));
+}
+
+export function scoreMovieWithSeason1Classifier(
+  artifact: Season1NodeClassifierArtifact,
+  movie: ClassifierMovieInput,
+  nodeSlugs?: string[],
+): NodeProbability[] {
+  return scoreMovieWithSeasonClassifier(artifact, movie, nodeSlugs);
+}
+
+export function scoreMovieWithSeason3Classifier(
+  artifact: SeasonNodeClassifierArtifact,
+  movie: ClassifierMovieInput,
+  nodeSlugs?: string[],
+): NodeProbability[] {
+  return scoreMovieWithSeasonClassifier(artifact, movie, nodeSlugs);
 }

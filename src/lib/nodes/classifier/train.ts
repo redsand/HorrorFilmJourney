@@ -1,4 +1,4 @@
-import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact } from './types';
+import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
 import { buildVocabulary, vectorizeMovie } from './features';
 
 type TrainInput = {
@@ -119,7 +119,7 @@ function calibrateThreshold(y: number[], p: number[], precisionFloor: number): {
   return best;
 }
 
-export function trainSeason1Classifier(input: TrainInput): Season1NodeClassifierArtifact {
+export function trainSeasonClassifier(input: TrainInput): SeasonNodeClassifierArtifact {
   const vocabulary = buildVocabulary(input.dataset.trainRows.map((row) => row.movie), input.maxVocabulary);
   const trainX = input.dataset.trainRows.map((row) => vectorizeMovie(row.movie, vocabulary));
   const valX = input.dataset.validationRows.map((row) => vectorizeMovie(row.movie, vocabulary));
@@ -204,7 +204,7 @@ export function trainSeason1Classifier(input: TrainInput): Season1NodeClassifier
   }
 
   return {
-    artifactVersion: 'season1-node-classifier-v1',
+    artifactVersion: 'season-node-classifier-v1',
     seasonSlug: input.seasonSlug,
     packSlug: input.packSlug,
     taxonomyVersion: input.taxonomyVersion,
@@ -230,4 +230,8 @@ export function trainSeason1Classifier(input: TrainInput): Season1NodeClassifier
       },
     },
   };
+}
+
+export function trainSeason1Classifier(input: TrainInput): Season1NodeClassifierArtifact {
+  return trainSeasonClassifier(input);
 }
