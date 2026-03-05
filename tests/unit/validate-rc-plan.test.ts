@@ -10,6 +10,7 @@ describe('validate rc plan', () => {
     const plan = buildRcValidationCommandPlan(options);
 
     expect(plan).toContain('npm run check:retrieval:gates');
+    expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).toContain('npm run check:external-links:gates');
   });
 
@@ -20,6 +21,7 @@ describe('validate rc plan', () => {
     const plan = buildRcValidationCommandPlan(options);
 
     expect(plan).not.toContain('npm run check:retrieval:gates');
+    expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).toContain('npm run check:external-links:gates');
   });
 
@@ -30,6 +32,17 @@ describe('validate rc plan', () => {
     const plan = buildRcValidationCommandPlan(options);
 
     expect(plan).toContain('npm run check:retrieval:gates');
+    expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).not.toContain('npm run check:external-links:gates');
+  });
+
+  it('allows skipping retrieval tracker gate via env flag', () => {
+    const options = resolveRcValidationOptions({
+      SKIP_RETRIEVAL_TRACKER_GATE: 'true',
+    });
+    const plan = buildRcValidationCommandPlan(options);
+
+    expect(plan).toContain('npm run check:retrieval:gates');
+    expect(plan).not.toContain('npm run check:retrieval:tracker');
   });
 });

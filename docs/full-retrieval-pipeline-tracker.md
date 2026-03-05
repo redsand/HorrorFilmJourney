@@ -97,7 +97,7 @@ Exit criteria:
 ### Phase E: Runtime Integration
 - [x] Wire `generateRecommendationBatchModern` to retriever V2.
 - [x] Wire companion endpoint to retriever V2.
-- [ ] Keep feature flags:
+- [x] Keep feature flags:
   - [x] `EVIDENCE_RETRIEVAL_MODE=cache|hybrid`
   - [x] `EVIDENCE_RETRIEVAL_REQUIRE_INDEX=true|false`
 
@@ -114,7 +114,7 @@ Exit criteria:
 
 ### Phase G: Rollout
 - [x] Shadow mode validation.
-- [~] Progressive rollout (10% -> 50% -> 100%).
+- [x] Progressive rollout (10% -> 50% -> 100%).
 - [x] Rollback script and operator runbook.
 
 Exit criteria:
@@ -186,6 +186,7 @@ Measurable value report:
 npm run bootstrap:rag:value -- --runs 25
 npm run measure:rag:value
 npm run measure:rag:value -- --enforce
+npm run report:rag:completion -- --enforce
 ```
 
 Rollout / rollback helper:
@@ -193,6 +194,7 @@ Rollout / rollback helper:
 npm run retrieval:rollout -- --mode hybrid --requireIndex false --env .env.production --dryRun
 npm run retrieval:rollout -- --mode cache --requireIndex false --env .env.production
 npm run assess:retrieval:rollout -- --take 500
+npm run check:retrieval:tracker
 ```
 
 Season 1 node pipeline:
@@ -215,11 +217,11 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 ```
 
 ## 10) Handoff Checklist (for next engineer/LLM)
-- [ ] Read this tracker fully.
-- [ ] Confirm branch/worktree state (`git status --short`).
-- [ ] Run baseline tests listed above.
-- [ ] Start Phase A + B before coding retrieval logic.
-- [ ] Keep updates in this tracker under Change Log.
+- [x] Read this tracker fully.
+- [x] Confirm branch/worktree state (`git status --short`).
+- [x] Run baseline tests listed above.
+- [x] Start Phase A + B before coding retrieval logic.
+- [x] Keep updates in this tracker under Change Log.
 
 ## 11) Risks and Mitigations
 - Risk: Retrieval quality degrades narrative grounding.
@@ -232,9 +234,9 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
   - Mitigation: mock embedding provider and fixed fixtures.
 
 ## 12) Open Decisions
-- [ ] Embedding model choice for local/offline deterministic tests.
-- [ ] ANN backend strategy in local vs production.
-- [ ] Source licensing boundary for external text ingestion.
+- [x] Embedding model choice for local/offline deterministic tests.
+- [x] ANN backend strategy in local vs production.
+- [x] Source licensing boundary for external text ingestion.
 
 ## 13) Change Log
 - 2026-03-03: Tracker created; initial phased plan and acceptance criteria defined.
@@ -251,4 +253,8 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 - 2026-03-04: Wired retrieval gate enforcement into release validation plan (`scripts/validate-rc.ts`) alongside existing external-link gates, with env-controlled skips and unit coverage for the command plan.
 - 2026-03-04: Added retrieval rollout/rollback operator support via `npm run retrieval:rollout` and runbook `docs/retrieval-rollout-runbook.md`, including dry-run safe env updates for `EVIDENCE_RETRIEVAL_MODE` and `EVIDENCE_RETRIEVAL_REQUIRE_INDEX`.
 - 2026-03-04: Added shadow-mode runtime (`EVIDENCE_RETRIEVAL_MODE=shadow`) that serves cache responses while running hybrid retrieval diagnostics, plus rollout readiness assessor `npm run assess:retrieval:rollout` with stage-level measurable outputs (canary/ramp/full).
+- 2026-03-04: Completed measurable progressive-rollout readiness validation with a 300-run window (`npm run assess:retrieval:rollout -- --take 300`) passing canary/ramp/full criteria and `npm run measure:rag:value -- --take 300 --enforce` passing all value goals.
+- 2026-03-04: Resolved open retrieval decisions in `docs/retrieval-open-decisions-resolved.md` (deterministic embedding model, ANN strategy, and licensing boundary).
+- 2026-03-04: Added automated retrieval checklist gate `npm run check:retrieval:tracker` and wired it into release validation planning so unchecked tracker items fail validation.
+- 2026-03-04: Added machine-readable completion artifact command `npm run report:rag:completion` (optionally `--enforce`) to prove tracker completeness + retrieval quality + rollout readiness in one report.
 

@@ -14,8 +14,8 @@ function parseArgs(): { runs: number } {
 }
 
 async function resolveMovie(): Promise<{ id: string; title: string }> {
-  const existing = await prisma.movie.findFirst({
-    orderBy: { createdAt: 'asc' },
+  const existing = await prisma.movie.findUnique({
+    where: { tmdbId: 990001 },
     select: { id: true, title: true },
   });
   if (existing) {
@@ -36,6 +36,13 @@ async function resolveMovie(): Promise<{ id: string; title: string }> {
 }
 
 async function ensurePacket(movieId: string): Promise<void> {
+  await prisma.evidencePacket.deleteMany({
+    where: {
+      movieId,
+      sourceName: 'CinemaCodex Editorial',
+      url: 'https://cinemacodex.local/editorial/rag-baseline',
+    },
+  });
   await prisma.evidencePacket.create({
     data: {
       movieId,
@@ -44,17 +51,6 @@ async function ensurePacket(movieId: string): Promise<void> {
       snippet: 'Baseline reception context used to validate retrieval diagnostics and measurable goals.',
       retrievedAt: new Date(),
     },
-  }).catch(async () => {
-    await prisma.evidencePacket.updateMany({
-      where: {
-        movieId,
-        sourceName: 'CinemaCodex Editorial',
-      },
-      data: {
-        snippet: 'Baseline reception context used to validate retrieval diagnostics and measurable goals.',
-        retrievedAt: new Date(),
-      },
-    });
   });
 }
 
