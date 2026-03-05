@@ -8,3 +8,4 @@ prisma/test.db
 .claude
 artifacts
 backups
+docs/engineering/season-doctor
