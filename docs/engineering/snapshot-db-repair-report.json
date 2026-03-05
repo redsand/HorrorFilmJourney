@@ -1,10 +1,187 @@
 {
-  "generatedAt": "2026-03-05T05:49:02.267Z",
+  "generatedAt": "2026-03-05T19:53:38.089Z",
   "results": [
     {
       "seasonSlug": "season-1",
       "packSlug": "horror",
       "taxonomyVersion": "season-1-horror-v3.5",
+      "pre": {
+        "lossRatePercent": 0.85,
+        "missingInDbCount": 19,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 30
+      },
+      "post": {
+        "lossRatePercent": 0.85,
+        "missingInDbCount": 19,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 0
+      },
+      "applied": {
+        "insertedNodeMovies": 0,
+        "correctedNodeDrift": 30,
+        "correctedTierDrift": 0,
+        "releaseItems": 490,
+        "releaseId": "cmmdvvgdt001sag60ya20vvcy"
+      },
+      "buckets": {
+        "unresolvedTmdb": [],
+        "missingPoster": [],
+        "missingCredits": [
+          {
+            "title": "Psycho",
+            "year": 1960,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 7002
+          },
+          {
+            "title": "The Shining",
+            "year": 1980,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 7007
+          },
+          {
+            "title": "Black Swan",
+            "year": 2010,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 44214
+          },
+          {
+            "title": "Repulsion",
+            "year": 1965,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 11481
+          },
+          {
+            "title": "The Tenant",
+            "year": 1976,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 11482
+          },
+          {
+            "title": "The Machinist",
+            "year": 2004,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 4553
+          },
+          {
+            "title": "Don't Look Now",
+            "year": 1973,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 931
+          },
+          {
+            "title": "Orphan",
+            "year": 2009,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 21208
+          },
+          {
+            "title": "Stonehearst Asylum",
+            "year": 2014,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 207933
+          },
+          {
+            "title": "Speak No Evil",
+            "year": 2024,
+            "nodeSlug": "psychological-horror",
+            "tier": "CORE",
+            "tmdbId": 1114513
+          },
+          {
+            "title": "tmdb:458109",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 458109
+          },
+          {
+            "title": "tmdb:506",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 506
+          },
+          {
+            "title": "tmdb:399366",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 399366
+          },
+          {
+            "title": "tmdb:11974",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 11974
+          },
+          {
+            "title": "tmdb:571055",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 571055
+          },
+          {
+            "title": "tmdb:46503",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 46503
+          },
+          {
+            "title": "tmdb:6498",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 6498
+          },
+          {
+            "title": "tmdb:2749",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 2749
+          },
+          {
+            "title": "tmdb:74777",
+            "year": null,
+            "nodeSlug": "psychological-horror",
+            "tier": "EXTENDED",
+            "tmdbId": 74777
+          }
+        ],
+        "missingVotes": [],
+        "importerSchema": []
+      },
+      "bucketTierBreakdown": {
+        "unresolvedTmdb": {},
+        "missingPoster": {},
+        "missingCredits": {
+          "CORE": 10,
+          "EXTENDED": 9
+        },
+        "missingVotes": {},
+        "importerSchema": {}
+      }
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "taxonomyVersion": "season-2-cult-v3",
       "pre": {
         "lossRatePercent": 0,
         "missingInDbCount": 0,
@@ -23,8 +200,8 @@
         "insertedNodeMovies": 0,
         "correctedNodeDrift": 0,
         "correctedTierDrift": 0,
-        "releaseItems": 500,
-        "releaseId": "cmmd1pad10004x05m3hutwd6x"
+        "releaseItems": 658,
+        "releaseId": "cmmdvvgr100fjag60vq7pq8uh"
       },
       "buckets": {
         "unresolvedTmdb": [],
@@ -35,56 +212,6 @@
       },
       "bucketTierBreakdown": {
         "unresolvedTmdb": {},
-        "missingPoster": {},
-        "missingCredits": {},
-        "missingVotes": {},
-        "importerSchema": {}
-      }
-    },
-    {
-      "seasonSlug": "season-2",
-      "packSlug": "cult-classics",
-      "taxonomyVersion": "season-2-cult-v3",
-      "pre": {
-        "lossRatePercent": 0.18,
-        "missingInDbCount": 1,
-        "missingInReleaseCount": 0,
-        "tierDriftCount": 0,
-        "nodeDriftCount": 0
-      },
-      "post": {
-        "lossRatePercent": 0,
-        "missingInDbCount": 0,
-        "missingInReleaseCount": 0,
-        "tierDriftCount": 0,
-        "nodeDriftCount": 0
-      },
-      "applied": {
-        "insertedNodeMovies": 1,
-        "correctedNodeDrift": 0,
-        "correctedTierDrift": 0,
-        "releaseItems": 170,
-        "releaseId": "cmmd1pb1s00ecx05mksul6zsu"
-      },
-      "buckets": {
-        "unresolvedTmdb": [
-          {
-            "title": "Naked Blood",
-            "year": 1996,
-            "nodeSlug": "grindhouse-exploitation",
-            "tier": "EXTENDED",
-            "tmdbId": 778000
-          }
-        ],
-        "missingPoster": [],
-        "missingCredits": [],
-        "missingVotes": [],
-        "importerSchema": []
-      },
-      "bucketTierBreakdown": {
-        "unresolvedTmdb": {
-          "EXTENDED": 1
-        },
         "missingPoster": {},
         "missingCredits": {},
         "missingVotes": {},
