@@ -19,7 +19,9 @@ param(
   [string]$Season1SnapshotFile = "",
   [switch]$ImportSeason1Snapshot,
   [switch]$UpdateSeasons,
-  [switch]$PublishSeason2
+  [switch]$PublishSeason2,
+  [string]$EvidenceCorpusFile = "",
+  [switch]$ImportEvidenceCorpus
 )
 
 $ErrorActionPreference = "Stop"
@@ -45,8 +47,13 @@ if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile) -and -not $Bootstrap.I
 }
 
 if ($ImportSeason2Mastered.IsPresent -and [string]::IsNullOrWhiteSpace($Season2MasteredFile)) {
-  throw "ImportSeason2Mastered requires -Season2MasteredFile."
+    throw "ImportSeason2Mastered requires -Season2MasteredFile."
 }
+
+if ($ImportEvidenceCorpus.IsPresent -and [string]::IsNullOrWhiteSpace($EvidenceCorpusFile)) {
+    throw "ImportEvidenceCorpus requires -EvidenceCorpusFile."
+}
+
 
 if ($ImportSeason1Snapshot.IsPresent -and [string]::IsNullOrWhiteSpace($Season1SnapshotFile)) {
   throw "ImportSeason1Snapshot requires -Season1SnapshotFile."
@@ -150,11 +157,26 @@ if ($ImportSeason1Snapshot.IsPresent) {
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season1:snapshot -- --input $season1RemotePath`""
 }
 
+  if ($ImportEvidenceCorpus.IsPresent) {
+    if (-not (Test-Path $EvidenceCorpusFile)) {
+      throw "Evidence corpus file not found: $EvidenceCorpusFile"
+    }
+    $evName = [System.IO.Path]::GetFileName($EvidenceCorpusFile)
+    $evRemoteDir = "$RemoteAppRoot/shared/backups"
+    $evRemotePath = "$evRemoteDir/$evName"
+    Write-Host "Uploading Evidence corpus file to remote: $evName"
+    Exec-OrThrow "ssh -C -i `"$resolvedKey`" ${User}@${HostName} `"mkdir -p $evRemoteDir`""
+    Exec-OrThrow "scp -C -i `"$resolvedKey`" `"$EvidenceCorpusFile`" ${User}@${HostName}:$evRemotePath"
+    Write-Host "Importing Evidence corpus file on remote"
+    Exec-OrThrow "ssh -C -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:evidence:corpus -- --input $evRemotePath`""
+  }
+
 if ($UpdateSeasons.IsPresent) {
   Write-Host "Running season update pipeline on remote"
   $publishFlag = if ($PublishSeason2.IsPresent) { "PUBLISH_SEASON2_ON_UPDATE=true" } else { "PUBLISH_SEASON2_ON_UPDATE=false" }
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; $publishFlag npm run update:seasons`""
 }
+
 
 Write-Host "Cleaning local archive"
 Remove-Item -Force $archivePath
