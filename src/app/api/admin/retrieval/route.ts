@@ -24,6 +24,8 @@ export async function GET(request: Request): Promise<Response> {
       queryText: true,
       candidateCount: true,
       selectedCount: true,
+      duplicateRate: true,
+      citationValidRate: true,
       latencyMs: true,
       createdAt: true,
     },

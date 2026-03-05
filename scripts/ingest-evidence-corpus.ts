@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../src/lib/prisma.ts';
 import {
   ingestEvidenceDocuments,
   type EvidenceIngestDocumentInput,
-} from '@/lib/evidence/ingestion';
+} from '../src/lib/evidence/ingestion/index.ts';
 
 type IngestFileShape = {
   documents?: EvidenceIngestDocumentInput[];
@@ -50,4 +50,3 @@ run()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

@@ -11,9 +11,22 @@ function dedupeKey(item: { sourceName: string; url?: string; snippet: string }):
 }
 
 export function applyGovernance(candidates: RetrievalEvidenceCandidate[], topK: number): RetrievalEvidenceCandidate[] {
+  return applyGovernanceWithStats(candidates, topK).selected;
+}
+
+export function applyGovernanceWithStats(
+  candidates: RetrievalEvidenceCandidate[],
+  topK: number,
+): {
+  selected: RetrievalEvidenceCandidate[];
+  duplicateDrops: number;
+  sourceCapDrops: number;
+} {
   const seen = new Set<string>();
   const sourceCounts = new Map<string, number>();
   const out: RetrievalEvidenceCandidate[] = [];
+  let duplicateDrops = 0;
+  let sourceCapDrops = 0;
 
   for (const candidate of candidates.sort((a, b) => b.fusedScore - a.fusedScore)) {
     if (out.length >= topK) {
@@ -21,11 +34,13 @@ export function applyGovernance(candidates: RetrievalEvidenceCandidate[], topK: 
     }
     const key = dedupeKey(candidate);
     if (seen.has(key)) {
+      duplicateDrops += 1;
       continue;
     }
     const normalizedSource = candidate.sourceName.trim().toLowerCase();
     const sourceCount = sourceCounts.get(normalizedSource) ?? 0;
     if (sourceCount >= MAX_PER_SOURCE) {
+      sourceCapDrops += 1;
       continue;
     }
     seen.add(key);
@@ -33,6 +48,9 @@ export function applyGovernance(candidates: RetrievalEvidenceCandidate[], topK: 
     out.push(candidate);
   }
 
-  return out;
+  return {
+    selected: out,
+    duplicateDrops,
+    sourceCapDrops,
+  };
 }
-

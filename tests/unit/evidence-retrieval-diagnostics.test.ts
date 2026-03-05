@@ -47,6 +47,8 @@ describe('evidence retrieval diagnostics', () => {
         selectedCount: 1,
         seasonSlug: 'season-1',
         packId: 'pack_horror',
+        duplicateRate: 0,
+        citationValidRate: 1,
       }),
     }));
   });
@@ -93,8 +95,54 @@ describe('evidence retrieval diagnostics', () => {
         selectedCount: 1,
         seasonSlug: 'season-2',
         packId: 'pack_cult',
+        duplicateRate: 0,
+        citationValidRate: 1,
+      }),
+    }));
+  });
+
+  it('records duplicateRate when corpus has duplicate evidence entries', async () => {
+    process.env.EVIDENCE_RETRIEVAL_MODE = 'hybrid';
+    const retrievalRunCreate = vi.fn().mockResolvedValue({ id: 'run_3' });
+    const prisma = {
+      evidencePacket: {
+        findMany: vi.fn().mockResolvedValue([
+          {
+            sourceName: 'Wikipedia',
+            url: 'https://example.com/wiki',
+            snippet: 'Duplicate snippet',
+            retrievedAt: new Date('2026-03-04T00:00:00.000Z'),
+          },
+        ]),
+      },
+      externalReadingCuration: {
+        findMany: vi.fn().mockResolvedValue([
+          {
+            sourceName: 'Wikipedia',
+            url: 'https://example.com/wiki',
+            articleTitle: 'Duplicate snippet',
+            publicationDate: new Date('2026-03-04T00:00:00.000Z'),
+            createdAt: new Date('2026-03-04T00:00:00.000Z'),
+          },
+        ]),
+      },
+      evidenceChunk: { findMany: vi.fn().mockResolvedValue([]) },
+      retrievalRun: { create: retrievalRunCreate },
+    } as const;
+
+    const retriever = createConfiguredEvidenceRetriever(prisma as never);
+    await retriever.getEvidenceForMovie('movie_3', {
+      seasonSlug: 'season-2',
+      query: 'duplicate',
+      topK: 5,
+    });
+
+    expect(retrievalRunCreate).toHaveBeenCalledTimes(1);
+    expect(retrievalRunCreate).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({
+        duplicateRate: 0.5,
+        citationValidRate: 1,
       }),
     }));
   });
 });
-

@@ -1,9 +1,9 @@
-import { prisma } from '@/lib/prisma';
-import { computeRetrievalGateMetricsFromRuns } from '@/lib/evidence/retrieval/metrics';
+import { prisma } from '../src/lib/prisma.ts';
+import { computeRetrievalGateMetricsFromRuns } from '../src/lib/evidence/retrieval/metrics.ts';
 import {
   DEFAULT_RETRIEVAL_GATE_THRESHOLDS,
   evaluateRetrievalQualityGates,
-} from '@/lib/evidence/retrieval/quality-gates';
+} from '../src/lib/evidence/retrieval/quality-gates.ts';
 
 function parseTakeArg(): number {
   const args = process.argv.slice(2);
@@ -25,6 +25,8 @@ async function run(): Promise<void> {
       selectedCount: true,
       fallbackUsed: true,
       latencyMs: true,
+      duplicateRate: true,
+      citationValidRate: true,
     },
   });
 
@@ -44,4 +46,3 @@ run()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

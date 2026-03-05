@@ -747,6 +747,37 @@ function findInvalidEvidenceRefs(narrative: RecommendationCardNarrative, evidenc
   });
 }
 
+export function computeCitationValidRateFromNarrative(
+  narrative: RecommendationCardNarrative,
+  evidenceCount: number,
+): number {
+  const referenced = new Set<string>();
+  const textFields = [
+    narrative.whyImportant,
+    narrative.whatItTeaches,
+    narrative.historicalContext,
+    narrative.nextStepHint,
+    ...(typeof narrative.reception.summary === 'string' ? [narrative.reception.summary] : []),
+    ...narrative.watchFor,
+  ];
+  textFields.forEach((text) => {
+    extractEvidenceRefs(text).forEach((ref) => referenced.add(ref));
+  });
+
+  if (referenced.size === 0) {
+    return 1;
+  }
+
+  let validCount = 0;
+  for (const ref of referenced) {
+    const n = Number(ref.slice(1));
+    if (Number.isInteger(n) && n >= 1 && n <= evidenceCount) {
+      validCount += 1;
+    }
+  }
+  return validCount / referenced.size;
+}
+
 export async function composeCardNarrative(input: {
   movie: CandidateMovie;
   userProfile: unknown;
@@ -1611,11 +1642,12 @@ export async function generateRecommendationBatchModern(
   const itemData = await Promise.all(
     orderedMovies.map(async (movie, index) => {
       const rank = index + 1;
+      const retrievalQueryText = `${movie.title} ${resolvedJourneyNode} reception context`;
       const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, {
         region: 'US',
         seasonSlug: options.seasonSlug ?? 'season-1',
         packId: options.packId ?? null,
-        query: `${movie.title} ${resolvedJourneyNode} reception context`,
+        query: retrievalQueryText,
       });
       const journeyNode = `${resolvedJourneyNode}#RANK_${rank}`;
       const ratings = movie.ratings;
@@ -1660,6 +1692,19 @@ export async function generateRecommendationBatchModern(
       });
 
       if (cachedNarrative) {
+        const citationValidRate = Number(
+          computeCitationValidRateFromNarrative(cachedNarrative, evidence.length).toFixed(6),
+        );
+        await prisma.retrievalRun.updateMany({
+          where: {
+            movieId: movie.id,
+            queryText: retrievalQueryText,
+            createdAt: { gte: new Date(startedAt - (10 * 60 * 1000)) },
+          },
+          data: {
+            citationValidRate,
+          },
+        });
         return {
           movie,
           rank,
@@ -1673,6 +1718,17 @@ export async function generateRecommendationBatchModern(
       }
 
       const narrative = await deps.narrativeComposer.compose(movie, userProfile, journeyNode, evidence);
+      const citationValidRate = Number(computeCitationValidRateFromNarrative(narrative, evidence.length).toFixed(6));
+      await prisma.retrievalRun.updateMany({
+        where: {
+          movieId: movie.id,
+          queryText: retrievalQueryText,
+          createdAt: { gte: new Date(startedAt - (10 * 60 * 1000)) },
+        },
+        data: {
+          citationValidRate,
+        },
+      });
       return {
         movie,
         rank,

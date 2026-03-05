@@ -10,7 +10,7 @@ import type { EvidenceRetrieverV2 } from './types';
 import { lexicalScoreEvidence } from './lexical-retriever';
 import { semanticScoreEvidence } from './semantic-retriever';
 import { reciprocalRankFusion } from './fusion-reranker';
-import { applyGovernance } from './governance';
+import { applyGovernanceWithStats } from './governance';
 
 type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadingCuration'> & {
   evidenceChunk?: {
@@ -49,6 +49,8 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
         queryText?: string | null;
         candidateCount: number;
         selectedCount: number;
+        duplicateRate?: number;
+        citationValidRate?: number;
         latencyMs: number;
       };
     }) => Promise<unknown>;
@@ -115,7 +117,11 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
 class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
   constructor(private readonly prisma: PrismaEvidenceClient) {}
 
-  async retrieve(input: { movieId: string; query: EvidenceRetrievalQuery }): Promise<EvidencePacketVM[]> {
+  async retrieve(input: { movieId: string; query: EvidenceRetrievalQuery }): Promise<{
+    evidence: EvidencePacketVM[];
+    candidateCount: number;
+    duplicateDrops: number;
+  }> {
     const topK = resolveTopK(input.query);
     const queryText = defaultQueryText(input.query);
     const includeExternalReadings = input.query.includeExternalReadings ?? true;
@@ -192,20 +198,29 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
 
     const corpus = [...packetEvidence, ...externalEvidence, ...chunkEvidence];
     if (corpus.length === 0) {
-      return [];
+      return {
+        evidence: [],
+        candidateCount: 0,
+        duplicateDrops: 0,
+      };
     }
 
     const lexicalScores = lexicalScoreEvidence(corpus, queryText);
     const semanticScores = semanticScoreEvidence(corpus, queryText);
     const fused = reciprocalRankFusion(corpus, lexicalScores, semanticScores);
-    const governed = applyGovernance(fused, topK);
-
-    return packageEvidencePackets(governed.map((item) => ({
+    const governed = applyGovernanceWithStats(fused, topK);
+    const evidence = packageEvidencePackets(governed.selected.map((item) => ({
       sourceName: item.sourceName,
       ...(item.url ? { url: item.url } : {}),
       snippet: item.snippet,
       retrievedAt: item.retrievedAt,
     })), topK);
+
+    return {
+      evidence,
+      candidateCount: corpus.length,
+      duplicateDrops: governed.duplicateDrops,
+    };
   }
 }
 
@@ -225,6 +240,8 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
     fallbackReason?: string;
     candidateCount: number;
     selectedCount: number;
+    duplicateRate: number;
+    citationValidRate: number;
     latencyMs: number;
   }): Promise<void> {
     if (!this.prisma.retrievalRun) {
@@ -241,6 +258,8 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
         ...(input.query.query ? { queryText: input.query.query } : {}),
         candidateCount: input.candidateCount,
         selectedCount: input.selectedCount,
+        duplicateRate: input.duplicateRate,
+        citationValidRate: input.citationValidRate,
         latencyMs: input.latencyMs,
       },
     });
@@ -251,16 +270,26 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
     const startedAt = Date.now();
     try {
       const hybridResult = await this.hybrid.retrieve({ movieId, query });
+      const citationValidCount = hybridResult.evidence.filter((item) =>
+        item.sourceName.trim().length > 0 && item.snippet.trim().length > 0).length;
+      const citationValidRate = hybridResult.evidence.length > 0
+        ? citationValidCount / hybridResult.evidence.length
+        : 1;
+      const duplicateRate = hybridResult.candidateCount > 0
+        ? hybridResult.duplicateDrops / hybridResult.candidateCount
+        : 0;
       await this.persistRun({
         movieId,
         query,
         fallbackUsed: false,
-        candidateCount: hybridResult.length,
-        selectedCount: hybridResult.length,
+        candidateCount: hybridResult.candidateCount,
+        selectedCount: hybridResult.evidence.length,
+        duplicateRate: Number(duplicateRate.toFixed(6)),
+        citationValidRate: Number(citationValidRate.toFixed(6)),
         latencyMs: Date.now() - startedAt,
       });
-      if (hybridResult.length > 0 || retrievalRequireIndex()) {
-        return hybridResult;
+      if (hybridResult.evidence.length > 0 || retrievalRequireIndex()) {
+        return hybridResult.evidence;
       }
       const fallbackResult = await this.fallback.getEvidenceForMovie(movieId, query);
       await this.persistRun({
@@ -270,6 +299,8 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
         fallbackReason: 'empty-hybrid',
         candidateCount: 0,
         selectedCount: fallbackResult.length,
+        duplicateRate: 0,
+        citationValidRate: 1,
         latencyMs: Date.now() - startedAt,
       });
       return fallbackResult;
@@ -285,6 +316,8 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
         fallbackReason: 'hybrid-error',
         candidateCount: 0,
         selectedCount: fallbackResult.length,
+        duplicateRate: 0,
+        citationValidRate: 1,
         latencyMs: Date.now() - startedAt,
       });
       return fallbackResult;

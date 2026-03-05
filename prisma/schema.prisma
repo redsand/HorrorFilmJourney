@@ -224,6 +224,8 @@ model RetrievalRun {
   queryText     String?
   candidateCount Int
   selectedCount Int
+  duplicateRate Float   @default(0)
+  citationValidRate Float @default(1)
   latencyMs     Int
   createdAt     DateTime @default(now())
 

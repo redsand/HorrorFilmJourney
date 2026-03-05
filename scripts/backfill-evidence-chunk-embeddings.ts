@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
-import { backfillEvidenceChunkEmbeddings } from '@/lib/evidence/ingestion';
+import { prisma } from '../src/lib/prisma.ts';
+import { backfillEvidenceChunkEmbeddings } from '../src/lib/evidence/ingestion/index.ts';
 
 function parseArgs(): { batchSize?: number; force: boolean } {
   const args = process.argv.slice(2);
@@ -32,4 +32,3 @@ run()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
