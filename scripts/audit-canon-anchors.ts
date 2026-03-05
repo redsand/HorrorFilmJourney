@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PrismaClient, type NodeAssignmentTier } from '@prisma/client';
+import { loadSeasonIntegrityRegistry, readAuthoritySnapshot } from '../src/lib/audit/season-integrity-registry.ts';
 
 type AnchorEntry = {
   tmdbId: number;
@@ -11,8 +12,8 @@ type AnchorEntry = {
 };
 
 type AnchorFile = {
-  seasonSlug: 'season-1' | 'season-2';
-  packSlug: 'horror' | 'cult-classics';
+  seasonSlug: string;
+  packSlug: string;
   anchors: AnchorEntry[];
 };
 
@@ -41,10 +42,6 @@ type AnchorAuditRow = {
   missingLayers: string[];
 };
 
-const SEASON1_ANCHORS_PATH = path.resolve('docs', 'season', 'season-1-horror-anchors.json');
-const SEASON2_ANCHORS_PATH = path.resolve('docs', 'season', 'season-2-cult-anchors.json');
-const SEASON1_SNAPSHOT_PATH = path.resolve('backups', 'season1-horror-snapshot-2026-03-04T19-19-00-138Z.json');
-const SEASON2_SNAPSHOT_PATH = path.resolve('docs', 'season', 'season-2-cult-classics-mastered.json');
 const REPORT_JSON_PATH = path.resolve('docs', 'engineering', 'canon-anchor-integrity-report.json');
 const REPORT_MD_PATH = path.resolve('docs', 'engineering', 'canon-anchor-integrity-audit.md');
 
@@ -53,39 +50,18 @@ async function readJsonFile<T>(filePath: string): Promise<T> {
   return JSON.parse(raw) as T;
 }
 
-async function loadSnapshotEntries(seasonSlug: 'season-1' | 'season-2'): Promise<SnapshotEntry[]> {
-  if (seasonSlug === 'season-1') {
-    const payload = await readJsonFile<{
-      assignments?: Array<{ tmdbId: number; nodeSlug: string; tier: NodeAssignmentTier }>;
-    }>(SEASON1_SNAPSHOT_PATH);
-    return (payload.assignments ?? []).map((row) => ({
-      tmdbId: row.tmdbId,
-      nodeSlug: row.nodeSlug,
-      tier: row.tier,
-    }));
+async function loadSnapshotEntries(seasonSlug: string, packSlug: string): Promise<SnapshotEntry[]> {
+  const registry = await loadSeasonIntegrityRegistry();
+  const spec = registry.find((item) => item.seasonSlug === seasonSlug && item.packSlug === packSlug);
+  if (!spec) {
+    throw new Error(`No season integrity registry entry for ${seasonSlug}/${packSlug}`);
   }
-
-  const payload = await readJsonFile<{
-    nodes?: Array<{
-      slug: string;
-      core?: Array<{ tmdbId?: number }>;
-      extended?: Array<{ tmdbId?: number }>;
-    }>;
-  }>(SEASON2_SNAPSHOT_PATH);
-  const entries: SnapshotEntry[] = [];
-  for (const node of payload.nodes ?? []) {
-    for (const film of node.core ?? []) {
-      if (typeof film.tmdbId === 'number') {
-        entries.push({ tmdbId: film.tmdbId, nodeSlug: node.slug, tier: 'CORE' });
-      }
-    }
-    for (const film of node.extended ?? []) {
-      if (typeof film.tmdbId === 'number') {
-        entries.push({ tmdbId: film.tmdbId, nodeSlug: node.slug, tier: 'EXTENDED' });
-      }
-    }
-  }
-  return entries;
+  const rows = await readAuthoritySnapshot(spec);
+  return rows.map((row) => ({
+    tmdbId: row.tmdbId,
+    nodeSlug: row.nodeSlug,
+    tier: row.tier,
+  }));
 }
 
 function makeStatus(status: AnchorLayerStatus): string[] {
@@ -141,7 +117,7 @@ function reportMarkdown(rows: AnchorAuditRow[]): string {
 }
 
 async function auditSeason(prisma: PrismaClient, anchorFile: AnchorFile): Promise<AnchorAuditRow[]> {
-  const snapshotEntries = await loadSnapshotEntries(anchorFile.seasonSlug);
+  const snapshotEntries = await loadSnapshotEntries(anchorFile.seasonSlug, anchorFile.packSlug);
   const snapshotKey = new Set(snapshotEntries.map((entry) => `${entry.tmdbId}:${entry.nodeSlug}:${entry.tier}`));
 
   const pack = await prisma.genrePack.findUnique({
@@ -214,15 +190,14 @@ async function auditSeason(prisma: PrismaClient, anchorFile: AnchorFile): Promis
 }
 
 async function main(): Promise<void> {
-  const season1 = await readJsonFile<AnchorFile>(SEASON1_ANCHORS_PATH);
-  const season2 = await readJsonFile<AnchorFile>(SEASON2_ANCHORS_PATH);
+  const registry = await loadSeasonIntegrityRegistry();
+  const anchorFiles = await Promise.all(
+    registry.map((spec) => readJsonFile<AnchorFile>(path.resolve(spec.anchorPath))),
+  );
   const prisma = new PrismaClient();
   try {
-    const [rows1, rows2] = await Promise.all([
-      auditSeason(prisma, season1),
-      auditSeason(prisma, season2),
-    ]);
-    const rows = [...rows1, ...rows2];
+    const rowSets = await Promise.all(anchorFiles.map((anchorFile) => auditSeason(prisma, anchorFile)));
+    const rows = rowSets.flat();
     const missingRows = rows.filter((row) => row.missingLayers.length > 0);
 
     const report = {

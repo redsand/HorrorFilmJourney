@@ -1,0 +1,93 @@
+{
+  "season": "sci-fi",
+  "taxonomyVersion": "season-3-sci-fi-v1",
+  "summary": {
+    "coreCount": 0,
+    "extendedCount": 0,
+    "totalUnique": 0
+  },
+  "nodes": [
+    {
+      "slug": "proto-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "space-opera",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "hard-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "cyberpunk",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "dystopian-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "post-apocalyptic-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "time-travel-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "alternate-history-multiverse",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "artificial-intelligence-robotics",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "alien-contact-invasion",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "biopunk-genetic-engineering",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "military-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "science-fiction-horror",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "social-speculative-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "new-weird-cosmic-science-fiction",
+      "core": [],
+      "extended": []
+    },
+    {
+      "slug": "retrofuturism-steampunk-dieselpunk",
+      "core": [],
+      "extended": []
+    }
+  ],
+  "status": "template",
+  "finalizedAt": null
+}

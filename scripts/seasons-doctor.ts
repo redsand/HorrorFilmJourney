@@ -3,10 +3,11 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
 import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence.ts';
+import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry.ts';
 
 type Config = {
-  seasonSlug: 'season-1' | 'season-2';
-  packSlug: 'horror' | 'cult-classics';
+  seasonSlug: string;
+  packSlug: string;
   defaultTaxonomy: string;
 };
 
@@ -14,11 +15,6 @@ type DoctorOptions = {
   dryRun: boolean;
   thresholdPercent: number;
 };
-
-const CONFIGS: Config[] = [
-  { seasonSlug: 'season-1', packSlug: 'horror', defaultTaxonomy: 'season-1-horror-v3.5' },
-  { seasonSlug: 'season-2', packSlug: 'cult-classics', defaultTaxonomy: 'season-2-cult-v3' },
-];
 
 function parseOptions(): DoctorOptions {
   const args = process.argv.slice(2);
@@ -51,8 +47,14 @@ function timestampSlug(now: Date): string {
 }
 
 async function runDivergence(prisma: PrismaClient): Promise<{ generatedAt: string; summaries: unknown[] }> {
+  const registry = await loadSeasonIntegrityRegistry();
+  const configs: Config[] = registry.map((entry) => ({
+    seasonSlug: entry.seasonSlug,
+    packSlug: entry.packSlug,
+    defaultTaxonomy: entry.taxonomyVersion,
+  }));
   const summaries = [];
-  for (const config of CONFIGS) {
+  for (const config of configs) {
     const published = await findLatestPublishedRelease(prisma, config.packSlug);
     const summary = await computeSnapshotDivergence(prisma, {
       seasonSlug: config.seasonSlug,

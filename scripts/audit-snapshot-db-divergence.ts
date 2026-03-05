@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence.ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry.ts';
 
 const REPORT_PATH = path.resolve('docs', 'engineering', 'snapshot-db-divergence.json');
 
@@ -24,16 +25,17 @@ async function findLatestPublishedRelease(prisma: PrismaClient, packSlug: string
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   try {
-    const configurations = [
-      { seasonSlug: 'season-1', packSlug: 'horror', defaultTaxonomy: 'season-1-horror-v3.5' },
-      { seasonSlug: 'season-2', packSlug: 'cult-classics', defaultTaxonomy: 'season-2-cult-v3' },
-    ];
+    const configurations = (await loadSeasonIntegrityRegistry()).map((entry) => ({
+      seasonSlug: entry.seasonSlug,
+      packSlug: entry.packSlug,
+      defaultTaxonomy: entry.taxonomyVersion,
+    }));
     const summaries = [];
     for (const config of configurations) {
       const published = await findLatestPublishedRelease(prisma, config.packSlug);
       const summary = await computeSnapshotDivergence(prisma, {
         seasonSlug: config.seasonSlug,
-        packSlug: config.packSlug as 'horror' | 'cult-classics',
+        packSlug: config.packSlug,
         taxonomyVersion: published?.taxonomyVersion ?? config.defaultTaxonomy,
         releaseId: published?.id,
       });

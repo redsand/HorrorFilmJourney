@@ -1,6 +1,8 @@
+import { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { findSeasonIntegritySpecByPair, readAuthoritySnapshot } from './season-integrity-registry.ts';
 
 type SeasonAuthorityEntry = {
   seasonSlug: string;
@@ -48,11 +50,6 @@ export type DivergenceSummary = {
   items: DivergenceItem[];
 };
 
-const SEASON1_SNAPSHOT_PATH = path.resolve(
-  'backups',
-  'season1-horror-snapshot-2026-03-04T19-19-00-138Z.json',
-);
-const SEASON2_SNAPSHOT_PATH = path.resolve('docs', 'season', 'season-2-cult-classics-mastered.json');
 const RELEASE_CORE_CONTRACT_DIR = path.resolve('artifacts', 'release-core-contract');
 
 export function shouldFailPublish(lossRatePct: number, thresholdPct: number, override: boolean): boolean {
@@ -76,53 +73,27 @@ export function classifyMissingReason(movie: { posterUrl?: string | null; castTo
   return 'importer-schema';
 }
 
-async function loadAuthoritySnapshot(seasonSlug: string): Promise<SeasonAuthorityEntry[]> {
-  if (seasonSlug === 'season-2') {
-    const content = await fs.readFile(SEASON2_SNAPSHOT_PATH, 'utf8');
-    const parsed = JSON.parse(content) as { nodes: Array<{ slug: string; core?: Array<{ tmdbId?: number }>; extended?: Array<{ tmdbId?: number }> }> };
-    const entries: SeasonAuthorityEntry[] = [];
-    for (const node of parsed.nodes ?? []) {
-      const core = node.core ?? [];
-      const extended = node.extended ?? [];
-      for (const item of core) {
-        if (typeof item.tmdbId === 'number') {
-          entries.push({
-            seasonSlug,
-            packSlug: 'cult-classics',
-            nodeSlug: node.slug,
-            tmdbId: item.tmdbId,
-            tier: 'CORE',
-          });
-        }
-      }
-      for (const item of extended) {
-        if (typeof item.tmdbId === 'number') {
-          entries.push({
-            seasonSlug,
-            packSlug: 'cult-classics',
-            nodeSlug: node.slug,
-            tmdbId: item.tmdbId,
-            tier: 'EXTENDED',
-          });
-        }
-      }
-    }
-    return entries;
+function normalizeCastTop(value: Prisma.JsonValue | null | undefined): string | string[] | null {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string');
   }
-
-  if (seasonSlug === 'season-1') {
-    const content = await fs.readFile(SEASON1_SNAPSHOT_PATH, 'utf8');
-    const parsed = JSON.parse(content) as { assignments: Array<{ nodeSlug: string; tmdbId: number; tier: 'CORE' | 'EXTENDED' }> };
-    return (parsed.assignments ?? []).map((assignment) => ({
-      seasonSlug,
-      packSlug: 'horror',
-      nodeSlug: assignment.nodeSlug,
-      tmdbId: assignment.tmdbId,
-      tier: assignment.tier,
-    }));
+  if (typeof value === 'string') {
+    return value;
   }
+  return null;
+}
 
-  throw new Error(`No authority snapshot defined for ${seasonSlug}`);
+async function loadAuthoritySnapshot(seasonSlug: string, packSlug: string): Promise<SeasonAuthorityEntry[]> {
+  const spec = await findSeasonIntegritySpecByPair(seasonSlug, packSlug);
+  const rows = await readAuthoritySnapshot(spec);
+  return rows.map((entry) => ({
+    seasonSlug: entry.seasonSlug,
+    packSlug: entry.packSlug,
+    nodeSlug: entry.nodeSlug,
+    tmdbId: entry.tmdbId,
+    tier: entry.tier,
+    ...(entry.title ? { title: entry.title } : {}),
+  }));
 }
 
 async function loadNodeMovies(prisma: PrismaClient, packId: string, taxonomyVersion: string): Promise<NodeAssignment[]> {
@@ -167,7 +138,7 @@ function buildTmdbMap(assignments: NodeAssignment[]): Map<number, NodeAssignment
 
 export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
   seasonSlug: string;
-  packSlug: 'horror' | 'cult-classics';
+  packSlug: string;
   taxonomyVersion: string;
   releaseId?: string;
   thresholdOverridePercent?: number;
@@ -184,13 +155,13 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
     throw new Error(`Pack ${input.packSlug} not tied to season ${input.seasonSlug}`);
   }
 
-  const authorityItems = await loadAuthoritySnapshot(input.seasonSlug);
+  const authorityItems = await loadAuthoritySnapshot(input.seasonSlug, input.packSlug);
   const authorityCount = authorityItems.length;
   const authorityCoreCount = authorityItems.reduce((count, entry) => (entry.tier === 'CORE' ? count + 1 : count), 0);
   const nodeMovies = await loadNodeMovies(prisma, pack.id, input.taxonomyVersion);
   const dbMap = buildTmdbMap(nodeMovies);
 
-  let releaseId = input.releaseId;
+  let releaseId: string | null = input.releaseId ?? null;
   if (!releaseId) {
     const published = await prisma.seasonNodeRelease.findFirst({
       where: { packId: pack.id, isPublished: true },
@@ -216,8 +187,15 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
       const alt = nodeMovies.find((entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug !== authority.nodeSlug);
       const movie = await prisma.movie.findUnique({
         where: { tmdbId: authority.tmdbId },
-    select: { posterUrl: true, castTop: true, ratings: { select: { source: true, value: true } } },
+        select: { posterUrl: true, castTop: true, ratings: { select: { source: true, value: true } } },
       });
+      const normalizedMovie = movie
+        ? {
+            posterUrl: movie.posterUrl,
+            castTop: normalizeCastTop(movie.castTop),
+            ratings: movie.ratings,
+          }
+        : null;
       if (alt) {
         nodeDriftCount += 1;
         items.push({
@@ -239,7 +217,7 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
           nodeSlug: authority.nodeSlug,
           tmdbId: authority.tmdbId,
           tier: authority.tier,
-          reason: classifyMissingReason(movie),
+          reason: classifyMissingReason(normalizedMovie),
         });
       }
       continue;
@@ -354,7 +332,7 @@ export async function emitReleaseContractReport(summary: DivergenceSummary): Pro
 
 export async function enforceSnapshotGuardrail(prisma: PrismaClient, input: {
   seasonSlug: string;
-  packSlug: 'horror' | 'cult-classics';
+  packSlug: string;
   taxonomyVersion: string;
   releaseId: string;
   thresholdPercent?: number;

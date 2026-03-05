@@ -3,7 +3,7 @@
 `seasons:doctor` is the operational workflow for season integrity drift.
 
 ## What it does
-1. Computes snapshot/database divergence for Season 1 and Season 2.
+1. Computes snapshot/database divergence for all seasons in `docs/season/season-integrity-registry.json`.
 2. Checks each season loss rate against threshold (default `2%`, configurable).
 3. If any season is over threshold:
    - runs `repair-season-dataset.ts`
@@ -41,3 +41,8 @@ Bundle contents:
 ## CI mode (read-only)
 - CI should run `npm run seasons:doctor:dry-run`.
 - Start non-blocking and archive the generated report directory as artifacts.
+
+## Season onboarding
+- Add new season scaffolds with:
+  - `npm run seasons:create-template -- --season-slug <slug> --pack-slug <pack>`
+- This updates `docs/season/season-integrity-registry.json`, which automatically includes the season in doctor runs.

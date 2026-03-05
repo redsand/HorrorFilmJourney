@@ -1,4 +1,4 @@
-import { InteractionStatus, PrismaClient } from '@prisma/client';
+import { InteractionStatus, PrismaClient, Prisma } from '@prisma/client';
 import { getLlmProviderFromEnv } from '@/ai';
 import { LlmSchemaError, type LlmProvider } from '@/ai/llmProvider';
 import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-contracts';
@@ -96,6 +96,13 @@ type CandidateMovieRow = {
   posterLastValidatedAt: Date | null;
   ratings: Array<{ source: string }>;
 };
+
+function hydrateCandidateMovieGenres<T extends Omit<CandidateMovieRow, 'genres'> & { genres: Prisma.JsonValue }>(rows: T[]): CandidateMovieRow[] {
+  return rows.map((row) => ({
+    ...row,
+    genres: normalizeGenres(row.genres),
+  }));
+}
 
 export type RecommendationContext = {
   targetCount: number;
@@ -1010,19 +1017,21 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     let allMovies: CandidateMovieRow[] = [];
     if (constraints.packId) {
       if (candidateMovieIds.length > 0) {
-        allMovies = await this.prisma.movie.findMany({
+        const rows = (await this.prisma.movie.findMany({
           where: { id: { in: candidateMovieIds } },
           orderBy: { tmdbId: 'asc' },
           select: selectFields,
-        });
+        })) as Array<Omit<CandidateMovieRow, 'genres'> & { genres: Prisma.JsonValue }>;
+        allMovies = hydrateCandidateMovieGenres(rows);
       } else {
         allMovies = [];
       }
     } else {
-      allMovies = await this.prisma.movie.findMany({
+      const rows = (await this.prisma.movie.findMany({
         orderBy: { tmdbId: 'asc' },
         select: selectFields,
-      });
+      })) as Array<Omit<CandidateMovieRow, 'genres'> & { genres: Prisma.JsonValue }>;
+      allMovies = hydrateCandidateMovieGenres(rows);
     }
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))

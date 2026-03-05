@@ -81,6 +81,11 @@ type CompanionResponse = {
       rankSemantic?: number;
     };
   }>;
+  codex?: {
+    whyImportant: string;
+    whatItTeaches: string;
+    watchFor: [string, string, string];
+  };
   externalReadings?: ExternalReading[];
 };
 

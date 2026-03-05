@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-03-05T14:21:22.961Z",
+  "thresholdPercent": 2,
+  "dryRun": true,
+  "repairTriggered": false,
+  "prePath": "C:\\Users\\TimShelton\\source\\repos\\HorrorFilmJourney\\docs\\engineering\\season-doctor\\2026-03-05T14-21-21-975Z\\divergence-pre.json",
+  "postPath": "C:\\Users\\TimShelton\\source\\repos\\HorrorFilmJourney\\docs\\engineering\\season-doctor\\2026-03-05T14-21-21-975Z\\divergence-post.json",
+  "repairPath": null,
+  "repairReport": null
+}

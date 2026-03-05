@@ -1,0 +1,43 @@
+{
+  "seasons": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "seasonName": "Season 1",
+      "packName": "Horror",
+      "taxonomyVersion": "season-1-horror-v3.5",
+      "snapshotFormat": "assignment-list",
+      "snapshotPath": "backups/season1-horror-snapshot-2026-03-04T19-19-00-138Z.json",
+      "anchorPath": "docs/season/season-1-horror-anchors.json",
+      "fallbackPath": "docs/season/season-1-fallback-candidates.json",
+      "governancePath": "docs/season/season-1-node-governance.json",
+      "configPath": null
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "seasonName": "Season 2",
+      "packName": "Cult Classics",
+      "taxonomyVersion": "season-2-cult-v3",
+      "snapshotFormat": "mastered-nodes",
+      "snapshotPath": "docs/season/season-2-cult-classics-mastered.json",
+      "anchorPath": "docs/season/season-2-cult-anchors.json",
+      "fallbackPath": "docs/season/season-2-fallback-candidates.json",
+      "governancePath": null,
+      "configPath": null
+    },
+    {
+      "seasonSlug": "season-3",
+      "packSlug": "sci-fi",
+      "seasonName": "Season 3",
+      "packName": "Sci-Fi",
+      "taxonomyVersion": "season-3-sci-fi-v1",
+      "snapshotFormat": "mastered-nodes",
+      "snapshotPath": "docs/season/season-3-sci-fi-mastered.template.json",
+      "anchorPath": "docs/season/season-3-sci-fi-anchors.json",
+      "fallbackPath": "docs/season/season-3-sci-fi-fallback-candidates.json",
+      "governancePath": "docs/season/season-3-sci-fi-node-governance.json",
+      "configPath": "docs/season/season-3-sci-fi-config.json"
+    }
+  ]
+}

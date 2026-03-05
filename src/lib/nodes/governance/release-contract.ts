@@ -38,6 +38,10 @@ export function getReleaseContract(params: { seasonSlug?: string; packSlug?: str
   return match;
 }
 
+export function getReleaseContracts(): ReleaseContract[] {
+  return [...CONTRACTS];
+}
+
 export function assertCanonicalTaxonomyVersion(contract: ReleaseContract, taxonomyVersion: string): void {
   if (taxonomyVersion !== contract.taxonomyVersion) {
     throw new Error(

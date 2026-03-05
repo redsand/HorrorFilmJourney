@@ -194,7 +194,7 @@ async function ensureReleaseItemsOnlyCore(
   releaseId: string,
   taxonomyVersion: string,
 ): Promise<void> {
-  const [row] = (await tx.$queryRaw<{ count: bigint }>(Prisma.sql`
+  const rows = await tx.$queryRaw<{ count: bigint }[]>(Prisma.sql`
     SELECT COUNT(*)::bigint AS count
     FROM "SeasonNodeReleaseItem" item
     JOIN "NodeMovie" nm ON nm."movieId" = item."movieId"
@@ -203,11 +203,13 @@ async function ensureReleaseItemsOnlyCore(
       AND nm."taxonomyVersion" = ${taxonomyVersion}
       AND node."slug" = item."nodeSlug"
       AND nm."tier" != 'CORE'
-  `)) ?? [{ count: BigInt(0) }];
+  `);
+  const row = rows[0];
+  const count = row?.count ?? BigInt(0);
 
-  if (Number(row.count) > 0) {
+  if (Number(count) > 0) {
     throw new Error(
-      `[release contract] release ${releaseId} contains ${row.count} EXTENDED assignments for taxonomy ${taxonomyVersion}`,
+      `[release contract] release ${releaseId} contains ${count} EXTENDED assignments for taxonomy ${taxonomyVersion}`,
     );
   }
 }

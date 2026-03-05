@@ -1,0 +1,145 @@
+{
+  "generatedAt": "2026-03-05T14:21:22.555Z",
+  "summaries": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "taxonomyVersion": "season-1-horror-v3.5",
+      "curatorAuthorityCount": 2235,
+      "authorityCoreCount": 500,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "releaseCoreCount": 500,
+      "coreCountDelta": 0,
+      "items": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "taxonomyVersion": "season-2-cult-v3",
+      "curatorAuthorityCount": 568,
+      "authorityCoreCount": 186,
+      "missingInDbCount": 6,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 4,
+      "lossRatePercent": 1.06,
+      "releaseCoreCount": 170,
+      "coreCountDelta": -16,
+      "items": [
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 14267,
+          "tier": "CORE",
+          "observedNodeSlug": "outsider-cinema",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1125,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 62,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 11210,
+          "tier": "CORE",
+          "reason": "unresolved-tmdb"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 8965,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 9696,
+          "tier": "CORE",
+          "observedNodeSlug": "eurocult",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "video-store-era",
+          "tmdbId": 77,
+          "tier": "CORE",
+          "observedNodeSlug": "modern-cult-phenomena",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "camp-cult-comedy",
+          "tmdbId": 928,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "modern-cult-phenomena",
+          "tmdbId": 129,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "modern-cult-phenomena",
+          "tmdbId": 141,
+          "tier": "CORE",
+          "observedNodeSlug": "cult-science-fiction",
+          "reason": "slug-mismatch"
+        }
+      ]
+    },
+    {
+      "seasonSlug": "season-3",
+      "packSlug": "sci-fi",
+      "taxonomyVersion": "season-3-sci-fi-v1",
+      "curatorAuthorityCount": 0,
+      "authorityCoreCount": 0,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "releaseCoreCount": 0,
+      "coreCountDelta": 0,
+      "items": []
+    }
+  ]
+}

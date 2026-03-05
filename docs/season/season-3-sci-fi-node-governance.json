@@ -1,0 +1,97 @@
+{
+  "seasonSlug": "season-3",
+  "packSlug": "sci-fi",
+  "taxonomyVersion": "season-3-sci-fi-v1",
+  "defaults": {
+    "threshold": 0.65,
+    "targetSize": 48,
+    "minEligible": 24,
+    "maxNodesPerMovie": 2
+  },
+  "nodes": {
+    "proto-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "space-opera": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "hard-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "cyberpunk": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "dystopian-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "post-apocalyptic-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "time-travel-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "alternate-history-multiverse": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "artificial-intelligence-robotics": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "alien-contact-invasion": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "biopunk-genetic-engineering": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "military-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "science-fiction-horror": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "social-speculative-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "new-weird-cosmic-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "retrofuturism-steampunk-dieselpunk": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    }
+  },
+  "overlapConstraints": {
+    "disallowedPairs": [],
+    "penalizedPairs": []
+  }
+}

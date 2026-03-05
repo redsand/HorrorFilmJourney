@@ -1,0 +1,10 @@
+{
+  "seasonSlug": "season-3",
+  "seasonName": "Season 3",
+  "packSlug": "sci-fi",
+  "packName": "Sci-Fi",
+  "taxonomyVersion": "season-3-sci-fi-v1",
+  "nodeTemplateProfile": "sci-fi-comprehensive",
+  "nodeSource": "default-profile",
+  "status": "template"
+}

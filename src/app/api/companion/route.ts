@@ -1225,14 +1225,20 @@ export async function GET(request: Request): Promise<Response> {
       narrativeGeneratedAt: 'desc',
     },
   });
+  function buildCodexWatchFor(values: unknown): [string, string, string] {
+    const array = Array.isArray(values) ? values : [];
+    const normalized = array.filter((item): item is string => typeof item === 'string');
+    return [
+      normalized[0] ?? 'Key visual motif',
+      normalized[1] ?? 'Atmosphere and pacing',
+      normalized[2] ?? 'Character performance beat',
+    ];
+  }
+
   const codex = latestRecommendationItem ? {
     whyImportant: latestRecommendationItem.whyImportant,
     whatItTeaches: latestRecommendationItem.whatItTeaches,
-    watchFor: Array.isArray(latestRecommendationItem.watchFor)
-      ? (latestRecommendationItem.watchFor as unknown[])
-        .filter((item): item is string => typeof item === 'string')
-        .slice(0, 3) as [string, string, string]
-      : ['Key visual motif', 'Atmosphere and pacing', 'Character performance beat'],
+    watchFor: buildCodexWatchFor(latestRecommendationItem.watchFor),
   } : undefined;
 
   const payloadsByPolicy = new Map<SpoilerPolicy, CompanionResponsePayload>();
