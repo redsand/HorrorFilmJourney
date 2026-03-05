@@ -3,10 +3,10 @@ import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import type { MovieCardVM } from '@/contracts/movieCardVM';
 import { JourneyMasteryCard, RecommendationBundle, RefreshRecommendationsButton } from '@/components/journey';
+import { OnboardingForm } from '@/components/journey/OnboardingForm';
 import { CinematicContextCard } from '@/components/context/CinematicContextCard';
 import { ReasonPanel } from '@/components/context/ReasonPanel';
 import { BottomNav, Button, Card } from '@/components/ui';
-import { getPackSubgenreOptions, MAX_SELECTED_SUBGENRES } from '@/lib/packs/subgenres';
 import { getPackCopy } from '@/lib/packs/pack-copy';
 import { buildFilmContextExplanation } from '@/lib/context/build-film-context-explanation';
 import type { FilmContextExplanation } from '@/lib/context/build-film-context-explanation';
@@ -240,40 +240,6 @@ async function apiJson<T>(path: string, init?: RequestInit): Promise<{ data: T |
   return { ...payload, status: response.status };
 }
 
-async function submitOnboarding(formData: FormData): Promise<void> {
-  'use server';
-  const tolerance = Number(formData.get('tolerance'));
-  const pacePreference = String(formData.get('pacePreference') ?? 'balanced');
-  const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
-  const minimumYearRaw = Number(formData.get('minimumYear'));
-  const minimumYear = (
-    minimumYearRaw === 1920
-    || minimumYearRaw === 1930
-    || minimumYearRaw === 1940
-    || minimumYearRaw === 1950
-    || minimumYearRaw === 1960
-    || minimumYearRaw === 1970
-  )
-    ? minimumYearRaw
-    : null;
-  const selectedSubgenres = formData.getAll('selectedSubgenres')
-    .map((entry) => String(entry).trim().toLowerCase())
-    .filter((entry) => entry.length > 0)
-    .slice(0, MAX_SELECTED_SUBGENRES);
-
-  const onboardingResponse = await apiJson('/api/onboarding', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ tolerance, pacePreference, selectedPackSlug, selectedSubgenres, minimumYear, horrorDNA: {} }),
-  });
-  if (onboardingResponse.status === 200) {
-    await apiJson('/api/recommendations/next', {
-      method: 'POST',
-    });
-  }
-  revalidatePath('/');
-}
-
 async function submitPackSelection(formData: FormData): Promise<void> {
   'use server';
   const selectedPackSlug = String(formData.get('selectedPackSlug') ?? 'horror');
@@ -285,7 +251,11 @@ async function submitPackSelection(formData: FormData): Promise<void> {
   revalidatePath('/');
 }
 
-export default async function HomePage({ searchParams }: { searchParams?: { watchlistPage?: string; nodeSlug?: string } }) {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: { watchlistPage?: string; nodeSlug?: string };
+}) {
   const experienceResponse = await apiJson<ExperienceResponse>('/api/experience', { method: 'GET' });
   const experience = experienceResponse.status === 200 ? experienceResponse.data : null;
   const unauthenticated = experienceResponse.status === 401;
@@ -346,7 +316,6 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
     }
   }
   const onboardingPackSlug = packs?.packs.find((pack) => pack.isEnabled)?.slug ?? 'horror';
-  const onboardingSubgenres = getPackSubgenreOptions(onboardingPackSlug);
   const onboardingPackCopy = getPackCopy(onboardingPackSlug);
   const hasWatchedAtLeastOne = (progression?.completedCount ?? 0) > 0;
 
@@ -479,118 +448,10 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
           <p className="mt-1 text-sm text-[var(--text-muted)]">
             {onboardingPackCopy.onboardingIntro}
           </p>
-          <form action={submitOnboarding} className="mt-4 space-y-4">
-            <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">{onboardingPackCopy.onboardingIntensityLabel}</p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                {onboardingPackCopy.onboardingIntensityHint}
-              </p>
-              <div className="grid grid-cols-5 gap-2">
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <label key={value} className="cursor-pointer">
-                    <input className="peer sr-only" type="radio" name="tolerance" value={value} defaultChecked={value === 3} />
-                    <span className="block rounded-lg border border-[var(--border)] px-0 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                      {value}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              {packs?.packs?.length ? (
-                <>
-                  <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                    Pack ({packs.activeSeason.name})
-                  </p>
-                  <div className="grid grid-cols-1 gap-2">
-                    {packs.packs.filter((pack) => pack.isEnabled).map((pack, index) => (
-                      <label key={pack.slug} className="cursor-pointer">
-                        <input
-                          className="peer sr-only"
-                          defaultChecked={index === 0}
-                          name="selectedPackSlug"
-                          type="radio"
-                          value={pack.slug}
-                        />
-                        <span className="block rounded-lg border border-[var(--border)] px-3 py-2 text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                          {pack.name}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </>
-              ) : null}
-            </div>
-            <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">{onboardingPackCopy.onboardingPaceLabel}</p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                {onboardingPackCopy.onboardingPaceHint}
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                {onboardingPackCopy.onboardingPaceOptions.map((item) => (
-                  <label key={item.id} className="cursor-pointer">
-                    <input className="peer sr-only" type="radio" name="pacePreference" value={item.id} defaultChecked={item.id === 'balanced'} />
-                    <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                      {item.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Minimum release decade</p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                Recommend films released in or after this decade.
-              </p>
-              <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
-                {([1920, 1930, 1940, 1950, 1960, 1970] as const).map((decade) => (
-                  <label key={decade} className="cursor-pointer">
-                    <input className="peer sr-only" type="radio" name="minimumYear" value={decade} />
-                    <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-xs peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                      {decade}s
-                    </span>
-                  </label>
-                ))}
-                <label className="cursor-pointer">
-                  <input className="peer sr-only" defaultChecked type="radio" name="minimumYear" value="" />
-                  <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-xs peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                    Any
-                  </span>
-                </label>
-              </div>
-            </div>
-            <div>
-              <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                {onboardingPackCopy.onboardingSubgenreLabel} (choose up to {MAX_SELECTED_SUBGENRES})
-              </p>
-              <p className="mb-3 text-xs leading-5 text-[var(--text-muted)]">
-                {onboardingPackCopy.onboardingSubgenreHint}
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {onboardingSubgenres.map((subgenre, index) => (
-                  <label key={subgenre} className="cursor-pointer">
-                    <input
-                      className="peer sr-only"
-                      defaultChecked={index < 2}
-                      name="selectedSubgenres"
-                      type="checkbox"
-                      value={subgenre}
-                    />
-                    <span className="block rounded-lg border border-[var(--border)] px-2 py-2 text-center text-sm peer-checked:border-[rgba(193,18,31,0.7)] peer-checked:bg-[rgba(155,17,30,0.22)]">
-                      {subgenre}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <Button className="w-full py-3 text-base" type="submit">
-              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <path d="M5 4h12l2 2v14H5V4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-                <path d="M8 4v6h8V4M9 16h6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-              </svg>
-              Save Preferences
-            </Button>
-          </form>
+          <OnboardingForm
+            initialPackSlug={onboardingPackSlug}
+            packs={packs ?? null}
+          />
         </Card>
       )}
 

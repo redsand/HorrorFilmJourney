@@ -58,6 +58,7 @@ export default function ProfilePage() {
   const [savingPreference, setSavingPreference] = useState(false);
   const [savingOnboarding, setSavingOnboarding] = useState(false);
   const [onboardingMessage, setOnboardingMessage] = useState<string | null>(null);
+  const [onboardingInvalidFields, setOnboardingInvalidFields] = useState<string[]>([]);
   const [themeMessage, setThemeMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [insights, setInsights] = useState<Insight[]>([]);
@@ -432,11 +433,12 @@ export default function ProfilePage() {
                 className="w-full py-3 text-base"
                 disabled={savingOnboarding}
                 onClick={async () => {
-                  setSavingOnboarding(true);
-                  setOnboardingMessage(null);
-                  try {
-                    const response = await fetch('/api/onboarding', {
-                      method: 'POST',
+                    setSavingOnboarding(true);
+                    setOnboardingMessage(null);
+                    setOnboardingInvalidFields([]);
+                    try {
+                      const response = await fetch('/api/onboarding', {
+                        method: 'POST',
                       credentials: 'include',
                       headers: { 'content-type': 'application/json' },
                       body: JSON.stringify({
@@ -447,15 +449,24 @@ export default function ProfilePage() {
                         minimumYear,
                       }),
                     });
-                    if (response.ok) {
-                      setOnboardingMessage('Preferences updated.');
-                      applyThemeTransition();
-                    } else {
+                      if (response.ok) {
+                        setOnboardingMessage('Preferences updated.');
+                        applyThemeTransition();
+                      } else {
+                        const payload = await response.json().catch(() => null);
+                        const message = payload?.error?.message ?? 'Unable to save preferences.';
+                        const invalidFields: string[] = [];
+                        if (/subgenre/i.test(message)) invalidFields.push('Subgenre picks');
+                        if (/pack/i.test(message)) invalidFields.push('Pack');
+                        if (/minimum year|decade/i.test(message)) invalidFields.push('Minimum release decade');
+                        if (/tolerance|intensity/i.test(message)) invalidFields.push('Intensity');
+                        if (/pace/i.test(message)) invalidFields.push('Pace preference');
+                        setOnboardingInvalidFields(invalidFields);
+                        setOnboardingMessage(message);
+                      }
+                    } catch {
                       setOnboardingMessage('Unable to save preferences.');
-                    }
-                  } catch {
-                    setOnboardingMessage('Unable to save preferences.');
-                  } finally {
+                    } finally {
                     setSavingOnboarding(false);
                   }
                 }}
@@ -469,7 +480,10 @@ export default function ProfilePage() {
               </Button>
             </div>
             {onboardingMessage ? (
-              <p className="text-xs text-[var(--text-muted)]">{onboardingMessage}</p>
+              <p className="text-xs text-[var(--text-muted)]">
+                {onboardingMessage}
+                {onboardingInvalidFields.length > 0 ? ` Fields to review: ${onboardingInvalidFields.join(', ')}.` : ''}
+              </p>
             ) : null}
           </div>
           <div className="border-t border-[var(--border)] pt-3">
