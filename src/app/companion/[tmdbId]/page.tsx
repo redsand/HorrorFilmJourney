@@ -422,13 +422,6 @@ export default async function CompanionPage({
               ) : null}
             </Card>
           ) : null}
-          <Card className="space-y-2">
-            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
-            <p className="text-sm text-[var(--text-muted)]">See the full timeline and movement progression from your profile.</p>
-            <Link className="inline-flex text-xs text-[var(--text)] underline-offset-2 hover:underline" href="/profile/journey-map">
-              Open Journey Map
-            </Link>
-          </Card>
 
           {[ 
             {
@@ -451,6 +444,23 @@ export default async function CompanionPage({
           ))}
 
           <CompanionActions tmdbId={payload.movie.tmdbId} title={payload.movie.title} />
+          <Card className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Journey Map</p>
+            <Link
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--cc-accent)] px-4 py-2 text-base font-semibold text-[var(--cc-text)] no-underline shadow-[0_0_0_1px_var(--cc-glow)] transition-colors hover:bg-[var(--cc-accent-2)] hover:text-[var(--cc-text)] visited:text-[var(--cc-text)]"
+              href="/profile/journey-map"
+            >
+              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <path d="M4 6h4l2 4 3-6 2 4h5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+                <circle cx="4" cy="6" r="1.5" fill="currentColor" />
+                <circle cx="10" cy="10" r="1.5" fill="currentColor" />
+                <circle cx="13" cy="4" r="1.5" fill="currentColor" />
+                <circle cx="15" cy="8" r="1.5" fill="currentColor" />
+                <circle cx="20" cy="8" r="1.5" fill="currentColor" />
+              </svg>
+              View
+            </Link>
+          </Card>
         </>
       )}
 

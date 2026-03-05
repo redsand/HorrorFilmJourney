@@ -52,9 +52,15 @@ describe('GET /api/admin/curriculum', () => {
                 slug: 'foundations',
                 name: 'Foundations',
                 orderIndex: 1,
+                learningObjective: 'Understand foundations',
+                eraSubgenreFocus: 'classic horror',
                 movies: [
                   {
                     rank: 1,
+                    tier: 'CORE',
+                    coreRank: 1,
+                    finalScore: 0.91,
+                    journeyScore: 0.87,
                     movie: {
                       id: 'movie_1',
                       tmdbId: 17,

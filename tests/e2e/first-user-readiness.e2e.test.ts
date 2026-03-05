@@ -18,6 +18,7 @@ const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
 const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
+const { POST: POST_SELECT_PACK } = await import('@/app/api/profile/select-pack/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
 const { POST: POST_INTERACTIONS } = await import('@/app/api/interactions/route');
 const { GET: GET_HISTORY } = await import('@/app/api/history/route');
@@ -120,7 +121,33 @@ describe('first real user readiness e2e', () => {
       }),
     );
     expect(experienceBefore.status).toBe(200);
-    expect((await experienceBefore.json()).data.state).toBe('ONBOARDING_NEEDED');
+    const experienceBeforeBody = await experienceBefore.json();
+    expect(experienceBeforeBody.data.state).toBe('PACK_SELECTION_NEEDED');
+    const firstPackSlug = (experienceBeforeBody.data.packSelection?.packs as Array<{ slug: string }> | undefined)?.[0]?.slug;
+    expect(firstPackSlug).toBeTruthy();
+
+    const selectPackA = await POST_SELECT_PACK(
+      new Request('http://localhost/api/profile/select-pack', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: userACookie,
+        },
+        body: JSON.stringify({ packSlug: firstPackSlug }),
+      }),
+    );
+    const selectPackB = await POST_SELECT_PACK(
+      new Request('http://localhost/api/profile/select-pack', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: userBCookie,
+        },
+        body: JSON.stringify({ packSlug: firstPackSlug }),
+      }),
+    );
+    expect(selectPackA.status).toBe(200);
+    expect(selectPackB.status).toBe(200);
 
     const invalidOnboarding = await POST_ONBOARDING(
       new Request('http://localhost/api/onboarding', {
@@ -235,6 +262,7 @@ describe('first real user readiness e2e', () => {
           tmdbId: cardsA[0]!.movie.tmdbId,
           status: 'WATCHED',
           rating: 5,
+          recommendationItemId: itemIdByTmdbId.get(cardsA[0]!.movie.tmdbId),
           intensity: 4,
           emotions: ['dread'],
           workedBest: ['pacing'],
@@ -267,7 +295,14 @@ describe('first real user readiness e2e', () => {
         headers: { cookie: userBCookie },
       }),
     );
-    const cardsB = (await recommendationsB.json()).data.cards as RecCard[];
+    const recommendationsBBody = await recommendationsB.json();
+    const batchIdB = recommendationsBBody.data.batchId as string;
+    const cardsB = recommendationsBBody.data.cards as RecCard[];
+    const batchItemsB = await prisma.recommendationItem.findMany({
+      where: { batchId: batchIdB },
+      include: { movie: { select: { tmdbId: true } } },
+    });
+    const itemIdByTmdbIdB = new Map(batchItemsB.map((item) => [item.movie.tmdbId, item.id] as const));
     await POST_INTERACTIONS(
       new Request('http://localhost/api/interactions', {
         method: 'POST',
@@ -279,6 +314,7 @@ describe('first real user readiness e2e', () => {
           tmdbId: cardsB[0]!.movie.tmdbId,
           status: 'WATCHED',
           rating: 2,
+          recommendationItemId: itemIdByTmdbIdB.get(cardsB[0]!.movie.tmdbId),
         }),
       }),
     );

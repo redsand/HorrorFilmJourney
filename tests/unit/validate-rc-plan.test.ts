@@ -12,6 +12,7 @@ describe('validate rc plan', () => {
     expect(plan).toContain('npm run check:retrieval:gates');
     expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).toContain('npm run check:external-links:gates');
+    expect(plan).toContain('npm run bootstrap:rag:value -- --runs 25');
     expect(plan).toContain('npm run report:rag:completion -- --enforce');
   });
 
@@ -56,5 +57,6 @@ describe('validate rc plan', () => {
     const plan = buildRcValidationCommandPlan(options);
 
     expect(plan).not.toContain('npm run report:rag:completion -- --enforce');
+    expect(plan).not.toContain('npm run bootstrap:rag:value -- --runs 25');
   });
 });

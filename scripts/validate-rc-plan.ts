@@ -25,6 +25,10 @@ export function buildRcValidationCommandPlan(options: RcValidationOptions): stri
     'npm run test:e2e',
   ];
 
+  if (!options.skipRagCompletionReport) {
+    commands.push('npm run bootstrap:rag:value -- --runs 25');
+  }
+
   if (!options.skipRetrievalGates) {
     commands.push('npm run check:retrieval:gates');
   }

@@ -344,6 +344,33 @@ const SEASON_2_CULT_SKELETON: Array<{
   },
 ];
 
+const SEASON_1_EXTERNAL_READING_SOURCES = [
+  {
+    sourceName: 'Bloody Disgusting',
+    baseUrl: 'https://www.bloody-disgusting.com/editorials',
+  },
+  {
+    sourceName: 'RogerEbert.com',
+    baseUrl: 'https://www.rogerebert.com/features',
+  },
+  {
+    sourceName: 'Collider',
+    baseUrl: 'https://collider.com',
+  },
+  {
+    sourceName: 'IndieWire',
+    baseUrl: 'https://www.indiewire.com/features',
+  },
+] as const;
+
+function toUrlSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
+}
+
 async function seedSeason1Curriculum(prisma: PrismaClient, packId: string): Promise<void> {
   const movieByTmdbId = new Map(
     (await prisma.movie.findMany({
@@ -479,6 +506,40 @@ async function seedSeason2CultSkeleton(prisma: PrismaClient): Promise<void> {
   }
 }
 
+async function seedSeason1ExternalReadings(prisma: PrismaClient, seasonId: string): Promise<void> {
+  const seedMovies = await prisma.movie.findMany({
+    orderBy: { tmdbId: 'asc' },
+    take: 30,
+    select: {
+      id: true,
+      tmdbId: true,
+      title: true,
+    },
+  });
+
+  const rows: Prisma.ExternalReadingCurationCreateManyInput[] = seedMovies.map((movie, index) => {
+    const source = SEASON_1_EXTERNAL_READING_SOURCES[index % SEASON_1_EXTERNAL_READING_SOURCES.length];
+    return {
+      movieId: movie.id,
+      seasonId,
+      sourceName: source.sourceName,
+      articleTitle: `${movie.title}: Context and Legacy`,
+      url: `${source.baseUrl}/${movie.tmdbId}-${toUrlSlug(movie.title)}`,
+      sourceType: 'RETROSPECTIVE',
+      publicationDate: new Date('2025-10-31T00:00:00.000Z'),
+    };
+  });
+
+  if (rows.length === 0) {
+    return;
+  }
+
+  await prisma.externalReadingCuration.createMany({
+    data: rows,
+    skipDuplicates: true,
+  });
+}
+
 export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<SeedSummary> {
   const season = await prisma.season.upsert({
     where: { slug: 'season-1' },
@@ -607,6 +668,7 @@ export async function seedStarterHorrorCatalog(prisma: PrismaClient): Promise<Se
   const totalRatings = await prisma.movieRating.count();
   const totalEvidence = await prisma.evidencePacket.count();
   await seedSeason1Curriculum(prisma, pack.id);
+  await seedSeason1ExternalReadings(prisma, season.id);
   await seedSeason2CultSkeleton(prisma);
 
   return {

@@ -2,6 +2,7 @@ import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 import { seedStarterHorrorCatalog } from '@/lib/testing/catalog-seed';
+import { buildExternalLinkCoverageReport } from '@/lib/companion/external-reading-ops';
 
 const testDbUrl = buildTestDatabaseUrl('seed_catalog_verification_test');
 const prisma = new PrismaClient({ datasources: { db: { url: testDbUrl } } });
@@ -75,5 +76,12 @@ describe('seed catalog verification', () => {
       },
     });
     expect(cultNodeMovies).toBe(0);
+
+    const externalCoverage = await buildExternalLinkCoverageReport(prisma, {
+      seasonSlug: 'season-1',
+      targetPct: 80,
+    });
+    expect(externalCoverage.overallCoveragePct).toBeGreaterThanOrEqual(80);
+    expect(externalCoverage.meetsTarget).toBe(true);
   });
 });

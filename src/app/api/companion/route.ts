@@ -8,6 +8,8 @@ import { getExternalReadingsForFilm } from '@/lib/companion/external-reading-reg
 import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 import { getPublishedNodesForMovie } from '@/lib/nodes/published-snapshot';
 import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
+import { buildFilmContextExplanation } from '@/lib/context/build-film-context-explanation';
+import { buildSeasonReasonPanel } from '@/lib/context/build-season-reason-panel';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
@@ -502,6 +504,13 @@ async function generateCompanionLlmOutput(input: {
   year: number | null;
   facts: TmdbCompanionFacts | null;
   evidence: Array<{ sourceName: string; snippet: string }>;
+  cinematicContext?: {
+    nodeName?: string;
+    tier?: string;
+    whyParagraph?: string;
+    reasonTitle?: string;
+    reasonBullets?: string[];
+  };
 }): Promise<{ output: CompanionLlmOutput | null; reason: string }> {
   if (!isCompanionLlmEnabled()) {
     return { output: null, reason: 'DISABLED_BY_ENV' };
@@ -538,6 +547,7 @@ async function generateCompanionLlmOutput(input: {
             tagline: input.facts?.tagline ?? 'unknown',
             runtimeMinutes: input.facts?.runtimeMinutes ?? null,
           },
+          cinematicContext: input.cinematicContext ?? null,
           evidence: input.evidence.slice(0, 5).map((item) => ({
             sourceName: item.sourceName,
             snippet: firstLine(item.snippet, 220),
@@ -763,6 +773,10 @@ function buildSections(
   ratings: RatingRow[],
   evidenceCount: number,
   llmOutput: CompanionLlmOutput | null,
+  cinematicContext?: {
+    whyParagraph?: string;
+    reasonBullets?: string[];
+  },
 ) {
   const title = input.facts?.title ?? input.title;
   const year = input.facts?.year ?? input.year;
@@ -806,6 +820,7 @@ function buildSections(
     `Released in ${year ?? 'an unknown year'}, this title sits in ${genresText} traditions.`,
     `Production context: ${regionsText}.`,
     'Use this as a lens for how horror language evolves across decades and subgenres.',
+    ...(cinematicContext?.whyParagraph ? [firstLine(cinematicContext.whyParagraph, 220)] : []),
   ];
   const receptionNotes = ratings.length > 0
     ? [...ratings.slice(0, 3).map(formatRatingLine), tmdbScoreText]
@@ -814,6 +829,9 @@ function buildSections(
     'Cinematography: track framing distance, lens choice feel, and shadow composition scene-to-scene.',
     'Score: note when music drives dread versus when silence is used as pressure.',
     'Editing rhythm: compare average shot length in setup versus escalation beats.',
+    ...(Array.isArray(cinematicContext?.reasonBullets) && cinematicContext.reasonBullets.length > 0
+      ? [firstLine(cinematicContext.reasonBullets[0]!, 200)]
+      : []),
   ];
   const influenceMap = [
     `Predecessor films: compare ${title}${yearText} with earlier horror mood-builders from adjacent subgenres.`,
@@ -967,6 +985,32 @@ export async function GET(request: Request): Promise<Response> {
       movieId: movie.id,
     })
     : [];
+  const primaryNodeSlug = publishedNodes[0]?.slug ?? null;
+  let filmContext: Awaited<ReturnType<typeof buildFilmContextExplanation>> = null;
+  let reasonPanel: Awaited<ReturnType<typeof buildSeasonReasonPanel>> = null;
+  try {
+    [filmContext, reasonPanel] = await Promise.all([
+      buildFilmContextExplanation({
+        seasonSlug: effectivePack.seasonSlug,
+        packSlug: effectivePack.packSlug,
+        nodeSlug: primaryNodeSlug,
+        tmdbId: movie.tmdbId,
+      }),
+      buildSeasonReasonPanel({
+        seasonSlug: effectivePack.seasonSlug,
+        packSlug: effectivePack.packSlug,
+        nodeSlug: primaryNodeSlug,
+        tmdbId: movie.tmdbId,
+      }),
+    ]);
+  } catch (error) {
+    console.warn('[companion] context enrichment unavailable', {
+      tmdbId: movie.tmdbId,
+      seasonSlug: effectivePack.seasonSlug,
+      packSlug: effectivePack.packSlug,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
   const externalReadings = await getExternalReadingsForFilm({
     filmId: String(movie.tmdbId),
     seasonId: effectivePack.seasonSlug,
@@ -1054,6 +1098,21 @@ export async function GET(request: Request): Promise<Response> {
     year: tmdbFacts?.year ?? movie.year,
     facts: tmdbFacts,
     evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
+    cinematicContext: {
+      ...(filmContext
+        ? {
+          nodeName: filmContext.nodeName,
+          tier: filmContext.tier,
+          whyParagraph: filmContext.whyParagraph,
+        }
+        : {}),
+      ...(reasonPanel
+        ? {
+          reasonTitle: reasonPanel.reasonTitle,
+          reasonBullets: reasonPanel.bullets.slice(0, 3),
+        }
+        : {}),
+    },
   });
   const llmOutput = llmResult.output;
   const payloadsByPolicy = new Map<SpoilerPolicy, CompanionResponsePayload>();
@@ -1071,6 +1130,10 @@ export async function GET(request: Request): Promise<Response> {
       responseRatings,
       evidence.length,
       llmOutput,
+      {
+        ...(filmContext ? { whyParagraph: filmContext.whyParagraph } : {}),
+        ...(reasonPanel ? { reasonBullets: reasonPanel.bullets.slice(0, 2) } : {}),
+      },
     );
     const payload: CompanionResponsePayload = {
       movie: {
