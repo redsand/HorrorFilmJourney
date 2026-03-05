@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { JourneyTimelineView } from '@/components/journey/JourneyTimelineView';
-import { BottomNav, Button, Card, LogoutIconButton } from '@/components/ui';
+import { BottomNav, Button, Card, Chip, LogoutIconButton } from '@/components/ui';
 import { getPackCopy } from '@/lib/packs/pack-copy';
 
 type ProgressionData = {
@@ -11,6 +11,7 @@ type ProgressionData = {
   masteryScore: number;
   completedCount: number;
   nextMilestone: number;
+  unlockedThemes: string[];
 };
 
 type PreferenceData = {
@@ -69,6 +70,9 @@ export default function ProfileJourneyMapPage() {
   }, []);
 
   const packCopy = getPackCopy(selectedPackSlug);
+  const completionRatio = progression
+    ? Math.max(0, Math.min(1, progression.completedCount / Math.max(1, progression.nextMilestone)))
+    : 0;
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
@@ -87,8 +91,22 @@ export default function ProfileJourneyMapPage() {
               Track your progression through {packCopy.masteryDisciplineLabel}. Each movement opens the next chapter.
             </p>
             <p className="text-xs text-[var(--text-muted)]">
-              Current node: {progression?.currentNode ?? 'Unknown'} | Mastery score: {progression?.masteryScore?.toFixed(2) ?? '0.00'}
+              Current node: {progression?.currentNode ?? 'Unknown'} | Mastery score: {progression?.masteryScore?.toFixed(2) ?? '0.00'} | Completed: {progression?.completedCount ?? 0}/{progression?.nextMilestone ?? 0}
             </p>
+            <div className="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.1)]">
+              <div
+                className="h-full rounded-full bg-[linear-gradient(90deg,rgba(127,29,29,0.95),rgba(220,38,38,0.95))] transition-all duration-700 ease-out"
+                style={{ width: `${Math.max(6, Math.round(completionRatio * 100))}%` }}
+              />
+            </div>
+          </Card>
+          <Card className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Unlocked Themes</p>
+            <div className="flex flex-wrap gap-2">
+              {progression?.unlockedThemes?.length
+                ? progression.unlockedThemes.map((theme) => <Chip key={theme}>{theme}</Chip>)
+                : <Chip>No themes unlocked yet</Chip>}
+            </div>
           </Card>
           <JourneyTimelineView
             baseHref="/journey"
