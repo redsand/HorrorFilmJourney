@@ -79,8 +79,9 @@
     "seasons:doctor:dry-run": "tsx scripts/seasons-doctor.ts --dry-run",
     "seasons:create-template": "tsx scripts/create-season-template.ts",
     "season3:harvest:sci-fi": "tsx scripts/harvest-season3-sci-fi-candidates.ts",
-    "season3:score:sci-fi": "tsx scripts/score-season3-sci-fi-candidates.ts"
-    ,"season3:calibrate:sci-fi": "tsx scripts/calibrate-season3-sci-fi-candidates.ts"
+    "season3:score:sci-fi": "tsx scripts/score-season3-sci-fi-candidates.ts",
+    "season3:calibrate:sci-fi": "tsx scripts/calibrate-season3-sci-fi-candidates.ts",
+    "build:evidence:corpus": "tsx scripts/build-season-evidence-corpus.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
