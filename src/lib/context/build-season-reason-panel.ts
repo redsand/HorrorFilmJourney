@@ -335,9 +335,6 @@ const season1Builder: SeasonReasonBuilder = (context) => {
   const bullets: string[] = [
     `Placed in ${context.assignment.node.name} (${tierLabel}) as part of the Season 1 horror taxonomy.`,
   ];
-  if (context.watchReason) {
-    bullets.push(`Film-specific rationale: ${context.watchReason}`);
-  }
   const notice = parseWhatToNotice(context.assignment.node.whatToNotice);
   if (!context.watchReason && notice.length > 0) {
     bullets.push(`Curriculum focus: ${notice.join('; ')}.`);
@@ -390,18 +387,9 @@ const season2Builder: SeasonReasonBuilder = (context) => {
   const bullets: string[] = [
     `Placed in ${context.assignment.node.name} (${tierLabel}) as part of curated Cult Classics canon.`,
   ];
-  if (context.watchReason) {
-    bullets.push(`Film-specific rationale: ${context.watchReason}`);
-  }
   const notice = parseWhatToNotice(context.assignment.node.whatToNotice);
   if (!context.watchReason && notice.length > 0) {
     bullets.push(`Cult movement cues: ${notice.join('; ')}.`);
-  }
-  if (typeof confidenceValue === 'number') {
-    bullets.push(`Cult confidence: ${confidenceValue} (${bucket}).`);
-  }
-  if (typeof canon?.rank === 'number') {
-    bullets.push(`Canon rank: #${canon.rank}.`);
   }
   if (typeof sourceVotes?.sourceCount === 'number') {
     bullets.push(
@@ -418,13 +406,18 @@ const season2Builder: SeasonReasonBuilder = (context) => {
     seasonSlug: context.seasonSlug,
     reasonTitle: "Why it's Cult",
     bullets,
-    badges: [context.assignment.node.name, tierLabel, ...clusters].slice(0, 6),
+    badges: [
+      context.assignment.node.name,
+      tierLabel,
+      ...(typeof canon?.rank === 'number' ? [`Canon #${canon.rank}`] : []),
+      ...clusters,
+    ].slice(0, 6),
     ...(typeof confidenceValue === 'number'
       ? {
         scoreBlock: {
           label: 'Cult Confidence',
-          value: `${confidenceValue} (${bucket})`,
-          ...(typeof canon?.rank === 'number' ? { detail: `Canon #${canon.rank}` } : {}),
+          value: String(confidenceValue),
+          detail: bucket,
         },
       }
       : {}),

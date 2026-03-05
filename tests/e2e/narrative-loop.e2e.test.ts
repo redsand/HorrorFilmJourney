@@ -18,6 +18,7 @@ const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
 const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
+const { POST: POST_SELECT_PACK } = await import('@/app/api/profile/select-pack/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
 const { POST: POST_INTERACTIONS } = await import('@/app/api/interactions/route');
 const { GET: GET_HISTORY } = await import('@/app/api/history/route');
@@ -97,7 +98,35 @@ describe('narrative loop e2e', () => {
     );
     expect(beforeOnboardingResponse.status).toBe(200);
     const beforeOnboarding = await beforeOnboardingResponse.json();
-    expect(beforeOnboarding.data.state).toBe('ONBOARDING_NEEDED');
+    expect(beforeOnboarding.data.state).toBe('PACK_SELECTION_NEEDED');
+
+    const firstPackSlug = (beforeOnboarding.data.packSelection?.packs as Array<{ slug: string }> | undefined)?.[0]?.slug;
+    expect(firstPackSlug).toBeTruthy();
+
+    const selectPackResponse = await POST_SELECT_PACK(
+      new Request('http://localhost/api/profile/select-pack', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: userCookie,
+        },
+        body: JSON.stringify({
+          packSlug: firstPackSlug,
+        }),
+      }),
+    );
+    expect(selectPackResponse.status).toBe(200);
+
+    const afterSelectPackResponse = await GET_EXPERIENCE(
+      new Request('http://localhost/api/experience', {
+        headers: {
+          cookie: userCookie,
+        },
+      }),
+    );
+    expect(afterSelectPackResponse.status).toBe(200);
+    const afterSelectPack = await afterSelectPackResponse.json();
+    expect(afterSelectPack.data.state).toBe('ONBOARDING_NEEDED');
 
     const onboardingResponse = await POST_ONBOARDING(
       new Request('http://localhost/api/onboarding', {
@@ -210,6 +239,7 @@ describe('narrative loop e2e', () => {
           tmdbId: cards[1]!.movie.tmdbId,
           status: 'WATCHED',
           rating: 5,
+          recommendationItemId: itemIdByTmdbId.get(cards[1]!.movie.tmdbId),
           intensity: 4,
           emotions: ['dread'],
           workedBest: ['direction'],

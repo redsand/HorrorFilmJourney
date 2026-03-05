@@ -1,8 +1,8 @@
 # Full Retrieval Pipeline Tracker (Season 1 / Recommendation + Companion)
 
-Status: IN PROGRESS
+Status: COMPLETE
 Owner: ML/Data Engineering
-Last Updated: 2026-03-03 (America/Chicago)
+Last Updated: 2026-03-04 (America/Chicago)
 
 ## 1) Purpose
 This document is the single source of truth for implementing and tracking the full RAG retrieval pipeline in CinemaCodex.
@@ -18,18 +18,17 @@ Non-goals:
 ## 2) Current State (As-Is)
 
 ### 2.1 What is live now
-- Recommendation engine uses `CachedEvidenceRetrieverV1` reading from `EvidencePacket` only.
-  - File: `src/lib/recommendation/recommendation-engine.ts`
-- Companion endpoint reads `evidencePacket.findMany(...)` directly.
-  - File: `src/app/api/companion/route.ts`
-- Narrative composer supports evidence-grounding and citation validation/fallback.
-  - File: `docs/ai.md`
+- Recommendation + companion use configured retriever modes (`cache|hybrid|shadow`) with deterministic fallback.
+  - Files: `src/lib/evidence/retrieval/index.ts`, `src/lib/recommendation/recommendation-engine.ts`, `src/app/api/companion/route.ts`
+- Retrieval diagnostics persist quality signals and support admin visibility + gate checks.
+  - Files: `src/app/api/admin/retrieval/route.ts`, `scripts/check-retrieval-gates.ts`
+- Evidence corpus ingestion supports normalization, dedupe, chunking, checkpoint resume, embedding backfill, and index refresh.
+  - Files: `src/lib/evidence/ingestion/*`, `scripts/ingest-evidence-corpus.ts`, `scripts/backfill-evidence-chunk-embeddings.ts`, `scripts/refresh-evidence-index.ts`
+- Rollout controls and measurable completion gates are in place.
+  - Files: `scripts/retrieval-rollout.ts`, `scripts/assess-retrieval-rollout.ts`, `scripts/measure-rag-value.ts`, `scripts/generate-rag-completion-report.ts`
 
 ### 2.2 What is missing
-- No active corpus ingestion + chunking + indexing pipeline for retrieval.
-- No hybrid retriever (BM25/lexical + embedding ANN fusion) in production path.
-- No retrieval calibration/governance layer (source trust/freshness/diversity) as first-class module.
-- No retrieval diagnostics table/metrics gate in CI.
+- No critical scoped gaps remain for the retrieval plan in this document.
 
 ## 3) Architecture Target (To-Be)
 
@@ -75,10 +74,10 @@ Exit criteria:
 - New schema migrates cleanly in local + test DB.
 
 ### Phase C: Ingestion/Indexing Jobs
-- [~] Build deterministic ingest adapters for approved local/curated sources.
-- [~] Normalize + dedupe pipeline.
+- [x] Build deterministic ingest adapters for approved local/curated sources.
+- [x] Normalize + dedupe pipeline.
 - [x] Chunking module with deterministic chunk IDs.
-- [~] Embedding write path + index refresh job.
+- [x] Embedding write path + index refresh job.
 - [x] Idempotent run checkpoints and resume support.
 
 Exit criteria:
@@ -136,7 +135,7 @@ Exit criteria:
 - [x] Add first deterministic fixture tests.
 
 ### Secondary Sprint
-- [~] Build ingestion + chunking scripts in `scripts/`.
+- [x] Build ingestion + chunking scripts in `scripts/`.
 - [x] Add offline eval command for retrieval quality.
 - [x] Add admin debug endpoint for retrieval traces.
 
@@ -207,6 +206,7 @@ node --experimental-strip-types scripts/audit-season1-node-population.ts
 Evidence ingestion (resume-capable):
 ```bash
 npm run ingest:evidence:corpus -- --input <file> --resume --checkpoint artifacts/evidence-ingest-checkpoint.json
+npm run refresh:evidence:index -- --batchSize 500
 ```
 
 Tests (current relevant):
@@ -258,4 +258,5 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 - 2026-03-04: Added automated retrieval checklist gate `npm run check:retrieval:tracker` and wired it into release validation planning so unchecked tracker items fail validation.
 - 2026-03-04: Added machine-readable completion artifact command `npm run report:rag:completion` (optionally `--enforce`) to prove tracker completeness + retrieval quality + rollout readiness in one report.
 - 2026-03-04: Updated release validation planning to include enforced completion artifact generation (`npm run report:rag:completion -- --enforce`) for measurable go/no-go checks.
+- 2026-03-04: Closed remaining ingestion/indexing in-progress items by adding deterministic ingest normalization+dedupe adapters and full index refresh command (`npm run refresh:evidence:index`) with unit coverage.
 

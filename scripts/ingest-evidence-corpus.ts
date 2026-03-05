@@ -6,6 +6,7 @@ import {
   filterPendingEvidenceDocuments,
   ingestEvidenceDocuments,
   markEvidenceDocumentInCheckpoint,
+  normalizeAndDedupeEvidenceDocuments,
   type EvidenceIngestDocumentInput,
   type EvidenceIngestionCheckpoint,
 } from '../src/lib/evidence/ingestion/index.ts';
@@ -38,7 +39,11 @@ function loadDocuments(inputPath: string): EvidenceIngestDocumentInput[] {
   if (!Array.isArray(docs) || docs.length === 0) {
     throw new Error(`No ingest documents found in ${inputPath}`);
   }
-  return docs;
+  const normalized = normalizeAndDedupeEvidenceDocuments(docs);
+  if (normalized.length === 0) {
+    throw new Error(`No valid ingest documents found in ${inputPath}`);
+  }
+  return normalized;
 }
 
 function loadCheckpoint(checkpointPath: string): EvidenceIngestionCheckpoint {

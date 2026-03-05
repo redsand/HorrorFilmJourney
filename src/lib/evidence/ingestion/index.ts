@@ -104,11 +104,16 @@ export async function ingestEvidenceDocuments(
 export type { EvidenceIngestDocumentInput } from './chunking';
 export type { EvidenceIngestionCheckpoint } from './checkpoint';
 export {
+  normalizeAndDedupeEvidenceDocuments,
+  normalizeEvidenceDocumentInput,
+} from './adapters';
+export {
   LOCAL_EVIDENCE_EMBEDDING_DIM,
   LOCAL_EVIDENCE_EMBEDDING_MODEL,
   backfillEvidenceChunkEmbeddings,
   computeEvidenceChunkEmbedding,
 } from './embed';
+export { refreshEvidenceIndex } from './index-refresh';
 export {
   createEmptyEvidenceIngestionCheckpoint,
   filterPendingEvidenceDocuments,

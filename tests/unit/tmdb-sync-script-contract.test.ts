@@ -10,14 +10,18 @@ describe('TMDB sync script contract', () => {
   it('full sync fetches credits and persists director/cast', () => {
     const source = load('scripts/sync-tmdb-catalog.ts');
     expect(source).toContain("append_to_response', 'keywords,credits'");
-    expect(source).toContain('director: parseDirector');
-    expect(source).toContain('castTop: parseCastTop');
+    expect(source).toContain('incomingDirector: parseDirector');
+    expect(source).toContain('incomingCastTop: parseCastTop');
+    expect(source).toContain('director: mergedCredits.director');
+    expect(source).toContain('castTop: mergedCredits.castTop');
   });
 
   it('incremental sync fetches credits and persists director/cast', () => {
     const source = load('scripts/sync-tmdb-catalog-update.ts');
     expect(source).toContain('append_to_response=keywords,credits');
-    expect(source).toContain('director: parseDirector');
-    expect(source).toContain('castTop: parseCastTop');
+    expect(source).toContain('incomingDirector: parseDirector');
+    expect(source).toContain('incomingCastTop: parseCastTop');
+    expect(source).toContain('director: mergedCredits.director');
+    expect(source).toContain('castTop: mergedCredits.castTop');
   });
 });

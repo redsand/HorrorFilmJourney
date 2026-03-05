@@ -4,20 +4,19 @@
   "bullets": [
     "Placed in Psychotronic Cinema (Core) as part of curated Cult Classics canon.",
     "Cult movement cues: transgressive excess; midnight audience ritual.",
-    "Cult confidence: 92 (Canonical).",
-    "Canon rank: #7.",
     "Source votes: 4 (threshold 3).",
     "Cluster context: HK Category III, Pinku."
   ],
   "badges": [
     "Psychotronic Cinema",
     "Core",
+    "Canon #7",
     "HK Category III",
     "Pinku"
   ],
   "scoreBlock": {
     "label": "Cult Confidence",
-    "value": "92 (Canonical)",
-    "detail": "Canon #7"
+    "value": "92",
+    "detail": "Canonical"
   }
 }

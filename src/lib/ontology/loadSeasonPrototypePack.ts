@@ -6,6 +6,16 @@ import { SEASON_PROTOTYPE_PACKS } from '@/ontology/prototypes/seasons';
 
 const SEASON_ID_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const PROTOTYPE_DIRECTORY = resolve(process.cwd(), 'src', 'config', 'seasons', 'prototype-packs');
+const SEASON_2_LEGACY_TAXONOMY = 'season-2-cult-v1';
+const SEASON_2_CURRENT_TAXONOMY = 'season-2-cult-v3';
+const SEASON_2_NODE_ALIASES: Record<string, string> = {
+  'birth-of-midnight': 'origins-of-cult-cinema',
+  'so-bad-its-good': 'psychotronic-cinema',
+  'cult-sci-fi-fantasy': 'cult-science-fiction',
+  'punk-counterculture': 'outsider-cinema',
+  'vhs-video-store-era': 'video-store-era',
+  'cult-comedy-absurdism': 'camp-cult-comedy',
+};
 
 function asNonEmptyString(value: unknown, fieldName: string): string {
   if (typeof value !== 'string') {
@@ -54,26 +64,42 @@ function asOptionalStringArray(value: unknown, fieldName: string): string[] | un
   return deduped;
 }
 
+function applyPrototypePackCompatibility(pack: SeasonPrototypePack): SeasonPrototypePack {
+  if (pack.seasonId !== 'season-2' || pack.taxonomyVersion !== SEASON_2_LEGACY_TAXONOMY) {
+    return pack;
+  }
+
+  return {
+    ...pack,
+    taxonomyVersion: SEASON_2_CURRENT_TAXONOMY,
+    nodes: pack.nodes.map((node) => ({
+      ...node,
+      nodeSlug: SEASON_2_NODE_ALIASES[node.nodeSlug] ?? node.nodeSlug,
+    })),
+  };
+}
+
 function validateSeasonPrototypePack(pack: SeasonPrototypePack, requestedTaxonomyVersion?: string): SeasonPrototypePack {
-  const seasonId = asNonEmptyString(pack.seasonId, 'seasonId');
+  const compatiblePack = applyPrototypePackCompatibility(pack);
+  const seasonId = asNonEmptyString(compatiblePack.seasonId, 'seasonId');
   if (!SEASON_ID_REGEX.test(seasonId)) {
     throw new Error(`Invalid prototype pack: seasonId must match ${SEASON_ID_REGEX.source}`);
   }
-  const taxonomyVersion = asNonEmptyString(pack.taxonomyVersion, 'taxonomyVersion');
+  const taxonomyVersion = asNonEmptyString(compatiblePack.taxonomyVersion, 'taxonomyVersion');
   if (requestedTaxonomyVersion && taxonomyVersion !== requestedTaxonomyVersion) {
     throw new Error(`Prototype taxonomy mismatch: expected ${requestedTaxonomyVersion}, got ${taxonomyVersion}`);
   }
 
-  if (!Array.isArray(pack.nodes) || pack.nodes.length === 0) {
+  if (!Array.isArray(compatiblePack.nodes) || compatiblePack.nodes.length === 0) {
     throw new Error('Invalid prototype pack: nodes must be a non-empty array');
   }
 
-  const ontology = loadSeasonOntology(pack.seasonId);
+  const ontology = loadSeasonOntology(compatiblePack.seasonId);
   const ontologyNodeSlugs = new Set(ontology.nodes.map((node) => node.slug));
   const seenNodeSlugs = new Set<string>();
   let vectorDim: number | null = null;
 
-  for (const [nodeIndex, node] of pack.nodes.entries()) {
+  for (const [nodeIndex, node] of compatiblePack.nodes.entries()) {
     const nodeSlug = asNonEmptyString(node.nodeSlug, `nodes[${nodeIndex}].nodeSlug`);
     if (!ontologyNodeSlugs.has(nodeSlug)) {
       throw new Error(`Invalid prototype pack: node "${nodeSlug}" does not exist in ontology`);
@@ -101,7 +127,7 @@ function validateSeasonPrototypePack(pack: SeasonPrototypePack, requestedTaxonom
     asOptionalStringArray(node.negativeTitles, `nodes[${nodeIndex}].negativeTitles`);
   }
 
-  return pack;
+  return compatiblePack;
 }
 
 export function loadSeasonPrototypePack(seasonId: string, taxonomyVersion?: string): SeasonPrototypePack {

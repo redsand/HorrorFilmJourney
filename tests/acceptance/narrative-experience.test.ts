@@ -18,6 +18,7 @@ const { POST: POST_USERS } = await import('@/app/api/users/route');
 const { POST: POST_AUTH_LOGIN } = await import('@/app/api/auth/login/route');
 const { POST: POST_AUTH_SIGNUP } = await import('@/app/api/auth/signup/route');
 const { POST: POST_ONBOARDING } = await import('@/app/api/onboarding/route');
+const { POST: POST_SELECT_PACK } = await import('@/app/api/profile/select-pack/route');
 const { GET: GET_EXPERIENCE } = await import('@/app/api/experience/route');
 const { POST: POST_RECOMMENDATIONS_NEXT } = await import('@/app/api/recommendations/next/route');
 const { POST: POST_INTERACTIONS } = await import('@/app/api/interactions/route');
@@ -149,8 +150,33 @@ describe('narrative experience acceptance', () => {
     );
     expect(experienceBeforeOnboarding.status).toBe(200);
     const beforeOnboardingBody = await experienceBeforeOnboarding.json();
-    expect(beforeOnboardingBody.data.state).toBe('ONBOARDING_NEEDED');
-    expect(Array.isArray(beforeOnboardingBody.data.onboardingQuestions)).toBe(true);
+    expect(beforeOnboardingBody.data.state).toBe('PACK_SELECTION_NEEDED');
+    const firstPackSlug = (beforeOnboardingBody.data.packSelection?.packs as Array<{ slug: string }> | undefined)?.[0]?.slug;
+    expect(firstPackSlug).toBeTruthy();
+
+    const selectPackResponse = await POST_SELECT_PACK(
+      new Request('http://localhost/api/profile/select-pack', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          cookie: userCookie,
+        },
+        body: JSON.stringify({ packSlug: firstPackSlug }),
+      }),
+    );
+    expect(selectPackResponse.status).toBe(200);
+
+    const experienceAfterPackSelect = await GET_EXPERIENCE(
+      new Request('http://localhost/api/experience', {
+        headers: {
+          cookie: userCookie,
+        },
+      }),
+    );
+    expect(experienceAfterPackSelect.status).toBe(200);
+    const afterPackBody = await experienceAfterPackSelect.json();
+    expect(afterPackBody.data.state).toBe('ONBOARDING_NEEDED');
+    expect(Array.isArray(afterPackBody.data.onboardingQuestions)).toBe(true);
 
     const onboardingResponse = await POST_ONBOARDING(
       new Request('http://localhost/api/onboarding', {
@@ -191,8 +217,15 @@ describe('narrative experience acceptance', () => {
     const recommendationsBody = await recommendationsResponse.json();
     expect(Array.isArray(recommendationsBody.data.cards)).toBe(true);
     expect(recommendationsBody.data.cards).toHaveLength(5);
+    const batchId = recommendationsBody.data.batchId as string;
 
     const cards = recommendationsBody.data.cards as RecommendationCard[];
+    const recommendationItems = await acceptancePrisma.recommendationItem.findMany({
+      where: { batchId },
+      include: { movie: { select: { tmdbId: true } } },
+    });
+    const recommendationItemIdByTmdbId = new Map(recommendationItems.map((item) => [item.movie.tmdbId, item.id] as const));
+
     for (const card of cards) {
       expect(zMovieCardVM.safeParse(card).success).toBe(true);
       expect(typeof card.movie.posterUrl).toBe('string');
@@ -251,6 +284,7 @@ describe('narrative experience acceptance', () => {
           tmdbId: cards[0]!.movie.tmdbId,
           status: 'ALREADY_SEEN',
           rating: 4,
+          recommendationItemId: recommendationItemIdByTmdbId.get(cards[0]!.movie.tmdbId),
           intensity: 3,
           emotions: ['tense'],
           workedBest: ['pacing'],
@@ -271,6 +305,7 @@ describe('narrative experience acceptance', () => {
           tmdbId: cards[1]!.movie.tmdbId,
           status: 'WATCHED',
           rating: 5,
+          recommendationItemId: recommendationItemIdByTmdbId.get(cards[1]!.movie.tmdbId),
           intensity: 4,
           emotions: ['dread'],
           workedBest: ['sound design'],

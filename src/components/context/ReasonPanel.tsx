@@ -28,29 +28,58 @@ function parseCurriculumFit(value: string): { ontologyPct: number; journeyPct: n
   };
 }
 
+function parseCultConfidence(value: string): number | null {
+  const numeric = Number.parseFloat(value);
+  if (!Number.isFinite(numeric)) {
+    return null;
+  }
+  return normalizeToPercent(numeric);
+}
+
 function CurriculumFitIconRow({ ontologyPct, journeyPct }: { ontologyPct: number; journeyPct: number }) {
   return (
-    <div className="mt-2 grid grid-cols-2 gap-2">
-      <div className="rounded-md border border-[var(--border)] bg-[rgba(18,18,22,0.72)] px-2 py-2">
-        <div className="flex items-center gap-1.5">
-          <svg aria-hidden="true" className="h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24">
-            <path d="M12 3 4 7v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-          </svg>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-muted)]">Ontology</p>
-        </div>
-        <p className="mt-1 text-sm font-medium">{ontologyPct}%</p>
-      </div>
-      <div className="rounded-md border border-[var(--border)] bg-[rgba(18,18,22,0.72)] px-2 py-2">
-        <div className="flex items-center gap-1.5">
-          <svg aria-hidden="true" className="h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24">
-            <path d="M12 3 19 7l-7 4-7-4 7-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-            <path d="M5 11l7 4 7-4M5 15l7 4 7-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-          </svg>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-muted)]">Journey</p>
-        </div>
-        <p className="mt-1 text-sm font-medium">{journeyPct}%</p>
-      </div>
+    <div className="flex items-center gap-3">
+      <button
+        aria-label={`Ontology fit ${ontologyPct} percent`}
+        className="inline-flex items-center gap-1 text-sm font-medium text-[var(--text)]"
+        title="Ontology fit"
+        type="button"
+      >
+        <svg aria-hidden="true" className="h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24">
+          <path d="M12 3 4 7v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        </svg>
+        <span>{ontologyPct}%</span>
+      </button>
+      <button
+        aria-label={`Journey fit ${journeyPct} percent`}
+        className="inline-flex items-center gap-1 text-sm font-medium text-[var(--text)]"
+        title="Journey fit"
+        type="button"
+      >
+        <svg aria-hidden="true" className="h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24">
+          <path d="M12 3 19 7l-7 4-7-4 7-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+          <path d="M5 11l7 4 7-4M5 15l7 4 7-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        </svg>
+        <span>{journeyPct}%</span>
+      </button>
     </div>
+  );
+}
+
+function CultConfidenceIconRow({ confidencePct }: { confidencePct: number }) {
+  return (
+    <button
+      aria-label={`Cult confidence ${confidencePct} percent`}
+      className="inline-flex items-center gap-1 text-sm font-medium text-[var(--text)]"
+      title="Cult confidence"
+      type="button"
+    >
+      <svg aria-hidden="true" className="h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24">
+        <path d="M12 3 4 7v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        <path d="M9.5 12.5 11 14l3.5-3.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+      </svg>
+      <span>{confidencePct}%</span>
+    </button>
   );
 }
 
@@ -68,6 +97,9 @@ export function ReasonPanel({
   const curriculumFit = scoreBlock?.label === 'Curriculum Fit' && scoreBlock?.value
     ? parseCurriculumFit(scoreBlock.value)
     : null;
+  const cultConfidence = scoreBlock?.label === 'Cult Confidence' && scoreBlock?.value
+    ? parseCultConfidence(scoreBlock.value)
+    : null;
   const content = (
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -80,17 +112,25 @@ export function ReasonPanel({
         </div>
       ) : null}
       {scoreBlock ? (
-        <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
-          <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{scoreBlock.label}</p>
-          {curriculumFit ? (
+        curriculumFit ? (
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{scoreBlock.label}</p>
             <CurriculumFitIconRow ontologyPct={curriculumFit.ontologyPct} journeyPct={curriculumFit.journeyPct} />
-          ) : (
+          </div>
+        ) : cultConfidence !== null ? (
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{scoreBlock.label}</p>
+            <CultConfidenceIconRow confidencePct={cultConfidence} />
+          </div>
+        ) : (
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2">
+            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{scoreBlock.label}</p>
             <p className="text-sm">{scoreBlock.value}</p>
-          )}
-          {scoreBlock.detail && !curriculumFit ? (
-            <p className="text-xs text-[var(--text-muted)]">{scoreBlock.detail}</p>
-          ) : null}
-        </div>
+            {scoreBlock.detail ? (
+              <p className="text-xs text-[var(--text-muted)]">{scoreBlock.detail}</p>
+            ) : null}
+          </div>
+        )
       ) : null}
       <ul className="list-disc space-y-1.5 pl-5 text-sm">
         {bullets.map((line) => <li key={line}>{line}</li>)}

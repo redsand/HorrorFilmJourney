@@ -1,6 +1,6 @@
 {
   "data": {
-    "batchId": "cmmas5b70001vcdefsjqerj17",
+    "batchId": "cmmcvfqd20020clmwjtwz8ya6",
     "cards": [
       {
         "movie": {
@@ -48,7 +48,7 @@
         },
         "codex": {
           "whyImportant": "Acceptance Movie 802 broadens your journey with a horror/supernatural angle and a clear stylistic signature.",
-          "whatItTeaches": "How to read pacing, visual language, and tone decisions in horror/supernatural horror.",
+          "whatItTeaches": "How Acceptance Movie 802 builds dread through horror/supernatural pacing, and why that 1990s rhythm still works.",
           "watchFor": [
             "How Acceptance Movie 802 stages horror/supernatural tension scene-by-scene",
             "A craft choice that aligns with its 1990s horror style",
@@ -64,7 +64,11 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/802",
             "snippet": "Seed evidence snippet 2",
-            "retrievedAt": "2026-01-01T00:00:00.000Z"
+            "retrievedAt": "2026-01-01T00:00:00.000Z",
+            "provenance": {
+              "retrievalMode": "cache",
+              "sourceType": "packet"
+            }
           }
         ]
       },
@@ -118,7 +122,7 @@
         },
         "codex": {
           "whyImportant": "Acceptance Movie 803 broadens your journey with a horror/psychological angle and a clear stylistic signature.",
-          "whatItTeaches": "How to read pacing, visual language, and tone decisions in horror/psychological horror.",
+          "whatItTeaches": "How Acceptance Movie 803 uses framing, tone, and escalation to define its horror/psychological identity for this journey node.",
           "watchFor": [
             "How Acceptance Movie 803 stages horror/psychological tension scene-by-scene",
             "A craft choice that aligns with its 1990s horror style",
@@ -134,7 +138,11 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/803",
             "snippet": "Seed evidence snippet 3",
-            "retrievedAt": "2026-01-01T00:00:00.000Z"
+            "retrievedAt": "2026-01-01T00:00:00.000Z",
+            "provenance": {
+              "retrievalMode": "cache",
+              "sourceType": "packet"
+            }
           }
         ]
       },
@@ -178,7 +186,7 @@
         },
         "codex": {
           "whyImportant": "Acceptance Movie 804 broadens your journey with a horror/supernatural angle and a clear stylistic signature.",
-          "whatItTeaches": "How to read pacing, visual language, and tone decisions in horror/supernatural horror.",
+          "whatItTeaches": "How to decode Acceptance Movie 804's craft signals: tension setup, payoff timing, and audience response cues from ROTTEN TOMATOES 73%.",
           "watchFor": [
             "How Acceptance Movie 804 stages horror/supernatural tension scene-by-scene",
             "A craft choice that aligns with its 1990s horror style",
@@ -194,7 +202,11 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/804",
             "snippet": "Seed evidence snippet 4",
-            "retrievedAt": "2026-01-01T00:00:00.000Z"
+            "retrievedAt": "2026-01-01T00:00:00.000Z",
+            "provenance": {
+              "retrievalMode": "cache",
+              "sourceType": "packet"
+            }
           }
         ]
       },
@@ -244,7 +256,7 @@
         },
         "codex": {
           "whyImportant": "Acceptance Movie 805 broadens your journey with a horror/psychological angle and a clear stylistic signature.",
-          "whatItTeaches": "How to read pacing, visual language, and tone decisions in horror/psychological horror.",
+          "whatItTeaches": "How Acceptance Movie 805 builds dread through horror/psychological pacing, and why that 1990s rhythm still works.",
           "watchFor": [
             "How Acceptance Movie 805 stages horror/psychological tension scene-by-scene",
             "A craft choice that aligns with its 1990s horror style",
@@ -260,7 +272,11 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/805",
             "snippet": "Seed evidence snippet 5",
-            "retrievedAt": "2026-01-01T00:00:00.000Z"
+            "retrievedAt": "2026-01-01T00:00:00.000Z",
+            "provenance": {
+              "retrievalMode": "cache",
+              "sourceType": "packet"
+            }
           }
         ]
       },
@@ -310,7 +326,7 @@
         },
         "codex": {
           "whyImportant": "Acceptance Movie 806 broadens your journey with a horror/supernatural angle and a clear stylistic signature.",
-          "whatItTeaches": "How to read pacing, visual language, and tone decisions in horror/supernatural horror.",
+          "whatItTeaches": "How Acceptance Movie 806 uses framing, tone, and escalation to define its horror/supernatural identity for this journey node.",
           "watchFor": [
             "How Acceptance Movie 806 stages horror/supernatural tension scene-by-scene",
             "A craft choice that aligns with its 1990s horror style",
@@ -326,7 +342,11 @@
             "sourceName": "SeedSource",
             "url": "https://example.com/movies/806",
             "snippet": "Seed evidence snippet 6",
-            "retrievedAt": "2026-01-01T00:00:00.000Z"
+            "retrievedAt": "2026-01-01T00:00:00.000Z",
+            "provenance": {
+              "retrievalMode": "cache",
+              "sourceType": "packet"
+            }
           }
         ]
       }
@@ -334,23 +354,23 @@
     "interactionContext": [
       {
         "tmdbId": 802,
-        "recommendationItemId": "cmmas5b70001xcdefcadb2pgr"
+        "recommendationItemId": "cmmcvfqd30022clmwy1bv1b74"
       },
       {
         "tmdbId": 803,
-        "recommendationItemId": "cmmas5b70001ycdef2k377p44"
+        "recommendationItemId": "cmmcvfqd30023clmwfenkkwm8"
       },
       {
         "tmdbId": 804,
-        "recommendationItemId": "cmmas5b70001zcdefl3ln15ux"
+        "recommendationItemId": "cmmcvfqd30024clmwl9eg1kar"
       },
       {
         "tmdbId": 805,
-        "recommendationItemId": "cmmas5b710020cdef7pnjehbm"
+        "recommendationItemId": "cmmcvfqd30025clmwhtu4eimg"
       },
       {
         "tmdbId": 806,
-        "recommendationItemId": "cmmas5b710021cdeftybsz2jx"
+        "recommendationItemId": "cmmcvfqd30026clmwucmf1t0f"
       }
     ]
   },

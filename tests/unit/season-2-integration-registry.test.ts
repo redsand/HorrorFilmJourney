@@ -10,8 +10,9 @@ describe('season-2 integration registry', () => {
     const prototypePack = loadSeasonPrototypePack('season-2', ontology.taxonomyVersion);
 
     expect(ontology.seasonId).toBe('season-2');
-    expect(ontology.nodes).toHaveLength(8);
+    expect(ontology.nodes).toHaveLength(11);
     expect(prototypePack.seasonId).toBe('season-2');
+    expect(prototypePack.taxonomyVersion).toBe(ontology.taxonomyVersion);
     expect(prototypePack.nodes).toHaveLength(8);
   });
 
@@ -23,4 +24,3 @@ describe('season-2 integration registry', () => {
     expect(journeyConfig.gates?.journeyMinCore).toBeLessThanOrEqual(0.6);
   });
 });
-

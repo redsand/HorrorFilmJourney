@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import type { NodeAssignmentTier, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { loadSeasonJourneyWorthinessConfig } from '@/config/seasons/journey-worthiness';
+import { resolveWatchReasonForFilm } from '@/lib/journey/watch-reason';
 
 export type FilmContextSignal = {
   label: string;
@@ -345,11 +346,16 @@ function buildWhyParagraph(input: {
   journeyThreshold: number;
   prototypeSignal: { score?: number; topMatch?: string };
   season2Signals?: { confidenceScore?: number; sourceVotes?: number };
+  watchReason?: string | null;
+  structuralOnly?: boolean;
 }): string {
   const parts: string[] = [];
   parts.push(
     `Placed in ${input.nodeName} (${input.tierLabel}) for ${input.seasonSlug}/${input.packSlug}.`,
   );
+  if (input.watchReason && input.watchReason.trim().length > 0) {
+    parts.push(`Film lens: ${input.watchReason.trim()}`);
+  }
   if (input.nodeWhatToNotice.length > 0) {
     parts.push(`What to notice: ${input.nodeWhatToNotice.join('; ')}.`);
   }
@@ -362,6 +368,9 @@ function buildWhyParagraph(input: {
     parts.push('Selected through reproducible scoring signals and model-assisted assignment.');
   } else if (input.assignmentSource === 'override') {
     parts.push('Kept via governance override in the published snapshot.');
+  }
+  if (input.structuralOnly) {
+    return parts.join(' ');
   }
   if (input.prototypeSignal.score !== undefined) {
     parts.push(
@@ -529,6 +538,13 @@ export async function buildFilmContextExplanation(input: BuildFilmContextInput):
     journeyThreshold,
     prototypeSignal,
     season2Signals,
+    watchReason: await resolveWatchReasonForFilm({
+      seasonSlug: pack.season.slug,
+      packSlug: pack.slug,
+      nodeSlug: assignment.node.slug,
+      tmdbId: input.tmdbId,
+    }),
+    structuralOnly: pack.season.slug === 'season-1' || pack.season.slug === 'season-2',
   });
 
   const debug = process.env.NODE_ENV !== 'production'
