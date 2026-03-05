@@ -914,27 +914,43 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
     }
     const movies = await this.prisma.movie.findMany({
       where: { tmdbId: { in: tmdbIds } },
-      orderBy: { tmdbId: 'asc' },
-      select: { id: true },
+      select: { id: true, tmdbId: true },
     });
-    return movies.map((movie) => movie.id);
+    const movieByTmdb = new Map(movies.map((movie) => [movie.tmdbId, movie.id]));
+    const orderedIds: string[] = [];
+    const seen = new Set<string>();
+    for (const tmdbId of tmdbIds) {
+      const movieId = movieByTmdb.get(tmdbId);
+      if (movieId && !seen.has(movieId)) {
+        orderedIds.push(movieId);
+        seen.add(movieId);
+      }
+    }
+    return orderedIds;
   }
 
-  private async resolvePackCandidateMovieIds(constraints: CandidateConstraints, publishedReleaseId: string | null): Promise<string[]> {
+  private async resolvePackCandidateMovieIds(
+    constraints: CandidateConstraints,
+    publishedReleaseId: string | null,
+  ): Promise<{ ids: string[]; source: 'release' | 'node' | 'fallback' | 'none' }> {
     if (!constraints.packId) {
-      return [];
+      return { ids: [], source: 'none' };
     }
     if (publishedReleaseId) {
       const releaseIds = await this.loadReleaseCandidateMovieIds(publishedReleaseId);
       if (releaseIds.length > 0) {
-        return releaseIds;
+        return { ids: releaseIds, source: 'release' };
       }
     }
     const nodeIds = await this.loadNodeAssignmentMovieIds(constraints.packId);
     if (nodeIds.length > 0) {
-      return nodeIds;
+      return { ids: nodeIds, source: 'node' };
     }
-    return this.loadFallbackCandidateMovieIds(constraints.seasonSlug, constraints.packSlug ?? undefined);
+    const fallbackIds = await this.loadFallbackCandidateMovieIds(constraints.seasonSlug, constraints.packSlug ?? undefined);
+    return {
+      ids: fallbackIds,
+      source: fallbackIds.length > 0 ? 'fallback' : 'none',
+    };
   }
 
   async generateCandidates(userId: string, constraints: CandidateConstraints): Promise<CandidateMovieId[]> {
@@ -978,9 +994,10 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         seasonSlug: constraints.seasonSlug!,
       })
       : null;
-    const candidateMovieIds = constraints.packId
+    const candidateResult = constraints.packId
       ? await this.resolvePackCandidateMovieIds(constraints, publishedReleaseId)
-      : [];
+      : { ids: [], source: 'none' };
+    const candidateMovieIds = candidateResult.ids;
     const selectFields = {
       id: true,
       tmdbId: true,
@@ -1087,9 +1104,12 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
           }
         }
       }
-      const fallbackIds = eligible
-        .filter((movie) => !curatedSet.has(movie.id))
-        .map((movie) => movie.id);
+      const fallbackIds =
+        candidateResult.source === 'fallback' && candidateMovieIds.length > 0
+          ? candidateMovieIds.filter((movieId) => !curatedSet.has(movieId) && eligibleSet.has(movieId))
+          : eligible
+            .filter((movie) => !curatedSet.has(movie.id))
+            .map((movie) => movie.id);
       console.info('[recommendations.engine] curriculum candidates', {
         journeyNodeSlug: constraints.journeyNodeSlug,
         curatedCount: curatedIds.length,

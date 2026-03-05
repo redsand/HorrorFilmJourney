@@ -70,7 +70,9 @@
     "setup:dev": "npx prisma migrate deploy && npm run bootstrap:admin && npm run seed:catalog && npm run seed:season1:subgenres",
     "setup:test": "node --experimental-strip-types scripts/setup-test.ts",
     "reset:test-db": "node --experimental-strip-types scripts/reset-test-db.ts",
-    "validate:rc": "node --experimental-strip-types scripts/validate-rc.ts"
+    "validate:rc": "node --experimental-strip-types scripts/validate-rc.ts",
+    "seasons:doctor": "node --experimental-strip-types scripts/seasons-doctor.ts",
+    "seasons:doctor:dry-run": "node --experimental-strip-types scripts/seasons-doctor.ts --dry-run"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

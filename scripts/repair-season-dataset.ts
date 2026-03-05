@@ -1,8 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { Prisma, PrismaClient, type NodeAssignmentTier } from '@prisma/client';
-import { classifyMissingReason, computeSnapshotDivergence, type DivergenceItem, type DivergenceSummary } from '../src/lib/audit/snapshot-db-divergence.ts';
+import { computeSnapshotDivergence, type DivergenceItem, type DivergenceSummary } from '../src/lib/audit/snapshot-db-divergence.ts';
 import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
+import { getDeterministicCatalogBackfill } from '../src/lib/catalog/deterministic-tmdb-backfill.ts';
 
 type SeasonConfig = {
   seasonSlug: 'season-1' | 'season-2';
@@ -56,10 +57,31 @@ const SEASON1_SNAPSHOT_PATH = path.resolve('backups', 'season1-horror-snapshot-2
 const SEASON2_SNAPSHOT_PATH = path.resolve('docs', 'season', 'season-2-cult-classics-mastered.json');
 const REPORT_PATH = path.resolve('docs', 'engineering', 'snapshot-db-repair-report.json');
 
+type RepairOptions = {
+  dryRun: boolean;
+  reportPath: string;
+  thresholdPercent: number;
+  enforceThreshold: boolean;
+};
+
 const CONFIGS: SeasonConfig[] = [
   { seasonSlug: 'season-1', packSlug: 'horror', defaultTaxonomyVersion: 'season-1-horror-v3.5' },
   { seasonSlug: 'season-2', packSlug: 'cult-classics', defaultTaxonomyVersion: 'season-2-cult-v3' },
 ];
+
+function parseCliOptions(): RepairOptions {
+  const args = process.argv.slice(2);
+  const reportIndex = args.findIndex((arg) => arg === '--report-path');
+  const thresholdIndex = args.findIndex((arg) => arg === '--threshold-pct');
+  const rawThreshold = thresholdIndex >= 0 ? Number(args[thresholdIndex + 1]) : NaN;
+
+  return {
+    dryRun: args.includes('--dry-run'),
+    reportPath: reportIndex >= 0 && args[reportIndex + 1] ? path.resolve(args[reportIndex + 1]!) : REPORT_PATH,
+    thresholdPercent: Number.isFinite(rawThreshold) && rawThreshold >= 0 ? rawThreshold : 2,
+    enforceThreshold: !args.includes('--no-threshold-enforce'),
+  };
+}
 
 function keyForAssignment(entry: { nodeSlug: string; tmdbId: number }): string {
   return `${entry.nodeSlug}:${entry.tmdbId}`;
@@ -186,7 +208,7 @@ function sortEntries(entries: AuthorityAssignment[]): AuthorityAssignment[] {
     .sort((a, b) => a.nodeSlug.localeCompare(b.nodeSlug) || a.rank - b.rank || a.tmdbId - b.tmdbId);
 }
 
-async function repairSeason(prisma: PrismaClient, config: SeasonConfig): Promise<SeasonRepairResult> {
+async function repairSeason(prisma: PrismaClient, config: SeasonConfig, options: RepairOptions): Promise<SeasonRepairResult> {
   const pack = await prisma.genrePack.findUnique({
     where: { slug: config.packSlug },
     select: { id: true, slug: true, season: { select: { id: true, slug: true } } },
@@ -208,6 +230,64 @@ async function repairSeason(prisma: PrismaClient, config: SeasonConfig): Promise
   });
 
   const buckets = buildBuckets(pre.items, authorityByKey);
+
+  if (!options.dryRun) {
+    await prisma.$transaction(async (tx) => {
+      for (const entry of buckets.unresolvedTmdb) {
+        const seed = getDeterministicCatalogBackfill(entry.tmdbId);
+        if (!seed) continue;
+        const movie = await tx.movie.upsert({
+          where: { tmdbId: seed.tmdbId },
+          create: {
+            tmdbId: seed.tmdbId,
+            title: seed.title,
+            year: seed.year,
+            posterUrl: seed.posterUrl,
+            synopsis: seed.synopsis,
+            genres: seed.genres,
+            keywords: seed.keywords,
+            country: seed.country,
+            director: seed.director,
+            castTop: seed.castTop,
+          },
+          update: {
+            title: seed.title,
+            year: seed.year,
+            posterUrl: seed.posterUrl,
+            synopsis: seed.synopsis,
+            genres: seed.genres,
+            keywords: seed.keywords,
+            country: seed.country,
+            director: seed.director,
+            castTop: seed.castTop,
+          },
+          select: { id: true },
+        });
+        for (const rating of seed.ratings) {
+          await tx.movieRating.upsert({
+            where: {
+              movieId_source: {
+                movieId: movie.id,
+                source: rating.source,
+              },
+            },
+            create: {
+              movieId: movie.id,
+              source: rating.source,
+              value: rating.value,
+              scale: rating.scale,
+              rawValue: rating.rawValue ?? null,
+            },
+            update: {
+              value: rating.value,
+              scale: rating.scale,
+              rawValue: rating.rawValue ?? null,
+            },
+          });
+        }
+      }
+    });
+  }
   const tmdbIds = [...new Set(authorityAssignments.map((entry) => entry.tmdbId))];
   const [movies, nodes] = await Promise.all([
     prisma.movie.findMany({
@@ -226,114 +306,141 @@ async function repairSeason(prisma: PrismaClient, config: SeasonConfig): Promise
   let insertedNodeMovies = 0;
   let correctedNodeDrift = 0;
   let correctedTierDrift = 0;
+  let releaseId = 'dry-run';
+  let releaseItems = 0;
 
-  await prisma.$transaction(async (tx) => {
-    for (const entry of buckets.importerSchema) {
-      const movieId = movieIdByTmdb.get(entry.tmdbId);
-      const nodeId = nodeIdBySlug.get(entry.nodeSlug);
-      if (!movieId || !nodeId) continue;
-      await tx.nodeMovie.upsert({
-        where: { nodeId_movieId: { nodeId, movieId } },
-        create: {
-          nodeId,
-          movieId,
-          tier: entry.tier,
-          rank: entry.rank,
-          coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
-          source: 'snapshot-db-repair',
-          score: 1,
-          finalScore: 1,
-          journeyScore: 1,
-          runId: `snapshot-db-repair:${config.seasonSlug}`,
-          taxonomyVersion,
-          evidence: Prisma.JsonNull,
-        },
-        update: {
-          tier: entry.tier,
-          rank: entry.rank,
-          coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
-          source: 'snapshot-db-repair',
-          taxonomyVersion,
-        },
-      });
-      insertedNodeMovies += 1;
-    }
+  if (!options.dryRun) {
+    await prisma.$transaction(async (tx) => {
+      for (const entry of [...buckets.importerSchema, ...buckets.unresolvedTmdb]) {
+        const movieId = movieIdByTmdb.get(entry.tmdbId);
+        const nodeId = nodeIdBySlug.get(entry.nodeSlug);
+        if (!movieId || !nodeId) continue;
+        await tx.nodeMovie.upsert({
+          where: { nodeId_movieId: { nodeId, movieId } },
+          create: {
+            nodeId,
+            movieId,
+            tier: entry.tier,
+            rank: entry.rank,
+            coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
+            source: 'snapshot-db-repair',
+            score: 1,
+            finalScore: 1,
+            journeyScore: 1,
+            runId: `snapshot-db-repair:${config.seasonSlug}`,
+            taxonomyVersion,
+            evidence: Prisma.JsonNull,
+          },
+          update: {
+            tier: entry.tier,
+            rank: entry.rank,
+            coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
+            source: 'snapshot-db-repair',
+            taxonomyVersion,
+          },
+        });
+        insertedNodeMovies += 1;
+      }
 
-    for (const item of pre.items) {
-      if (item.category !== 'node-drift') continue;
-      const entry = authorityByKey.get(keyForAssignment(item));
-      if (!entry) continue;
-      const movieId = movieIdByTmdb.get(entry.tmdbId);
-      const nodeId = nodeIdBySlug.get(entry.nodeSlug);
-      if (!movieId || !nodeId) continue;
-      await tx.nodeMovie.upsert({
-        where: { nodeId_movieId: { nodeId, movieId } },
-        create: {
-          nodeId,
-          movieId,
-          tier: entry.tier,
-          rank: entry.rank,
-          coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
-          source: 'snapshot-db-repair',
-          score: 1,
-          finalScore: 1,
-          journeyScore: 1,
-          runId: `snapshot-db-repair:${config.seasonSlug}`,
-          taxonomyVersion,
-          evidence: Prisma.JsonNull,
-        },
-        update: {
-          tier: entry.tier,
-          rank: entry.rank,
-          coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
-          source: 'snapshot-db-repair',
-          taxonomyVersion,
-        },
-      });
-      correctedNodeDrift += 1;
-    }
+      for (const item of pre.items) {
+        if (item.category !== 'node-drift') continue;
+        const entry = authorityByKey.get(keyForAssignment(item));
+        if (!entry) continue;
+        const movieId = movieIdByTmdb.get(entry.tmdbId);
+        const nodeId = nodeIdBySlug.get(entry.nodeSlug);
+        if (!movieId || !nodeId) continue;
+        await tx.nodeMovie.upsert({
+          where: { nodeId_movieId: { nodeId, movieId } },
+          create: {
+            nodeId,
+            movieId,
+            tier: entry.tier,
+            rank: entry.rank,
+            coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
+            source: 'snapshot-db-repair',
+            score: 1,
+            finalScore: 1,
+            journeyScore: 1,
+            runId: `snapshot-db-repair:${config.seasonSlug}`,
+            taxonomyVersion,
+            evidence: Prisma.JsonNull,
+          },
+          update: {
+            tier: entry.tier,
+            rank: entry.rank,
+            coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
+            source: 'snapshot-db-repair',
+            taxonomyVersion,
+          },
+        });
+        correctedNodeDrift += 1;
+      }
 
-    for (const item of pre.items) {
-      if (item.category !== 'tier-drift') continue;
-      const entry = authorityByKey.get(keyForAssignment(item));
-      if (!entry) continue;
-      const movieId = movieIdByTmdb.get(entry.tmdbId);
-      const nodeId = nodeIdBySlug.get(entry.nodeSlug);
-      if (!movieId || !nodeId) continue;
-      const updated = await tx.nodeMovie.updateMany({
-        where: { nodeId, movieId, taxonomyVersion },
-        data: {
-          tier: entry.tier,
-          rank: entry.rank,
-          coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
-          source: 'snapshot-db-repair',
-        },
-      });
-      correctedTierDrift += updated.count;
-    }
-  });
+      for (const item of pre.items) {
+        if (item.category !== 'tier-drift') continue;
+        const entry = authorityByKey.get(keyForAssignment(item));
+        if (!entry) continue;
+        const movieId = movieIdByTmdb.get(entry.tmdbId);
+        const nodeId = nodeIdBySlug.get(entry.nodeSlug);
+        if (!movieId || !nodeId) continue;
+        const updated = await tx.nodeMovie.updateMany({
+          where: { nodeId, movieId, taxonomyVersion },
+          data: {
+            tier: entry.tier,
+            rank: entry.rank,
+            coreRank: entry.tier === 'CORE' ? entry.coreRank : null,
+            source: 'snapshot-db-repair',
+          },
+        });
+        correctedTierDrift += updated.count;
+      }
+    });
 
-  const releaseRunId = `snapshot-db-repair-${config.seasonSlug}-${new Date().toISOString()}`;
-  const release = await createSeasonNodeReleaseFromNodeMovie(prisma, {
-    seasonId: pack.season.id,
-    packId: pack.id,
-    taxonomyVersion,
-    runId: releaseRunId,
-    publish: true,
-    metadata: {
-      source: 'snapshot-db-repair',
-      generatedAt: new Date().toISOString(),
+    const releaseRunId = `snapshot-db-repair-${config.seasonSlug}-${new Date().toISOString()}`;
+    const release = await createSeasonNodeReleaseFromNodeMovie(prisma, {
+      seasonId: pack.season.id,
+      packId: pack.id,
+      taxonomyVersion,
+      runId: releaseRunId,
+      publish: true,
+      metadata: {
+        source: 'snapshot-db-repair',
+        generatedAt: new Date().toISOString(),
+        seasonSlug: config.seasonSlug,
+        packSlug: config.packSlug,
+      },
+    });
+    releaseId = release.releaseId;
+    releaseItems = release.itemCount;
+  } else {
+    const canResolveMovie = (tmdbId: number): boolean => movieIdByTmdb.has(tmdbId) || getDeterministicCatalogBackfill(tmdbId) !== null;
+    insertedNodeMovies = [...buckets.importerSchema, ...buckets.unresolvedTmdb]
+      .filter((entry) => nodeIdBySlug.has(entry.nodeSlug) && canResolveMovie(entry.tmdbId))
+      .length;
+    correctedNodeDrift = pre.items
+      .filter((item) => item.category === 'node-drift')
+      .filter((item) => {
+        const entry = authorityByKey.get(keyForAssignment(item));
+        return Boolean(entry && nodeIdBySlug.has(entry.nodeSlug) && canResolveMovie(entry.tmdbId));
+      })
+      .length;
+    correctedTierDrift = pre.items
+      .filter((item) => item.category === 'tier-drift')
+      .filter((item) => {
+        const entry = authorityByKey.get(keyForAssignment(item));
+        return Boolean(entry && nodeIdBySlug.has(entry.nodeSlug) && canResolveMovie(entry.tmdbId));
+      })
+      .length;
+  }
+
+  const post = options.dryRun
+    ? pre
+    : await computeSnapshotDivergence(prisma, {
       seasonSlug: config.seasonSlug,
       packSlug: config.packSlug,
-    },
-  });
-
-  const post = await computeSnapshotDivergence(prisma, {
-    seasonSlug: config.seasonSlug,
-    packSlug: config.packSlug,
-    taxonomyVersion,
-    releaseId: release.releaseId,
-  });
+      taxonomyVersion,
+      releaseId,
+    });
 
   const toTitles = (entries: AuthorityAssignment[]) => sortEntries(entries).map((entry) => ({
     title: entry.title ?? `tmdb:${entry.tmdbId}`,
@@ -353,8 +460,8 @@ async function repairSeason(prisma: PrismaClient, config: SeasonConfig): Promise
       insertedNodeMovies,
       correctedNodeDrift,
       correctedTierDrift,
-      releaseItems: release.itemCount,
-      releaseId: release.releaseId,
+      releaseItems,
+      releaseId,
     },
     buckets: {
       unresolvedTmdb: toTitles(buckets.unresolvedTmdb),
@@ -376,11 +483,12 @@ function summariseReasons(entries: AuthorityAssignment[]): Record<string, number
 }
 
 async function main(): Promise<void> {
+  const options = parseCliOptions();
   const prisma = new PrismaClient();
   try {
     const results: SeasonRepairResult[] = [];
     for (const config of CONFIGS) {
-      const result = await repairSeason(prisma, config);
+      const result = await repairSeason(prisma, config, options);
       results.push(result);
     }
 
@@ -466,20 +574,20 @@ async function main(): Promise<void> {
       })),
     };
 
-    await fs.mkdir(path.dirname(REPORT_PATH), { recursive: true });
-    await fs.writeFile(REPORT_PATH, JSON.stringify(report, null, 2), 'utf8');
-    console.log(`[repair-season-dataset] wrote report ${REPORT_PATH}`);
+    await fs.mkdir(path.dirname(options.reportPath), { recursive: true });
+    await fs.writeFile(options.reportPath, JSON.stringify(report, null, 2), 'utf8');
+    console.log(`[repair-season-dataset] wrote report ${options.reportPath}`);
 
     for (const result of results) {
       console.log(
-        `[repair-season-dataset] ${result.seasonSlug}/${result.packSlug} preLoss=${result.pre.lossRatePercent}% postLoss=${result.post.lossRatePercent}% inserted=${result.applied.insertedNodeMovies} nodeFixes=${result.applied.correctedNodeDrift} tierFixes=${result.applied.correctedTierDrift} releaseItems=${result.applied.releaseItems}`,
+        `[repair-season-dataset] ${result.seasonSlug}/${result.packSlug} preLoss=${result.pre.lossRatePercent}% postLoss=${result.post.lossRatePercent}% inserted=${result.applied.insertedNodeMovies} nodeFixes=${result.applied.correctedNodeDrift} tierFixes=${result.applied.correctedTierDrift} releaseItems=${result.applied.releaseItems} dryRun=${options.dryRun}`,
       );
     }
 
-    const failed = results.filter((result) => result.post.lossRatePercent >= 2);
-    if (failed.length > 0) {
+    const failed = results.filter((result) => result.post.lossRatePercent >= options.thresholdPercent);
+    if (options.enforceThreshold && !options.dryRun && failed.length > 0) {
       const detail = failed.map((item) => `${item.seasonSlug}:${item.post.lossRatePercent}%`).join(', ');
-      throw new Error(`Loss rate is still >= 2% after repair (${detail})`);
+      throw new Error(`Loss rate is still >= ${options.thresholdPercent}% after repair (${detail})`);
     }
   } finally {
     await prisma.$disconnect();

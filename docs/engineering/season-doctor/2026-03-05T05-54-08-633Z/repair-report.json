@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-05T05:49:02.267Z",
+  "generatedAt": "2026-03-05T05:54:09.738Z",
   "results": [
     {
       "seasonSlug": "season-1",
@@ -23,8 +23,8 @@
         "insertedNodeMovies": 0,
         "correctedNodeDrift": 0,
         "correctedTierDrift": 0,
-        "releaseItems": 500,
-        "releaseId": "cmmd1pad10004x05m3hutwd6x"
+        "releaseItems": 0,
+        "releaseId": "dry-run"
       },
       "buckets": {
         "unresolvedTmdb": [],
@@ -46,8 +46,8 @@
       "packSlug": "cult-classics",
       "taxonomyVersion": "season-2-cult-v3",
       "pre": {
-        "lossRatePercent": 0.18,
-        "missingInDbCount": 1,
+        "lossRatePercent": 0,
+        "missingInDbCount": 0,
         "missingInReleaseCount": 0,
         "tierDriftCount": 0,
         "nodeDriftCount": 0
@@ -60,31 +60,21 @@
         "nodeDriftCount": 0
       },
       "applied": {
-        "insertedNodeMovies": 1,
+        "insertedNodeMovies": 0,
         "correctedNodeDrift": 0,
         "correctedTierDrift": 0,
-        "releaseItems": 170,
-        "releaseId": "cmmd1pb1s00ecx05mksul6zsu"
+        "releaseItems": 0,
+        "releaseId": "dry-run"
       },
       "buckets": {
-        "unresolvedTmdb": [
-          {
-            "title": "Naked Blood",
-            "year": 1996,
-            "nodeSlug": "grindhouse-exploitation",
-            "tier": "EXTENDED",
-            "tmdbId": 778000
-          }
-        ],
+        "unresolvedTmdb": [],
         "missingPoster": [],
         "missingCredits": [],
         "missingVotes": [],
         "importerSchema": []
       },
       "bucketTierBreakdown": {
-        "unresolvedTmdb": {
-          "EXTENDED": 1
-        },
+        "unresolvedTmdb": {},
         "missingPoster": {},
         "missingCredits": {},
         "missingVotes": {},

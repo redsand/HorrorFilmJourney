@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-03-05T05:54:10.033Z",
+  "summaries": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "taxonomyVersion": "season-1-horror-v3.5",
+      "curatorAuthorityCount": 2235,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "items": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "taxonomyVersion": "season-2-cult-v3",
+      "curatorAuthorityCount": 552,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "items": []
+    }
+  ]
+}

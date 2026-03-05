@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient, type NodeAssignmentTier } from '@prisma/client';
+import { listDeterministicCatalogBackfills } from '../src/lib/catalog/deterministic-tmdb-backfill.ts';
 
 type ImportedRating = {
   source: string;
@@ -193,12 +194,19 @@ function titleCaseFromSlug(slug: string): string {
 }
 
 async function loadCatalogMovies(): Promise<CatalogMovie[]> {
+  const deterministic = listDeterministicCatalogBackfills();
   try {
     const raw = await readFile(CATALOG_BACKUP_PATH, 'utf8');
     const parsed = JSON.parse(raw) as { movies?: CatalogMovie[] };
-    return Array.isArray(parsed.movies) ? parsed.movies : [];
+    const movies = Array.isArray(parsed.movies) ? parsed.movies : [];
+    const seen = new Set(movies.map((movie) => movie.tmdbId));
+    for (const seeded of deterministic) {
+      if (seen.has(seeded.tmdbId)) continue;
+      movies.push(seeded);
+    }
+    return movies;
   } catch {
-    return [];
+    return deterministic;
   }
 }
 

@@ -1,6 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { generateRecommendationBatch } from '@/lib/recommendation/recommendation-engine';
+import season1FallbackSpec from '../../docs/season/season-1-fallback-candidates.json';
+import season2FallbackSpec from '../../docs/season/season-2-fallback-candidates.json';
 import { buildTestDatabaseUrl, prismaDbPush } from '../helpers/test-db';
 
 const testDbUrl = buildTestDatabaseUrl('recommendation_engine_modern_test');
@@ -235,7 +237,7 @@ describe('RecommendationEngine modern mode', () => {
       },
     });
 
-    const fallbackTmdbIds = [10331, 923, 7018, 20766, 396535];
+    const fallbackTmdbIds = season1FallbackSpec.tmdbIds.slice(0, 5);
     const fallbackMovies = await Promise.all(
       fallbackTmdbIds.map((tmdbId, index) =>
         prisma.movie.create({
@@ -257,8 +259,51 @@ describe('RecommendationEngine modern mode', () => {
 
     const firstIds = first.cards.map((card) => card.movie.tmdbId);
     const secondIds = second.cards.map((card) => card.movie.tmdbId);
+    expect(new Set(firstIds)).toEqual(new Set(fallbackTmdbIds));
     expect(firstIds).toEqual(secondIds);
     expect(firstIds.length).toBeGreaterThan(0);
+  });
+
+  it('returns deterministic fallback batches for Season 2 cult-classics', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Cult Fallback User' } });
+    const season2 = await prisma.season.create({ data: { slug: 'season-2', name: 'Season 2', isActive: true } });
+    const cultPack = await prisma.genrePack.create({
+      data: { slug: 'cult-classics', name: 'Cult Classics', seasonId: season2.id, isEnabled: true, primaryGenre: 'cult' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: cultPack.id,
+      },
+    });
+
+    const fallbackTmdbIds = season2FallbackSpec.tmdbIds.slice(0, 5);
+    const fallbackMovies = await Promise.all(
+      fallbackTmdbIds.map((tmdbId, index) =>
+        prisma.movie.create({
+          data: {
+            tmdbId,
+            title: `Cult Fallback ${tmdbId}`,
+            year: 1970 + index,
+            posterUrl: `https://img/${tmdbId}.jpg`,
+            genres: ['cult'],
+          },
+        }),
+      ),
+    );
+    await Promise.all(fallbackMovies.map((movie) => addRatings(movie.id)));
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const firstBatch = await generateRecommendationBatch(user.id, prisma);
+    const firstIds = firstBatch.cards.map((card) => card.movie.tmdbId);
+    expect(new Set(firstIds)).toEqual(new Set(fallbackTmdbIds));
+
+    const secondBatch = await generateRecommendationBatch(user.id, prisma);
+    const secondIds = secondBatch.cards.map((card) => card.movie.tmdbId);
+    expect(secondIds).toEqual(firstIds);
   });
 
   it('passes season and pack scope into retrieval runs for modern recommendation evidence', async () => {
