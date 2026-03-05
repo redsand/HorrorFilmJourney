@@ -9,9 +9,11 @@ type PollStatus = 'WATCHED' | 'ALREADY_SEEN';
 export function CompanionActions({
   tmdbId,
   title,
+  seasonSlug,
 }: {
   tmdbId: number;
   title: string;
+  seasonSlug?: string | null;
 }) {
   const [pollStatus, setPollStatus] = useState<PollStatus | null>(null);
   const [skipPending, setSkipPending] = useState(false);
@@ -108,10 +110,10 @@ export function CompanionActions({
           setError(null);
         }}
         open={pollStatus !== null}
+        seasonSlug={seasonSlug}
         status={pollStatus ?? 'WATCHED'}
         title={title}
       />
     </>
   );
 }
-

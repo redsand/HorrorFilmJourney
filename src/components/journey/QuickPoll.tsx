@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, Chip } from '@/components/ui';
+import { getSeasonQuickPollOptions } from '@/lib/journey/season-quick-poll-options';
 
 type QuickPollSubmit = {
   rating: number;
@@ -16,31 +17,10 @@ type QuickPollProps = {
   open: boolean;
   status: 'WATCHED' | 'ALREADY_SEEN';
   title: string;
+  seasonSlug?: string | null;
   onClose: () => void;
   onSubmit: (payload: QuickPollSubmit) => Promise<void>;
 };
-
-const emotionOptions = [
-  'tense',
-  'dread',
-  'creepy',
-  'disturbing',
-  'surreal',
-  'cathartic',
-  'fun',
-  'bored',
-  'slow',
-  'dull',
-  'disappointed',
-  'frustrated',
-  'anxious',
-  'sad',
-  'angry',
-  'uneasy',
-  'confused',
-];
-const workedBestOptions = ['pacing', 'atmosphere', 'performances', 'score', 'direction', 'editing'];
-const agedWellOptions = ['yes', 'mostly', 'mixed', 'no'];
 
 function toggleWithCap(current: string[], value: string, cap: number): string[] {
   if (current.includes(value)) {
@@ -56,6 +36,7 @@ export function QuickPoll({
   open,
   status,
   title,
+  seasonSlug,
   onClose,
   onSubmit,
 }: QuickPollProps) {
@@ -67,6 +48,7 @@ export function QuickPoll({
   const [recommend, setRecommend] = useState<boolean>(true);
   const [saving, setSaving] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const options = getSeasonQuickPollOptions(seasonSlug);
 
   if (!open) {
     return null;
@@ -128,7 +110,7 @@ export function QuickPoll({
         <div className={`mt-4 rounded-xl border p-3 ${emotions.length > 0 ? 'border-[var(--border)] bg-[rgba(10,10,12,0.45)]' : 'border-[rgba(193,18,31,0.35)] bg-[rgba(193,18,31,0.08)]'}`}>
           <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Emotions (max 5)</p>
           <div className="flex flex-wrap gap-2">
-            {emotionOptions.map((item) => {
+            {options.emotions.map((item) => {
               const active = emotions.includes(item);
               const blocked = !active && emotions.length >= 5;
               return (
@@ -149,7 +131,7 @@ export function QuickPoll({
         <div className={`mt-4 rounded-xl border p-3 ${workedBest.length > 0 ? 'border-[var(--border)] bg-[rgba(10,10,12,0.45)]' : 'border-[rgba(193,18,31,0.35)] bg-[rgba(193,18,31,0.08)]'}`}>
           <p className="mb-2 text-xs uppercase tracking-wide text-[var(--text-muted)]">Worked best (max 3)</p>
           <div className="flex flex-wrap gap-2">
-            {workedBestOptions.map((item) => {
+            {options.workedBest.map((item) => {
               const active = workedBest.includes(item);
               const blocked = !active && workedBest.length >= 3;
               return (
@@ -174,7 +156,7 @@ export function QuickPoll({
             onChange={(event) => setAgedWell(event.target.value)}
             value={agedWell}
           >
-            {agedWellOptions.map((item) => (
+            {options.agedWell.map((item) => (
               <option key={item} value={item}>{item}</option>
             ))}
           </select>

@@ -204,6 +204,7 @@ export default async function CompanionPage({
   const spoilerTabs: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
   const summaryLine = payload ? extractSummaryLine(payload.sections.productionNotes) : null;
   const summaryBullets = summaryLine ? toSummaryBullets(stripSummaryPrefix(summaryLine)) : [];
+  const quickPollSeasonSlug = filmContext.data?.reasonPanel?.seasonSlug ?? null;
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
@@ -443,7 +444,7 @@ export default async function CompanionPage({
             </Card>
           ))}
 
-          <CompanionActions tmdbId={payload.movie.tmdbId} title={payload.movie.title} />
+          <CompanionActions seasonSlug={quickPollSeasonSlug} tmdbId={payload.movie.tmdbId} title={payload.movie.title} />
           <Card className="space-y-3">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Journey Map</p>
             <Link

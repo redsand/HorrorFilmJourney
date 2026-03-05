@@ -9,6 +9,7 @@ import { Card } from '@/components/ui';
 type RecommendationBundleProps = {
   cards: MovieCardVM[];
   batchId: string;
+  seasonSlug?: string | null;
   interactionContext?: Array<{ tmdbId: number; recommendationItemId: string }>;
 };
 
@@ -21,6 +22,7 @@ type RecommendationApiPayload = {
 export function RecommendationBundle({
   cards,
   batchId,
+  seasonSlug,
   interactionContext = [],
 }: RecommendationBundleProps) {
   const [visibleCards, setVisibleCards] = useState(cards);
@@ -122,6 +124,7 @@ export function RecommendationBundle({
           key={card.movie.tmdbId}
           onInteractionSaved={replaceSingleCard}
           recommendationItemId={contextMap.get(card.movie.tmdbId)}
+          seasonSlug={seasonSlug}
         />
       ))}
     </section>

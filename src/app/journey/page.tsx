@@ -484,6 +484,7 @@ export default async function HomePage({
               batchId={recommendations.batchId}
               cards={recommendations.cards}
               interactionContext={recommendations.interactionContext}
+              seasonSlug={selectedSeasonSlug}
             />
           ) : (
             <Card>

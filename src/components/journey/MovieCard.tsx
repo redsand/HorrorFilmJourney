@@ -10,6 +10,7 @@ import { QuickPoll } from '@/components/journey/QuickPoll';
 type MovieCardProps = {
   card: MovieCardVM;
   recommendationItemId?: string;
+  seasonSlug?: string | null;
   onInteractionSaved?: (tmdbId: number) => void;
   isRefreshing?: boolean;
 };
@@ -41,6 +42,7 @@ async function postInteraction(
 export function MovieCard({
   card,
   recommendationItemId,
+  seasonSlug,
   onInteractionSaved,
   isRefreshing = false,
 }: MovieCardProps) {
@@ -276,6 +278,7 @@ export function MovieCard({
           onInteractionSaved?.(card.movie.tmdbId);
         }}
         open={pollStatus !== null}
+        seasonSlug={seasonSlug}
         status={pollStatus ?? 'WATCHED'}
         title={card.movie.title}
       />
