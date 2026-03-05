@@ -14,13 +14,23 @@ describe('theme config mapping', () => {
     expect(config.themeName).toBe('horror');
   });
 
-  it('keeps placeholder presets disabled and falls back to horror', () => {
-    const scifiPreset = getThemePresetForPackSlug('scifi');
+  it('resolves season 3 sci-fi theme for sci-fi pack slug', () => {
+    const scifiPreset = getThemePresetForPackSlug('sci-fi');
     expect(scifiPreset).not.toBeNull();
-    expect(scifiPreset?.enabled).toBe(false);
+    expect(scifiPreset?.enabled).toBe(true);
+    expect(scifiPreset?.themeName).toBe('scifi');
+    expect(scifiPreset?.cabinetImagePath).toBe('/assets/cabinets/sci-fi-season-3.png');
+    expect(scifiPreset?.cssVars['--cc-accent']).toBe('#21b6ff');
 
+    const resolved = getThemeConfigForPackSlug('sci-fi');
+    expect(resolved.themeName).toBe('scifi');
+    expect(resolved.cabinetImagePath).toBe('/assets/cabinets/sci-fi-season-3.png');
+  });
+
+  it('keeps scifi alias mapped to season 3 for backward compatibility', () => {
     const resolved = getThemeConfigForPackSlug('scifi');
-    expect(resolved.themeName).toBe('horror');
+    expect(resolved.themeName).toBe('scifi');
+    expect(resolved.cabinetImagePath).toBe('/assets/cabinets/sci-fi-season-3.png');
   });
 
   it('defines cult-classics preset with cabinet mapping and neon palette', () => {

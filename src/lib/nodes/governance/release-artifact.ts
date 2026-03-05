@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
-import { assertCanonicalTaxonomyVersion, getReleaseContract } from './release-contract';
+import { assertCanonicalTaxonomyVersion, getReleaseContract } from './release-contract.ts';
 
 export type CreateSeasonNodeReleaseInput = {
   seasonId: string;
@@ -31,6 +31,7 @@ export async function createSeasonNodeReleaseFromNodeMovie(prisma: PrismaClient,
 
   const assignments = await prisma.nodeMovie.findMany({
     where: {
+      tier: 'CORE',
       node: { packId: input.packId },
       taxonomyVersion: input.taxonomyVersion,
     },

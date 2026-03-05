@@ -1,0 +1,3501 @@
+{
+  "generatedAt": "2026-03-05T14:55:53.517Z",
+  "results": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "taxonomyVersion": "season-1-horror-v3.5",
+      "pre": {
+        "lossRatePercent": 0,
+        "missingInDbCount": 0,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 0
+      },
+      "post": {
+        "lossRatePercent": 0,
+        "missingInDbCount": 0,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 0
+      },
+      "applied": {
+        "insertedNodeMovies": 0,
+        "correctedNodeDrift": 0,
+        "correctedTierDrift": 0,
+        "releaseItems": 0,
+        "releaseId": "dry-run"
+      },
+      "buckets": {
+        "unresolvedTmdb": [],
+        "missingPoster": [],
+        "missingCredits": [],
+        "missingVotes": [],
+        "importerSchema": []
+      },
+      "bucketTierBreakdown": {
+        "unresolvedTmdb": {},
+        "missingPoster": {},
+        "missingCredits": {},
+        "missingVotes": {},
+        "importerSchema": {}
+      }
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "taxonomyVersion": "season-2-cult-v3",
+      "pre": {
+        "lossRatePercent": 85.74,
+        "missingInDbCount": 487,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 1
+      },
+      "post": {
+        "lossRatePercent": 85.74,
+        "missingInDbCount": 487,
+        "missingInReleaseCount": 0,
+        "tierDriftCount": 0,
+        "nodeDriftCount": 1
+      },
+      "applied": {
+        "insertedNodeMovies": 0,
+        "correctedNodeDrift": 1,
+        "correctedTierDrift": 0,
+        "releaseItems": 0,
+        "releaseId": "dry-run"
+      },
+      "buckets": {
+        "unresolvedTmdb": [
+          {
+            "title": "Tetsuo: The Iron Man",
+            "year": 1989,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 11210
+          }
+        ],
+        "missingPoster": [],
+        "missingCredits": [
+          {
+            "title": "Teaserama",
+            "year": 1955,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 70233
+          },
+          {
+            "title": "The Loved One",
+            "year": 1965,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 16303
+          },
+          {
+            "title": "Cul-de-sac",
+            "year": 1966,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 4772
+          },
+          {
+            "title": "Weekend",
+            "year": 1967,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 8075
+          },
+          {
+            "title": "They Might Be Giants",
+            "year": 1971,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 27841
+          },
+          {
+            "title": "Going Places",
+            "year": 1974,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 4031
+          },
+          {
+            "title": "Inserts",
+            "year": 1975,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 32069
+          },
+          {
+            "title": "Monty Python and the Holy Grail",
+            "year": 1975,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 762
+          },
+          {
+            "title": "The Rocky Horror Picture Show",
+            "year": 1975,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 36685
+          },
+          {
+            "title": "Up!",
+            "year": 1976,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 5651
+          },
+          {
+            "title": "The Kentucky Fried Movie",
+            "year": 1977,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 11598
+          },
+          {
+            "title": "The End",
+            "year": 1978,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 35976
+          },
+          {
+            "title": "The Jerk",
+            "year": 1979,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 6471
+          },
+          {
+            "title": "Wise Blood",
+            "year": 1979,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 42179
+          },
+          {
+            "title": "The Gods Must Be Crazy",
+            "year": 1980,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 8393
+          },
+          {
+            "title": "Polyester",
+            "year": 1981,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 14269
+          },
+          {
+            "title": "The Cannonball Run",
+            "year": 1981,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 11286
+          },
+          {
+            "title": "This Is Spinal Tap",
+            "year": 1984,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 11031
+          },
+          {
+            "title": "Withnail & I",
+            "year": 1987,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 13446
+          },
+          {
+            "title": "Clerks",
+            "year": 1994,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 2292
+          },
+          {
+            "title": "Office Space",
+            "year": 1999,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 1542
+          },
+          {
+            "title": "Heathers",
+            "year": 1988,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 928
+          },
+          {
+            "title": "The Big Lebowski",
+            "year": 1998,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 115
+          },
+          {
+            "title": "The Big Lebowski",
+            "year": 1998,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "CORE",
+            "tmdbId": 115
+          },
+          {
+            "title": "The Draughtsman's Contract",
+            "year": 1982,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 10831
+          },
+          {
+            "title": "Breakin'",
+            "year": 1984,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 15259
+          },
+          {
+            "title": "Gremlins",
+            "year": 1984,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 927
+          },
+          {
+            "title": "The Adventures of Buckaroo Banzai Across the 8th Dimension",
+            "year": 1984,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 11379
+          },
+          {
+            "title": "Top Secret!",
+            "year": 1984,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 8764
+          },
+          {
+            "title": "Evil Dead II",
+            "year": 1987,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 765
+          },
+          {
+            "title": "The Princess Bride",
+            "year": 1987,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 2493
+          },
+          {
+            "title": "Beetlejuice",
+            "year": 1988,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 4011
+          },
+          {
+            "title": "UHF",
+            "year": 1989,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 11959
+          },
+          {
+            "title": "Jamon Jamon",
+            "year": 1992,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 4507
+          },
+          {
+            "title": "Sonatine",
+            "year": 1993,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 7500
+          },
+          {
+            "title": "Spanking the Monkey",
+            "year": 1994,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 17600
+          },
+          {
+            "title": "The Adventures of Priscilla, Queen of the Desert",
+            "year": 1994,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 2759
+          },
+          {
+            "title": "Three Colors: White",
+            "year": 1994,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 109
+          },
+          {
+            "title": "Mystery Science Theater 3000: The Movie",
+            "year": 1996,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 3065
+          },
+          {
+            "title": "The Cable Guy",
+            "year": 1996,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9894
+          },
+          {
+            "title": "In the Company of Men",
+            "year": 1997,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 14585
+          },
+          {
+            "title": "Happiness",
+            "year": 1998,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 10683
+          },
+          {
+            "title": "Taxi",
+            "year": 1998,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 2330
+          },
+          {
+            "title": "The Idiots",
+            "year": 1998,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 452
+          },
+          {
+            "title": "Drop Dead Gorgeous",
+            "year": 1999,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 10490
+          },
+          {
+            "title": "Galaxy Quest",
+            "year": 1999,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 926
+          },
+          {
+            "title": "Mystery Men",
+            "year": 1999,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9824
+          },
+          {
+            "title": "South Park: Bigger, Longer & Uncut",
+            "year": 1999,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9473
+          },
+          {
+            "title": "Best in Show",
+            "year": 2000,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 13785
+          },
+          {
+            "title": "Together",
+            "year": 2000,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 742
+          },
+          {
+            "title": "Super Troopers",
+            "year": 2001,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 39939
+          },
+          {
+            "title": "Wet Hot American Summer",
+            "year": 2001,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 2171
+          },
+          {
+            "title": "Bubba Ho-tep",
+            "year": 2002,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9707
+          },
+          {
+            "title": "Death to Smoochy",
+            "year": 2002,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9275
+          },
+          {
+            "title": "Funny Ha Ha",
+            "year": 2002,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 33693
+          },
+          {
+            "title": "Kung Pow: Enter the Fist",
+            "year": 2002,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 11891
+          },
+          {
+            "title": "The Happiness of the Katakuris",
+            "year": 2002,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 16184
+          },
+          {
+            "title": "Harold & Kumar Go to White Castle",
+            "year": 2004,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 11282
+          },
+          {
+            "title": "Kung Fu Hustle",
+            "year": 2004,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9470
+          },
+          {
+            "title": "Napoleon Dynamite",
+            "year": 2004,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 8193
+          },
+          {
+            "title": "Shaun of the Dead",
+            "year": 2004,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 747
+          },
+          {
+            "title": "Team America: World Police",
+            "year": 2004,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 3989
+          },
+          {
+            "title": "Grandma's Boy",
+            "year": 2006,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 9900
+          },
+          {
+            "title": "Idiocracy",
+            "year": 2006,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 7512
+          },
+          {
+            "title": "Poultrygeist: Night of the Chicken Dead",
+            "year": 2006,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 17287
+          },
+          {
+            "title": "The Foot Fist Way",
+            "year": 2006,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 13484
+          },
+          {
+            "title": "Hot Fuzz",
+            "year": 2007,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 4638
+          },
+          {
+            "title": "Hot Rod",
+            "year": 2007,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 10074
+          },
+          {
+            "title": "Walk Hard: The Dewey Cox Story",
+            "year": 2007,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 6575
+          },
+          {
+            "title": "Repo! The Genetic Opera",
+            "year": 2008,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 14353
+          },
+          {
+            "title": "Black Dynamite",
+            "year": 2009,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 24804
+          },
+          {
+            "title": "MacGruber",
+            "year": 2010,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 37931
+          },
+          {
+            "title": "Rubber",
+            "year": 2010,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 45649
+          },
+          {
+            "title": "Tucker and Dale vs. Evil",
+            "year": 2010,
+            "nodeSlug": "camp-cult-comedy",
+            "tier": "EXTENDED",
+            "tmdbId": 46838
+          },
+          {
+            "title": "Orpheus",
+            "year": 1950,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 4558
+          },
+          {
+            "title": "The 7th Voyage of Sinbad",
+            "year": 1958,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 15515
+          },
+          {
+            "title": "Barbarella",
+            "year": 1968,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 8069
+          },
+          {
+            "title": "200 Motels",
+            "year": 1971,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 27645
+          },
+          {
+            "title": "THX 1138",
+            "year": 1971,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 636
+          },
+          {
+            "title": "Fritz the Cat",
+            "year": 1972,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 12593
+          },
+          {
+            "title": "Silent Running",
+            "year": 1972,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 811
+          },
+          {
+            "title": "Solaris",
+            "year": 1972,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 593
+          },
+          {
+            "title": "Belladonna of Sadness",
+            "year": 1973,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 64847
+          },
+          {
+            "title": "Fantastic Planet",
+            "year": 1973,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 16306
+          },
+          {
+            "title": "Dark Star",
+            "year": 1974,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 1410
+          },
+          {
+            "title": "Escape from New York",
+            "year": 1981,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 1103
+          },
+          {
+            "title": "Heavy Metal",
+            "year": 1981,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 11827
+          },
+          {
+            "title": "Blade Runner",
+            "year": 1982,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 78
+          },
+          {
+            "title": "Videodrome",
+            "year": 1983,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 837
+          },
+          {
+            "title": "They Live",
+            "year": 1988,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 8337
+          },
+          {
+            "title": "Ghost in the Shell",
+            "year": 1995,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 9323
+          },
+          {
+            "title": "Perfect Blue",
+            "year": 1997,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 10494
+          },
+          {
+            "title": "Dark City",
+            "year": 1998,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 2666
+          },
+          {
+            "title": "Donnie Darko",
+            "year": 2001,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 141
+          },
+          {
+            "title": "Repo Man",
+            "year": 1984,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 1125
+          },
+          {
+            "title": "Brazil",
+            "year": 1985,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 68
+          },
+          {
+            "title": "Brazil",
+            "year": 1985,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 68
+          },
+          {
+            "title": "Akira",
+            "year": 1988,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 149
+          },
+          {
+            "title": "Akira",
+            "year": 1988,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 149
+          },
+          {
+            "title": "Ghost in the Shell",
+            "year": 1995,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "CORE",
+            "tmdbId": 62
+          },
+          {
+            "title": "Zardoz",
+            "year": 1974,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 4923
+          },
+          {
+            "title": "A Boy and His Dog",
+            "year": 1975,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 4917
+          },
+          {
+            "title": "Rollerball",
+            "year": 1975,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11484
+          },
+          {
+            "title": "The Man Who Fell to Earth",
+            "year": 1976,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 991
+          },
+          {
+            "title": "Close Encounters of the Third Kind",
+            "year": 1977,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 840
+          },
+          {
+            "title": "The Last Wave",
+            "year": 1977,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 72277
+          },
+          {
+            "title": "Wizards",
+            "year": 1977,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 16220
+          },
+          {
+            "title": "Watership Down",
+            "year": 1978,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11837
+          },
+          {
+            "title": "Mad Max",
+            "year": 1979,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9659
+          },
+          {
+            "title": "Stalker",
+            "year": 1979,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 1398
+          },
+          {
+            "title": "Altered States",
+            "year": 1980,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11542
+          },
+          {
+            "title": "Scanners",
+            "year": 1981,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9538
+          },
+          {
+            "title": "Time Bandits",
+            "year": 1981,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 36819
+          },
+          {
+            "title": "The Dark Crystal",
+            "year": 1982,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11639
+          },
+          {
+            "title": "The Last Unicorn",
+            "year": 1982,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 10150
+          },
+          {
+            "title": "The Secret of NIMH",
+            "year": 1982,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11704
+          },
+          {
+            "title": "Tron",
+            "year": 1982,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 97
+          },
+          {
+            "title": "Krull",
+            "year": 1983,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 849
+          },
+          {
+            "title": "The Keep",
+            "year": 1983,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 26198
+          },
+          {
+            "title": "NausicaÃ¤ of the Valley of the Wind",
+            "year": 1984,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 81
+          },
+          {
+            "title": "The Brother from Another Planet",
+            "year": 1984,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 26889
+          },
+          {
+            "title": "The Last Starfighter",
+            "year": 1984,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11884
+          },
+          {
+            "title": "Legend",
+            "year": 1985,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11976
+          },
+          {
+            "title": "The Quiet Earth",
+            "year": 1985,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 10176
+          },
+          {
+            "title": "Vampire Hunter D",
+            "year": 1985,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9463
+          },
+          {
+            "title": "Highlander",
+            "year": 1986,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 8009
+          },
+          {
+            "title": "Labyrinth",
+            "year": 1986,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 13597
+          },
+          {
+            "title": "RoboCop",
+            "year": 1987,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 5548
+          },
+          {
+            "title": "The Running Man",
+            "year": 1987,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 865
+          },
+          {
+            "title": "Wicked City",
+            "year": 1987,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 21453
+          },
+          {
+            "title": "The Adventures of Baron Munchausen",
+            "year": 1988,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 14506
+          },
+          {
+            "title": "The Navigator: A Medieval Odyssey",
+            "year": 1988,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 34637
+          },
+          {
+            "title": "Urotsukidoji: Legend of the Overfiend",
+            "year": 1989,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 48624
+          },
+          {
+            "title": "Hardware",
+            "year": 1990,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11309
+          },
+          {
+            "title": "Prospero's Books",
+            "year": 1991,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 5048
+          },
+          {
+            "title": "Demolition Man",
+            "year": 1993,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9739
+          },
+          {
+            "title": "Ninja Scroll",
+            "year": 1993,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 14282
+          },
+          {
+            "title": "Johnny Mnemonic",
+            "year": 1995,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9886
+          },
+          {
+            "title": "Strange Days",
+            "year": 1995,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 281
+          },
+          {
+            "title": "The City of Lost Children",
+            "year": 1995,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 902
+          },
+          {
+            "title": "Gattaca",
+            "year": 1997,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 782
+          },
+          {
+            "title": "Princess Mononoke",
+            "year": 1997,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 128
+          },
+          {
+            "title": "The Fifth Element",
+            "year": 1997,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 18
+          },
+          {
+            "title": "Pi",
+            "year": 1998,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 473
+          },
+          {
+            "title": "eXistenZ",
+            "year": 1999,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 1946
+          },
+          {
+            "title": "The Thirteenth Floor",
+            "year": 1999,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 1090
+          },
+          {
+            "title": "The Cell",
+            "year": 2000,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 8843
+          },
+          {
+            "title": "Equilibrium",
+            "year": 2002,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 7299
+          },
+          {
+            "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+            "year": 2003,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 11049
+          },
+          {
+            "title": "Primer",
+            "year": 2004,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 14337
+          },
+          {
+            "title": "Serenity",
+            "year": 2005,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 16320
+          },
+          {
+            "title": "Renaissance",
+            "year": 2006,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 9389
+          },
+          {
+            "title": "Sunshine",
+            "year": 2007,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 1272
+          },
+          {
+            "title": "District 9",
+            "year": 2009,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 17654
+          },
+          {
+            "title": "Moon",
+            "year": 2009,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 17431
+          },
+          {
+            "title": "Pandorum",
+            "year": 2009,
+            "nodeSlug": "cult-science-fiction",
+            "tier": "EXTENDED",
+            "tmdbId": 19898
+          },
+          {
+            "title": "Blood Feast",
+            "year": 1963,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 28172
+          },
+          {
+            "title": "Faster, Pussycat! Kill! Kill!",
+            "year": 1965,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 315
+          },
+          {
+            "title": "Spider Baby",
+            "year": 1967,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 28504
+          },
+          {
+            "title": "The Swimmer",
+            "year": 1968,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 33564
+          },
+          {
+            "title": "I Drink Your Blood",
+            "year": 1971,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 27313
+          },
+          {
+            "title": "Street Mobster",
+            "year": 1972,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 21613
+          },
+          {
+            "title": "Tombs of the Blind Dead",
+            "year": 1972,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 37601
+          },
+          {
+            "title": "Lady Snowblood",
+            "year": 1973,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 2487
+          },
+          {
+            "title": "Thriller: A Cruel Picture",
+            "year": 1973,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 15018
+          },
+          {
+            "title": "Stone",
+            "year": 1974,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 14937
+          },
+          {
+            "title": "Ilsa: She Wolf of the SS",
+            "year": 1975,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 20850
+          },
+          {
+            "title": "Alucarda",
+            "year": 1977,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 40074
+          },
+          {
+            "title": "The Killer",
+            "year": 1989,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 10835
+          },
+          {
+            "title": "Hard Boiled",
+            "year": 1992,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 11782
+          },
+          {
+            "title": "Battle Royale",
+            "year": 2000,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "CORE",
+            "tmdbId": 3176
+          },
+          {
+            "title": "The Brainiac",
+            "year": 1962,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 42992
+          },
+          {
+            "title": "Even the Wind Is Afraid",
+            "year": 1968,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 68627
+          },
+          {
+            "title": "The Book of Stone",
+            "year": 1969,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 68632
+          },
+          {
+            "title": "The Last House on the Left",
+            "year": 1972,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 15516
+          },
+          {
+            "title": "Sisters",
+            "year": 1973,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 22307
+          },
+          {
+            "title": "Picnic at Hanging Rock",
+            "year": 1975,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 11020
+          },
+          {
+            "title": "Shivers",
+            "year": 1975,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 27429
+          },
+          {
+            "title": "Rabid",
+            "year": 1977,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 29437
+          },
+          {
+            "title": "The Fun House",
+            "year": 1977,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 27328
+          },
+          {
+            "title": "Day of the Woman",
+            "year": 1978,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 25239
+          },
+          {
+            "title": "Long Weekend",
+            "year": 1979,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 39995
+          },
+          {
+            "title": "Zombie Flesh Eaters",
+            "year": 1979,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 7219
+          },
+          {
+            "title": "Maniac",
+            "year": 1980,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 27346
+          },
+          {
+            "title": "Shogun Assassin",
+            "year": 1980,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 15119
+          },
+          {
+            "title": "Ms .45",
+            "year": 1981,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 22171
+          },
+          {
+            "title": "Roadgames",
+            "year": 1981,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 43089
+          },
+          {
+            "title": "Pieces",
+            "year": 1982,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 47886
+          },
+          {
+            "title": "Tenebre",
+            "year": 1982,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 29702
+          },
+          {
+            "title": "Razorback",
+            "year": 1984,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 26178
+          },
+          {
+            "title": "Cemetery of Terror",
+            "year": 1985,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 85002
+          },
+          {
+            "title": "A Better Tomorrow",
+            "year": 1986,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 11471
+          },
+          {
+            "title": "Poison for the Fairies",
+            "year": 1986,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 28968
+          },
+          {
+            "title": "The Blob",
+            "year": 1988,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 9599
+          },
+          {
+            "title": "Intruder",
+            "year": 1989,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 31150
+          },
+          {
+            "title": "964 Pinocchio",
+            "year": 1991,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 50162
+          },
+          {
+            "title": "Braindead",
+            "year": 1992,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 763
+          },
+          {
+            "title": "Full Contact",
+            "year": 1992,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 27073
+          },
+          {
+            "title": "Run and Kill",
+            "year": 1993,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 40066
+          },
+          {
+            "title": "From Dusk Till Dawn",
+            "year": 1996,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 755
+          },
+          {
+            "title": "Naked Blood",
+            "year": 1996,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 778000
+          },
+          {
+            "title": "Splatter: Naked Blood",
+            "year": 1996,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 36075
+          },
+          {
+            "title": "Audition",
+            "year": 2000,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 11075
+          },
+          {
+            "title": "Night Watch",
+            "year": 2004,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 3040
+          },
+          {
+            "title": "Planet Terror",
+            "year": 2007,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 1992
+          },
+          {
+            "title": "Tokyo Gore Police",
+            "year": 2008,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 16061
+          },
+          {
+            "title": "Carny",
+            "year": 2009,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 36737
+          },
+          {
+            "title": "Machete",
+            "year": 2010,
+            "nodeSlug": "grindhouse-exploitation",
+            "tier": "EXTENDED",
+            "tmdbId": 23631
+          },
+          {
+            "title": "Gimme Shelter",
+            "year": 1970,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 132
+          },
+          {
+            "title": "Phantasm",
+            "year": 1979,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 9638
+          },
+          {
+            "title": "House of Games",
+            "year": 1987,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 26719
+          },
+          {
+            "title": "Ghosts... of the Civil Dead",
+            "year": 1988,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 31219
+          },
+          {
+            "title": "Light Sleeper",
+            "year": 1992,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 36351
+          },
+          {
+            "title": "Reservoir Dogs",
+            "year": 1992,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 500
+          },
+          {
+            "title": "The Last Seduction",
+            "year": 1994,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 25284
+          },
+          {
+            "title": "Three Colors: Red",
+            "year": 1994,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 110
+          },
+          {
+            "title": "When We Were Kings",
+            "year": 1996,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 10548
+          },
+          {
+            "title": "Fear and Loathing in Las Vegas",
+            "year": 1998,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 1878
+          },
+          {
+            "title": "American Movie",
+            "year": 1999,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 14242
+          },
+          {
+            "title": "Fight Club",
+            "year": 1999,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 550
+          },
+          {
+            "title": "The Blair Witch Project",
+            "year": 1999,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 7016
+          },
+          {
+            "title": "The Boondock Saints",
+            "year": 1999,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 8374
+          },
+          {
+            "title": "The Virgin Suicides",
+            "year": 1999,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 1443
+          },
+          {
+            "title": "American Psycho",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 1359
+          },
+          {
+            "title": "Oldboy",
+            "year": 2003,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 670
+          },
+          {
+            "title": "Oldboy",
+            "year": 2003,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 670
+          },
+          {
+            "title": "Battle Royale",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 129
+          },
+          {
+            "title": "Mulholland Drive",
+            "year": 2001,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 1018
+          },
+          {
+            "title": "Mulholland Drive",
+            "year": 2001,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 1018
+          },
+          {
+            "title": "Donnie Darko",
+            "year": 2001,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "CORE",
+            "tmdbId": 141
+          },
+          {
+            "title": "Grey Gardens",
+            "year": 1976,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 17346
+          },
+          {
+            "title": "84C MoPic",
+            "year": 1989,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 55149
+          },
+          {
+            "title": "Apartment Zero",
+            "year": 1989,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 5333
+          },
+          {
+            "title": "Naked Tango",
+            "year": 1990,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 60801
+          },
+          {
+            "title": "Crumb",
+            "year": 1995,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 26564
+          },
+          {
+            "title": "Baise-moi",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 3134
+          },
+          {
+            "title": "Chopper",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 9519
+          },
+          {
+            "title": "Memento",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 77
+          },
+          {
+            "title": "Requiem for a Dream",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 641
+          },
+          {
+            "title": "Snatch",
+            "year": 2000,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 107
+          },
+          {
+            "title": "The Experiment",
+            "year": 2001,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 575
+          },
+          {
+            "title": "The Royal Tenenbaums",
+            "year": 2001,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 9428
+          },
+          {
+            "title": "Dogtown and Z-Boys",
+            "year": 2002,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 1282
+          },
+          {
+            "title": "Infernal Affairs",
+            "year": 2002,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 10775
+          },
+          {
+            "title": "Irreversible",
+            "year": 2002,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 979
+          },
+          {
+            "title": "Touching the Void",
+            "year": 2003,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 11194
+          },
+          {
+            "title": "Eternal Sunshine of the Spotless Mind",
+            "year": 2004,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 38
+          },
+          {
+            "title": "Garden State",
+            "year": 2004,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 401
+          },
+          {
+            "title": "CachÃ©",
+            "year": 2005,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 445
+          },
+          {
+            "title": "Sin City",
+            "year": 2005,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 187
+          },
+          {
+            "title": "The Descent",
+            "year": 2005,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 7019
+          },
+          {
+            "title": "Children of Men",
+            "year": 2006,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 9693
+          },
+          {
+            "title": "Pan's Labyrinth",
+            "year": 2006,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 1417
+          },
+          {
+            "title": "The Fall",
+            "year": 2006,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 14784
+          },
+          {
+            "title": "The Fountain",
+            "year": 2006,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 1381
+          },
+          {
+            "title": "V for Vendetta",
+            "year": 2006,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 752
+          },
+          {
+            "title": "Paranormal Activity",
+            "year": 2007,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 23827
+          },
+          {
+            "title": "The Mist",
+            "year": 2007,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 5876
+          },
+          {
+            "title": "Trick 'r Treat",
+            "year": 2007,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 23202
+          },
+          {
+            "title": "Zodiac",
+            "year": 2007,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 1949
+          },
+          {
+            "title": "Funny Games",
+            "year": 2008,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 8461
+          },
+          {
+            "title": "In Bruges",
+            "year": 2008,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 8321
+          },
+          {
+            "title": "Let the Right One In",
+            "year": 2008,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 7021
+          },
+          {
+            "title": "Martyrs",
+            "year": 2008,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 9539
+          },
+          {
+            "title": "Synecdoche, New York",
+            "year": 2008,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 4960
+          },
+          {
+            "title": "A Serious Man",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 12573
+          },
+          {
+            "title": "Antichrist",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 17609
+          },
+          {
+            "title": "Exam",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 29917
+          },
+          {
+            "title": "Jennifer's Body",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 19994
+          },
+          {
+            "title": "Pontypool",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 23963
+          },
+          {
+            "title": "Triangle",
+            "year": 2009,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 26466
+          },
+          {
+            "title": "Black Swan",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 44214
+          },
+          {
+            "title": "Enter the Void",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 34647
+          },
+          {
+            "title": "Inception",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 27205
+          },
+          {
+            "title": "Kick-Ass",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 23483
+          },
+          {
+            "title": "Monsters",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 43933
+          },
+          {
+            "title": "Rare Exports: A Christmas Tale",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 48395
+          },
+          {
+            "title": "The Crazies",
+            "year": 2010,
+            "nodeSlug": "modern-cult-phenomena",
+            "tier": "EXTENDED",
+            "tmdbId": 29427
+          },
+          {
+            "title": "The Cabinet of Dr. Caligari",
+            "year": 1920,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 234
+          },
+          {
+            "title": "HÃ¤xan",
+            "year": 1922,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 57283
+          },
+          {
+            "title": "Un Chien Andalou",
+            "year": 1929,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 626
+          },
+          {
+            "title": "Freaks",
+            "year": 1932,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 136
+          },
+          {
+            "title": "Vampyr",
+            "year": 1932,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 779
+          },
+          {
+            "title": "The Dawn Patrol",
+            "year": 1938,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 46688
+          },
+          {
+            "title": "Brief Encounter",
+            "year": 1945,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 851
+          },
+          {
+            "title": "The Lost Weekend",
+            "year": 1945,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 28580
+          },
+          {
+            "title": "The Strange Love of Martha Ivers",
+            "year": 1946,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 27033
+          },
+          {
+            "title": "The Red Shoes",
+            "year": 1948,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 19542
+          },
+          {
+            "title": "The Night of the Hunter",
+            "year": 1955,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 3112
+          },
+          {
+            "title": "Run of the Arrow",
+            "year": 1957,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 35001
+          },
+          {
+            "title": "Night of the Living Dead",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 7003
+          },
+          {
+            "title": "Pink Flamingos",
+            "year": 1972,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "CORE",
+            "tmdbId": 14267
+          },
+          {
+            "title": "Black Sunday",
+            "year": 1960,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 27632
+          },
+          {
+            "title": "Eyes Without a Face",
+            "year": 1960,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 31417
+          },
+          {
+            "title": "Peeping Tom",
+            "year": 1960,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11167
+          },
+          {
+            "title": "One-Eyed Jacks",
+            "year": 1961,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 18647
+          },
+          {
+            "title": "Viridiana",
+            "year": 1961,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 4497
+          },
+          {
+            "title": "Carnival of Souls",
+            "year": 1962,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 16093
+          },
+          {
+            "title": "La JetÃ©e",
+            "year": 1962,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 662
+          },
+          {
+            "title": "The Loneliness of the Long Distance Runner",
+            "year": 1962,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 16103
+          },
+          {
+            "title": "The Trial",
+            "year": 1962,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 3009
+          },
+          {
+            "title": "Walk on the Wild Side",
+            "year": 1962,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 60792
+          },
+          {
+            "title": "The Servant",
+            "year": 1963,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 42987
+          },
+          {
+            "title": "Onibaba",
+            "year": 1964,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 3763
+          },
+          {
+            "title": "Repulsion",
+            "year": 1965,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11481
+          },
+          {
+            "title": "The Hill",
+            "year": 1965,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 24395
+          },
+          {
+            "title": "Persona",
+            "year": 1966,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 797
+          },
+          {
+            "title": "Seconds",
+            "year": 1966,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 20620
+          },
+          {
+            "title": "A Bullet for the General",
+            "year": 1967,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 37316
+          },
+          {
+            "title": "Kill and Pray",
+            "year": 1967,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 122787
+          },
+          {
+            "title": "Flesh",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 4578
+          },
+          {
+            "title": "Hour of the Wolf",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 18333
+          },
+          {
+            "title": "Kuroneko",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 40149
+          },
+          {
+            "title": "The Girl on a Motorcycle",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 29722
+          },
+          {
+            "title": "The Killing of Sister George",
+            "year": 1968,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 54575
+          },
+          {
+            "title": "The Cremator",
+            "year": 1969,
+            "nodeSlug": "origins-of-cult-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 18352
+          },
+          {
+            "title": "D.O.A.",
+            "year": 1949,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 18995
+          },
+          {
+            "title": "The Prowler",
+            "year": 1951,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 22985
+          },
+          {
+            "title": "The Narrow Margin",
+            "year": 1952,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 31713
+          },
+          {
+            "title": "Blackboard Jungle",
+            "year": 1955,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 26516
+          },
+          {
+            "title": "The Big Combo",
+            "year": 1955,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 22342
+          },
+          {
+            "title": "The Phenix City Story",
+            "year": 1955,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 35956
+          },
+          {
+            "title": "A Man Escaped",
+            "year": 1956,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 15244
+          },
+          {
+            "title": "High School Confidential!",
+            "year": 1958,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 43116
+          },
+          {
+            "title": "Hush... Hush, Sweet Charlotte",
+            "year": 1964,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 10299
+          },
+          {
+            "title": "The Naked Kiss",
+            "year": 1964,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 26031
+          },
+          {
+            "title": "Tokyo Drifter",
+            "year": 1966,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 45706
+          },
+          {
+            "title": "Le SamouraÃ¯",
+            "year": 1967,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 5511
+          },
+          {
+            "title": "Cisco Pike",
+            "year": 1971,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 55044
+          },
+          {
+            "title": "The Grissom Gang",
+            "year": 1971,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 79645
+          },
+          {
+            "title": "The Harder They Come",
+            "year": 1972,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 7514
+          },
+          {
+            "title": "Dillinger",
+            "year": 1973,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 28110
+          },
+          {
+            "title": "The Holy Mountain",
+            "year": 1973,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 8327
+          },
+          {
+            "title": "Female Trouble",
+            "year": 1974,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 14267
+          },
+          {
+            "title": "The Day of the Locust",
+            "year": 1975,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 5122
+          },
+          {
+            "title": "Velvet Goldmine",
+            "year": 1998,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 1808
+          },
+          {
+            "title": "Hedwig and the Angry Inch",
+            "year": 2001,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 13403
+          },
+          {
+            "title": "Audition",
+            "year": 1999,
+            "nodeSlug": "outsider-cinema",
+            "tier": "CORE",
+            "tmdbId": 8965
+          },
+          {
+            "title": "Twilight's Last Gleaming",
+            "year": 1977,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 75938
+          },
+          {
+            "title": "Jubilee",
+            "year": 1978,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 41426
+          },
+          {
+            "title": "The Long Riders",
+            "year": 1980,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 14729
+          },
+          {
+            "title": "Christiane F.",
+            "year": 1981,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9589
+          },
+          {
+            "title": "Diva",
+            "year": 1981,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 4485
+          },
+          {
+            "title": "The Decline of Western Civilization",
+            "year": 1981,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 21137
+          },
+          {
+            "title": "The Postman Always Rings Twice",
+            "year": 1981,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11027
+          },
+          {
+            "title": "Ladies and Gentlemen, the Fabulous Stains",
+            "year": 1982,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 27016
+          },
+          {
+            "title": "Smithereens",
+            "year": 1982,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 94066
+          },
+          {
+            "title": "Wild Style",
+            "year": 1982,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 14243
+          },
+          {
+            "title": "Scarface",
+            "year": 1983,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 111
+          },
+          {
+            "title": "The Hunger",
+            "year": 1983,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11654
+          },
+          {
+            "title": "Suburbia",
+            "year": 1984,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 28054
+          },
+          {
+            "title": "The Toxic Avenger",
+            "year": 1984,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 15239
+          },
+          {
+            "title": "Come and See",
+            "year": 1985,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 25237
+          },
+          {
+            "title": "Subway",
+            "year": 1985,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10656
+          },
+          {
+            "title": "River's Edge",
+            "year": 1986,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 21309
+          },
+          {
+            "title": "Sid and Nancy",
+            "year": 1986,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 14924
+          },
+          {
+            "title": "Hairspray",
+            "year": 1988,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11054
+          },
+          {
+            "title": "The Decline of Western Civilization Part II: The Metal Years",
+            "year": 1988,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 36724
+          },
+          {
+            "title": "Heathers",
+            "year": 1989,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 2640
+          },
+          {
+            "title": "Paris Is Burning",
+            "year": 1991,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 31225
+          },
+          {
+            "title": "Poison",
+            "year": 1991,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 47620
+          },
+          {
+            "title": "Slacker",
+            "year": 1991,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 14022
+          },
+          {
+            "title": "Man Bites Dog",
+            "year": 1992,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10086
+          },
+          {
+            "title": "Romper Stomper",
+            "year": 1992,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10412
+          },
+          {
+            "title": "Three Colors: Blue",
+            "year": 1993,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 108
+          },
+          {
+            "title": "Natural Born Killers",
+            "year": 1994,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 241
+          },
+          {
+            "title": "Pulp Fiction",
+            "year": 1994,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 680
+          },
+          {
+            "title": "Kids",
+            "year": 1995,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9344
+          },
+          {
+            "title": "The Doom Generation",
+            "year": 1995,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 13552
+          },
+          {
+            "title": "The Craft",
+            "year": 1996,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9100
+          },
+          {
+            "title": "Trainspotting",
+            "year": 1996,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 627
+          },
+          {
+            "title": "Gummo",
+            "year": 1997,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 18415
+          },
+          {
+            "title": "Nowhere",
+            "year": 1997,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 1811
+          },
+          {
+            "title": "SubUrbia",
+            "year": 1997,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 28059
+          },
+          {
+            "title": "SLC Punk",
+            "year": 1998,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 6396
+          },
+          {
+            "title": "The Decline of Western Civilization Part III",
+            "year": 1998,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 44848
+          },
+          {
+            "title": "Go",
+            "year": 1999,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9430
+          },
+          {
+            "title": "Bully",
+            "year": 2001,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9517
+          },
+          {
+            "title": "Ghost World",
+            "year": 2001,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 1548
+          },
+          {
+            "title": "24 Hour Party People",
+            "year": 2002,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 2750
+          },
+          {
+            "title": "Metallica: Some Kind of Monster",
+            "year": 2004,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11401
+          },
+          {
+            "title": "Brick",
+            "year": 2006,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9270
+          },
+          {
+            "title": "Control",
+            "year": 2007,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 5708
+          },
+          {
+            "title": "Southland Tales",
+            "year": 2007,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 4723
+          },
+          {
+            "title": "Beyond the Black Rainbow",
+            "year": 2010,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 50037
+          },
+          {
+            "title": "Scott Pilgrim vs. the World",
+            "year": 2010,
+            "nodeSlug": "outsider-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 22538
+          },
+          {
+            "title": "Robot Monster",
+            "year": 1953,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 43353
+          },
+          {
+            "title": "The Giant Claw",
+            "year": 1957,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 36089
+          },
+          {
+            "title": "The Beast of Yucca Flats",
+            "year": 1961,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 22727
+          },
+          {
+            "title": "Santa Claus Conquers the Martians",
+            "year": 1964,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 32307
+          },
+          {
+            "title": "The Creeping Terror",
+            "year": 1964,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 31275
+          },
+          {
+            "title": "The Horror of Party Beach",
+            "year": 1964,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 42794
+          },
+          {
+            "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+            "year": 1964,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 31383
+          },
+          {
+            "title": "Manos: The Hands of Fate",
+            "year": 1966,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 22293
+          },
+          {
+            "title": "Branded to Kill",
+            "year": 1967,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 17905
+          },
+          {
+            "title": "Female Prisoner #701 Scorpion",
+            "year": 1972,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 71138
+          },
+          {
+            "title": "The Star Wars Holiday Special",
+            "year": 1978,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 74849
+          },
+          {
+            "title": "Cannibal Apocalypse",
+            "year": 1980,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 8692
+          },
+          {
+            "title": "The Apple",
+            "year": 1980,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 49069
+          },
+          {
+            "title": "Basket Case",
+            "year": 1982,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 27813
+          },
+          {
+            "title": "The Room",
+            "year": 2003,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "CORE",
+            "tmdbId": 17473
+          },
+          {
+            "title": "Plan 9 from Outer Space",
+            "year": 1957,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10513
+          },
+          {
+            "title": "Turkey Shoot",
+            "year": 1982,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 39899
+          },
+          {
+            "title": "Yor: The Hunter from the Future",
+            "year": 1983,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 38219
+          },
+          {
+            "title": "Gymkata",
+            "year": 1985,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 14570
+          },
+          {
+            "title": "Mr. Vampire",
+            "year": 1985,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 67342
+          },
+          {
+            "title": "Class of Nuke 'Em High",
+            "year": 1986,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 26554
+          },
+          {
+            "title": "The Seventh Curse",
+            "year": 1986,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 39900
+          },
+          {
+            "title": "The Wraith",
+            "year": 1986,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10017
+          },
+          {
+            "title": "A Chinese Ghost Story",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 30421
+          },
+          {
+            "title": "Hard Ticket to Hawaii",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 26011
+          },
+          {
+            "title": "Miami Connection",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 59558
+          },
+          {
+            "title": "Over the Top",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 1825
+          },
+          {
+            "title": "Silent Night, Deadly Night Part 2",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 50719
+          },
+          {
+            "title": "Street Trash",
+            "year": 1987,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 22172
+          },
+          {
+            "title": "Hobgoblins",
+            "year": 1988,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 31245
+          },
+          {
+            "title": "Mac and Me",
+            "year": 1988,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 20196
+          },
+          {
+            "title": "No Holds Barred",
+            "year": 1989,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 39002
+          },
+          {
+            "title": "Robot Jox",
+            "year": 1990,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 15618
+          },
+          {
+            "title": "Troll 2",
+            "year": 1990,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 26914
+          },
+          {
+            "title": "Cool as Ice",
+            "year": 1991,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 1496
+          },
+          {
+            "title": "Samurai Cop",
+            "year": 1991,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 65374
+          },
+          {
+            "title": "Showdown in Little Tokyo",
+            "year": 1991,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 13154
+          },
+          {
+            "title": "The Heroic Trio",
+            "year": 1993,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 43636
+          },
+          {
+            "title": "The Untold Story",
+            "year": 1993,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 39857
+          },
+          {
+            "title": "Street Fighter",
+            "year": 1994,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 11667
+          },
+          {
+            "title": "Showgirls",
+            "year": 1995,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 10802
+          },
+          {
+            "title": "Ebola Syndrome",
+            "year": 1996,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 24922
+          },
+          {
+            "title": "Batman & Robin",
+            "year": 1997,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 415
+          },
+          {
+            "title": "Double Team",
+            "year": 1997,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9405
+          },
+          {
+            "title": "Battlefield Earth",
+            "year": 2000,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 5491
+          },
+          {
+            "title": "Ben & Arthur",
+            "year": 2002,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 31130
+          },
+          {
+            "title": "The Core",
+            "year": 2003,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 9341
+          },
+          {
+            "title": "Suburban Sasquatch",
+            "year": 2004,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 84297
+          },
+          {
+            "title": "The Happening",
+            "year": 2008,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 8645
+          },
+          {
+            "title": "Birdemic: Shock and Terror",
+            "year": 2010,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 40016
+          },
+          {
+            "title": "Who Killed Captain Alex?",
+            "year": 2010,
+            "nodeSlug": "psychotronic-cinema",
+            "tier": "EXTENDED",
+            "tmdbId": 316776
+          },
+          {
+            "title": "Glen or Glenda",
+            "year": 1953,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 24018
+          },
+          {
+            "title": "The Long Hair of Death",
+            "year": 1964,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 83121
+          },
+          {
+            "title": "Mudhoney",
+            "year": 1965,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 5719
+          },
+          {
+            "title": "Countess Dracula",
+            "year": 1971,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 39043
+          },
+          {
+            "title": "Shock Waves",
+            "year": 1977,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 26680
+          },
+          {
+            "title": "The Howling",
+            "year": 1981,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 11298
+          },
+          {
+            "title": "Poltergeist",
+            "year": 1982,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 609
+          },
+          {
+            "title": "The Sword and the Sorcerer",
+            "year": 1982,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 13945
+          },
+          {
+            "title": "Night of the Comet",
+            "year": 1984,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 18462
+          },
+          {
+            "title": "Clue",
+            "year": 1985,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 15196
+          },
+          {
+            "title": "Fright Night",
+            "year": 1985,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 11797
+          },
+          {
+            "title": "The Last Dragon",
+            "year": 1985,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 13938
+          },
+          {
+            "title": "The Stuff",
+            "year": 1985,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 18502
+          },
+          {
+            "title": "Big Trouble in Little China",
+            "year": 1986,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 6978
+          },
+          {
+            "title": "Chopping Mall",
+            "year": 1986,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 28941
+          },
+          {
+            "title": "The Fly",
+            "year": 1986,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 9426
+          },
+          {
+            "title": "Trainspotting",
+            "year": 1996,
+            "nodeSlug": "video-store-era",
+            "tier": "CORE",
+            "tmdbId": 77
+          },
+          {
+            "title": "The Beastmaster",
+            "year": 1982,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 16441
+          },
+          {
+            "title": "Fire and Ice",
+            "year": 1983,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 15035
+          },
+          {
+            "title": "Red Sonja",
+            "year": 1985,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9626
+          },
+          {
+            "title": "Night of the Creeps",
+            "year": 1986,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 15762
+          },
+          {
+            "title": "Gothic",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 33516
+          },
+          {
+            "title": "Masters of the Universe",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 11649
+          },
+          {
+            "title": "The Gate",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 6917
+          },
+          {
+            "title": "The Hidden",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 12476
+          },
+          {
+            "title": "The Lost Boys",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 1547
+          },
+          {
+            "title": "The Monster Squad",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 13509
+          },
+          {
+            "title": "The Video Dead",
+            "year": 1987,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 26677
+          },
+          {
+            "title": "976-EVIL",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 24038
+          },
+          {
+            "title": "Brain Damage",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 27814
+          },
+          {
+            "title": "Dead Heat",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 40095
+          },
+          {
+            "title": "Hellbound: Hellraiser II",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9064
+          },
+          {
+            "title": "Pumpkinhead",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 26515
+          },
+          {
+            "title": "Return of the Killer Tomatoes!",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 15482
+          },
+          {
+            "title": "Waxwork",
+            "year": 1988,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 29095
+          },
+          {
+            "title": "Warlock",
+            "year": 1989,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 11342
+          },
+          {
+            "title": "Darkman",
+            "year": 1990,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9556
+          },
+          {
+            "title": "Gate II",
+            "year": 1990,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 40729
+          },
+          {
+            "title": "Grim Prairie Tales",
+            "year": 1990,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 66706
+          },
+          {
+            "title": "Nightbreed",
+            "year": 1990,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 20481
+          },
+          {
+            "title": "Tremors",
+            "year": 1990,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9362
+          },
+          {
+            "title": "The People Under the Stairs",
+            "year": 1991,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 13122
+          },
+          {
+            "title": "The Crow",
+            "year": 1994,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9495
+          },
+          {
+            "title": "The Addiction",
+            "year": 1995,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 34996
+          },
+          {
+            "title": "The Relic",
+            "year": 1997,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 11015
+          },
+          {
+            "title": "Cube",
+            "year": 1998,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 431
+          },
+          {
+            "title": "Deep Rising",
+            "year": 1998,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9457
+          },
+          {
+            "title": "The Faculty",
+            "year": 1998,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 9276
+          },
+          {
+            "title": "House on Haunted Hill",
+            "year": 1999,
+            "nodeSlug": "video-store-era",
+            "tier": "EXTENDED",
+            "tmdbId": 11377
+          }
+        ],
+        "missingVotes": [],
+        "importerSchema": []
+      },
+      "bucketTierBreakdown": {
+        "unresolvedTmdb": {
+          "CORE": 1
+        },
+        "missingPoster": {},
+        "missingCredits": {
+          "CORE": 155,
+          "EXTENDED": 331
+        },
+        "missingVotes": {},
+        "importerSchema": {}
+      }
+    }
+  ]
+}

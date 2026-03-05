@@ -114,13 +114,21 @@ export const HORROR_THEME: ThemeConfig = {
 
 const THEMES_BY_PACK_SLUG: Record<string, ThemeConfig> = {
   horror: HORROR_THEME,
-  scifi: {
+  'sci-fi': {
     themeName: 'scifi',
-    cabinetImagePath: '/assets/cabinets/scifi-season-1.png',
-    marqueeLabel: 'Season X: Sci-Fi',
+    cabinetImagePath: '/assets/cabinets/sci-fi-season-3.png',
+    marqueeLabel: 'Season 3: Sci-Fi',
     tokens: SCIFI_TOKENS,
     cssVars: SCIFI_TOKENS,
-    enabled: false,
+    enabled: true,
+  },
+  scifi: {
+    themeName: 'scifi',
+    cabinetImagePath: '/assets/cabinets/sci-fi-season-3.png',
+    marqueeLabel: 'Season 3: Sci-Fi',
+    tokens: SCIFI_TOKENS,
+    cssVars: SCIFI_TOKENS,
+    enabled: true,
   },
   fantasy: {
     themeName: 'fantasy',

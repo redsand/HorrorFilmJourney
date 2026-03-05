@@ -1,0 +1,1665 @@
+{
+  "generatedAt": "2026-03-05T14:54:55.934Z",
+  "summaries": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "taxonomyVersion": "season-1-horror-v3.5",
+      "curatorAuthorityCount": 2235,
+      "authorityCoreCount": 500,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "releaseCoreCount": 500,
+      "coreCountDelta": 0,
+      "items": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "taxonomyVersion": "season-2-cult-v3",
+      "curatorAuthorityCount": 568,
+      "authorityCoreCount": 186,
+      "missingInDbCount": 176,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 3,
+      "lossRatePercent": 30.99,
+      "releaseCoreCount": 170,
+      "coreCountDelta": -16,
+      "items": [
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 234,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 57283,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 626,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 136,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 779,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 46688,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 851,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 28580,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 27033,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 19542,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 3112,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 35001,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 7003,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 14267,
+          "tier": "CORE",
+          "observedNodeSlug": "outsider-cinema",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 27632,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 31417,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 11167,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 18647,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 4497,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 16093,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 662,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 16103,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 3009,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 60792,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 42987,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 3763,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 11481,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 24395,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 797,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 20620,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 37316,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 122787,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 4578,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 18333,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 40149,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 29722,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 54575,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "origins-of-cult-cinema",
+          "tmdbId": 18352,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 28172,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 315,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 28504,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 33564,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 27313,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 21613,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 37601,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 2487,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 15018,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 14937,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 20850,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 40074,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 10835,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 11782,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 3176,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 42992,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 68627,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 68632,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 15516,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 22307,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 11020,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 27429,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 29437,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 27328,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 25239,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 39995,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 7219,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 27346,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 15119,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 22171,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 43089,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 47886,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 29702,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 26178,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 85002,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 11471,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 28968,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 9599,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 31150,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 50162,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 763,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 27073,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 40066,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 755,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 778000,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 36075,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 11075,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 3040,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 1992,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 16061,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 36737,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "grindhouse-exploitation",
+          "tmdbId": 23631,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 4558,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 15515,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 8069,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 27645,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 636,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 12593,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 811,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 593,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 64847,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 16306,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1410,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1103,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11827,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 78,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 837,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 68,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 149,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 8337,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9323,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 10494,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 2666,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 141,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1125,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 68,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 149,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 62,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 4923,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 4917,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11484,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 991,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 840,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 72277,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 16220,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11837,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9659,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1398,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11542,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9538,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 36819,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11639,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 10150,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11704,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 97,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 849,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 26198,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 81,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 26889,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11884,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11976,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 10176,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9463,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 8009,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 13597,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 5548,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 865,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 21453,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 14506,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 34637,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 48624,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11309,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 5048,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9739,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 14282,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9886,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 281,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 902,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 782,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 128,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 18,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 473,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1946,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1090,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 8843,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 7299,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 11049,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 14337,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 16320,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 9389,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 1272,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 17654,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 17431,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "cult-science-fiction",
+          "tmdbId": 19898,
+          "tier": "EXTENDED",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 11210,
+          "tier": "CORE",
+          "reason": "unresolved-tmdb"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 8965,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "outsider-cinema",
+          "tmdbId": 9696,
+          "tier": "CORE",
+          "observedNodeSlug": "eurocult",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "node-drift",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "video-store-era",
+          "tmdbId": 77,
+          "tier": "CORE",
+          "observedNodeSlug": "modern-cult-phenomena",
+          "reason": "slug-mismatch"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "camp-cult-comedy",
+          "tmdbId": 928,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "modern-cult-phenomena",
+          "tmdbId": 129,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        },
+        {
+          "category": "missing-in-db",
+          "seasonSlug": "season-2",
+          "packSlug": "cult-classics",
+          "nodeSlug": "modern-cult-phenomena",
+          "tmdbId": 141,
+          "tier": "CORE",
+          "reason": "eligibility-gate:credits"
+        }
+      ]
+    },
+    {
+      "seasonSlug": "season-3",
+      "packSlug": "sci-fi",
+      "taxonomyVersion": "season-3-sci-fi-v1",
+      "curatorAuthorityCount": 0,
+      "authorityCoreCount": 0,
+      "missingInDbCount": 0,
+      "missingInReleaseCount": 0,
+      "tierDriftCount": 0,
+      "nodeDriftCount": 0,
+      "lossRatePercent": 0,
+      "releaseCoreCount": 640,
+      "coreCountDelta": 640,
+      "items": []
+    }
+  ]
+}

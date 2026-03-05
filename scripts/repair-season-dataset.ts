@@ -83,13 +83,17 @@ function parseCliOptions(): RepairOptions {
   };
 }
 
+function parseJson<T>(raw: string): T {
+  return JSON.parse(raw.replace(/^\uFEFF/, '')) as T;
+}
+
 function keyForAssignment(entry: { nodeSlug: string; tmdbId: number }): string {
   return `${entry.nodeSlug}:${entry.tmdbId}`;
 }
 
 async function loadSeason1Assignments(): Promise<AuthorityAssignment[]> {
   const raw = await fs.readFile(SEASON1_SNAPSHOT_PATH, 'utf8');
-  const parsed = JSON.parse(raw) as {
+  const parsed = parseJson<{
     season?: { slug?: string };
     pack?: { slug?: string };
     assignments?: Array<{
@@ -100,7 +104,7 @@ async function loadSeason1Assignments(): Promise<AuthorityAssignment[]> {
       coreRank?: number | null;
       evidence?: { matchTitle?: string; matchYear?: number };
     }>;
-  };
+  }>(raw);
   return (parsed.assignments ?? []).map((item) => ({
     seasonSlug: parsed.season?.slug ?? 'season-1',
     packSlug: parsed.pack?.slug ?? 'horror',
@@ -116,13 +120,13 @@ async function loadSeason1Assignments(): Promise<AuthorityAssignment[]> {
 
 async function loadSeason2Assignments(): Promise<AuthorityAssignment[]> {
   const raw = await fs.readFile(SEASON2_SNAPSHOT_PATH, 'utf8');
-  const parsed = JSON.parse(raw) as {
+  const parsed = parseJson<{
     nodes?: Array<{
       slug: string;
       core?: Array<{ title: string; year: number; tmdbId?: number | null }>;
       extended?: Array<{ title: string; year: number; tmdbId?: number | null }>;
     }>;
-  };
+  }>(raw);
   const entries: AuthorityAssignment[] = [];
   for (const node of parsed.nodes ?? []) {
     let rank = 1;

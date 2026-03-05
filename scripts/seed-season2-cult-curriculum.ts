@@ -31,6 +31,7 @@ const READINESS_PATH = resolve('docs/season/season-2-cult-classics-readiness.md'
 const ALLOWLIST_PATH = resolve('docs/season/season-2-cult-classics-allowlist.json');
 const BLOCKLIST_PATH = resolve('docs/season/season-2-cult-classics-blocklist.json');
 const REVIEW_QUEUE_PATH = resolve('docs/season/season-2-cult-candidates-needing-review.json');
+const SEASON2_TAXONOMY_VERSION = process.env.SEASON2_TAXONOMY_VERSION?.trim() || 'season-2-cult-v3';
 const DEFAULT_NODE_OBJECTIVES: Record<string, string> = {
   'origins-of-cult-cinema': 'Origins of cult fandom and underground screenings.',
   'grindhouse-exploitation': 'Low-budget rebellion, shock cinema, and exploitation craft.',
@@ -1047,11 +1048,13 @@ async function main(): Promise<void> {
           if (!evaluation.isEligible) {
             continue;
           }
-          assignments.push({
-            nodeId: node.id,
-            movieId: assignment.movie.id,
-            rank: assignments.length + 1,
-          });
+        assignments.push({
+          nodeId: node.id,
+          movieId: assignment.movie.id,
+          rank: assignments.length + 1,
+          tier: 'CORE',
+          taxonomyVersion: SEASON2_TAXONOMY_VERSION,
+        });
           if (enforceGlobalDedup) {
             globallyAssignedMovieIds.add(assignment.movie.id);
           }
@@ -1258,6 +1261,8 @@ async function main(): Promise<void> {
           nodeId: node.id,
           movieId: resolved.id,
           rank: index + 1,
+          tier: 'CORE',
+          taxonomyVersion: SEASON2_TAXONOMY_VERSION,
         });
       }
 
@@ -1376,6 +1381,8 @@ async function main(): Promise<void> {
             nodeId: node.id,
             movieId: movie.id,
             rank: assignments.length + 1,
+            tier: 'CORE',
+            taxonomyVersion: SEASON2_TAXONOMY_VERSION,
           });
           if (enforceGlobalDedup) {
             globallyAssignedMovieIds.add(movie.id);
@@ -1474,6 +1481,8 @@ async function main(): Promise<void> {
           nodeId: node.id,
           movieId: hydrated.id,
           rank: assignments.length + 1,
+          tier: 'CORE',
+          taxonomyVersion: SEASON2_TAXONOMY_VERSION,
         });
         if (enforceGlobalDedup) {
           globallyAssignedMovieIds.add(hydrated.id);

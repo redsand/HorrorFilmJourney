@@ -27,8 +27,10 @@
     "publish:season1:nodes": "tsx scripts/publish-season1-node-release.ts",
     "seed:season1:enrich-tags": "node --experimental-strip-types scripts/enrich-season1-horror-tags.ts",
     "seed:season2:cult": "node --experimental-strip-types scripts/seed-season2-cult-curriculum.ts",
+    "seed:season3:sci-fi": "node --experimental-strip-types scripts/seed-season3-sci-fi-curriculum.ts",
     "update:seasons": "node --experimental-strip-types scripts/update-seasons.ts",
     "publish:season2": "node --experimental-strip-types scripts/publish-season2.ts",
+    "publish:season3": "node --experimental-strip-types scripts/publish-season3.ts",
     "review:season2:candidates": "node --experimental-strip-types scripts/review-season2-candidate-pool.ts",
     "curate:season2": "node --experimental-strip-types scripts/curate-season2-shortlist.ts",
     "season2:lock": "node --experimental-strip-types scripts/season2-lock.ts",
@@ -78,6 +80,7 @@
     "seasons:create-template": "node --experimental-strip-types scripts/create-season-template.ts",
     "season3:harvest:sci-fi": "node --experimental-strip-types scripts/harvest-season3-sci-fi-candidates.ts",
     "season3:score:sci-fi": "node --experimental-strip-types scripts/score-season3-sci-fi-candidates.ts"
+    ,"season3:calibrate:sci-fi": "node --experimental-strip-types scripts/calibrate-season3-sci-fi-candidates.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
