@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-05T16:34:28.294Z",
-  "count": 19,
+  "generatedAt": "2026-03-05T18:53:41.861Z",
+  "count": 42,
   "items": [
     {
       "tmdbId": 16306,
@@ -134,6 +134,167 @@
       "year": 1999,
       "reason": "ANIMATION_EXCLUDED",
       "nodeSlug": "camp-cult-comedy"
+    },
+    {
+      "tmdbId": 64690,
+      "title": "Drive",
+      "year": 2011,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 122081,
+      "title": "Spring Breakers",
+      "year": 2013,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 301365,
+      "title": "The Neon Demon",
+      "year": 2016,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 435615,
+      "title": "Possessor",
+      "year": 2020,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 630240,
+      "title": "Titane",
+      "year": 2021,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 22970,
+      "title": "The Cabin in the Woods",
+      "year": 2012,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 7025,
+      "title": "It Follows",
+      "year": 2014,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 460885,
+      "title": "Mandy",
+      "year": 2018,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 7029,
+      "title": "Hereditary",
+      "year": 2018,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 503919,
+      "title": "The Lighthouse",
+      "year": 2019,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 530385,
+      "title": "Midsommar",
+      "year": 2019,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 913290,
+      "title": "Barbarian",
+      "year": 2022,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 619778,
+      "title": "Malignant",
+      "year": 2021,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 1201298,
+      "title": "乌兰察布",
+      "year": 2022,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 667216,
+      "title": "Infinity Pool",
+      "year": 2023,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 663712,
+      "title": "Terrifier 2",
+      "year": 2022,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 760104,
+      "title": "X",
+      "year": 2022,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 949423,
+      "title": "Pearl",
+      "year": 2022,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 1520326,
+      "title": "???",
+      "year": 2023,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 1008042,
+      "title": "Talk to Me",
+      "year": 2023,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 241848,
+      "title": "The Guest",
+      "year": 2014,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 519669,
+      "title": "Можете звать меня папой",
+      "year": 2016,
+      "reason": "YEAR_CAP_EXCLUDED_CURATED",
+      "nodeSlug": "midnight-movies"
+    },
+    {
+      "tmdbId": 149,
+      "title": "Akira",
+      "year": 1988,
+      "reason": "ANIMATION_EXCLUDED",
+      "nodeSlug": "midnight-movies"
     }
   ]
 }
