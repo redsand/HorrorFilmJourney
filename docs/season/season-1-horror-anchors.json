@@ -1,0 +1,41 @@
+{
+  "seasonSlug": "season-1",
+  "packSlug": "horror",
+  "anchors": [
+    {
+      "tmdbId": 10331,
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 923,
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 7018,
+      "title": "28 Days Later",
+      "year": 2002,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 20766,
+      "title": "The Road",
+      "year": 2009,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 396535,
+      "title": "Train to Busan",
+      "year": 2016,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE"
+    }
+  ]
+}

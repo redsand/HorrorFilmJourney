@@ -1,0 +1,41 @@
+{
+  "seasonSlug": "season-2",
+  "packSlug": "cult-classics",
+  "anchors": [
+    {
+      "tmdbId": 234,
+      "title": "The Cabinet of Dr. Caligari",
+      "year": 1920,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 136,
+      "title": "Freaks",
+      "year": 1932,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 7003,
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 36685,
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "nodeSlug": "camp-cult-comedy",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 985,
+      "title": "Eraserhead",
+      "year": 1977,
+      "nodeSlug": "midnight-movies",
+      "tier": "CORE"
+    }
+  ]
+}
