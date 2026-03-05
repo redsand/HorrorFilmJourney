@@ -91,7 +91,33 @@
     }
   },
   "overlapConstraints": {
-    "disallowedPairs": [],
-    "penalizedPairs": []
+    "disallowedPairs": [
+      [
+        "proto-science-fiction",
+        "retrofuturism-steampunk-dieselpunk"
+      ]
+    ],
+    "penalizedPairs": [
+      [
+        "dystopian-science-fiction",
+        "post-apocalyptic-science-fiction"
+      ],
+      [
+        "artificial-intelligence-robotics",
+        "cyberpunk"
+      ],
+      [
+        "alien-contact-invasion",
+        "military-science-fiction"
+      ],
+      [
+        "social-speculative-science-fiction",
+        "dystopian-science-fiction"
+      ],
+      [
+        "time-travel-science-fiction",
+        "alternate-history-multiverse"
+      ]
+    ]
   }
 }

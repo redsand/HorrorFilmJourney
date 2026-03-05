@@ -120,8 +120,9 @@ function reasonPass(candidate: ScoredCandidate, minSciFiScoreWithGenre: number, 
 
 async function main(): Promise<void> {
   const targetCount = parseIntEnv('SEASON3_CALIBRATED_TARGET', 900);
-  const minSciFiScoreWithGenre = parseFloatEnv('SEASON3_MIN_SCORE_WITH_GENRE', 0.08);
+  const minSciFiScoreWithGenre = parseFloatEnv('SEASON3_MIN_SCORE_WITH_GENRE', 0.03);
   const minSciFiScoreWithoutGenre = parseFloatEnv('SEASON3_MIN_SCORE_NO_GENRE', 0.20);
+  const fallbackMinSciFiScoreWithGenre = parseFloatEnv('SEASON3_FALLBACK_MIN_SCORE_WITH_GENRE', 0.01);
   const allowFranchise = process.env.SEASON3_ALLOW_FRANCHISE === 'true';
 
   const payload = JSON.parse(await fs.readFile(INPUT_PATH, 'utf8')) as ScoredFile;
@@ -147,7 +148,24 @@ async function main(): Promise<void> {
     });
   }
 
-  const calibrated = accepted
+  const acceptedByTmdb = new Set(accepted.map((item) => item.tmdbId));
+  const fallbackTopUp = candidates
+    .filter((candidate) => {
+      if (acceptedByTmdb.has(candidate.tmdbId)) return false;
+      const hasGenre878 = Array.isArray(candidate.genreIds) && candidate.genreIds.includes(SCI_FI_GENRE_ID);
+      if (!hasGenre878) return false;
+      if ((candidate.sciFiScore ?? 0) < fallbackMinSciFiScoreWithGenre) return false;
+      if (!allowFranchise && isLikelyFranchise(candidate)) return false;
+      return true;
+    })
+    .map((candidate) => ({
+      ...candidate,
+      strength: combinedStrength(candidate),
+      calibrationReasons: ['fallback:genre878-topup'],
+    }))
+    .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title));
+
+  const calibrated = [...accepted, ...fallbackTopUp]
     .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title))
     .slice(0, targetCount);
 
@@ -199,4 +217,3 @@ void main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
-

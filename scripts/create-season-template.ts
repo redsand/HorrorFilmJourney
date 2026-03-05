@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import { loadSeasonIntegrityRegistry, type SeasonIntegritySpec } from '../src/lib/audit/season-integrity-registry.ts';
+import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy.ts';
 
 type CliOptions = {
   seasonSlug: string;
@@ -20,28 +21,9 @@ type CliOptions = {
 
 const REGISTRY_PATH = path.resolve('docs', 'season', 'season-integrity-registry.json');
 
-const SCI_FI_COMPREHENSIVE_NODES = [
-  'proto-science-fiction',
-  'space-opera',
-  'hard-science-fiction',
-  'cyberpunk',
-  'dystopian-science-fiction',
-  'post-apocalyptic-science-fiction',
-  'time-travel-science-fiction',
-  'alternate-history-multiverse',
-  'artificial-intelligence-robotics',
-  'alien-contact-invasion',
-  'biopunk-genetic-engineering',
-  'military-science-fiction',
-  'science-fiction-horror',
-  'social-speculative-science-fiction',
-  'new-weird-cosmic-science-fiction',
-  'retrofuturism-steampunk-dieselpunk',
-] as const;
-
 function defaultNodeSlugsForPack(packSlug: string): string[] {
   if (packSlug === 'sci-fi') {
-    return [...SCI_FI_COMPREHENSIVE_NODES];
+    return [...SEASON3_SCI_FI_NODE_SLUGS];
   }
   return ['foundations', 'movements', 'modern', 'deep-cuts'];
 }
@@ -84,9 +66,9 @@ function parseOptions(): CliOptions {
   if (nodeSlugs.length === 0) {
     throw new Error('At least one node slug is required.');
   }
-  if (packSlug === 'sci-fi' && hasCustomNodeSlugs && nodeSlugs.length < SCI_FI_COMPREHENSIVE_NODES.length && !allowCustomNodeSlugs) {
+  if (packSlug === 'sci-fi' && hasCustomNodeSlugs && nodeSlugs.length < SEASON3_SCI_FI_NODE_SLUGS.length && !allowCustomNodeSlugs) {
     throw new Error(
-      `Custom sci-fi node list is too narrow (${nodeSlugs.length}). Expected at least ${SCI_FI_COMPREHENSIVE_NODES.length}. Re-run without --node-slugs for the comprehensive profile, or pass --allow-custom-node-slugs to override.`,
+      `Custom sci-fi node list is too narrow (${nodeSlugs.length}). Expected at least ${SEASON3_SCI_FI_NODE_SLUGS.length}. Re-run without --node-slugs for the comprehensive profile, or pass --allow-custom-node-slugs to override.`,
     );
   }
 

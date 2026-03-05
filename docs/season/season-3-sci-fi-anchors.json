@@ -1,5 +1,118 @@
 {
   "seasonSlug": "season-3",
   "packSlug": "sci-fi",
-  "anchors": []
+  "anchors": [
+    {
+      "tmdbId": 19,
+      "title": "Metropolis",
+      "year": 1927,
+      "nodeSlug": "proto-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 11,
+      "title": "Star Wars",
+      "year": 1977,
+      "nodeSlug": "space-opera",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 157336,
+      "title": "Interstellar",
+      "year": 2014,
+      "nodeSlug": "hard-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 78,
+      "title": "Blade Runner",
+      "year": 1982,
+      "nodeSlug": "cyberpunk",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 68,
+      "title": "Brazil",
+      "year": 1985,
+      "nodeSlug": "dystopian-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 9659,
+      "title": "Mad Max",
+      "year": 1979,
+      "nodeSlug": "post-apocalyptic-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 105,
+      "title": "Back to the Future",
+      "year": 1985,
+      "nodeSlug": "time-travel-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 157350,
+      "title": "Divergent",
+      "year": 2014,
+      "nodeSlug": "alternate-history-multiverse",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 62,
+      "title": "2001: A Space Odyssey",
+      "year": 1968,
+      "nodeSlug": "artificial-intelligence-robotics",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 329865,
+      "title": "Arrival",
+      "year": 2016,
+      "nodeSlug": "alien-contact-invasion",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 782,
+      "title": "Gattaca",
+      "year": 1997,
+      "nodeSlug": "biopunk-genetic-engineering",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 137113,
+      "title": "Edge of Tomorrow",
+      "year": 2014,
+      "nodeSlug": "military-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 348,
+      "title": "Alien",
+      "year": 1979,
+      "nodeSlug": "science-fiction-horror",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 76,
+      "title": "A Clockwork Orange",
+      "year": 1971,
+      "nodeSlug": "social-speculative-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 340102,
+      "title": "The New Mutants",
+      "year": 2020,
+      "nodeSlug": "new-weird-cosmic-science-fiction",
+      "tier": "CORE"
+    },
+    {
+      "tmdbId": 3034,
+      "title": "The Wild Wild West Revisited",
+      "year": 1979,
+      "nodeSlug": "retrofuturism-steampunk-dieselpunk",
+      "tier": "CORE"
+    }
+  ]
 }

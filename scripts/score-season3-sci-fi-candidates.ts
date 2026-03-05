@@ -30,12 +30,12 @@ function parseArg(name: string): string | null {
 }
 
 async function resolveDefaultInputPath(): Promise<string> {
-  const calibrated = path.resolve('docs/season/season-3-sci-fi-candidates-calibrated.json');
+  const shortlist = path.resolve('docs/season/season-3-sci-fi-candidates-shortlist.json');
   try {
-    await fs.access(calibrated);
-    return calibrated;
+    await fs.access(shortlist);
+    return shortlist;
   } catch {
-    return path.resolve('docs/season/season-3-sci-fi-candidates-shortlist.json');
+    return path.resolve('docs/season/season-3-sci-fi-candidates-calibrated.json');
   }
 }
 

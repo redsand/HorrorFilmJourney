@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
   getSeason3SciFiDiscoverPlans,
+  SEASON3_DISCOVERY_SCORE_WEIGHT_BY_PLAN_KEY,
   type DiscoverPlan,
 } from '../src/lib/seasons/season3/sci-fi-discovery-profile.ts';
 
@@ -140,14 +141,16 @@ function scoreCandidate(movie: Candidate): number {
   const voteCount = movie.voteCount ?? 0;
   const voteAverage = movie.voteAverage ?? 0;
   const popularity = movie.popularity ?? 0;
-  const discoveryBreadth = movie.discoveryKeys.length;
+  const discoveryPlanWeight = movie.discoveryKeys
+    .map((key) => SEASON3_DISCOVERY_SCORE_WEIGHT_BY_PLAN_KEY[key] ?? 0)
+    .reduce((sum, weight) => sum + weight, 0);
   const vintageBonus = movie.year && movie.year < 2000 ? 2 : movie.year && movie.year < 2010 ? 1 : 0;
 
   let score = 0;
-  score += Math.min(10, Math.log10(Math.max(1, voteCount)) * 3);
+  score += Math.min(12, Math.log10(Math.max(1, voteCount)) * 3.4);
   score += Math.max(0, voteAverage - 5);
-  score += Math.min(5, popularity / 20);
-  score += discoveryBreadth * 1.5;
+  score += Math.min(2, popularity / 40);
+  score += discoveryPlanWeight;
   score += vintageBonus;
   return Number(score.toFixed(2));
 }

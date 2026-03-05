@@ -7,6 +7,14 @@ export type DiscoverPlan = {
   voteCountGte: number;
 };
 
+export const SEASON3_DISCOVERY_SCORE_WEIGHT_BY_PLAN_KEY: Record<string, number> = {
+  'core-sci-fi-vote-count': 2.4,
+  'core-sci-fi-popularity': 1.6,
+  'sci-fi-horror': 1.2,
+  'sci-fi-thriller-mystery': 1.1,
+  'adjacent-genre-sweep': 0.35,
+} as const;
+
 export const TMDB_GENRE = {
   ACTION: 28,
   ADVENTURE: 12,
@@ -36,6 +44,11 @@ export const SCI_FI_ADJACENT_GENRES: number[] = [
 ];
 
 export function getSeason3SciFiDiscoverPlans(): DiscoverPlan[] {
+  const sciFiAdjacencyWithExplicitSignal = [
+    TMDB_GENRE.SCIENCE_FICTION,
+    ...SCI_FI_ADJACENT_GENRES,
+  ];
+
   return [
     {
       key: 'core-sci-fi-vote-count',
@@ -68,11 +81,10 @@ export function getSeason3SciFiDiscoverPlans(): DiscoverPlan[] {
     {
       key: 'adjacent-genre-sweep',
       label: 'Adjacent genres with sci-fi signal, excluding animation',
-      withGenres: [...SCI_FI_ADJACENT_GENRES],
+      withGenres: sciFiAdjacencyWithExplicitSignal,
       withoutGenres: [TMDB_GENRE.ANIMATION],
-      sortBy: 'popularity.desc',
-      voteCountGte: 30,
+      sortBy: 'vote_count.desc',
+      voteCountGte: 50,
     },
   ];
 }
-

@@ -1,6 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { SEASON3_SCI_FI_NODE_KEYWORDS } from '../src/lib/seasons/season3/taxonomy.ts';
 
 type GovernanceFile = {
   seasonSlug: string;
@@ -16,6 +17,7 @@ type Candidate = {
   overview?: string | null;
   discoveryReasons?: string[];
   discoveryScore?: number;
+  topNodes?: Array<{ nodeSlug?: string; probability?: number }>;
 };
 
 type CandidateFile = {
@@ -40,25 +42,6 @@ type TmdbDetails = {
 const GOVERNANCE_PATH = path.resolve('docs', 'season', 'season-3-sci-fi-node-governance.json');
 const DEFAULT_CANDIDATE_PATH = path.resolve('docs', 'season', 'season-3-sci-fi-candidates-calibrated.json');
 const MASTERED_OUTPUT = path.resolve('docs', 'season', 'season-3-sci-fi-mastered.json');
-
-const NODE_KEYWORDS: Record<string, string[]> = {
-  'proto-science-fiction': ['silent', 'early', 'metropolis', 'frankenstein', 'futurism'],
-  'space-opera': ['space', 'star', 'galaxy', 'planet', 'spaceship', 'interstellar'],
-  'hard-science-fiction': ['science', 'physics', 'astronaut', 'experiment', 'orbital', 'quantum'],
-  cyberpunk: ['cyber', 'hacker', 'virtual', 'android', 'matrix', 'neon'],
-  'dystopian-science-fiction': ['dystopia', 'totalitarian', 'surveillance', 'future society', 'authoritarian'],
-  'post-apocalyptic-science-fiction': ['apocalypse', 'post apocalyptic', 'wasteland', 'collapse', 'nuclear'],
-  'time-travel-science-fiction': ['time travel', 'future', 'past', 'timeline', 'paradox', 'loop'],
-  'alternate-history-multiverse': ['multiverse', 'alternate', 'parallel', 'alternate history', 'dimension'],
-  'artificial-intelligence-robotics': ['ai', 'artificial intelligence', 'robot', 'android', 'machine'],
-  'alien-contact-invasion': ['alien', 'invasion', 'extraterrestrial', 'ufo', 'first contact'],
-  'biopunk-genetic-engineering': ['genetic', 'clone', 'virus', 'bio', 'mutation', 'dna'],
-  'military-science-fiction': ['war', 'soldier', 'military', 'battle', 'combat', 'weapon'],
-  'science-fiction-horror': ['horror', 'creature', 'monster', 'infection', 'body horror', 'terror'],
-  'social-speculative-science-fiction': ['society', 'class', 'identity', 'political', 'social', 'speculative'],
-  'new-weird-cosmic-science-fiction': ['cosmic', 'weird', 'eldritch', 'surreal', 'dream', 'lovecraft'],
-  'retrofuturism-steampunk-dieselpunk': ['retro', 'steampunk', 'dieselpunk', 'clockwork', 'victorian'],
-};
 
 function parseIntEnv(name: string, fallback: number): number {
   const raw = process.env[name]?.trim();
@@ -88,7 +71,7 @@ function pickYear(releaseDate?: string, fallback?: number | null): number | null
 }
 
 function nodeMatchScore(nodeSlug: string, candidate: Candidate): number {
-  const terms = NODE_KEYWORDS[nodeSlug] ?? [];
+  const terms = SEASON3_SCI_FI_NODE_KEYWORDS[nodeSlug] ?? [];
   if (terms.length === 0) return 0;
   const haystack = normalize([
     candidate.title,
@@ -102,6 +85,16 @@ function nodeMatchScore(nodeSlug: string, candidate: Candidate): number {
     }
   }
   return score;
+}
+
+function classifierNodeScore(nodeSlug: string, candidate: Candidate): number {
+  const topNodes = Array.isArray(candidate.topNodes) ? candidate.topNodes : [];
+  for (const topNode of topNodes) {
+    if (topNode?.nodeSlug === nodeSlug && typeof topNode.probability === 'number') {
+      return Math.max(0, topNode.probability);
+    }
+  }
+  return 0;
 }
 
 async function fetchTmdbDetails(apiKey: string, tmdbId: number): Promise<TmdbDetails | null> {
@@ -186,30 +179,56 @@ async function main(): Promise<void> {
       nodes.push(node);
     }
 
+    const sortedNodes = nodes.sort((a, b) => a.orderIndex - b.orderIndex);
     const usedTmdb = new Set<number>();
     const assignments: Array<{ nodeId: string; nodeSlug: string; tmdbId: number; rank: number; coreRank: number }> = [];
-    for (const node of nodes.sort((a, b) => a.orderIndex - b.orderIndex)) {
-      const ranked = candidates
-        .filter((candidate) => !usedTmdb.has(candidate.tmdbId))
-        .map((candidate) => ({
-          candidate,
-          nodeScore: nodeMatchScore(node.slug, candidate),
-          baseScore: candidate.discoveryScore ?? 0,
-        }))
-        .sort((a, b) => b.nodeScore - a.nodeScore || b.baseScore - a.baseScore);
+    const perNodeCount = new Map(sortedNodes.map((node) => [node.id, 0]));
 
-      const picked = ranked.slice(0, nodeSize);
-      for (let i = 0; i < picked.length; i += 1) {
-        const row = picked[i]!;
-        usedTmdb.add(row.candidate.tmdbId);
+    const pickBestForNode = (nodeSlug: string, requirePositiveSignal: boolean): Candidate | null => {
+      let best: { candidate: Candidate; score: number; base: number } | null = null;
+      for (const candidate of candidates) {
+        if (usedTmdb.has(candidate.tmdbId)) continue;
+        const keywordScore = nodeMatchScore(nodeSlug, candidate);
+        const classifierScore = classifierNodeScore(nodeSlug, candidate);
+        const combined = (keywordScore * 2) + (classifierScore * 8);
+        if (requirePositiveSignal && combined <= 0) continue;
+        const base = candidate.discoveryScore ?? 0;
+        if (!best || combined > best.score || (combined === best.score && base > best.base)) {
+          best = { candidate, score: combined, base };
+        }
+      }
+      return best?.candidate ?? null;
+    };
+
+    const roundRobinAssign = (requirePositiveSignal: boolean): boolean => {
+      let assignedAny = false;
+      for (const node of sortedNodes) {
+        const count = perNodeCount.get(node.id) ?? 0;
+        if (count >= nodeSize) continue;
+        const picked = pickBestForNode(node.slug, requirePositiveSignal);
+        if (!picked) continue;
+        usedTmdb.add(picked.tmdbId);
+        const nextRank = count + 1;
+        perNodeCount.set(node.id, nextRank);
         assignments.push({
           nodeId: node.id,
           nodeSlug: node.slug,
-          tmdbId: row.candidate.tmdbId,
-          rank: i + 1,
-          coreRank: i + 1,
+          tmdbId: picked.tmdbId,
+          rank: nextRank,
+          coreRank: nextRank,
         });
+        assignedAny = true;
       }
+      return assignedAny;
+    };
+
+    // Pass 1: assign only candidates with explicit signal for each node.
+    while (roundRobinAssign(true)) {
+      // continue until no node can be filled with a positive signal candidate.
+    }
+    // Pass 2: soft backfill remaining slots if candidates remain.
+    while (roundRobinAssign(false)) {
+      // continue until no further candidates remain or all nodes hit nodeSize.
     }
 
     if (assignments.length === 0) {
