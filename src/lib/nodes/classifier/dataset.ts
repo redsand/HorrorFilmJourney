@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { PrismaClient } from '@prisma/client';
-import type { BuiltDataset, ClassifierMovieInput, DatasetRow } from './types';
-import { parseCastNames, parseJsonStringArray } from './features';
+import type { BuiltDataset, ClassifierMovieInput, DatasetRow } from './types.ts';
+import { parseCastNames, parseJsonStringArray } from './features.ts';
 
 type BuildDatasetInput = {
   seasonSlug: string;
@@ -9,6 +9,7 @@ type BuildDatasetInput = {
   taxonomyVersion?: string;
   validationRatio: number;
   splitSeed: number;
+  genreHints?: string[];
 };
 
 function stableRatio(key: string, seed: number): number {
@@ -17,7 +18,7 @@ function stableRatio(key: string, seed: number): number {
   return value / 0xffffffff;
 }
 
-export async function buildSeason1TrainingDataset(
+export async function buildSeasonTrainingDataset(
   prisma: PrismaClient,
   input: BuildDatasetInput,
 ): Promise<BuiltDataset> {
@@ -59,7 +60,7 @@ export async function buildSeason1TrainingDataset(
   });
 
   if (!release) {
-    throw new Error('No published Season 1 release found for training labels');
+    throw new Error(`No published release found for ${input.seasonSlug}/${input.packSlug} training labels`);
   }
 
   const nodeSlugs = await prisma.journeyNode.findMany({
@@ -71,8 +72,8 @@ export async function buildSeason1TrainingDataset(
     select: { slug: true },
   }).then((rows) => rows.map((row) => row.slug));
 
-  if (nodeSlugs.length !== 16) {
-    throw new Error(`Expected 16 Season 1 nodes for training; found ${nodeSlugs.length}`);
+  if (nodeSlugs.length < 4) {
+    throw new Error(`Expected at least 4 nodes for training; found ${nodeSlugs.length}`);
   }
 
   const positiveByMovie = new Map<string, Set<string>>();
@@ -118,6 +119,10 @@ export async function buildSeason1TrainingDataset(
 
   const labelMovieIds = new Set(positiveByMovie.keys());
 
+  const genreHints = new Set(
+    (input.genreHints && input.genreHints.length > 0 ? input.genreHints : [input.packSlug])
+      .map((entry) => entry.trim().toLowerCase()),
+  );
   const movies: ClassifierMovieInput[] = moviesRaw
     .map((movie) => ({
       id: movie.id,
@@ -134,7 +139,10 @@ export async function buildSeason1TrainingDataset(
         ? movie.embedding!.vectorJson.filter((entry): entry is number => typeof entry === 'number')
         : undefined,
     }))
-    .filter((movie) => labelMovieIds.has(movie.id) || movie.genres.includes('horror'));
+    .filter((movie) => {
+      if (labelMovieIds.has(movie.id)) return true;
+      return movie.genres.some((genre) => genreHints.has(genre.toLowerCase()));
+    });
 
   const rows: DatasetRow[] = movies.map((movie) => {
     const labels = positiveByMovie.get(movie.id) ?? new Set<string>();
@@ -160,4 +168,24 @@ export async function buildSeason1TrainingDataset(
     validationRows,
     labelSourceReleaseId: release.id,
   };
+}
+
+export async function buildSeason1TrainingDataset(
+  prisma: PrismaClient,
+  input: BuildDatasetInput,
+): Promise<BuiltDataset> {
+  return buildSeasonTrainingDataset(prisma, {
+    ...input,
+    genreHints: input.genreHints ?? ['horror'],
+  });
+}
+
+export async function buildSeason3TrainingDataset(
+  prisma: PrismaClient,
+  input: BuildDatasetInput,
+): Promise<BuiltDataset> {
+  return buildSeasonTrainingDataset(prisma, {
+    ...input,
+    genreHints: input.genreHints ?? ['science fiction', 'sci-fi', 'science-fiction', 'scifi'],
+  });
 }

@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import type { Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
+import type { Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types.ts';
 
 function validateClassifierArtifact(parsed: SeasonNodeClassifierArtifact): SeasonNodeClassifierArtifact {
   if (parsed.artifactVersion !== 'season1-node-classifier-v1' && parsed.artifactVersion !== 'season-node-classifier-v1') {

@@ -1,5 +1,5 @@
-import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
-import { vectorizeMovie } from './features';
+import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types.ts';
+import { vectorizeMovie } from './features.ts';
 
 function sigmoid(value: number): number {
   if (value < -30) return 0;
@@ -73,4 +73,13 @@ export function scoreMovieWithSeason3Classifier(
   nodeSlugs?: string[],
 ): NodeProbability[] {
   return scoreMovieWithSeasonClassifier(artifact, movie, nodeSlugs);
+}
+
+export function computeSeasonPackScore(probabilities: NodeProbability[]): number {
+  if (probabilities.length === 0) {
+    return 0;
+  }
+  const top = probabilities[0]?.probability ?? 0;
+  const avg = probabilities.reduce((sum, item) => sum + item.probability, 0) / probabilities.length;
+  return Number(((top * 0.6) + (avg * 0.4)).toFixed(6));
 }

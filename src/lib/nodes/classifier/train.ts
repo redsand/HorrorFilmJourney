@@ -1,5 +1,5 @@
-import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
-import { buildVocabulary, vectorizeMovie } from './features';
+import type { BuiltDataset, NodeModel, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types.ts';
+import { buildVocabulary, vectorizeMovie } from './features.ts';
 
 type TrainInput = {
   seasonSlug: string;

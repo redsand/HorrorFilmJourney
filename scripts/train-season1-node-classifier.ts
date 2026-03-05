@@ -2,8 +2,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import {
-  buildSeason1TrainingDataset,
-  trainSeason1Classifier,
+  buildSeasonTrainingDataset,
+  trainSeasonClassifier,
 } from '../src/lib/nodes/classifier/index.ts';
 
 type Cli = {
@@ -50,12 +50,13 @@ async function main(): Promise<void> {
   const precisionFloor = Math.min(1, Math.max(0, parseFloatEnv('SEASON1_CLASSIFIER_PRECISION_FLOOR', 0.55)));
 
   try {
-    const dataset = await buildSeason1TrainingDataset(prisma, {
+    const dataset = await buildSeasonTrainingDataset(prisma, {
       seasonSlug: 'season-1',
       packSlug: 'horror',
       taxonomyVersion: cli.taxonomyVersion,
       validationRatio,
       splitSeed: seed,
+      genreHints: ['horror'],
     });
 
     const seasonRelease = await prisma.seasonNodeRelease.findUnique({
@@ -68,7 +69,7 @@ async function main(): Promise<void> {
 
     const runId = process.env.SEASON1_CLASSIFIER_RUN_ID?.trim() || `season1-node-classifier-${new Date().toISOString()}`;
 
-    const artifact = trainSeason1Classifier({
+    const artifact = trainSeasonClassifier({
       seasonSlug: 'season-1',
       packSlug: 'horror',
       taxonomyVersion: seasonRelease.taxonomyVersion,
