@@ -985,7 +985,7 @@ export async function GET(request: Request): Promise<Response> {
       movieId: movie.id,
     })
     : [];
-  const primaryNodeSlug = publishedNodes[0]?.slug ?? null;
+  const primaryNodeSlug = publishedNodes[0]?.nodeSlug ?? null;
   let filmContext: Awaited<ReturnType<typeof buildFilmContextExplanation>> = null;
   let reasonPanel: Awaited<ReturnType<typeof buildSeasonReasonPanel>> = null;
   try {
