@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { selectBalancedCandidates } from '../src/lib/seasons/season3/calibration-balance.ts';
+import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy.ts';
 
 type NodeProb = {
   nodeSlug: string;
@@ -95,7 +97,12 @@ function combinedStrength(candidate: ScoredCandidate): number {
   return Number((score * 0.55 + discovery * 0.2 + votes * 0.15 + rating * 0.1).toFixed(6));
 }
 
-function reasonPass(candidate: ScoredCandidate, minSciFiScoreWithGenre: number, minSciFiScoreWithoutGenre: number): { pass: boolean; reasons: string[] } {
+function reasonPass(
+  candidate: ScoredCandidate,
+  minSciFiScoreWithGenre: number,
+  minSciFiScoreWithoutGenre: number,
+  allowNoGenre878: boolean,
+): { pass: boolean; reasons: string[] } {
   const reasons: string[] = [];
   const hasGenre878 = Array.isArray(candidate.genreIds) && candidate.genreIds.includes(SCI_FI_GENRE_ID);
   const hasKeywordSignal = hasSciFiTerm(candidate);
@@ -113,7 +120,7 @@ function reasonPass(candidate: ScoredCandidate, minSciFiScoreWithGenre: number, 
     : (hasKeywordSignal && sciFiScore >= minSciFiScoreWithoutGenre);
 
   return {
-    pass: passesCore,
+    pass: passesCore && (allowNoGenre878 || hasGenre878),
     reasons,
   };
 }
@@ -123,6 +130,8 @@ async function main(): Promise<void> {
   const minSciFiScoreWithGenre = parseFloatEnv('SEASON3_MIN_SCORE_WITH_GENRE', 0.03);
   const minSciFiScoreWithoutGenre = parseFloatEnv('SEASON3_MIN_SCORE_NO_GENRE', 0.20);
   const fallbackMinSciFiScoreWithGenre = parseFloatEnv('SEASON3_FALLBACK_MIN_SCORE_WITH_GENRE', 0.01);
+  const perNodeFloor = parseIntEnv('SEASON3_PER_NODE_CANDIDATE_FLOOR', 100);
+  const allowNoGenre878 = process.env.SEASON3_ALLOW_NO_GENRE_878 === 'true';
   const allowFranchise = process.env.SEASON3_ALLOW_FRANCHISE === 'true';
 
   const payload = JSON.parse(await fs.readFile(INPUT_PATH, 'utf8')) as ScoredFile;
@@ -132,7 +141,7 @@ async function main(): Promise<void> {
   const rejected: Array<{ tmdbId: number; title: string; year: number | null; reason: string }> = [];
 
   for (const candidate of candidates) {
-    const gate = reasonPass(candidate, minSciFiScoreWithGenre, minSciFiScoreWithoutGenre);
+    const gate = reasonPass(candidate, minSciFiScoreWithGenre, minSciFiScoreWithoutGenre, allowNoGenre878);
     if (!gate.pass) {
       rejected.push({ tmdbId: candidate.tmdbId, title: candidate.title, year: candidate.year, reason: 'gate-fail' });
       continue;
@@ -165,9 +174,13 @@ async function main(): Promise<void> {
     }))
     .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title));
 
-  const calibrated = [...accepted, ...fallbackTopUp]
-    .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title))
-    .slice(0, targetCount);
+  const pool = [...accepted, ...fallbackTopUp]
+    .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title));
+  const calibrated = selectBalancedCandidates(pool, {
+    targetCount,
+    perNodeFloor,
+    nodeSlugs: SEASON3_SCI_FI_NODE_SLUGS,
+  }) as Array<ScoredCandidate & { strength: number; calibrationReasons: string[] }>;
 
   const stats = {
     generatedAt: new Date().toISOString(),
@@ -194,6 +207,7 @@ async function main(): Promise<void> {
   lines.push(`Accepted before cap: ${stats.acceptedBeforeLimit}`);
   lines.push(`Final count: ${stats.finalCount} (target=${stats.targetCount})`);
   lines.push(`Rejected: ${stats.rejectedCount}`);
+  lines.push(`Per-node floor target: ${perNodeFloor}`);
   lines.push(`With sci-fi genre 878: ${stats.withGenre878}`);
   lines.push(`Without sci-fi genre 878: ${stats.withoutGenre878}`);
   lines.push('');
