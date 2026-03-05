@@ -38,7 +38,7 @@ export function OnboardingForm({
   const [tolerance, setTolerance] = useState<number>(3);
   const [pacePreference, setPacePreference] = useState<PacePreference>('balanced');
   const [selectedPackSlug, setSelectedPackSlug] = useState<string>(initialPackSlug);
-  const [minimumYear, setMinimumYear] = useState<MinimumYear>(null);
+  const [minimumYear, setMinimumYear] = useState<MinimumYear>(1950);
   const [selectedSubgenres, setSelectedSubgenres] = useState<string[]>(() =>
     getPackSubgenreOptions(initialPackSlug).slice(0, 2),
   );
@@ -119,6 +119,14 @@ export function OnboardingForm({
         if (/pack/i.test(message)) fields.push('selectedPackSlug');
         setInvalidFields(fields);
         setErrorMessage(message);
+        return;
+      }
+      const recommendationsResponse = await fetch('/api/recommendations/next', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!recommendationsResponse.ok) {
+        setErrorMessage('Preferences saved, but we could not generate recommendations. Please retry.');
         return;
       }
       router.push('/journey');

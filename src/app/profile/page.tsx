@@ -450,7 +450,15 @@ export default function ProfilePage() {
                       }),
                     });
                       if (response.ok) {
-                        setOnboardingMessage('Preferences updated.');
+                        const recResponse = await fetch('/api/recommendations/next', {
+                          method: 'POST',
+                          credentials: 'include',
+                        });
+                        if (!recResponse.ok) {
+                          setOnboardingMessage('Preferences saved, but recommendations could not refresh. Please retry.');
+                          return;
+                        }
+                        setOnboardingMessage('Preferences updated. Recommendations refreshed.');
                         applyThemeTransition();
                       } else {
                         const payload = await response.json().catch(() => null);

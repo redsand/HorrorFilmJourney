@@ -353,6 +353,14 @@ export default async function HomePage({
     }
   }
 
+  // Deterministic fallback: if Journey has no active recommendation entries, always auto-generate.
+  if (!unauthenticated && !recommendations && experience?.state !== 'PACK_SELECTION_NEEDED' && experience?.state !== 'ONBOARDING_NEEDED') {
+    const generated = await apiJson<RecommendationResponse>('/api/recommendations/next', { method: 'POST' });
+    if (generated.status === 200 && generated.data && generated.data.cards.length > 0) {
+      recommendations = generated.data;
+    }
+  }
+
   if (unauthenticated) {
     return (
       <main className="flex flex-1 flex-col gap-4 pb-8 pt-4">
