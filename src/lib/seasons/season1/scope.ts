@@ -1,6 +1,6 @@
 export type Season1ScopeMovie = {
-  genres?: string[] | null;
-  keywords?: string[] | null;
+  genres?: Array<string | { name?: string | null } | null> | null;
+  keywords?: Array<string | { name?: string | null } | null> | null;
   isCuratedAnchor?: boolean;
   maxNodeScore?: number | null;
   scopeNodeMin?: number;
@@ -23,6 +23,22 @@ const FAMILY_FANTASY_BUCKET = new Set([
   'adventure',
 ]);
 
+const NON_HORROR_LEAKAGE_GENRES = new Set([
+  'comedy',
+  'family',
+  'animation',
+  'romance',
+  'music',
+]);
+
+const HORROR_ADJACENT_GENRES = new Set([
+  'thriller',
+  'mystery',
+  'sci-fi',
+  'science fiction',
+  'fantasy',
+]);
+
 const HORROR_KEYWORD_HINTS = [
   'horror',
   'haunt',
@@ -40,15 +56,27 @@ const HORROR_KEYWORD_HINTS = [
   'serial killer',
 ];
 
-function normalize(values: string[] | null | undefined): string[] {
+function normalize(values: Season1ScopeMovie['genres'] | Season1ScopeMovie['keywords']): string[] {
   if (!Array.isArray(values)) return [];
   return values
-    .map((value) => value.trim().toLowerCase())
+    .map((value) => {
+      if (typeof value === 'string') {
+        return value.trim().toLowerCase();
+      }
+      if (value && typeof value === 'object' && typeof value.name === 'string') {
+        return value.name.trim().toLowerCase();
+      }
+      return '';
+    })
     .filter((value) => value.length > 0);
 }
 
 function hasHorrorGenre(genres: string[]): boolean {
   return genres.some((genre) => genre === 'horror' || genre.includes('horror'));
+}
+
+function hasHorrorAdjacentGenre(genres: string[]): boolean {
+  return genres.some((genre) => HORROR_ADJACENT_GENRES.has(genre));
 }
 
 function hasHorrorKeyword(keywords: string[]): boolean {
@@ -67,6 +95,22 @@ function isHardNegative(input: { genres: string[]; keywords: string[]; mediaType
   if (hasOnlyFamilyFantasyLike && !hasHorrorKeyword(input.keywords)) {
     reasons.push('hard_negative_family_animation_fantasy_without_horror_keywords');
   }
+
+  const hasComedyGenre = input.genres.some((genre) => genre === 'comedy' || genre.includes('comedy'));
+  const hasHorrorGenreFlag = hasHorrorGenre(input.genres);
+  if (hasComedyGenre && !hasHorrorGenreFlag && !hasHorrorKeyword(input.keywords)) {
+    reasons.push('hard_negative_comedy_without_horror_signals');
+  }
+
+  const hasFamilyOrAnimation = input.genres.some((genre) => genre === 'family' || genre === 'animation');
+  if (hasFamilyOrAnimation && !hasHorrorGenreFlag && !hasHorrorKeyword(input.keywords)) {
+    reasons.push('hard_negative_family_or_animation_without_horror_signals');
+  }
+
+  const hasLeakageGenre = input.genres.some((genre) => NON_HORROR_LEAKAGE_GENRES.has(genre));
+  if (hasLeakageGenre && !hasHorrorGenreFlag && !hasHorrorKeyword(input.keywords)) {
+    reasons.push('hard_negative_non_horror_leakage_genre_without_horror_signals');
+  }
   return reasons;
 }
 
@@ -77,14 +121,14 @@ export function scopeReasons(movie: Season1ScopeMovie): string[] {
   const scopeNodeMin = Number.isFinite(movie.scopeNodeMin) ? (movie.scopeNodeMin as number) : DEFAULT_SCOPE_NODE_MIN;
 
   const reasons: string[] = [];
-  if (movie.isCuratedAnchor) {
-    reasons.push('curated_anchor_or_must_include');
-    return reasons;
-  }
-
   const hardNegatives = isHardNegative({ genres, keywords, mediaType });
   if (hardNegatives.length > 0) {
     reasons.push(...hardNegatives);
+    return reasons;
+  }
+
+  if (movie.isCuratedAnchor) {
+    reasons.push('curated_anchor_or_must_include');
     return reasons;
   }
 
@@ -92,7 +136,11 @@ export function scopeReasons(movie: Season1ScopeMovie): string[] {
     reasons.push('genre:horror');
     return reasons;
   }
-  if (Number.isFinite(movie.maxNodeScore) && (movie.maxNodeScore as number) >= scopeNodeMin) {
+  if (
+    Number.isFinite(movie.maxNodeScore)
+    && (movie.maxNodeScore as number) >= scopeNodeMin
+    && (hasHorrorAdjacentGenre(genres) || hasHorrorKeyword(keywords))
+  ) {
     reasons.push(`strong_ontology_alignment:maxNodeScore>=${scopeNodeMin.toFixed(2)}`);
     return reasons;
   }

@@ -164,6 +164,14 @@ a.cc-link-muted:active {
   padding-bottom: 6rem;
 }
 
+.cabinet-frame.theme-cult .cabinet-frame__image {
+  height: 106dvh;
+}
+
+.cabinet-frame.theme-cult .cabinet-frame__content {
+  --cc-cabinet-screen-top: 120px;
+}
+
 .horror-mist-overlay {
   pointer-events: none;
   position: fixed;
@@ -310,6 +318,10 @@ a.cc-link-muted:active {
     --cc-cabinet-screen-padding-x: 14px;
   }
 
+  .cabinet-frame.theme-cult .cabinet-frame__content {
+    --cc-cabinet-screen-top: 112px;
+  }
+
   .horror-mist-overlay__layer,
   .horror-mist-overlay__bloom {
     filter: blur(14px);
@@ -317,6 +329,14 @@ a.cc-link-muted:active {
 }
 
 @media (min-width: 1024px) {
+  .cabinet-frame.theme-cult .cabinet-frame__image {
+    height: 109dvh;
+  }
+
+  .cabinet-frame.theme-cult .cabinet-frame__content {
+    --cc-cabinet-screen-top: 110px;
+  }
+
   .horror-mist-overlay__layer,
   .horror-mist-overlay__bloom {
     filter: blur(24px);
@@ -334,6 +354,16 @@ a.cc-link-muted:active {
 
   .horror-mist-overlay__layer--center {
     opacity: 0.16;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cabinet-frame.theme-cult .cabinet-frame__image {
+    height: 107dvh;
+  }
+
+  .cabinet-frame.theme-cult .cabinet-frame__content {
+    --cc-cabinet-screen-top: 115px;
   }
 }
 

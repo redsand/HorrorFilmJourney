@@ -212,8 +212,15 @@ function parseJsonStringArray(value: unknown): string[] {
     return [];
   }
   return value
-    .filter((entry): entry is string => typeof entry === 'string')
-    .map((entry) => entry.trim().toLowerCase())
+    .map((entry) => {
+      if (typeof entry === 'string') {
+        return entry.trim().toLowerCase();
+      }
+      if (entry && typeof entry === 'object' && typeof (entry as { name?: unknown }).name === 'string') {
+        return ((entry as { name: string }).name).trim().toLowerCase();
+      }
+      return '';
+    })
     .filter((entry) => entry.length > 0);
 }
 
@@ -742,6 +749,15 @@ async function main(): Promise<void> {
             title: required.title,
             year: required.year,
             reason: 'fails hard eligibility',
+          });
+          continue;
+        }
+        if (!found.inSeasonScope) {
+          unresolved.push({
+            nodeSlug: node.slug,
+            title: required.title,
+            year: required.year,
+            reason: `fails season scope (${found.scopeReasons.join(', ') || 'out_of_scope'})`,
           });
           continue;
         }

@@ -52,7 +52,46 @@ describe('Season 1 scope predicate', () => {
       keywords: ['quest', 'ring'],
       isCuratedAnchor: true,
       maxNodeScore: 0.1,
+    })).toBe(false);
+  });
+
+  it('excludes comedy-only mockumentary leakage even with high node score', () => {
+    expect(isSeason1HorrorScope({
+      genres: ['comedy'],
+      keywords: ['mockumentary', 'satire'],
+      maxNodeScore: 0.95,
+    })).toBe(false);
+  });
+
+  it('handles object-shaped genre and keyword metadata deterministically', () => {
+    expect(isSeason1HorrorScope({
+      genres: [{ name: 'Comedy' }, { name: 'Family' }] as Array<{ name: string }>,
+      keywords: [{ name: 'satire' }] as Array<{ name: string }>,
+      maxNodeScore: 0.98,
+    })).toBe(false);
+
+    expect(isSeason1HorrorScope({
+      genres: [{ name: 'Thriller' }, { name: 'Mystery' }] as Array<{ name: string }>,
+      keywords: [{ name: 'haunted house' }] as Array<{ name: string }>,
+      maxNodeScore: 0.9,
     })).toBe(true);
   });
-});
 
+  it('rejects high ontology score with no horror signals', () => {
+    expect(isSeason1HorrorScope({
+      genres: ['drama'],
+      keywords: ['marriage', 'career', 'friendship'],
+      maxNodeScore: 0.99,
+      scopeNodeMin: 0.7,
+    })).toBe(false);
+  });
+
+  it('does not allow curated anchors to bypass hard negatives', () => {
+    expect(isSeason1HorrorScope({
+      genres: ['comedy', 'family'],
+      keywords: ['friendship', 'school'],
+      isCuratedAnchor: true,
+      maxNodeScore: 0.99,
+    })).toBe(false);
+  });
+});
