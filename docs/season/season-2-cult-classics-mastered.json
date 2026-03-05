@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-05T15:05:49.978Z",
+  "generatedAt": "2026-03-05T16:36:02.595Z",
   "season": {
     "slug": "season-2",
     "name": "Season 2",
@@ -8,12 +8,12 @@
   "pack": {
     "slug": "cult-classics",
     "name": "Cult Classics",
-    "isEnabled": false
+    "isEnabled": true
   },
   "summary": {
     "nodeCount": 11,
     "totalAssigned": 598,
-    "uniqueTmdb": 520
+    "uniqueTmdb": 518
   },
   "trackedCultSubgenres": [
     "Midnight Movies (70s-80s theatrical)",
@@ -765,19 +765,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 7.982,
+              "value": 7.985,
               "scale": "10",
-              "rawValue": "7.982/10"
+              "rawValue": "7.985/10"
             },
             {
               "source": "TMDB",
-              "value": 7.982,
+              "value": 7.985,
               "scale": "10",
-              "rawValue": "7.982/10"
+              "rawValue": "7.985/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 79.82000000000001,
+              "value": 79.85000000000001,
               "scale": "100",
               "rawValue": "80%"
             },
@@ -6303,77 +6303,77 @@
         },
         {
           "rank": 85,
-          "tmdbId": 11210,
-          "title": "Robinson Crusoe",
-          "year": 1997,
-          "posterUrl": "https://image.tmdb.org/t/p/w500/93uRPzVpf4ZVjDfswmpsrAmBS4w.jpg",
+          "tmdbId": 41428,
+          "title": "Tetsuo: The Iron Man",
+          "year": 1989,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/9RquCMBJ42Kq7ASBy0qcyVP0ugi.jpg",
           "genres": [
-            "adventure",
-            "drama"
+            "horror",
+            "science fiction"
           ],
-          "director": "George T. Miller",
+          "director": "Shinya Tsukamoto",
           "castTop": [
             {
-              "name": "Pierce Brosnan",
-              "role": "Robinson Crusoe"
+              "name": "Tomorowo Taguchi",
+              "role": "Salaryman"
             },
             {
-              "name": "Polly Walker",
-              "role": "Mary"
+              "name": "Shinya Tsukamoto",
+              "role": "Metal Fetishist"
             },
             {
-              "name": "Ian Hart",
-              "role": "Daniel Defoe"
+              "name": "Kei Fujiwara",
+              "role": "Girlfriend"
             },
             {
-              "name": "James Frain",
-              "role": "Robert/Defoe's Publisher"
+              "name": "Nobu Kanaoka",
+              "role": "Woman in Glasses"
             },
             {
-              "name": "Damian Lewis",
-              "role": "Patrick"
+              "name": "Naomasa Musaka",
+              "role": "Doctor"
             },
             {
-              "name": "William Takaku",
-              "role": "Man Friday"
+              "name": "Renji Ishibashi",
+              "role": "Tramp"
             }
           ],
           "ratings": [
             {
               "source": "IMDB",
-              "value": 6,
+              "value": 6.968,
               "scale": "10",
-              "rawValue": "6/10"
-            },
-            {
-              "source": "METACRITIC",
-              "value": 76,
-              "scale": "100",
-              "rawValue": "76/100"
-            },
-            {
-              "source": "ROTTEN_TOMATOES",
-              "value": 84,
-              "scale": "100",
-              "rawValue": "84%"
+              "rawValue": "6.968/10"
             },
             {
               "source": "TMDB",
-              "value": 6,
+              "value": 6.968,
               "scale": "10",
-              "rawValue": "6/10"
+              "rawValue": "6.968/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 60,
+              "value": 69.68,
               "scale": "100",
-              "rawValue": "60%"
+              "rawValue": "70%"
             },
             {
               "source": "TMDB_POPULARITY",
-              "value": 5.1232,
+              "value": 1.7845,
               "scale": "100",
-              "rawValue": "5.1232"
+              "rawValue": "1.7845"
+            },
+            {
+              "source": "TMDB_RUNTIME",
+              "value": 67,
+              "scale": "MINUTES",
+              "rawValue": "67"
+            },
+            {
+              "source": "TMDB_VOTE_COUNT",
+              "value": 690,
+              "scale": "COUNT",
+              "rawValue": "690"
             }
           ]
         },
@@ -16230,19 +16230,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 4.386,
+              "value": 4.387,
               "scale": "10",
-              "rawValue": "4.386/10"
+              "rawValue": "4.387/10"
             },
             {
               "source": "TMDB",
-              "value": 4.386,
+              "value": 4.387,
               "scale": "10",
-              "rawValue": "4.386/10"
+              "rawValue": "4.387/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 43.86,
+              "value": 43.87,
               "scale": "100",
               "rawValue": "44%"
             },
@@ -18158,19 +18158,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 8.101,
+              "value": 8.1,
               "scale": "10",
-              "rawValue": "8.101/10"
+              "rawValue": "8.1/10"
             },
             {
               "source": "TMDB",
-              "value": 8.101,
+              "value": 8.1,
               "scale": "10",
-              "rawValue": "8.101/10"
+              "rawValue": "8.1/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 81.01,
+              "value": 81,
               "scale": "100",
               "rawValue": "81%"
             },
@@ -19311,19 +19311,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 7.28,
+              "value": 7.3,
               "scale": "10",
-              "rawValue": "7.28/10"
+              "rawValue": "7.3/10"
             },
             {
               "source": "TMDB",
-              "value": 7.28,
+              "value": 7.3,
               "scale": "10",
-              "rawValue": "7.28/10"
+              "rawValue": "7.3/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 72.8,
+              "value": 73,
               "scale": "100",
               "rawValue": "73%"
             },
@@ -27960,19 +27960,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 6.822,
+              "value": 6.821,
               "scale": "10",
-              "rawValue": "6.822/10"
+              "rawValue": "6.821/10"
             },
             {
               "source": "TMDB",
-              "value": 6.822,
+              "value": 6.821,
               "scale": "10",
-              "rawValue": "6.822/10"
+              "rawValue": "6.821/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 68.22,
+              "value": 68.21,
               "scale": "100",
               "rawValue": "68%"
             },
@@ -29154,10 +29154,7 @@
           "posterUrl": "https://image.tmdb.org/t/p/w500/jbOkO2kxxfISyBWPCSKsVJS0MFc.jpg",
           "genres": [
             "horror",
-            "sci-fi",
-            "sci-fi-horror",
-            "creature-monster",
-            "apocalyptic-horror"
+            "science fiction"
           ],
           "director": "Umberto Lenzi",
           "castTop": [
@@ -29184,14 +29181,6 @@
             {
               "name": "Eduardo Fajardo",
               "role": "Dr. Kramer"
-            },
-            {
-              "name": "Stefania D'Amario",
-              "role": "Jessica Murchison"
-            },
-            {
-              "name": "Ugo Bologna",
-              "role": "Mr. Desmond"
             }
           ],
           "ratings": [
@@ -30651,89 +30640,78 @@
         },
         {
           "rank": 9,
-          "tmdbId": 7009,
-          "title": "The Wild Chicks",
-          "year": 2006,
-          "posterUrl": "https://image.tmdb.org/t/p/w500/eUfG3fWrSYyfUo86kmxJSJqiEUW.jpg",
+          "tmdbId": 1091,
+          "title": "The Thing",
+          "year": 1982,
+          "posterUrl": "https://image.tmdb.org/t/p/w500/tzGY49kseSE9QAKk47uuDGwnSCu.jpg",
           "genres": [
-            "comedy",
-            "family"
+            "horror",
+            "mystery",
+            "science fiction"
           ],
-          "director": "Vivian Naefe",
+          "director": "John Carpenter",
           "castTop": [
             {
-              "name": "Michelle von Treuberg",
-              "role": "Sprotte"
+              "name": "Kurt Russell",
+              "role": "MacReady"
             },
             {
-              "name": "Lucie Hollmann",
-              "role": "Frieda"
+              "name": "Keith David",
+              "role": "Childs"
             },
             {
-              "name": "Paula Riemann",
-              "role": "Melanie"
+              "name": "Wilford Brimley",
+              "role": "Blair"
             },
             {
-              "name": "Zsá Zsá Inci Bürkle",
-              "role": "Trude"
+              "name": "T.K. Carter",
+              "role": "Nauls"
             },
             {
-              "name": "Jette Hering",
-              "role": "Wilma"
+              "name": "David Clennon",
+              "role": "Palmer"
             },
             {
-              "name": "Jeremy Mockridge",
-              "role": "Fred"
+              "name": "Richard Dysart",
+              "role": "Dr. Copper"
             }
           ],
           "ratings": [
             {
               "source": "IMDB",
-              "value": 6.147,
+              "value": 8.068,
               "scale": "10",
-              "rawValue": "6.147/10"
-            },
-            {
-              "source": "METACRITIC",
-              "value": 57,
-              "scale": "100",
-              "rawValue": "57/100"
-            },
-            {
-              "source": "ROTTEN_TOMATOES",
-              "value": 84,
-              "scale": "100",
-              "rawValue": "84%"
+              "rawValue": "8.068/10"
             },
             {
               "source": "TMDB",
-              "value": 6.147,
+              "value": 8.068,
               "scale": "10",
-              "rawValue": "6.147/10"
+              "rawValue": "8.068/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 61.47,
+              "value": 80.67999999999999,
               "scale": "100",
-              "rawValue": "61%"
+              "rawValue": "81%"
             },
             {
               "source": "TMDB_POPULARITY",
-              "value": 0.7522,
+              "value": 9.0327,
               "scale": "100",
-              "rawValue": "0.7522"
+              "rawValue": "9.0327"
             },
             {
               "source": "TMDB_RUNTIME",
-              "value": 105,
+              "value": 109,
               "scale": "MINUTES",
-              "rawValue": "105"
+              "rawValue": "109"
             },
             {
               "source": "TMDB_VOTE_COUNT",
-              "value": 75,
+              "value": 7745,
               "scale": "COUNT",
-              "rawValue": "75"
+              "rawValue": "7745"
             }
           ]
         },
@@ -37611,19 +37589,19 @@
           "ratings": [
             {
               "source": "IMDB",
-              "value": 6.719,
+              "value": 6.718,
               "scale": "10",
-              "rawValue": "6.719/10"
+              "rawValue": "6.718/10"
             },
             {
               "source": "TMDB",
-              "value": 6.719,
+              "value": 6.718,
               "scale": "10",
-              "rawValue": "6.719/10"
+              "rawValue": "6.718/10"
             },
             {
               "source": "TMDB_AUDIENCE_PROXY",
-              "value": 67.19,
+              "value": 67.18,
               "scale": "100",
               "rawValue": "67%"
             },
