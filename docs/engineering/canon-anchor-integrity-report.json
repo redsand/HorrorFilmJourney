@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-03-05T06:16:44.168Z",
+  "totalAnchors": 10,
+  "missingCount": 0,
+  "rows": [
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "tmdbId": 10331,
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "tmdbId": 923,
+      "title": "Dawn of the Dead",
+      "year": 1978,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "tmdbId": 7018,
+      "title": "28 Days Later",
+      "year": 2002,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "tmdbId": 20766,
+      "title": "The Road",
+      "year": 2009,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-1",
+      "packSlug": "horror",
+      "tmdbId": 396535,
+      "title": "Train to Busan",
+      "year": 2016,
+      "nodeSlug": "apocalyptic-horror",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "tmdbId": 234,
+      "title": "The Cabinet of Dr. Caligari",
+      "year": 1920,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "tmdbId": 136,
+      "title": "Freaks",
+      "year": 1932,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "tmdbId": 7003,
+      "title": "Night of the Living Dead",
+      "year": 1968,
+      "nodeSlug": "origins-of-cult-cinema",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "tmdbId": 36685,
+      "title": "The Rocky Horror Picture Show",
+      "year": 1975,
+      "nodeSlug": "camp-cult-comedy",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    },
+    {
+      "seasonSlug": "season-2",
+      "packSlug": "cult-classics",
+      "tmdbId": 985,
+      "title": "Eraserhead",
+      "year": 1977,
+      "nodeSlug": "midnight-movies",
+      "tier": "CORE",
+      "status": {
+        "catalog": true,
+        "snapshot": true,
+        "nodeMovie": true,
+        "publishedRelease": true
+      },
+      "missingLayers": []
+    }
+  ]
+}
