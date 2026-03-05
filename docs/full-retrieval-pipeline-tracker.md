@@ -257,4 +257,5 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 - 2026-03-04: Resolved open retrieval decisions in `docs/retrieval-open-decisions-resolved.md` (deterministic embedding model, ANN strategy, and licensing boundary).
 - 2026-03-04: Added automated retrieval checklist gate `npm run check:retrieval:tracker` and wired it into release validation planning so unchecked tracker items fail validation.
 - 2026-03-04: Added machine-readable completion artifact command `npm run report:rag:completion` (optionally `--enforce`) to prove tracker completeness + retrieval quality + rollout readiness in one report.
+- 2026-03-04: Updated release validation planning to include enforced completion artifact generation (`npm run report:rag:completion -- --enforce`) for measurable go/no-go checks.
 

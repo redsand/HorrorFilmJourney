@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { SEASON1_MUST_INCLUDE_ANCHORS } from '@/config/seasons/season1-must-include';
-import { loadSeasonJourneyWorthinessConfig } from '@/config/seasons/journey-worthiness';
+import { resolveWatchReasonForFilm } from '@/lib/journey/watch-reason';
 
 export type ReasonPanelScoreBlock = {
   label: string;
@@ -35,6 +35,8 @@ type BuildSeasonReasonPanelInput = {
 type BaseContext = {
   seasonSlug: string;
   packSlug: string;
+  tmdbId: number;
+  watchReason: string | null;
   movie: {
     title: string;
     year: number | null;
@@ -330,25 +332,18 @@ const season1Builder: SeasonReasonBuilder = (context) => {
       title: context.movie.title,
       year: context.movie.year,
     }));
-  const journeyCfg = loadSeasonJourneyWorthinessConfig(context.seasonSlug);
-  const journeyThreshold = context.assignment.tier === 'CORE'
-    ? (journeyCfg.gates?.journeyMinCore ?? 0.6)
-    : (journeyCfg.gates?.journeyMinExtended ?? 0.5);
-
   const bullets: string[] = [
     `Placed in ${context.assignment.node.name} (${tierLabel}) as part of the Season 1 horror taxonomy.`,
   ];
+  if (context.watchReason) {
+    bullets.push(`Film-specific rationale: ${context.watchReason}`);
+  }
   const notice = parseWhatToNotice(context.assignment.node.whatToNotice);
-  if (notice.length > 0) {
+  if (!context.watchReason && notice.length > 0) {
     bullets.push(`Curriculum focus: ${notice.join('; ')}.`);
   }
   if (subgenres.length > 0) {
     bullets.push(`Subgenre fit: ${subgenres.join(', ')}.`);
-  }
-  if (context.assignment.journeyScore > 0 || context.assignment.finalScore > 0) {
-    bullets.push(
-      `Scoring summary: journey-worthiness ${context.assignment.journeyScore.toFixed(2)} (min ${journeyThreshold.toFixed(2)}), ontology score ${context.assignment.finalScore.toFixed(2)}.`,
-    );
   }
   if (mustIncludeFromEvidence) {
     bullets.push(`Guardrail reason: ${mustIncludeFromEvidence}`);
@@ -395,8 +390,11 @@ const season2Builder: SeasonReasonBuilder = (context) => {
   const bullets: string[] = [
     `Placed in ${context.assignment.node.name} (${tierLabel}) as part of curated Cult Classics canon.`,
   ];
+  if (context.watchReason) {
+    bullets.push(`Film-specific rationale: ${context.watchReason}`);
+  }
   const notice = parseWhatToNotice(context.assignment.node.whatToNotice);
-  if (notice.length > 0) {
+  if (!context.watchReason && notice.length > 0) {
     bullets.push(`Cult movement cues: ${notice.join('; ')}.`);
   }
   if (typeof confidenceValue === 'number') {
@@ -519,6 +517,13 @@ async function loadBaseContext(input: BuildSeasonReasonPanelInput): Promise<Base
   return {
     seasonSlug: pack.season.slug,
     packSlug: pack.slug,
+    tmdbId: input.tmdbId,
+    watchReason: await resolveWatchReasonForFilm({
+      seasonSlug: pack.season.slug,
+      packSlug: pack.slug,
+      nodeSlug: assignment.node.slug,
+      tmdbId: input.tmdbId,
+    }),
     movie: {
       title: movie.title,
       year: movie.year,

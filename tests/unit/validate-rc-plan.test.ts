@@ -12,6 +12,7 @@ describe('validate rc plan', () => {
     expect(plan).toContain('npm run check:retrieval:gates');
     expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).toContain('npm run check:external-links:gates');
+    expect(plan).toContain('npm run report:rag:completion -- --enforce');
   });
 
   it('allows skipping retrieval gates via env flag', () => {
@@ -23,6 +24,7 @@ describe('validate rc plan', () => {
     expect(plan).not.toContain('npm run check:retrieval:gates');
     expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).toContain('npm run check:external-links:gates');
+    expect(plan).toContain('npm run report:rag:completion -- --enforce');
   });
 
   it('allows skipping external link gates via env flag', () => {
@@ -34,6 +36,7 @@ describe('validate rc plan', () => {
     expect(plan).toContain('npm run check:retrieval:gates');
     expect(plan).toContain('npm run check:retrieval:tracker');
     expect(plan).not.toContain('npm run check:external-links:gates');
+    expect(plan).toContain('npm run report:rag:completion -- --enforce');
   });
 
   it('allows skipping retrieval tracker gate via env flag', () => {
@@ -44,5 +47,14 @@ describe('validate rc plan', () => {
 
     expect(plan).toContain('npm run check:retrieval:gates');
     expect(plan).not.toContain('npm run check:retrieval:tracker');
+  });
+
+  it('allows skipping rag completion report via env flag', () => {
+    const options = resolveRcValidationOptions({
+      SKIP_RAG_COMPLETION_REPORT: 'true',
+    });
+    const plan = buildRcValidationCommandPlan(options);
+
+    expect(plan).not.toContain('npm run report:rag:completion -- --enforce');
   });
 });
