@@ -26,7 +26,7 @@ export function buildRcValidationCommandPlan(options: RcValidationOptions): stri
   ];
 
   if (!options.skipRagCompletionReport) {
-    commands.push('npm run bootstrap:rag:value -- --runs 25');
+    commands.push('npm run bootstrap:rag:value -- --runs 300');
   }
 
   if (!options.skipRetrievalGates) {

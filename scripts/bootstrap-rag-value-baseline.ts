@@ -10,7 +10,7 @@ function parseArgs(): { runs: number } {
   if (!Number.isInteger(parsed) || parsed <= 0) {
     return { runs: 25 };
   }
-  return { runs: Math.min(parsed, 200) };
+  return { runs: Math.min(parsed, 500) };
 }
 
 async function resolveMovie(): Promise<{ id: string; title: string }> {
