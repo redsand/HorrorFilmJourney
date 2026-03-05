@@ -53,9 +53,9 @@ Non-goals:
 ## 4) Phase Plan + Progress
 
 Legend:
-- [ ] not started
-- [~] in progress
-- [x] done
+- `not started`
+- `in progress`
+- `done`
 
 ### Phase A: Contracts and Gates
 - [x] Define `EvidenceRetrieverV2` contract (query, filters, topK, provenance, scores).

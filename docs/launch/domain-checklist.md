@@ -1,5 +1,14 @@
 # Domain Checklist (cinemacodex.com)
 
+This is an operations signoff checklist for production infrastructure and launch configuration.
+It is not an engineering implementation backlog. Leave items unchecked until verified in the target environment.
+
+Signoff:
+- Owner: `________________`
+- Environment: `production | staging | preview`
+- Date: `YYYY-MM-DD`
+- Evidence links: `________________`
+
 ## DNS and TLS
 
 - [ ] `cinemacodex.com` A/ALIAS/CNAME points to production host.

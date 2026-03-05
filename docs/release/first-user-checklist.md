@@ -49,8 +49,12 @@
 
 - [x] Create user.  
   Coverage: `/tests/e2e/first-user-readiness.e2e.test.ts`
-- [x] `GET /api/experience` => `ONBOARDING_NEEDED` for new user.  
+- [x] `GET /api/experience` => `PACK_SELECTION_NEEDED` for new user when packs are enabled.  
   Coverage: `/tests/e2e/first-user-readiness.e2e.test.ts`
+- [x] `POST /api/profile/select-pack` persists pack selection for user profile.  
+  Coverage: `/tests/e2e/first-user-readiness.e2e.test.ts`, `/tests/api/profile-select-pack-route.test.ts`
+- [x] `GET /api/experience` => `ONBOARDING_NEEDED` after pack selection when onboarding is incomplete.  
+  Coverage: `/tests/e2e/first-user-readiness.e2e.test.ts`, `/tests/prisma/experience-state.test.ts`
 - [x] `POST /api/onboarding` completes onboarding and persists profile.  
   Coverage: `/tests/e2e/first-user-readiness.e2e.test.ts`, `/tests/api/onboarding-route.test.ts`
 - [x] `GET /api/experience` => `SHOW_RECOMMENDATION_BUNDLE` after onboarding.  

@@ -2,7 +2,7 @@
 
 ## Scope
 - Launch packs end-to-end with one enabled pack only: `horror`.
-- Keep rollout reversible behind `SEASONS_PACKS_ENABLED` (default `false`).
+- Keep rollout reversible behind `SEASONS_PACKS_ENABLED` behavior.
 - No new genre ingestion in this launch.
 
 ## Current Implementation Findings
@@ -27,7 +27,7 @@
     - [`src/app/api/admin/packs/[id]/route.ts`](/C:/Users/TimShelton/source/repos/HorrorFilmJourney/src/app/api/admin/packs/[id]/route.ts)
 
 ## Authoritative Launch Decisions
-- Flag: `SEASONS_PACKS_ENABLED=false` by default.
+- Flag behavior: packs are currently forced ON in code (`seasonsPacksEnabled()` returns `true`).
 - Active season: exactly one season has `isActive=true`; launch target is `season-1`.
 - Enabled packs for launch: only `horror` (`isEnabled=true`), all other packs in Season 1 must be `isEnabled=false`.
 - Experience flow when flag is ON:
@@ -47,14 +47,14 @@
 ## Enable Procedure
 1. Apply migrations.
 2. Run catalog seed.
-3. Set `SEASONS_PACKS_ENABLED=true`.
+3. Ensure packs mode is ON (`seasonsPacksEnabled()` true, or env-gated equivalent if reintroduced).
 4. Validate:
    - `GET /api/packs` returns Season 1 + Horror enabled.
    - New user sees pack selection before onboarding.
    - Recommendations/history/progression behave with pack context.
 
 ## Rollback Plan
-1. Set `SEASONS_PACKS_ENABLED=false`.
+1. Reintroduce env-gated flag behavior and set packs mode OFF.
 2. Keep data as-is; code will continue to operate with default Horror behavior.
 3. Validate:
    - Journey no longer blocks on pack selection.

@@ -3,6 +3,14 @@
 ## Purpose
 
 Run a structured first-pass user test on the narrative recommendation loop and capture actionable feedback.
+This checklist is a manual UAT signoff artifact and not an implementation TODO list.
+
+Signoff:
+- Tester: `________________`
+- Environment: `production | staging | preview`
+- Build/commit: `________________`
+- Date: `YYYY-MM-DD`
+- Result: `PASS | FAIL | PASS WITH NOTES`
 
 ## Setup
 
@@ -11,7 +19,7 @@ Run a structured first-pass user test on the narrative recommendation loop and c
    - `ADMIN_EMAIL`
    - `ADMIN_PASSWORD`
    - `SESSION_SECRET`
-   - `SEASONS_PACKS_ENABLED=true` (packs launch mode)
+   - packs mode is currently always on in code (`PACK_SELECTION_NEEDED` expected for new users)
    - `USE_LLM=false` for deterministic testing
 2. Initialize schema, bootstrap admin, and seed starter catalog:
 
