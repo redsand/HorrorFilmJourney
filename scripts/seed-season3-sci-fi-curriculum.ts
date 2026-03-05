@@ -337,6 +337,9 @@ async function main(): Promise<void> {
           },
         });
       }
+    }, {
+      maxWait: 15000,
+      timeout: 600000,
     });
 
     const release = await prisma.$transaction(async (tx) => {
@@ -390,6 +393,9 @@ async function main(): Promise<void> {
         });
       }
       return { id: created.id, items: nodeMovies };
+    }, {
+      maxWait: 15000,
+      timeout: 600000,
     });
 
     const nodeMap = new Map<string, { core: Array<{ title: string; year: number | null; tmdbId: number }> }>();

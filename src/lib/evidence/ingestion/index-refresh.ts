@@ -1,4 +1,4 @@
-import { backfillEvidenceChunkEmbeddings } from './embed';
+import { backfillEvidenceChunkEmbeddings } from './embed.ts';
 
 type PrismaEvidenceEmbeddingClient = Parameters<typeof backfillEvidenceChunkEmbeddings>[0];
 

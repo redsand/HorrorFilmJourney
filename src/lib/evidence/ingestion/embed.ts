@@ -1,4 +1,4 @@
-import { computeLocalTextEmbedding, LOCAL_MOVIE_EMBEDDING_DIM } from '@/lib/movie/local-embedding';
+import { computeLocalTextEmbedding, LOCAL_MOVIE_EMBEDDING_DIM } from '../../movie/local-embedding.ts';
 
 export const LOCAL_EVIDENCE_EMBEDDING_MODEL = 'local-evidence-embedding-v1';
 export const LOCAL_EVIDENCE_EMBEDDING_DIM = LOCAL_MOVIE_EMBEDDING_DIM;
@@ -6,7 +6,7 @@ export const LOCAL_EVIDENCE_EMBEDDING_DIM = LOCAL_MOVIE_EMBEDDING_DIM;
 type PrismaEvidenceEmbeddingClient = {
   evidenceChunk: {
     findMany: (args: {
-      where?: { OR?: Array<{ embeddingVector: null } | { embeddingModel: null } | { embeddingDim: null }> };
+      where?: { OR?: Array<{ embeddingVector: { equals: null } } | { embeddingModel: null } | { embeddingDim: null }> };
       orderBy: { createdAt: 'asc' };
       take: number;
       select: {
@@ -43,13 +43,13 @@ export async function backfillEvidenceChunkEmbeddings(
     ...(force
       ? {}
       : {
-        where: {
-          OR: [
-            { embeddingVector: null },
-            { embeddingModel: null },
-            { embeddingDim: null },
-          ],
-        },
+    where: {
+      OR: [
+        { embeddingVector: { equals: null } },
+        { embeddingModel: null },
+        { embeddingDim: null },
+      ],
+    },
       }),
     orderBy: { createdAt: 'asc' },
     take: batchSize,
@@ -82,4 +82,3 @@ export async function backfillEvidenceChunkEmbeddings(
     updated,
   };
 }
-

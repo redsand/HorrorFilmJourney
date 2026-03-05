@@ -2,9 +2,9 @@
   "season": "sci-fi",
   "taxonomyVersion": "season-3-sci-fi-v1",
   "summary": {
-    "coreCount": 1340,
+    "coreCount": 1600,
     "extendedCount": 0,
-    "totalUnique": 1340
+    "totalUnique": 1600
   },
   "nodes": [
     {
@@ -26,9 +26,19 @@
           "tmdbId": 14139
         },
         {
+          "title": "The Revenge of Frankenstein",
+          "year": 1958,
+          "tmdbId": 3127
+        },
+        {
           "title": "Metropolis",
           "year": 1927,
           "tmdbId": 19
+        },
+        {
+          "title": "Visioneers",
+          "year": 2008,
+          "tmdbId": 20382
         },
         {
           "title": "The Curse of Frankenstein",
@@ -36,9 +46,29 @@
           "tmdbId": 3079
         },
         {
+          "title": "The Silent Star",
+          "year": 1960,
+          "tmdbId": 17938
+        },
+        {
           "title": "Mystery Men",
           "year": 1999,
           "tmdbId": 9824
+        },
+        {
+          "title": "House of Frankenstein",
+          "year": 1944,
+          "tmdbId": 3103
+        },
+        {
+          "title": "Dracula vs. Frankenstein",
+          "year": 1971,
+          "tmdbId": 3125
+        },
+        {
+          "title": "The Ghost of Frankenstein",
+          "year": 1942,
+          "tmdbId": 3074
         },
         {
           "title": "Son of Frankenstein",
@@ -49,6 +79,11 @@
           "title": "Silent Running",
           "year": 1972,
           "tmdbId": 811
+        },
+        {
+          "title": "Frankenstein Created Woman",
+          "year": 1967,
+          "tmdbId": 3104
         },
         {
           "title": "Death Race 2000",
@@ -76,14 +111,24 @@
           "tmdbId": 174
         },
         {
-          "title": "Godzilla: City on the Edge of Battle",
-          "year": 2018,
-          "tmdbId": 492719
+          "title": "Date A Live: Mayuri Judgement",
+          "year": 2015,
+          "tmdbId": 331061
         },
         {
-          "title": "The Astronaut's Wife",
-          "year": 1999,
-          "tmdbId": 2900
+          "title": "Captain America",
+          "year": 1979,
+          "tmdbId": 197467
+        },
+        {
+          "title": "Message from Space",
+          "year": 1978,
+          "tmdbId": 54160
+        },
+        {
+          "title": "Bionicle: The Legend Reborn",
+          "year": 2009,
+          "tmdbId": 22259
         },
         {
           "title": "Superman: Man of Tomorrow",
@@ -91,14 +136,14 @@
           "tmdbId": 618354
         },
         {
+          "title": "The Astronaut's Wife",
+          "year": 1999,
+          "tmdbId": 2900
+        },
+        {
           "title": "Frankenstein Meets the Wolf Man",
           "year": 1943,
           "tmdbId": 3076
-        },
-        {
-          "title": "House of Frankenstein",
-          "year": 1944,
-          "tmdbId": 3103
         },
         {
           "title": "The Girl with All the Gifts",
@@ -111,9 +156,9 @@
           "tmdbId": 75612
         },
         {
-          "title": "Frankenstein Created Woman",
-          "year": 1967,
-          "tmdbId": 3104
+          "title": "Beyond the Black Rainbow",
+          "year": 2010,
+          "tmdbId": 50037
         },
         {
           "title": "Pacific Rim",
@@ -136,11 +181,6 @@
           "tmdbId": 9606
         },
         {
-          "title": "The Revenge of Frankenstein",
-          "year": 1958,
-          "tmdbId": 3127
-        },
-        {
           "title": "The Last Battle",
           "year": 1983,
           "tmdbId": 19184
@@ -149,11 +189,6 @@
           "title": "Silent Rage",
           "year": 1982,
           "tmdbId": 27150
-        },
-        {
-          "title": "The Ghost of Frankenstein",
-          "year": 1942,
-          "tmdbId": 3074
         },
         {
           "title": "Silent Night",
@@ -171,74 +206,104 @@
           "tmdbId": 3072
         },
         {
-          "title": "Requiem for a Dream",
-          "year": 2000,
-          "tmdbId": 641
+          "title": "Silent Night, Deadly Night 5: The Toy Maker",
+          "year": 1991,
+          "tmdbId": 70984
         },
         {
-          "title": "Family Guy Presents: Blue Harvest",
-          "year": 2008,
-          "tmdbId": 653528
+          "title": "Date A Bullet: Nightmare or Queen",
+          "year": 2020,
+          "tmdbId": 723343
         },
         {
-          "title": "The 6th Man",
-          "year": 1997,
-          "tmdbId": 36807
+          "title": "Billion Dollar Limited",
+          "year": 1942,
+          "tmdbId": 145931
         },
         {
-          "title": "The Jetsons Meet the Flintstones",
+          "title": "Miracle Beach",
+          "year": 1992,
+          "tmdbId": 55694
+        },
+        {
+          "title": "Hands of Steel",
+          "year": 1986,
+          "tmdbId": 67221
+        },
+        {
+          "title": "Alien Autopsy",
+          "year": 2006,
+          "tmdbId": 9773
+        },
+        {
+          "title": "Hot Bot",
+          "year": 2016,
+          "tmdbId": 385317
+        },
+        {
+          "title": "Panic Attack!",
+          "year": 2009,
+          "tmdbId": 85478
+        },
+        {
+          "title": "Planet of Storms",
+          "year": 1962,
+          "tmdbId": 49164
+        },
+        {
+          "title": "Spider-Man 2: Making the Amazing",
+          "year": 2004,
+          "tmdbId": 470035
+        },
+        {
+          "title": "Megalodon Rising",
+          "year": 2021,
+          "tmdbId": 866462
+        },
+        {
+          "title": "Chicken Park",
+          "year": 1996,
+          "tmdbId": 65758
+        },
+        {
+          "title": "Batman Beyond",
+          "year": 2014,
+          "tmdbId": 269246
+        },
+        {
+          "title": "Smash and Grab",
+          "year": 2019,
+          "tmdbId": 532952
+        },
+        {
+          "title": "3022",
+          "year": 2019,
+          "tmdbId": 640882
+        },
+        {
+          "title": "Halo Legends",
+          "year": 2010,
+          "tmdbId": 573531
+        },
+        {
+          "title": "Panic in the Mailroom",
+          "year": 2013,
+          "tmdbId": 229405
+        },
+        {
+          "title": "The Garbage Pail Kids Movie",
           "year": 1987,
-          "tmdbId": 36868
+          "tmdbId": 14443
         },
         {
-          "title": "Sixty Million Dollar Man",
-          "year": 1995,
-          "tmdbId": 52324
+          "title": "Appleseed",
+          "year": 1988,
+          "tmdbId": 45295
         },
         {
-          "title": "No Time for Nuts",
-          "year": 2006,
-          "tmdbId": 46247
-        },
-        {
-          "title": "Fascists on Mars",
-          "year": 2006,
-          "tmdbId": 48250
-        },
-        {
-          "title": "Clara",
-          "year": 2018,
-          "tmdbId": 466532
-        },
-        {
-          "title": "Things to Come",
-          "year": 1936,
-          "tmdbId": 3596
-        },
-        {
-          "title": "Superman",
-          "year": 1941,
-          "tmdbId": 95414
-        },
-        {
-          "title": "Auntie Edna",
-          "year": 2018,
-          "tmdbId": 546728
-        },
-        {
-          "title": "The Crazy Ray",
-          "year": 1925,
-          "tmdbId": 47579
-        },
-        {
-          "title": "9",
-          "year": 2005,
-          "tmdbId": 98622
-        },
-        {
-          "title": "Dr. Strange",
-          "year": 1978,
-          "tmdbId": 50468
+          "title": "Biggles",
+          "year": 1986,
+          "tmdbId": 22976
         },
         {
           "title": "Shivers",
@@ -246,19 +311,94 @@
           "tmdbId": 27429
         },
         {
+          "title": "Japon İşi",
+          "year": 1987,
+          "tmdbId": 236053
+        },
+        {
+          "title": "Digimon Adventure tri. Part 1: Reunion",
+          "year": 2015,
+          "tmdbId": 357400
+        },
+        {
+          "title": "Making Contact",
+          "year": 1985,
+          "tmdbId": 7011
+        },
+        {
           "title": "Solaris",
           "year": 2002,
           "tmdbId": 2103
         },
         {
-          "title": "The Aerial",
+          "title": "Peter's To-Do List",
+          "year": 2019,
+          "tmdbId": 758025
+        },
+        {
+          "title": "Ultramarines: A Warhammer 40,000 Movie",
+          "year": 2010,
+          "tmdbId": 52010
+        },
+        {
+          "title": "Batman vs. Two-Face",
+          "year": 2017,
+          "tmdbId": 464882
+        },
+        {
+          "title": "Thunderbirds Are GO",
+          "year": 1966,
+          "tmdbId": 35780
+        },
+        {
+          "title": "Space Mutiny",
+          "year": 1988,
+          "tmdbId": 32148
+        },
+        {
+          "title": "The 6th Man",
+          "year": 1997,
+          "tmdbId": 36807
+        },
+        {
+          "title": "Brainstorm",
+          "year": 1983,
+          "tmdbId": 15050
+        },
+        {
+          "title": "Sixty Million Dollar Man",
+          "year": 1995,
+          "tmdbId": 52324
+        },
+        {
+          "title": "Smosh: The Movie",
+          "year": 2015,
+          "tmdbId": 311615
+        },
+        {
+          "title": "Doctor Who: Time Crash",
           "year": 2007,
-          "tmdbId": 13317
+          "tmdbId": 419786
+        },
+        {
+          "title": "Fascists on Mars",
+          "year": 2006,
+          "tmdbId": 48250
+        },
+        {
+          "title": "The Last Journey",
+          "year": 2021,
+          "tmdbId": 754765
         },
         {
           "title": "Midnight Special",
           "year": 2016,
           "tmdbId": 245703
+        },
+        {
+          "title": "Family Guy Presents: It's a Trap!",
+          "year": 2010,
+          "tmdbId": 278427
         },
         {
           "title": "20,000 Leagues Under the Sea",
@@ -271,19 +411,19 @@
           "tmdbId": 10061
         },
         {
-          "title": "Zenon: Girl of the 21st Century",
-          "year": 1999,
-          "tmdbId": 34766
-        },
-        {
-          "title": "Gandahar",
-          "year": 1987,
-          "tmdbId": 22500
-        },
-        {
           "title": "Rebel Moon - Part One: A Child of Fire",
           "year": 2023,
           "tmdbId": 848326
+        },
+        {
+          "title": "Jump!",
+          "year": 2023,
+          "tmdbId": 1109146
+        },
+        {
+          "title": "San Andreas Quake",
+          "year": 2015,
+          "tmdbId": 339533
         },
         {
           "title": "Under the Skin",
@@ -291,24 +431,39 @@
           "tmdbId": 97370
         },
         {
-          "title": "Family Guy Presents: It's a Trap!",
-          "year": 2010,
-          "tmdbId": 278427
+          "title": "The Last Man on Earth",
+          "year": 1964,
+          "tmdbId": 21159
         },
         {
-          "title": "Amphibian Man",
-          "year": 1961,
-          "tmdbId": 43685
+          "title": "The Rocketeer",
+          "year": 1991,
+          "tmdbId": 10249
         },
         {
-          "title": "Doraemon: Nobita's Dinosaur",
+          "title": "Congo",
+          "year": 1995,
+          "tmdbId": 10329
+        },
+        {
+          "title": "Honeymoon",
+          "year": 2014,
+          "tmdbId": 254191
+        },
+        {
+          "title": "The Aerial",
+          "year": 2007,
+          "tmdbId": 13317
+        },
+        {
+          "title": "Puppet Master III: Toulon's Revenge",
+          "year": 1992,
+          "tmdbId": 26956
+        },
+        {
+          "title": "Superman: Brainiac Attacks",
           "year": 2006,
-          "tmdbId": 70841
-        },
-        {
-          "title": "Womb",
-          "year": 2010,
-          "tmdbId": 59457
+          "tmdbId": 19323
         },
         {
           "title": "Hellraiser: Bloodline",
@@ -326,19 +481,19 @@
           "tmdbId": 11559
         },
         {
+          "title": "Iron Man: Rise of Technovore",
+          "year": 2013,
+          "tmdbId": 169934
+        },
+        {
+          "title": "The Colony",
+          "year": 2013,
+          "tmdbId": 178809
+        },
+        {
           "title": "Blindness",
           "year": 2008,
           "tmdbId": 8338
-        },
-        {
-          "title": "Life",
-          "year": 2017,
-          "tmdbId": 395992
-        },
-        {
-          "title": "Mr. India",
-          "year": 1987,
-          "tmdbId": 41903
         },
         {
           "title": "The Congress",
@@ -346,159 +501,14 @@
           "tmdbId": 152795
         },
         {
-          "title": "The Fifth Element",
-          "year": 1997,
-          "tmdbId": 18
+          "title": "Thermae Romae",
+          "year": 2012,
+          "tmdbId": 105210
         },
         {
           "title": "Superman vs. The Elite",
           "year": 2012,
           "tmdbId": 103269
-        },
-        {
-          "title": "Outland",
-          "year": 1981,
-          "tmdbId": 10540
-        },
-        {
-          "title": "Transcendence",
-          "year": 2014,
-          "tmdbId": 157353
-        },
-        {
-          "title": "Time After Time",
-          "year": 1979,
-          "tmdbId": 24750
-        },
-        {
-          "title": "Aniara",
-          "year": 2019,
-          "tmdbId": 496743
-        },
-        {
-          "title": "Shorts",
-          "year": 2009,
-          "tmdbId": 25132
-        },
-        {
-          "title": "Iron Sky",
-          "year": 2012,
-          "tmdbId": 10679
-        },
-        {
-          "title": "The Meteor Man",
-          "year": 1993,
-          "tmdbId": 11244
-        },
-        {
-          "title": "Golem",
-          "year": 1980,
-          "tmdbId": 107983
-        },
-        {
-          "title": "iBoy",
-          "year": 2017,
-          "tmdbId": 414190
-        },
-        {
-          "title": "PK",
-          "year": 2014,
-          "tmdbId": 297222
-        },
-        {
-          "title": "Magnum Opus",
-          "year": 2022,
-          "tmdbId": 1010823
-        },
-        {
-          "title": "Deathstroke: Knights & Dragons - The Movie",
-          "year": 2020,
-          "tmdbId": 703771
-        },
-        {
-          "title": "The Endless",
-          "year": 2017,
-          "tmdbId": 430231
-        },
-        {
-          "title": "Young Einstein",
-          "year": 1988,
-          "tmdbId": 10001
-        },
-        {
-          "title": "Puppet Master III: Toulon's Revenge",
-          "year": 1992,
-          "tmdbId": 26956
-        },
-        {
-          "title": "Groot's First Steps",
-          "year": 2022,
-          "tmdbId": 1010818
-        },
-        {
-          "title": "Mickey 17",
-          "year": 2025,
-          "tmdbId": 696506
-        },
-        {
-          "title": "Pokémon Ranger and the Temple of the Sea",
-          "year": 2006,
-          "tmdbId": 16808
-        },
-        {
-          "title": "Hardcore Henry",
-          "year": 2015,
-          "tmdbId": 325348
-        },
-        {
-          "title": "Scanners",
-          "year": 1981,
-          "tmdbId": 9538
-        },
-        {
-          "title": "Scanners II: The New Order",
-          "year": 1991,
-          "tmdbId": 24331
-        },
-        {
-          "title": "Minions: The Rise of Gru",
-          "year": 2022,
-          "tmdbId": 438148
-        },
-        {
-          "title": "Dead Heat",
-          "year": 1988,
-          "tmdbId": 40095
-        },
-        {
-          "title": "What Happened to Monday",
-          "year": 2017,
-          "tmdbId": 406990
-        },
-        {
-          "title": "Kung Fury",
-          "year": 2015,
-          "tmdbId": 251516
-        },
-        {
-          "title": "Rememory",
-          "year": 2017,
-          "tmdbId": 395814
-        },
-        {
-          "title": "Kingdom of the Spiders",
-          "year": 1977,
-          "tmdbId": 30315
-        },
-        {
-          "title": "Stowaway",
-          "year": 2021,
-          "tmdbId": 559581
-        },
-        {
-          "title": "Too Many Cooks",
-          "year": 2014,
-          "tmdbId": 301566
         }
       ],
       "extended": []
@@ -517,14 +527,24 @@
           "tmdbId": 28893
         },
         {
+          "title": "Omer the Tourist in Star Trek",
+          "year": 1973,
+          "tmdbId": 161334
+        },
+        {
+          "title": "To the Stars by Hard Ways",
+          "year": 1981,
+          "tmdbId": 26873
+        },
+        {
           "title": "Stargate",
           "year": 1994,
           "tmdbId": 2164
         },
         {
-          "title": "Doppelgänger",
-          "year": 1969,
-          "tmdbId": 40430
+          "title": "The Man Who Saved the World",
+          "year": 1982,
+          "tmdbId": 20787
         },
         {
           "title": "Meet Dave",
@@ -535,6 +555,26 @@
           "title": "Lost in Space",
           "year": 1998,
           "tmdbId": 2157
+        },
+        {
+          "title": "Jurassic Galaxy",
+          "year": 2018,
+          "tmdbId": 540247
+        },
+        {
+          "title": "Gamera vs. Guiron",
+          "year": 1969,
+          "tmdbId": 26947
+        },
+        {
+          "title": "Gamera vs. Zigra",
+          "year": 1971,
+          "tmdbId": 70322
+        },
+        {
+          "title": "Doppelgänger",
+          "year": 1969,
+          "tmdbId": 40430
         },
         {
           "title": "Planet 51",
@@ -557,6 +597,11 @@
           "tmdbId": 168
         },
         {
+          "title": "Cosmic Sin",
+          "year": 2021,
+          "tmdbId": 681887
+        },
+        {
           "title": "Spaceballs",
           "year": 1987,
           "tmdbId": 957
@@ -577,14 +622,19 @@
           "tmdbId": 20874
         },
         {
+          "title": "Beyond Skyline",
+          "year": 2017,
+          "tmdbId": 271404
+        },
+        {
           "title": "Ad Astra",
           "year": 2019,
           "tmdbId": 419704
         },
         {
-          "title": "Beyond Skyline",
-          "year": 2017,
-          "tmdbId": 271404
+          "title": "Babylon 5: Thirdspace",
+          "year": 1998,
+          "tmdbId": 10941
         },
         {
           "title": "Buck Rogers in the 25th Century",
@@ -592,14 +642,54 @@
           "tmdbId": 3786
         },
         {
+          "title": "Johnny Express",
+          "year": 2014,
+          "tmdbId": 269711
+        },
+        {
+          "title": "Good Boy!",
+          "year": 2003,
+          "tmdbId": 21765
+        },
+        {
+          "title": "Gayniggers from Outer Space",
+          "year": 1993,
+          "tmdbId": 33380
+        },
+        {
           "title": "Duck Dodgers in the 24½th Century",
           "year": 1953,
           "tmdbId": 67409
         },
         {
+          "title": "Lost in Starlight",
+          "year": 2025,
+          "tmdbId": 1165642
+        },
+        {
+          "title": "Barbie: Star Light Adventure",
+          "year": 2016,
+          "tmdbId": 415749
+        },
+        {
+          "title": "Spacehunter: Adventures in the Forbidden Zone",
+          "year": 1983,
+          "tmdbId": 26978
+        },
+        {
+          "title": "Space Adventure Cobra: The Movie",
+          "year": 1982,
+          "tmdbId": 81850
+        },
+        {
           "title": "Space Pirate Captain Harlock",
           "year": 2013,
           "tmdbId": 192577
+        },
+        {
+          "title": "The Beyond",
+          "year": 2018,
+          "tmdbId": 449575
         },
         {
           "title": "Dragon Ball Z: Broly - The Legendary Super Saiyan",
@@ -617,19 +707,14 @@
           "tmdbId": 172
         },
         {
-          "title": "The Faculty",
-          "year": 1998,
-          "tmdbId": 9276
-        },
-        {
           "title": "Space Chimps",
           "year": 2008,
           "tmdbId": 11802
         },
         {
-          "title": "Star Trek Beyond",
-          "year": 2016,
-          "tmdbId": 188927
+          "title": "The Faculty",
+          "year": 1998,
+          "tmdbId": 9276
         },
         {
           "title": "The Brother from Another Planet",
@@ -637,9 +722,29 @@
           "tmdbId": 26889
         },
         {
-          "title": "Ikarie XB 1",
-          "year": 1963,
-          "tmdbId": 19757
+          "title": "Ben 10 vs. the Universe: The Movie",
+          "year": 2020,
+          "tmdbId": 724475
+        },
+        {
+          "title": "Star Trek Beyond",
+          "year": 2016,
+          "tmdbId": 188927
+        },
+        {
+          "title": "The Inhabited Island",
+          "year": 2009,
+          "tmdbId": 16911
+        },
+        {
+          "title": "Gamera vs. Viras",
+          "year": 1968,
+          "tmdbId": 34131
+        },
+        {
+          "title": "Arena",
+          "year": 1989,
+          "tmdbId": 44796
         },
         {
           "title": "Futurama: Bender's Big Score",
@@ -657,6 +762,11 @@
           "tmdbId": 16380
         },
         {
+          "title": "Star Trek: Section 31",
+          "year": 2025,
+          "tmdbId": 1114894
+        },
+        {
           "title": "Lifted",
           "year": 2006,
           "tmdbId": 13060
@@ -667,14 +777,24 @@
           "tmdbId": 11884
         },
         {
+          "title": "Ikarie XB 1",
+          "year": 1963,
+          "tmdbId": 19757
+        },
+        {
           "title": "Star Trek: Insurrection",
           "year": 1998,
           "tmdbId": 200
         },
         {
-          "title": "Galaxy Express 999: The Movie",
-          "year": 1979,
-          "tmdbId": 15227
+          "title": "Moonshot",
+          "year": 2022,
+          "tmdbId": 767825
+        },
+        {
+          "title": "Slave Girls from Beyond Infinity",
+          "year": 1987,
+          "tmdbId": 27462
         },
         {
           "title": "Alien: Covenant",
@@ -707,9 +827,9 @@
           "tmdbId": 593
         },
         {
-          "title": "Deep Impact",
-          "year": 1998,
-          "tmdbId": 8656
+          "title": "Batman and Superman: Battle of the Super Sons",
+          "year": 2022,
+          "tmdbId": 886396
         },
         {
           "title": "Escape from the Planet of the Apes",
@@ -717,9 +837,14 @@
           "tmdbId": 1687
         },
         {
-          "title": "Batman and Superman: Battle of the Super Sons",
+          "title": "Voices of a Distant Star",
+          "year": 2002,
+          "tmdbId": 37910
+        },
+        {
+          "title": "Project Gemini",
           "year": 2022,
-          "tmdbId": 886396
+          "tmdbId": 575322
         },
         {
           "title": "Dune",
@@ -727,19 +852,14 @@
           "tmdbId": 841
         },
         {
-          "title": "The Secret of the Third Planet",
-          "year": 1981,
-          "tmdbId": 49802
-        },
-        {
           "title": "The Hitchhiker's Guide to the Galaxy",
           "year": 2005,
           "tmdbId": 7453
         },
         {
-          "title": "Voices of a Distant Star",
-          "year": 2002,
-          "tmdbId": 37910
+          "title": "RocketMan",
+          "year": 1997,
+          "tmdbId": 36797
         },
         {
           "title": "Star Trek: First Contact",
@@ -757,9 +877,14 @@
           "tmdbId": 157336
         },
         {
-          "title": "The Ice Pirates",
-          "year": 1984,
-          "tmdbId": 10179
+          "title": "Galaxy Express 999: The Movie",
+          "year": 1979,
+          "tmdbId": 15227
+        },
+        {
+          "title": "Zone Troopers",
+          "year": 1985,
+          "tmdbId": 17790
         },
         {
           "title": "Earth Girls Are Easy",
@@ -767,39 +892,24 @@
           "tmdbId": 2210
         },
         {
-          "title": "Galaxy Quest",
-          "year": 1999,
-          "tmdbId": 926
-        },
-        {
           "title": "Phineas and Ferb the Movie: Candace Against the Universe",
           "year": 2020,
           "tmdbId": 594328
         },
         {
-          "title": "Stargate: The Ark of Truth",
-          "year": 2008,
-          "tmdbId": 13001
+          "title": "Galaxy Quest",
+          "year": 1999,
+          "tmdbId": 926
         },
         {
-          "title": "Heavy Metal 2000",
-          "year": 2000,
-          "tmdbId": 16225
+          "title": "Starchaser: The Legend of Orin",
+          "year": 1985,
+          "tmdbId": 32147
         },
         {
-          "title": "Planet Hulk",
-          "year": 2010,
-          "tmdbId": 30675
-        },
-        {
-          "title": "Project Gemini",
-          "year": 2022,
-          "tmdbId": 575322
-        },
-        {
-          "title": "Mad Max: Fury Road",
-          "year": 2015,
-          "tmdbId": 76341
+          "title": "The Secret of the Third Planet",
+          "year": 1981,
+          "tmdbId": 49802
         },
         {
           "title": "Dead Space: Downfall",
@@ -807,19 +917,59 @@
           "tmdbId": 13190
         },
         {
-          "title": "Mobile Suit Gundam III: Encounters in Space",
-          "year": 1982,
-          "tmdbId": 39230
+          "title": "Stargate: The Ark of Truth",
+          "year": 2008,
+          "tmdbId": 13001
         },
         {
-          "title": "Mobile Suit Gundam I",
-          "year": 1981,
-          "tmdbId": 39228
+          "title": "Planet Hulk",
+          "year": 2010,
+          "tmdbId": 30675
+        },
+        {
+          "title": "The Ice Pirates",
+          "year": 1984,
+          "tmdbId": 10179
+        },
+        {
+          "title": "Teenagers from Outer Space",
+          "year": 1959,
+          "tmdbId": 35139
+        },
+        {
+          "title": "Dead Space",
+          "year": 1991,
+          "tmdbId": 48291
+        },
+        {
+          "title": "Mad Max: Fury Road",
+          "year": 2015,
+          "tmdbId": 76341
+        },
+        {
+          "title": "The Man from Planet X",
+          "year": 1951,
+          "tmdbId": 50153
+        },
+        {
+          "title": "Ga-ga: Glory to the Heroes",
+          "year": 1986,
+          "tmdbId": 91691
+        },
+        {
+          "title": "Save Yourselves!",
+          "year": 2020,
+          "tmdbId": 653569
         },
         {
           "title": "Battle for Terra",
           "year": 2007,
           "tmdbId": 16873
+        },
+        {
+          "title": "Mobile Suit Gundam III: Encounters in Space",
+          "year": 1982,
+          "tmdbId": 39230
         },
         {
           "title": "IO",
@@ -830,6 +980,21 @@
           "title": "Rim of the World",
           "year": 2019,
           "tmdbId": 531306
+        },
+        {
+          "title": "Superman",
+          "year": 1941,
+          "tmdbId": 95414
+        },
+        {
+          "title": "2001: A Space Odyssey",
+          "year": 1968,
+          "tmdbId": 62
+        },
+        {
+          "title": "Sonic the Hedgehog: The Movie",
+          "year": 1996,
+          "tmdbId": 16355
         },
         {
           "title": "The Nutty Professor",
@@ -847,154 +1012,9 @@
           "tmdbId": 1685
         },
         {
-          "title": "Critters 3",
-          "year": 1991,
-          "tmdbId": 12702
-        },
-        {
-          "title": "Doctor Who: Planet of the Dead",
-          "year": 2009,
-          "tmdbId": 282963
-        },
-        {
-          "title": "Attraction",
-          "year": 2017,
-          "tmdbId": 401513
-        },
-        {
-          "title": "Battlestar Galactica: The Plan",
-          "year": 2009,
-          "tmdbId": 105077
-        },
-        {
-          "title": "Primer",
-          "year": 2004,
-          "tmdbId": 14337
-        },
-        {
-          "title": "A Wrinkle in Time",
-          "year": 2018,
-          "tmdbId": 407451
-        },
-        {
-          "title": "Chaos Walking",
-          "year": 2021,
-          "tmdbId": 412656
-        },
-        {
-          "title": "Downsizing",
-          "year": 2017,
-          "tmdbId": 301337
-        },
-        {
-          "title": "Crater",
-          "year": 2023,
-          "tmdbId": 620705
-        },
-        {
-          "title": "Babylon 5: The Gathering",
-          "year": 1993,
-          "tmdbId": 10942
-        },
-        {
-          "title": "Green Lantern: Emerald Knights",
-          "year": 2011,
-          "tmdbId": 65291
-        },
-        {
-          "title": "The Guardians of the Galaxy Holiday Special",
-          "year": 2022,
-          "tmdbId": 774752
-        },
-        {
-          "title": "Ghosts of Mars",
-          "year": 2001,
-          "tmdbId": 10016
-        },
-        {
-          "title": "Redline",
-          "year": 2009,
-          "tmdbId": 71883
-        },
-        {
-          "title": "Turbo: A Power Rangers Movie",
-          "year": 1997,
-          "tmdbId": 6499
-        },
-        {
-          "title": "Fantastic Planet",
-          "year": 1973,
-          "tmdbId": 16306
-        },
-        {
-          "title": "S1m0ne",
-          "year": 2002,
-          "tmdbId": 9296
-        },
-        {
-          "title": "Doctor Who: A Christmas Carol",
-          "year": 2010,
-          "tmdbId": 315620
-        },
-        {
-          "title": "Tank Girl",
-          "year": 1995,
-          "tmdbId": 9067
-        },
-        {
-          "title": "Ring 2",
-          "year": 1999,
-          "tmdbId": 9669
-        },
-        {
-          "title": "Moonraker",
-          "year": 1979,
-          "tmdbId": 698
-        },
-        {
-          "title": "Space Buddies",
-          "year": 2009,
-          "tmdbId": 14749
-        },
-        {
-          "title": "Space Truckers",
-          "year": 1996,
-          "tmdbId": 10690
-        },
-        {
-          "title": "Volcano",
-          "year": 1997,
-          "tmdbId": 10357
-        },
-        {
-          "title": "Superman Returns",
-          "year": 2006,
-          "tmdbId": 1452
-        },
-        {
-          "title": "Pokémon: The Rise of Darkrai",
-          "year": 2007,
-          "tmdbId": 25961
-        },
-        {
-          "title": "Sword Art Online the Movie – Progressive – Scherzo of Deep Night",
-          "year": 2022,
-          "tmdbId": 893712
-        },
-        {
-          "title": "Made in Abyss: Wandering Twilight",
-          "year": 2019,
-          "tmdbId": 526429
-        },
-        {
-          "title": "The Adventures of Pluto Nash",
-          "year": 2002,
-          "tmdbId": 11692
-        },
-        {
-          "title": "Spy Kids: All the Time in the World",
-          "year": 2011,
-          "tmdbId": 56288
+          "title": "The Princess Xuxa and the Trapalhões",
+          "year": 1989,
+          "tmdbId": 123571
         }
       ],
       "extended": []
@@ -1008,9 +1028,9 @@
           "tmdbId": 660833
         },
         {
-          "title": "Edward Scissorhands",
-          "year": 1990,
-          "tmdbId": 162
+          "title": "Ice Twisters",
+          "year": 2009,
+          "tmdbId": 34559
         },
         {
           "title": "Planet of the Apes",
@@ -1023,14 +1043,34 @@
           "tmdbId": 39829
         },
         {
+          "title": "The American Astronaut",
+          "year": 2001,
+          "tmdbId": 21538
+        },
+        {
+          "title": "Deep",
+          "year": 2021,
+          "tmdbId": 842171
+        },
+        {
           "title": "Senseless",
           "year": 1998,
           "tmdbId": 12538
         },
         {
+          "title": "Stereo (Tile 3B of a CAEE Educational Mosaic)",
+          "year": 1969,
+          "tmdbId": 33691
+        },
+        {
           "title": "Victor Frankenstein",
           "year": 2015,
           "tmdbId": 228066
+        },
+        {
+          "title": "A Wrinkle in Time",
+          "year": 2003,
+          "tmdbId": 27874
         },
         {
           "title": "The Quiet Earth",
@@ -1046,6 +1086,11 @@
           "title": "The Lawnmower Man",
           "year": 1992,
           "tmdbId": 10163
+        },
+        {
+          "title": "The Damned",
+          "year": 1962,
+          "tmdbId": 71701
         },
         {
           "title": "Flatliners",
@@ -1073,9 +1118,9 @@
           "tmdbId": 10326
         },
         {
-          "title": "Escape from Planet Earth",
-          "year": 2013,
-          "tmdbId": 68179
+          "title": "Isolation",
+          "year": 2005,
+          "tmdbId": 25967
         },
         {
           "title": "Innerspace",
@@ -1083,9 +1128,14 @@
           "tmdbId": 2614
         },
         {
-          "title": "Uranus 2324",
-          "year": 2024,
-          "tmdbId": 1167366
+          "title": "Splatter: Naked Blood",
+          "year": 1996,
+          "tmdbId": 36075
+        },
+        {
+          "title": "Black Box",
+          "year": 2020,
+          "tmdbId": 716258
         },
         {
           "title": "The Nutty Professor",
@@ -1103,29 +1153,79 @@
           "tmdbId": 8413
         },
         {
-          "title": "SpaceCamp",
-          "year": 1986,
-          "tmdbId": 13766
+          "title": "Body Melt",
+          "year": 1994,
+          "tmdbId": 22455
         },
         {
-          "title": "Marooned",
-          "year": 1969,
-          "tmdbId": 40140
+          "title": "Uranus 2324",
+          "year": 2024,
+          "tmdbId": 1167366
         },
         {
-          "title": "The Damned",
-          "year": 1962,
-          "tmdbId": 71701
+          "title": "Creator",
+          "year": 1985,
+          "tmdbId": 41243
         },
         {
-          "title": "Beyond Re-Animator",
-          "year": 2003,
-          "tmdbId": 11429
+          "title": "The Island of Dr. Moreau",
+          "year": 1977,
+          "tmdbId": 26932
+        },
+        {
+          "title": "DeepStar Six",
+          "year": 1989,
+          "tmdbId": 11607
+        },
+        {
+          "title": "Anti Matter",
+          "year": 2016,
+          "tmdbId": 429101
+        },
+        {
+          "title": "The Wild Blue Yonder",
+          "year": 2005,
+          "tmdbId": 8410
+        },
+        {
+          "title": "The Nest",
+          "year": 1988,
+          "tmdbId": 87710
+        },
+        {
+          "title": "Spontaneous Combustion",
+          "year": 1990,
+          "tmdbId": 39195
+        },
+        {
+          "title": "Earth vs. the Spider",
+          "year": 1958,
+          "tmdbId": 43115
+        },
+        {
+          "title": "The Invisible Maniac",
+          "year": 1990,
+          "tmdbId": 28340
+        },
+        {
+          "title": "Rabid",
+          "year": 2019,
+          "tmdbId": 384756
         },
         {
           "title": "Splice",
           "year": 2010,
           "tmdbId": 37707
+        },
+        {
+          "title": "SpaceCamp",
+          "year": 1986,
+          "tmdbId": 13766
+        },
+        {
+          "title": "Earth vs. the Spider",
+          "year": 2001,
+          "tmdbId": 31013
         },
         {
           "title": "The Fly",
@@ -1143,19 +1243,39 @@
           "tmdbId": 354857
         },
         {
+          "title": "Mind Ripper",
+          "year": 1995,
+          "tmdbId": 8771
+        },
+        {
+          "title": "Night of the Lepus",
+          "year": 1972,
+          "tmdbId": 38761
+        },
+        {
           "title": "Night of the Creeps",
           "year": 1986,
           "tmdbId": 15762
         },
         {
-          "title": "Black Box",
-          "year": 2020,
-          "tmdbId": 716258
+          "title": "Marooned",
+          "year": 1969,
+          "tmdbId": 40140
         },
         {
-          "title": "Doom",
-          "year": 2005,
-          "tmdbId": 8814
+          "title": "The Phantom Planet",
+          "year": 1961,
+          "tmdbId": 27717
+        },
+        {
+          "title": "Kill Switch",
+          "year": 2017,
+          "tmdbId": 423988
+        },
+        {
+          "title": "I, Monster",
+          "year": 1971,
+          "tmdbId": 52941
         },
         {
           "title": "Her",
@@ -1168,14 +1288,19 @@
           "tmdbId": 60935
         },
         {
-          "title": "The Island of Dr. Moreau",
-          "year": 1977,
-          "tmdbId": 26932
-        },
-        {
           "title": "Zathura: A Space Adventure",
           "year": 2005,
           "tmdbId": 6795
+        },
+        {
+          "title": "Indestructible Man",
+          "year": 1956,
+          "tmdbId": 48385
+        },
+        {
+          "title": "Double Blind",
+          "year": 2024,
+          "tmdbId": 1140648
         },
         {
           "title": "Push",
@@ -1188,9 +1313,9 @@
           "tmdbId": 3019
         },
         {
-          "title": "DeepStar Six",
-          "year": 1989,
-          "tmdbId": 11607
+          "title": "The Astronaut",
+          "year": 2025,
+          "tmdbId": 1086260
         },
         {
           "title": "The Martian",
@@ -1201,6 +1326,11 @@
           "title": "Stalker",
           "year": 1979,
           "tmdbId": 1398
+        },
+        {
+          "title": "Deep Impact",
+          "year": 1998,
+          "tmdbId": 8656
         },
         {
           "title": "Sunshine",
@@ -1238,11 +1368,6 @@
           "tmdbId": 839321
         },
         {
-          "title": "Leroy & Stitch",
-          "year": 2006,
-          "tmdbId": 21316
-        },
-        {
           "title": "Planet of the Vampires",
           "year": 1965,
           "tmdbId": 17921
@@ -1253,9 +1378,9 @@
           "tmdbId": 765245
         },
         {
-          "title": "Royal Space Force - The Wings of Honneamise",
-          "year": 1987,
-          "tmdbId": 20043
+          "title": "Beyond Re-Animator",
+          "year": 2003,
+          "tmdbId": 11429
         },
         {
           "title": "Time Freak",
@@ -1278,119 +1403,124 @@
           "tmdbId": 34276
         },
         {
+          "title": "EVANGELION: DEATH (TRUE)²",
+          "year": 1998,
+          "tmdbId": 857862
+        },
+        {
           "title": "The Two Faces of Dr. Jekyll",
           "year": 1960,
           "tmdbId": 3025
         },
         {
-          "title": "Forbidden World",
-          "year": 1982,
-          "tmdbId": 42251
+          "title": "Blush",
+          "year": 2021,
+          "tmdbId": 818350
         },
         {
-          "title": "Groot's Pursuit",
-          "year": 2022,
-          "tmdbId": 1010820
+          "title": "Darkman III: Die Darkman Die",
+          "year": 1996,
+          "tmdbId": 19002
         },
         {
-          "title": "Phase IV",
-          "year": 1974,
-          "tmdbId": 59189
+          "title": "Poison",
+          "year": 1991,
+          "tmdbId": 47620
         },
         {
-          "title": "The Ewok Adventure",
-          "year": 1984,
-          "tmdbId": 1884
+          "title": "Destination Moon",
+          "year": 1950,
+          "tmdbId": 25392
         },
         {
-          "title": "Invaders from Mars",
-          "year": 1986,
-          "tmdbId": 31909
+          "title": "Unforgettable",
+          "year": 1996,
+          "tmdbId": 2045
         },
         {
-          "title": "Dr. Jekyll and Mr. Hyde",
-          "year": 1941,
-          "tmdbId": 3022
-        },
-        {
-          "title": "Mr. Peabody & Sherman",
-          "year": 2014,
-          "tmdbId": 82703
-        },
-        {
-          "title": "I, Robot",
-          "year": 2004,
-          "tmdbId": 2048
-        },
-        {
-          "title": "AVP: Alien vs. Predator",
-          "year": 2004,
-          "tmdbId": 395
-        },
-        {
-          "title": "The Signal",
-          "year": 2014,
-          "tmdbId": 242095
-        },
-        {
-          "title": "Monkey Shines",
-          "year": 1988,
-          "tmdbId": 29787
-        },
-        {
-          "title": "A Cure for Wellness",
-          "year": 2017,
-          "tmdbId": 340837
-        },
-        {
-          "title": "The Watch",
-          "year": 2012,
-          "tmdbId": 80035
-        },
-        {
-          "title": "I'm Here",
-          "year": 2010,
-          "tmdbId": 37058
-        },
-        {
-          "title": "It Came from Outer Space",
-          "year": 1953,
-          "tmdbId": 19483
-        },
-        {
-          "title": "Bud Abbott and Lou Costello Meet the Invisible Man",
-          "year": 1951,
-          "tmdbId": 33475
-        },
-        {
-          "title": "The Invisible Man Returns",
-          "year": 1940,
-          "tmdbId": 28421
-        },
-        {
-          "title": "Beavis and Butt-Head Do the Universe",
-          "year": 2022,
-          "tmdbId": 828947
-        },
-        {
-          "title": "Never Let Me Go",
-          "year": 2010,
-          "tmdbId": 42188
-        },
-        {
-          "title": "The Thundermans Return",
+          "title": "I.S.S.",
           "year": 2024,
-          "tmdbId": 1094556
+          "tmdbId": 790462
         },
         {
-          "title": "Gantz",
-          "year": 2010,
-          "tmdbId": 56832
+          "title": "Dr. Cyclops",
+          "year": 1940,
+          "tmdbId": 3593
         },
         {
-          "title": "Pulse",
-          "year": 2006,
-          "tmdbId": 9682
+          "title": "Now You See Him, Now You Don't",
+          "year": 1972,
+          "tmdbId": 24236
+        },
+        {
+          "title": "The Incredible Shrinking Woman",
+          "year": 1981,
+          "tmdbId": 12472
+        },
+        {
+          "title": "Sssssss",
+          "year": 1973,
+          "tmdbId": 70345
+        },
+        {
+          "title": "Strange Behavior",
+          "year": 1981,
+          "tmdbId": 40041
+        },
+        {
+          "title": "Slingshot",
+          "year": 2024,
+          "tmdbId": 916728
+        },
+        {
+          "title": "Bride of the Monster",
+          "year": 1955,
+          "tmdbId": 36489
+        },
+        {
+          "title": "The Wasp Woman",
+          "year": 1959,
+          "tmdbId": 27545
+        },
+        {
+          "title": "Philadelphia Experiment II",
+          "year": 1993,
+          "tmdbId": 35610
+        },
+        {
+          "title": "The Killer Shrews",
+          "year": 1959,
+          "tmdbId": 43109
+        },
+        {
+          "title": "DNA",
+          "year": 1997,
+          "tmdbId": 76403
+        },
+        {
+          "title": "The Adventures of Jurassic Pet",
+          "year": 2019,
+          "tmdbId": 593026
+        },
+        {
+          "title": "A Certain Magical Index: The Miracle of Endymion",
+          "year": 2013,
+          "tmdbId": 219250
+        },
+        {
+          "title": "Jonathan",
+          "year": 2018,
+          "tmdbId": 422619
+        },
+        {
+          "title": "Brick",
+          "year": 2025,
+          "tmdbId": 1425045
+        },
+        {
+          "title": "The Giant Claw",
+          "year": 1957,
+          "tmdbId": 36089
         }
       ],
       "extended": []
@@ -1398,6 +1528,11 @@
     {
       "slug": "cyberpunk",
       "core": [
+        {
+          "title": "A Detective Story",
+          "year": 2003,
+          "tmdbId": 24660
+        },
         {
           "title": "Ghost in the Shell 2.0",
           "year": 2008,
@@ -1414,24 +1549,14 @@
           "tmdbId": 77561
         },
         {
-          "title": "A Detective Story",
-          "year": 2003,
-          "tmdbId": 24660
+          "title": "Armitage: Dual Matrix",
+          "year": 2002,
+          "tmdbId": 21769
         },
         {
           "title": "Kid's Story",
           "year": 2003,
           "tmdbId": 24914
-        },
-        {
-          "title": "Star Kid",
-          "year": 1997,
-          "tmdbId": 54007
-        },
-        {
-          "title": "Program",
-          "year": 2003,
-          "tmdbId": 24959
         },
         {
           "title": "eXistenZ",
@@ -1444,14 +1569,19 @@
           "tmdbId": 624860
         },
         {
-          "title": "Matriculated",
-          "year": 2003,
-          "tmdbId": 24950
-        },
-        {
           "title": "Ready Player One",
           "year": 2018,
           "tmdbId": 333339
+        },
+        {
+          "title": "Program",
+          "year": 2003,
+          "tmdbId": 24959
+        },
+        {
+          "title": "Star Kid",
+          "year": 1997,
+          "tmdbId": 54007
         },
         {
           "title": "Virtuosity",
@@ -1462,6 +1592,26 @@
           "title": "Dragon Ball Z: The History of Trunks",
           "year": 1993,
           "tmdbId": 39324
+        },
+        {
+          "title": "Into Pitch Black",
+          "year": 2000,
+          "tmdbId": 244839
+        },
+        {
+          "title": "The Whispering Star",
+          "year": 2015,
+          "tmdbId": 355993
+        },
+        {
+          "title": "Psycho-Pass 3: First Inspector",
+          "year": 2020,
+          "tmdbId": 655431
+        },
+        {
+          "title": "Matriculated",
+          "year": 2003,
+          "tmdbId": 24950
         },
         {
           "title": "Total Recall",
@@ -1479,9 +1629,24 @@
           "tmdbId": 605
         },
         {
+          "title": "Beyond",
+          "year": 2003,
+          "tmdbId": 24675
+        },
+        {
+          "title": "Looker",
+          "year": 1981,
+          "tmdbId": 21874
+        },
+        {
           "title": "Dragon Ball Z: Bio-Broly",
           "year": 1994,
           "tmdbId": 39106
+        },
+        {
+          "title": "Cyborg 2",
+          "year": 1993,
+          "tmdbId": 16437
         },
         {
           "title": "Outside the Wire",
@@ -1499,6 +1664,11 @@
           "tmdbId": 315837
         },
         {
+          "title": "Dragon Ball Super: Super Hero",
+          "year": 2022,
+          "tmdbId": 610150
+        },
+        {
           "title": "Neon Genesis Evangelion: Death and Rebirth",
           "year": 1997,
           "tmdbId": 21832
@@ -1514,14 +1684,14 @@
           "tmdbId": 302156
         },
         {
+          "title": "Pinocchio 3000",
+          "year": 2004,
+          "tmdbId": 23056
+        },
+        {
           "title": "The Terminator",
           "year": 1984,
           "tmdbId": 218
-        },
-        {
-          "title": "Battle Angel",
-          "year": 1993,
-          "tmdbId": 17189
         },
         {
           "title": "Tron",
@@ -1539,14 +1709,9 @@
           "tmdbId": 15785
         },
         {
-          "title": "Looker",
-          "year": 1981,
-          "tmdbId": 21874
-        },
-        {
-          "title": "The Bay",
-          "year": 2012,
-          "tmdbId": 123105
+          "title": "Expelled from Paradise",
+          "year": 2014,
+          "tmdbId": 304023
         },
         {
           "title": "Predator: Badlands",
@@ -1564,11 +1729,6 @@
           "tmdbId": 54270
         },
         {
-          "title": "Beyond",
-          "year": 2003,
-          "tmdbId": 24675
-        },
-        {
           "title": "How to Build a Better Boy",
           "year": 2014,
           "tmdbId": 286987
@@ -1584,29 +1744,69 @@
           "tmdbId": 24960
         },
         {
-          "title": "The Second Renaissance Part II",
-          "year": 2003,
-          "tmdbId": 24362
+          "title": "Sleep Dealer",
+          "year": 2008,
+          "tmdbId": 20764
         },
         {
-          "title": "Drive",
-          "year": 1997,
-          "tmdbId": 25571
+          "title": "Galaxina",
+          "year": 1980,
+          "tmdbId": 33155
         },
         {
-          "title": "The Guyver",
-          "year": 1991,
-          "tmdbId": 15026
+          "title": "WarGames: The Dead Code",
+          "year": 2008,
+          "tmdbId": 14154
         },
         {
-          "title": "Haredevil Hare",
-          "year": 1948,
-          "tmdbId": 83790
+          "title": "Android Re-Enactment",
+          "year": 2011,
+          "tmdbId": 663414
+        },
+        {
+          "title": "Game Therapy",
+          "year": 2015,
+          "tmdbId": 364470
+        },
+        {
+          "title": "Alienator",
+          "year": 1990,
+          "tmdbId": 86094
+        },
+        {
+          "title": "LOLA",
+          "year": 2023,
+          "tmdbId": 941019
+        },
+        {
+          "title": "Warrior of the Lost World",
+          "year": 1983,
+          "tmdbId": 52837
+        },
+        {
+          "title": "Things to Come",
+          "year": 1936,
+          "tmdbId": 3596
+        },
+        {
+          "title": "Gintama 2: Rules are Made to Be Broken",
+          "year": 2018,
+          "tmdbId": 519176
+        },
+        {
+          "title": "9",
+          "year": 2005,
+          "tmdbId": 98622
         },
         {
           "title": "Coherence",
           "year": 2014,
           "tmdbId": 220289
+        },
+        {
+          "title": "Sri Asih",
+          "year": 2022,
+          "tmdbId": 624091
         },
         {
           "title": "Doctor Who",
@@ -1624,9 +1824,29 @@
           "tmdbId": 39466
         },
         {
-          "title": "Blush",
-          "year": 2021,
-          "tmdbId": 818350
+          "title": "Dragon Ball Z: The Return of Cooler",
+          "year": 1992,
+          "tmdbId": 39103
+        },
+        {
+          "title": "Class of 1999 II: The Substitute",
+          "year": 1994,
+          "tmdbId": 61954
+        },
+        {
+          "title": "Hare-Way to the Stars",
+          "year": 1958,
+          "tmdbId": 83794
+        },
+        {
+          "title": "Moon Man",
+          "year": 2022,
+          "tmdbId": 801803
+        },
+        {
+          "title": "Bionic Showdown: The Six Million Dollar Man and the Bionic Woman",
+          "year": 1989,
+          "tmdbId": 97262
         },
         {
           "title": "Green Lantern: First Flight",
@@ -1634,9 +1854,24 @@
           "tmdbId": 17445
         },
         {
+          "title": "Family Guy Presents: Blue Harvest",
+          "year": 2008,
+          "tmdbId": 653528
+        },
+        {
+          "title": "Under the Hood",
+          "year": 2009,
+          "tmdbId": 41207
+        },
+        {
           "title": "Batman: Gotham Knight",
           "year": 2008,
           "tmdbId": 13851
+        },
+        {
+          "title": "The Second Renaissance Part II",
+          "year": 2003,
+          "tmdbId": 24362
         },
         {
           "title": "Batman Beyond: The Movie",
@@ -1644,9 +1879,19 @@
           "tmdbId": 64202
         },
         {
-          "title": "Daleks' Invasion Earth: 2150 A.D.",
-          "year": 1966,
-          "tmdbId": 16387
+          "title": "Death Race 2050",
+          "year": 2017,
+          "tmdbId": 401544
+        },
+        {
+          "title": "The Captains",
+          "year": 2011,
+          "tmdbId": 70703
+        },
+        {
+          "title": "The Guyver",
+          "year": 1991,
+          "tmdbId": 15026
         },
         {
           "title": "TRON: Ares",
@@ -1654,9 +1899,44 @@
           "tmdbId": 533533
         },
         {
+          "title": "Phineas and Ferb: Mission Marvel",
+          "year": 2013,
+          "tmdbId": 284019
+        },
+        {
+          "title": "A Troll in Central Park",
+          "year": 1994,
+          "tmdbId": 35614
+        },
+        {
+          "title": "Lazer Team",
+          "year": 2016,
+          "tmdbId": 279096
+        },
+        {
+          "title": "Britannia Hospital",
+          "year": 1982,
+          "tmdbId": 26639
+        },
+        {
           "title": "Dragon Ball Z: The Tree of Might",
           "year": 1990,
           "tmdbId": 39101
+        },
+        {
+          "title": "Unidentified Flying Mater",
+          "year": 2009,
+          "tmdbId": 171536
+        },
+        {
+          "title": "Repli-Kate",
+          "year": 2002,
+          "tmdbId": 16261
+        },
+        {
+          "title": "Mazinger Z: Infinity",
+          "year": 2017,
+          "tmdbId": 452970
         },
         {
           "title": "Woman in the Moon",
@@ -1664,14 +1944,29 @@
           "tmdbId": 3007
         },
         {
-          "title": "Moonfall",
-          "year": 2022,
-          "tmdbId": 406759
+          "title": "Drive",
+          "year": 1997,
+          "tmdbId": 25571
         },
         {
-          "title": "The Rocketeer",
-          "year": 1991,
-          "tmdbId": 10249
+          "title": "A Wind Named Amnesia",
+          "year": 1990,
+          "tmdbId": 42070
+        },
+        {
+          "title": "Haredevil Hare",
+          "year": 1948,
+          "tmdbId": 83790
+        },
+        {
+          "title": "Ghost in the Shell: Arise - Border 3: Ghost Tears",
+          "year": 2014,
+          "tmdbId": 240341
+        },
+        {
+          "title": "The Wave",
+          "year": 2019,
+          "tmdbId": 619263
         },
         {
           "title": "Avatar",
@@ -1679,9 +1974,19 @@
           "tmdbId": 19995
         },
         {
-          "title": "Strange Brew",
-          "year": 1983,
-          "tmdbId": 12921
+          "title": "Doctor Who: Twice Upon a Time",
+          "year": 2017,
+          "tmdbId": 495151
+        },
+        {
+          "title": "Fullmetal Alchemist",
+          "year": 2017,
+          "tmdbId": 426285
+        },
+        {
+          "title": "UFO",
+          "year": 2018,
+          "tmdbId": 426865
         },
         {
           "title": "The Hidden",
@@ -1694,24 +1999,24 @@
           "tmdbId": 13836
         },
         {
-          "title": "The Heart of the World",
-          "year": 2000,
-          "tmdbId": 41571
-        },
-        {
-          "title": "Mazinger Z: Infinity",
+          "title": "Barbie Video Game Hero",
           "year": 2017,
-          "tmdbId": 452970
+          "tmdbId": 434757
         },
         {
-          "title": "2001: A Space Odyssey",
-          "year": 1968,
-          "tmdbId": 62
-        },
-        {
-          "title": "Underdog",
+          "title": "Doraemon: Nobita's New Great Adventure Into the Underworld - The Seven Magic Users",
           "year": 2007,
-          "tmdbId": 6589
+          "tmdbId": 52795
+        },
+        {
+          "title": "Daleks' Invasion Earth: 2150 A.D.",
+          "year": 1966,
+          "tmdbId": 16387
+        },
+        {
+          "title": "Pixel Perfect",
+          "year": 2004,
+          "tmdbId": 124117
         },
         {
           "title": "The Little Guy",
@@ -1719,169 +2024,9 @@
           "tmdbId": 1010819
         },
         {
-          "title": "Our War Game",
-          "year": 2000,
-          "tmdbId": 75571
-        },
-        {
-          "title": "Guardians of the Galaxy Vol. 2",
-          "year": 2017,
-          "tmdbId": 283995
-        },
-        {
-          "title": "Rebel Moon - Part Two: The Scargiver",
-          "year": 2024,
-          "tmdbId": 934632
-        },
-        {
-          "title": "Blackadder: Back & Forth",
-          "year": 1999,
-          "tmdbId": 194113
-        },
-        {
-          "title": "Mission to Mars",
-          "year": 2000,
-          "tmdbId": 2067
-        },
-        {
-          "title": "Doctor Strange",
-          "year": 2007,
-          "tmdbId": 14830
-        },
-        {
-          "title": "The Hunger Games: The Ballad of Songbirds & Snakes",
-          "year": 2023,
-          "tmdbId": 695721
-        },
-        {
-          "title": "Dragon Ball Z: Resurrection 'F'",
-          "year": 2015,
-          "tmdbId": 303857
-        },
-        {
-          "title": "Bliss",
-          "year": 2021,
-          "tmdbId": 613911
-        },
-        {
-          "title": "Jurassic World: Fallen Kingdom",
-          "year": 2018,
-          "tmdbId": 351286
-        },
-        {
-          "title": "Titan A.E.",
-          "year": 2000,
-          "tmdbId": 7450
-        },
-        {
-          "title": "The Trial of the Incredible Hulk",
-          "year": 1989,
-          "tmdbId": 26883
-        },
-        {
-          "title": "Batman Beyond: Return of the Joker",
-          "year": 2000,
-          "tmdbId": 16234
-        },
-        {
-          "title": "Austin Powers: International Man of Mystery",
-          "year": 1997,
-          "tmdbId": 816
-        },
-        {
-          "title": "The Flu",
-          "year": 2013,
-          "tmdbId": 200085
-        },
-        {
-          "title": "The Saint",
-          "year": 1997,
-          "tmdbId": 10003
-        },
-        {
-          "title": "Teen Titans: The Judas Contract",
-          "year": 2017,
-          "tmdbId": 408647
-        },
-        {
-          "title": "Suburban Commando",
+          "title": "Beastmaster 2: Through the Portal of Time",
           "year": 1991,
-          "tmdbId": 11504
-        },
-        {
-          "title": "Batman: The Dark Knight Returns, Part 1",
-          "year": 2012,
-          "tmdbId": 123025
-        },
-        {
-          "title": "Mannequin Two: On the Move",
-          "year": 1991,
-          "tmdbId": 34376
-        },
-        {
-          "title": "Godzilla vs. Gigan",
-          "year": 1972,
-          "tmdbId": 19336
-        },
-        {
-          "title": "Atlantis: Milo's Return",
-          "year": 2003,
-          "tmdbId": 8965
-        },
-        {
-          "title": "A Grand Day Out",
-          "year": 1990,
-          "tmdbId": 530
-        },
-        {
-          "title": "Pokémon the Movie 2000",
-          "year": 1999,
-          "tmdbId": 12599
-        },
-        {
-          "title": "Halloween III: Season of the Witch",
-          "year": 1982,
-          "tmdbId": 10676
-        },
-        {
-          "title": "Idiocracy",
-          "year": 2006,
-          "tmdbId": 7512
-        },
-        {
-          "title": "Brainscan",
-          "year": 1994,
-          "tmdbId": 14237
-        },
-        {
-          "title": "Junior",
-          "year": 1994,
-          "tmdbId": 6280
-        },
-        {
-          "title": "Maximum Overdrive",
-          "year": 1986,
-          "tmdbId": 9980
-        },
-        {
-          "title": "Gundala",
-          "year": 2019,
-          "tmdbId": 516700
-        },
-        {
-          "title": "The Element of Crime",
-          "year": 1984,
-          "tmdbId": 9063
-        },
-        {
-          "title": "Sharknado 2: The Second One",
-          "year": 2014,
-          "tmdbId": 248504
-        },
-        {
-          "title": "Left Behind",
-          "year": 2014,
-          "tmdbId": 218043
+          "tmdbId": 27549
         }
       ],
       "extended": []
@@ -1925,14 +2070,19 @@
           "tmdbId": 461130
         },
         {
+          "title": "Gentlemen Broncos",
+          "year": 2009,
+          "tmdbId": 22820
+        },
+        {
+          "title": "Virtual Sexuality",
+          "year": 1999,
+          "tmdbId": 5248
+        },
+        {
           "title": "War of the Worlds",
           "year": 2025,
           "tmdbId": 755898
-        },
-        {
-          "title": "Freaked",
-          "year": 1993,
-          "tmdbId": 17796
         },
         {
           "title": "Blade Runner",
@@ -1975,9 +2125,79 @@
           "tmdbId": 339988
         },
         {
+          "title": "Code 8",
+          "year": 2016,
+          "tmdbId": 389165
+        },
+        {
+          "title": "The Last Survivors",
+          "year": 2014,
+          "tmdbId": 270771
+        },
+        {
+          "title": "Kalki 2898-AD",
+          "year": 2024,
+          "tmdbId": 801688
+        },
+        {
+          "title": "Executive Order",
+          "year": 2022,
+          "tmdbId": 614282
+        },
+        {
+          "title": "2073",
+          "year": 2024,
+          "tmdbId": 1023915
+        },
+        {
+          "title": "Strawberry Mansion",
+          "year": 2021,
+          "tmdbId": 776561
+        },
+        {
+          "title": "Resurrected",
+          "year": 2023,
+          "tmdbId": 584004
+        },
+        {
           "title": "Koi... Mil Gaya",
           "year": 2003,
           "tmdbId": 25516
+        },
+        {
+          "title": "Ditto",
+          "year": 2000,
+          "tmdbId": 81760
+        },
+        {
+          "title": "Gintama",
+          "year": 2017,
+          "tmdbId": 432985
+        },
+        {
+          "title": "Captain America II: Death Too Soon",
+          "year": 1979,
+          "tmdbId": 197481
+        },
+        {
+          "title": "Black Moon Rising",
+          "year": 1986,
+          "tmdbId": 36349
+        },
+        {
+          "title": "Future World",
+          "year": 2018,
+          "tmdbId": 411135
+        },
+        {
+          "title": "Spider-Ham: Caught in a Ham",
+          "year": 2019,
+          "tmdbId": 583055
+        },
+        {
+          "title": "Mobile Suit Gundam Hathaway",
+          "year": 2021,
+          "tmdbId": 685274
         },
         {
           "title": "Spider-Man",
@@ -1985,19 +2205,39 @@
           "tmdbId": 225914
         },
         {
-          "title": "Neo Tokyo",
-          "year": 1989,
-          "tmdbId": 37433
+          "title": "Ticks",
+          "year": 1993,
+          "tmdbId": 34098
         },
         {
-          "title": "Hulk",
-          "year": 2003,
-          "tmdbId": 1927
+          "title": "Wedlock",
+          "year": 1991,
+          "tmdbId": 2125
         },
         {
-          "title": "Parallels",
-          "year": 2015,
-          "tmdbId": 328595
+          "title": "Ape vs. Monster",
+          "year": 2021,
+          "tmdbId": 823087
+        },
+        {
+          "title": "Reality+",
+          "year": 2014,
+          "tmdbId": 367181
+        },
+        {
+          "title": "Right at Your Door",
+          "year": 2006,
+          "tmdbId": 15664
+        },
+        {
+          "title": "Mac and Me",
+          "year": 1988,
+          "tmdbId": 20196
+        },
+        {
+          "title": "Illang: The Wolf Brigade",
+          "year": 2018,
+          "tmdbId": 467824
         },
         {
           "title": "Steamboy",
@@ -2005,14 +2245,14 @@
           "tmdbId": 8953
         },
         {
+          "title": "Aelita: Queen of Mars",
+          "year": 1924,
+          "tmdbId": 2973
+        },
+        {
           "title": "Akira",
           "year": 1988,
           "tmdbId": 149
-        },
-        {
-          "title": "Kim Possible Movie: So the Drama",
-          "year": 2005,
-          "tmdbId": 20771
         },
         {
           "title": "Sleeper",
@@ -2030,14 +2270,24 @@
           "tmdbId": 1726
         },
         {
+          "title": "Liquid Sky",
+          "year": 1982,
+          "tmdbId": 20980
+        },
+        {
           "title": "Dark City",
           "year": 1998,
           "tmdbId": 2666
         },
         {
-          "title": "Memoirs of an Invisible Man",
-          "year": 1992,
-          "tmdbId": 2687
+          "title": "Bubble",
+          "year": 2022,
+          "tmdbId": 912598
+        },
+        {
+          "title": "Delirium",
+          "year": 2014,
+          "tmdbId": 279828
         },
         {
           "title": "Mr. Nobody",
@@ -2065,14 +2315,19 @@
           "tmdbId": 303542
         },
         {
-          "title": "Black Mirror: Bandersnatch",
-          "year": 2018,
-          "tmdbId": 569547
+          "title": "Code 8 Part II",
+          "year": 2024,
+          "tmdbId": 932420
         },
         {
-          "title": "Bubble",
-          "year": 2022,
-          "tmdbId": 912598
+          "title": "Communion",
+          "year": 1989,
+          "tmdbId": 28774
+        },
+        {
+          "title": "Tremors: A Cold Day in Hell",
+          "year": 2018,
+          "tmdbId": 496704
         },
         {
           "title": "Hypnotic",
@@ -2085,19 +2340,24 @@
           "tmdbId": 18775
         },
         {
-          "title": "Nope",
-          "year": 2022,
-          "tmdbId": 762504
-        },
-        {
           "title": "Superman II",
           "year": 1980,
           "tmdbId": 8536
         },
         {
-          "title": "Liquid Sky",
-          "year": 1982,
-          "tmdbId": 20980
+          "title": "Songbird",
+          "year": 2020,
+          "tmdbId": 721625
+        },
+        {
+          "title": "The Signal",
+          "year": 2007,
+          "tmdbId": 13059
+        },
+        {
+          "title": "Neo Tokyo",
+          "year": 1989,
+          "tmdbId": 37433
         },
         {
           "title": "Repo Man",
@@ -2105,9 +2365,9 @@
           "tmdbId": 13820
         },
         {
-          "title": "Code 8 Part II",
-          "year": 2024,
-          "tmdbId": 932420
+          "title": "A Walk in Time",
+          "year": 1996,
+          "tmdbId": 42425
         },
         {
           "title": "Dawn of the Dead",
@@ -2120,9 +2380,9 @@
           "tmdbId": 106
         },
         {
-          "title": "Tremors: A Cold Day in Hell",
-          "year": 2018,
-          "tmdbId": 496704
+          "title": "Lust of the Vampire",
+          "year": 1957,
+          "tmdbId": 28061
         },
         {
           "title": "Close Encounters of the Third Kind",
@@ -2130,9 +2390,19 @@
           "tmdbId": 840
         },
         {
-          "title": "Body Bags",
-          "year": 1993,
-          "tmdbId": 31578
+          "title": "Jules",
+          "year": 2023,
+          "tmdbId": 1072371
+        },
+        {
+          "title": "Alien Abduction",
+          "year": 2014,
+          "tmdbId": 258193
+        },
+        {
+          "title": "The Darkest Hour",
+          "year": 2011,
+          "tmdbId": 71469
         },
         {
           "title": "Lifeforce",
@@ -2140,19 +2410,29 @@
           "tmdbId": 11954
         },
         {
+          "title": "I Think We're Alone Now",
+          "year": 2018,
+          "tmdbId": 451877
+        },
+        {
+          "title": "Nightbeast",
+          "year": 1982,
+          "tmdbId": 66881
+        },
+        {
+          "title": "964 Pinocchio",
+          "year": 1991,
+          "tmdbId": 50162
+        },
+        {
           "title": "Moon",
           "year": 2009,
           "tmdbId": 17431
         },
         {
-          "title": "A Walk in Time",
-          "year": 1996,
-          "tmdbId": 42425
-        },
-        {
-          "title": "Wedlock",
-          "year": 1991,
-          "tmdbId": 2125
+          "title": "Batman",
+          "year": 1943,
+          "tmdbId": 125249
         },
         {
           "title": "Everything Everywhere All at Once",
@@ -2170,9 +2450,19 @@
           "tmdbId": 1902
         },
         {
-          "title": "The Monolith Monsters",
-          "year": 1957,
-          "tmdbId": 52196
+          "title": "Ravenous",
+          "year": 2017,
+          "tmdbId": 415010
+        },
+        {
+          "title": "Patema Inverted",
+          "year": 2013,
+          "tmdbId": 212167
+        },
+        {
+          "title": "The Heroic Trio",
+          "year": 1993,
+          "tmdbId": 43636
         },
         {
           "title": "More",
@@ -2190,9 +2480,9 @@
           "tmdbId": 559
         },
         {
-          "title": "Patema Inverted",
-          "year": 2013,
-          "tmdbId": 212167
+          "title": "The Blackout",
+          "year": 2019,
+          "tmdbId": 574982
         },
         {
           "title": "28 Years Later: The Bone Temple",
@@ -2215,14 +2505,24 @@
           "tmdbId": 333371
         },
         {
+          "title": "Monkey Shines",
+          "year": 1988,
+          "tmdbId": 29787
+        },
+        {
+          "title": "Death Trance",
+          "year": 2005,
+          "tmdbId": 19504
+        },
+        {
+          "title": "Marjorie Prime",
+          "year": 2017,
+          "tmdbId": 426254
+        },
+        {
           "title": "The Hole",
           "year": 1999,
           "tmdbId": 47060
-        },
-        {
-          "title": "Communion",
-          "year": 1989,
-          "tmdbId": 28774
         },
         {
           "title": "Surrogates",
@@ -2230,34 +2530,9 @@
           "tmdbId": 19959
         },
         {
-          "title": "Songbird",
-          "year": 2020,
-          "tmdbId": 721625
-        },
-        {
-          "title": "The Heroic Trio",
-          "year": 1993,
-          "tmdbId": 43636
-        },
-        {
-          "title": "The Darkest Hour",
-          "year": 2011,
-          "tmdbId": 71469
-        },
-        {
-          "title": "I Think We're Alone Now",
-          "year": 2018,
-          "tmdbId": 451877
-        },
-        {
-          "title": "The Blackout",
-          "year": 2019,
-          "tmdbId": 574982
-        },
-        {
-          "title": "Universal Soldier: Day of Reckoning",
-          "year": 2012,
-          "tmdbId": 122857
+          "title": "Ghost Lab",
+          "year": 2021,
+          "tmdbId": 710871
         }
       ],
       "extended": []
@@ -2291,6 +2566,16 @@
           "tmdbId": 73920
         },
         {
+          "title": "Rats: Night of Terror",
+          "year": 1984,
+          "tmdbId": 83223
+        },
+        {
+          "title": "Steel Dawn",
+          "year": 1987,
+          "tmdbId": 27786
+        },
+        {
           "title": "Godzilla vs. Megalon",
           "year": 1973,
           "tmdbId": 39264
@@ -2306,9 +2591,9 @@
           "tmdbId": 246655
         },
         {
-          "title": "Testament",
-          "year": 1983,
-          "tmdbId": 21259
+          "title": "Damnation Alley",
+          "year": 1977,
+          "tmdbId": 25763
         },
         {
           "title": "The Book of Eli",
@@ -2319,6 +2604,16 @@
           "title": "The Postman",
           "year": 1997,
           "tmdbId": 9922
+        },
+        {
+          "title": "1990: The Bronx Warriors",
+          "year": 1982,
+          "tmdbId": 61755
+        },
+        {
+          "title": "The Manhattan Project",
+          "year": 1986,
+          "tmdbId": 30194
         },
         {
           "title": "Elevation",
@@ -2336,14 +2631,44 @@
           "tmdbId": 892
         },
         {
+          "title": "Creepozoids",
+          "year": 1987,
+          "tmdbId": 28223
+        },
+        {
+          "title": "The Cloud",
+          "year": 2006,
+          "tmdbId": 7456
+        },
+        {
+          "title": "The Divide",
+          "year": 2012,
+          "tmdbId": 38541
+        },
+        {
+          "title": "2019: After the Fall of New York",
+          "year": 1983,
+          "tmdbId": 23807
+        },
+        {
+          "title": "Testament",
+          "year": 1983,
+          "tmdbId": 21259
+        },
+        {
           "title": "Super Fuzz",
           "year": 1980,
           "tmdbId": 11333
         },
         {
-          "title": "Terminator Salvation",
-          "year": 2009,
-          "tmdbId": 534
+          "title": "Into the Forest",
+          "year": 2016,
+          "tmdbId": 334538
+        },
+        {
+          "title": "Nightmare City",
+          "year": 1980,
+          "tmdbId": 28319
         },
         {
           "title": "2010",
@@ -2356,14 +2681,19 @@
           "tmdbId": 14801
         },
         {
+          "title": "Omega Doom",
+          "year": 1996,
+          "tmdbId": 17135
+        },
+        {
           "title": "Godzilla",
           "year": 1998,
           "tmdbId": 929
         },
         {
-          "title": "Into the Forest",
-          "year": 2016,
-          "tmdbId": 334538
+          "title": "Arctic Apocalypse",
+          "year": 2019,
+          "tmdbId": 621914
         },
         {
           "title": "The Day the Earth Caught Fire",
@@ -2371,9 +2701,29 @@
           "tmdbId": 28430
         },
         {
+          "title": "The New Barbarians",
+          "year": 1983,
+          "tmdbId": 48490
+        },
+        {
+          "title": "Crack in the World",
+          "year": 1965,
+          "tmdbId": 30374
+        },
+        {
+          "title": "Robot Jox",
+          "year": 1990,
+          "tmdbId": 15618
+        },
+        {
           "title": "Mortal Engines",
           "year": 2018,
           "tmdbId": 428078
+        },
+        {
+          "title": "The Beast of Yucca Flats",
+          "year": 1961,
+          "tmdbId": 22727
         },
         {
           "title": "Mars Attacks!",
@@ -2386,9 +2736,9 @@
           "tmdbId": 11071
         },
         {
-          "title": "Robot Jox",
-          "year": 1990,
-          "tmdbId": 15618
+          "title": "Holocaust 2000",
+          "year": 1977,
+          "tmdbId": 46158
         },
         {
           "title": "Greenland 2: Migration",
@@ -2401,24 +2751,19 @@
           "tmdbId": 786892
         },
         {
+          "title": "Zombie Apocalypse",
+          "year": 2011,
+          "tmdbId": 75735
+        },
+        {
           "title": "Resident Evil: Welcome to Raccoon City",
           "year": 2021,
           "tmdbId": 460458
         },
         {
-          "title": "The Manhattan Project",
-          "year": 1986,
-          "tmdbId": 30194
-        },
-        {
-          "title": "The Cloud",
-          "year": 2006,
-          "tmdbId": 7456
-        },
-        {
-          "title": "Nightmare City",
-          "year": 1980,
-          "tmdbId": 28319
+          "title": "Into the Abyss",
+          "year": 2023,
+          "tmdbId": 917281
         },
         {
           "title": "9",
@@ -2426,9 +2771,14 @@
           "tmdbId": 12244
         },
         {
-          "title": "Six-String Samurai",
-          "year": 1998,
-          "tmdbId": 24746
+          "title": "Fist of the North Star",
+          "year": 1986,
+          "tmdbId": 19877
+        },
+        {
+          "title": "4 Horsemen: Apocalypse",
+          "year": 2022,
+          "tmdbId": 969686
         },
         {
           "title": "Resident Evil: The Final Chapter",
@@ -2436,19 +2786,9 @@
           "tmdbId": 173897
         },
         {
-          "title": "O-Bi, O-Ba: The End of Civilization",
-          "year": 1985,
-          "tmdbId": 71933
-        },
-        {
-          "title": "The Divide",
-          "year": 2012,
-          "tmdbId": 38541
-        },
-        {
-          "title": "Attack on Titan",
-          "year": 2015,
-          "tmdbId": 295830
+          "title": "Class of Nuke 'Em High 2: Subhumanoid Meltdown",
+          "year": 1991,
+          "tmdbId": 26230
         },
         {
           "title": "Greenland",
@@ -2471,6 +2811,11 @@
           "tmdbId": 860
         },
         {
+          "title": "Babylon A.D.",
+          "year": 2008,
+          "tmdbId": 9381
+        },
+        {
           "title": "Superman/Batman: Apocalypse",
           "year": 2010,
           "tmdbId": 45162
@@ -2481,9 +2826,9 @@
           "tmdbId": 287424
         },
         {
-          "title": "Fist of the North Star",
-          "year": 1986,
-          "tmdbId": 19877
+          "title": "Attack on Titan",
+          "year": 2015,
+          "tmdbId": 295830
         },
         {
           "title": "Vesper",
@@ -2501,19 +2846,74 @@
           "tmdbId": 28510
         },
         {
-          "title": "Our Man Flint",
-          "year": 1966,
-          "tmdbId": 23728
+          "title": "The Toxic Avenger Part III: The Last Temptation of Toxie",
+          "year": 1989,
+          "tmdbId": 28169
         },
         {
-          "title": "The Land That Time Forgot",
-          "year": 1974,
-          "tmdbId": 27085
+          "title": "Not of This Earth",
+          "year": 1957,
+          "tmdbId": 27623
         },
         {
-          "title": "Death Watch",
+          "title": "Caltiki, the Immortal Monster",
+          "year": 1959,
+          "tmdbId": 28063
+        },
+        {
+          "title": "The Children",
           "year": 1980,
-          "tmdbId": 3418
+          "tmdbId": 84107
+        },
+        {
+          "title": "The Chain Reaction",
+          "year": 1980,
+          "tmdbId": 60591
+        },
+        {
+          "title": "Alpha",
+          "year": 2025,
+          "tmdbId": 1284460
+        },
+        {
+          "title": "Killers from Space",
+          "year": 1954,
+          "tmdbId": 23045
+        },
+        {
+          "title": "Carnosaur 2",
+          "year": 1995,
+          "tmdbId": 65460
+        },
+        {
+          "title": "Zenon: Z3",
+          "year": 2004,
+          "tmdbId": 34765
+        },
+        {
+          "title": "Jimmy Timmy Power Hour",
+          "year": 2004,
+          "tmdbId": 40706
+        },
+        {
+          "title": "Bionicle 2: Legends of Metru Nui",
+          "year": 2004,
+          "tmdbId": 21379
+        },
+        {
+          "title": "Doraemon: Nobita's Dinosaur",
+          "year": 1980,
+          "tmdbId": 64789
+        },
+        {
+          "title": "Aqua Teen Hunger Force Colon Movie Film for Theaters",
+          "year": 2007,
+          "tmdbId": 13158
+        },
+        {
+          "title": "Arctic Blast",
+          "year": 2010,
+          "tmdbId": 45556
         },
         {
           "title": "Altered Carbon: Resleeved",
@@ -2521,29 +2921,64 @@
           "tmdbId": 665251
         },
         {
+          "title": "Pumaman",
+          "year": 1980,
+          "tmdbId": 31278
+        },
+        {
+          "title": "The Crazy Ray",
+          "year": 1925,
+          "tmdbId": 47579
+        },
+        {
+          "title": "Slipstream",
+          "year": 1989,
+          "tmdbId": 22379
+        },
+        {
           "title": "Escape from New York",
           "year": 1981,
           "tmdbId": 1103
         },
         {
-          "title": "Batman",
-          "year": 1943,
-          "tmdbId": 125249
+          "title": "The Land That Time Forgot",
+          "year": 1974,
+          "tmdbId": 27085
         },
         {
-          "title": "EVANGELION: DEATH (TRUE)²",
-          "year": 1998,
-          "tmdbId": 857862
+          "title": "Moonfall",
+          "year": 2022,
+          "tmdbId": 406759
         },
         {
-          "title": "Congo",
-          "year": 1995,
-          "tmdbId": 10329
+          "title": "Robot Overlords",
+          "year": 2015,
+          "tmdbId": 240483
         },
         {
-          "title": "The Last Man on Earth",
-          "year": 1964,
-          "tmdbId": 21159
+          "title": "Chaos on the Bridge",
+          "year": 2014,
+          "tmdbId": 347497
+        },
+        {
+          "title": "Sgt. Pepper's Lonely Hearts Club Band",
+          "year": 1978,
+          "tmdbId": 36759
+        },
+        {
+          "title": "The Wall",
+          "year": 2012,
+          "tmdbId": 115442
+        },
+        {
+          "title": "MegaForce",
+          "year": 1982,
+          "tmdbId": 27380
+        },
+        {
+          "title": "Spy Kids: Armageddon",
+          "year": 2023,
+          "tmdbId": 790493
         },
         {
           "title": "Cube",
@@ -2561,24 +2996,34 @@
           "tmdbId": 619264
         },
         {
-          "title": "Kaliman, the Incredible Man",
-          "year": 1972,
-          "tmdbId": 286002
+          "title": "Atragon",
+          "year": 1963,
+          "tmdbId": 35072
         },
         {
-          "title": "Jules",
-          "year": 2023,
-          "tmdbId": 1072371
+          "title": "The Apple",
+          "year": 1980,
+          "tmdbId": 49069
+        },
+        {
+          "title": "Sharknado 4: The 4th Awakens",
+          "year": 2016,
+          "tmdbId": 390989
+        },
+        {
+          "title": "Death Watch",
+          "year": 1980,
+          "tmdbId": 3418
+        },
+        {
+          "title": "Timecop 2: The Berlin Decision",
+          "year": 2003,
+          "tmdbId": 18051
         },
         {
           "title": "The Beast from 20,000 Fathoms",
           "year": 1953,
           "tmdbId": 35073
-        },
-        {
-          "title": "Watchmen: Chapter I",
-          "year": 2024,
-          "tmdbId": 1155058
         },
         {
           "title": "In Your Eyes",
@@ -2594,161 +3039,6 @@
           "title": "Babylon 5: In the Beginning",
           "year": 1998,
           "tmdbId": 10940
-        },
-        {
-          "title": "Another Earth",
-          "year": 2011,
-          "tmdbId": 55420
-        },
-        {
-          "title": "The Final Countdown",
-          "year": 1980,
-          "tmdbId": 8738
-        },
-        {
-          "title": "The Little Prince",
-          "year": 1974,
-          "tmdbId": 37627
-        },
-        {
-          "title": "Tau",
-          "year": 2018,
-          "tmdbId": 411143
-        },
-        {
-          "title": "Spiderhead",
-          "year": 2022,
-          "tmdbId": 615469
-        },
-        {
-          "title": "Level 16",
-          "year": 2018,
-          "tmdbId": 548066
-        },
-        {
-          "title": "Hot Wheels AcceleRacers: Ignition",
-          "year": 2005,
-          "tmdbId": 72720
-        },
-        {
-          "title": "Captain America: Brave New World",
-          "year": 2025,
-          "tmdbId": 822119
-        },
-        {
-          "title": "Dragon Ball Z: Broly - Second Coming",
-          "year": 1994,
-          "tmdbId": 44251
-        },
-        {
-          "title": "Godzilla 2000: Millennium",
-          "year": 1999,
-          "tmdbId": 10643
-        },
-        {
-          "title": "Tenet",
-          "year": 2020,
-          "tmdbId": 577922
-        },
-        {
-          "title": "Batman: Bad Blood",
-          "year": 2016,
-          "tmdbId": 366924
-        },
-        {
-          "title": "Teenage Mutant Ninja Turtles",
-          "year": 1990,
-          "tmdbId": 1498
-        },
-        {
-          "title": "Village of the Damned",
-          "year": 1960,
-          "tmdbId": 11773
-        },
-        {
-          "title": "How to Talk to Girls at Parties",
-          "year": 2017,
-          "tmdbId": 341689
-        },
-        {
-          "title": "Men in Black: International",
-          "year": 2019,
-          "tmdbId": 479455
-        },
-        {
-          "title": "Doctor Who: The Runaway Bride",
-          "year": 2006,
-          "tmdbId": 282758
-        },
-        {
-          "title": "The Stepford Wives",
-          "year": 1975,
-          "tmdbId": 12223
-        },
-        {
-          "title": "G.I. Joe: Retaliation",
-          "year": 2013,
-          "tmdbId": 72559
-        },
-        {
-          "title": "Resident Evil: Extinction",
-          "year": 2007,
-          "tmdbId": 7737
-        },
-        {
-          "title": "Promare",
-          "year": 2019,
-          "tmdbId": 553600
-        },
-        {
-          "title": "Trigun: Badlands Rumble",
-          "year": 2010,
-          "tmdbId": 51859
-        },
-        {
-          "title": "The Absent-Minded Professor",
-          "year": 1961,
-          "tmdbId": 17984
-        },
-        {
-          "title": "The Stuff",
-          "year": 1985,
-          "tmdbId": 18502
-        },
-        {
-          "title": "Teenage Mutant Ninja Turtles III",
-          "year": 1993,
-          "tmdbId": 1499
-        },
-        {
-          "title": "Mothra vs. Godzilla",
-          "year": 1964,
-          "tmdbId": 1682
-        },
-        {
-          "title": "Village of the Damned",
-          "year": 1995,
-          "tmdbId": 12122
-        },
-        {
-          "title": "The Suite Life Movie",
-          "year": 2011,
-          "tmdbId": 60803
-        },
-        {
-          "title": "Infestation",
-          "year": 2009,
-          "tmdbId": 22476
-        },
-        {
-          "title": "12:01",
-          "year": 1993,
-          "tmdbId": 17803
-        },
-        {
-          "title": "Dry",
-          "year": 2022,
-          "tmdbId": 797840
         }
       ],
       "extended": []
@@ -2762,14 +3052,24 @@
           "tmdbId": 59967
         },
         {
+          "title": "Time Cut",
+          "year": 2024,
+          "tmdbId": 827931
+        },
+        {
+          "title": "The Time Travelers",
+          "year": 1964,
+          "tmdbId": 49160
+        },
+        {
           "title": "Happy Accidents",
           "year": 2000,
           "tmdbId": 22230
         },
         {
-          "title": "Time Cut",
-          "year": 2024,
-          "tmdbId": 827931
+          "title": "The Visitor from the Future",
+          "year": 2022,
+          "tmdbId": 810389
         },
         {
           "title": "Millennium",
@@ -2780,6 +3080,11 @@
           "title": "No One Will Save You",
           "year": 2023,
           "tmdbId": 820609
+        },
+        {
+          "title": "The Beast",
+          "year": 2024,
+          "tmdbId": 914206
         },
         {
           "title": "Timecop",
@@ -2797,19 +3102,14 @@
           "tmdbId": 23048
         },
         {
-          "title": "Je T'Aime, Je T'Aime",
-          "year": 1968,
-          "tmdbId": 4798
+          "title": "Hello World",
+          "year": 2019,
+          "tmdbId": 604605
         },
         {
           "title": "The Time Machine",
           "year": 2002,
           "tmdbId": 2135
-        },
-        {
-          "title": "Hello World",
-          "year": 2019,
-          "tmdbId": 604605
         },
         {
           "title": "The Adam Project",
@@ -2827,9 +3127,9 @@
           "tmdbId": 9562
         },
         {
-          "title": "Origin: Spirits of the Past",
-          "year": 2006,
-          "tmdbId": 14945
+          "title": "Je T'Aime, Je T'Aime",
+          "year": 1968,
+          "tmdbId": 4798
         },
         {
           "title": "Alita: Battle Angel",
@@ -2837,14 +3137,9 @@
           "tmdbId": 399579
         },
         {
-          "title": "My Science Project",
-          "year": 1985,
-          "tmdbId": 18252
-        },
-        {
-          "title": "X-Men: Days of Future Past",
-          "year": 2014,
-          "tmdbId": 127585
+          "title": "Mute",
+          "year": 2018,
+          "tmdbId": 401371
         },
         {
           "title": "See You Yesterday",
@@ -2852,9 +3147,29 @@
           "tmdbId": 582607
         },
         {
+          "title": "X-Men: Days of Future Past",
+          "year": 2014,
+          "tmdbId": 127585
+        },
+        {
+          "title": "The Time Shifters",
+          "year": 1999,
+          "tmdbId": 7837
+        },
+        {
+          "title": "Origin: Spirits of the Past",
+          "year": 2006,
+          "tmdbId": 14945
+        },
+        {
           "title": "Kingdom of the Planet of the Apes",
           "year": 2024,
           "tmdbId": 653346
+        },
+        {
+          "title": "Terminator Salvation",
+          "year": 2009,
+          "tmdbId": 534
         },
         {
           "title": "Predestination",
@@ -2877,14 +3192,14 @@
           "tmdbId": 11336
         },
         {
+          "title": "Another End",
+          "year": 2024,
+          "tmdbId": 1087593
+        },
+        {
           "title": "The Butterfly Effect 2",
           "year": 2006,
           "tmdbId": 14620
-        },
-        {
-          "title": "Mute",
-          "year": 2018,
-          "tmdbId": 401371
         },
         {
           "title": "Back to the Future Part II",
@@ -2892,9 +3207,29 @@
           "tmdbId": 165
         },
         {
-          "title": "Stand by Me Doraemon 2",
-          "year": 2020,
-          "tmdbId": 728754
+          "title": "Born in Flames",
+          "year": 1983,
+          "tmdbId": 36832
+        },
+        {
+          "title": "Hulk",
+          "year": 2003,
+          "tmdbId": 1927
+        },
+        {
+          "title": "Captain Nova",
+          "year": 2021,
+          "tmdbId": 881957
+        },
+        {
+          "title": "Our Times",
+          "year": 2025,
+          "tmdbId": 1426680
+        },
+        {
+          "title": "Real Men",
+          "year": 1987,
+          "tmdbId": 44801
         },
         {
           "title": "Cyborg",
@@ -2902,9 +3237,34 @@
           "tmdbId": 10134
         },
         {
-          "title": "World of Tomorrow",
+          "title": "Advantageous",
           "year": 2015,
-          "tmdbId": 303867
+          "tmdbId": 308457
+        },
+        {
+          "title": "The Frame",
+          "year": 2014,
+          "tmdbId": 305127
+        },
+        {
+          "title": "The Pod Generation",
+          "year": 2023,
+          "tmdbId": 889675
+        },
+        {
+          "title": "World of Tomorrow Episode Two: The Burden of Other People's Thoughts",
+          "year": 2017,
+          "tmdbId": 471495
+        },
+        {
+          "title": "Reset",
+          "year": 2017,
+          "tmdbId": 457832
+        },
+        {
+          "title": "The Titan",
+          "year": 2018,
+          "tmdbId": 476926
         },
         {
           "title": "Thunderbolts*",
@@ -2922,9 +3282,24 @@
           "tmdbId": 8069
         },
         {
+          "title": "Dead End Drive-In",
+          "year": 1986,
+          "tmdbId": 47340
+        },
+        {
+          "title": "Fahrenheit 451",
+          "year": 2018,
+          "tmdbId": 401905
+        },
+        {
           "title": "Split Second",
           "year": 1992,
           "tmdbId": 13006
+        },
+        {
+          "title": "Forbidden World",
+          "year": 1982,
+          "tmdbId": 42251
         },
         {
           "title": "Zardoz",
@@ -2942,24 +3317,39 @@
           "tmdbId": 10803
         },
         {
+          "title": "Beyond the Infinite Two Minutes",
+          "year": 2020,
+          "tmdbId": 805627
+        },
+        {
+          "title": "Young Ones",
+          "year": 2014,
+          "tmdbId": 215379
+        },
+        {
+          "title": "57 Seconds",
+          "year": 2023,
+          "tmdbId": 937249
+        },
+        {
           "title": "Children of Men",
           "year": 2006,
           "tmdbId": 9693
         },
         {
-          "title": "Date with an Angel",
-          "year": 1987,
-          "tmdbId": 28370
+          "title": "Sound of My Voice",
+          "year": 2011,
+          "tmdbId": 86812
+        },
+        {
+          "title": "Stand by Me Doraemon 2",
+          "year": 2020,
+          "tmdbId": 728754
         },
         {
           "title": "Caddo Lake",
           "year": 2024,
           "tmdbId": 863873
-        },
-        {
-          "title": "Beyond the Infinite Two Minutes",
-          "year": 2020,
-          "tmdbId": 805627
         },
         {
           "title": "Demolition Man",
@@ -2982,14 +3372,29 @@
           "tmdbId": 11484
         },
         {
-          "title": "The Butterfly Effect",
-          "year": 2004,
-          "tmdbId": 1954
+          "title": "Aachi and Ssipak",
+          "year": 2006,
+          "tmdbId": 22520
         },
         {
           "title": "Immortal",
           "year": 2004,
           "tmdbId": 5552
+        },
+        {
+          "title": "Science Fiction Volume One: The Osiris Child",
+          "year": 2016,
+          "tmdbId": 354282
+        },
+        {
+          "title": "Alienoid",
+          "year": 2022,
+          "tmdbId": 601796
+        },
+        {
+          "title": "The Butterfly Effect",
+          "year": 2004,
+          "tmdbId": 1954
         },
         {
           "title": "The Jacket",
@@ -3012,19 +3417,19 @@
           "tmdbId": 313106
         },
         {
-          "title": "Science Fiction Volume One: The Osiris Child",
-          "year": 2016,
-          "tmdbId": 354282
-        },
-        {
           "title": "Boss Level",
           "year": 2021,
           "tmdbId": 513310
         },
         {
-          "title": "Dead End Drive-In",
-          "year": 1986,
-          "tmdbId": 47340
+          "title": "Rise of the Teenage Mutant Ninja Turtles: The Movie",
+          "year": 2022,
+          "tmdbId": 765172
+        },
+        {
+          "title": "Quintet",
+          "year": 1979,
+          "tmdbId": 45169
         },
         {
           "title": "Logan",
@@ -3032,14 +3437,29 @@
           "tmdbId": 263115
         },
         {
+          "title": "The Great Flood",
+          "year": 2025,
+          "tmdbId": 982843
+        },
+        {
           "title": "Mercy",
           "year": 2026,
           "tmdbId": 1236153
         },
         {
-          "title": "Iceman",
-          "year": 1984,
-          "tmdbId": 24749
+          "title": "Date with an Angel",
+          "year": 1987,
+          "tmdbId": 28370
+        },
+        {
+          "title": "The Ugly Swans",
+          "year": 2006,
+          "tmdbId": 53252
+        },
+        {
+          "title": "Shanghai Fortress",
+          "year": 2019,
+          "tmdbId": 559957
         },
         {
           "title": "The Meg",
@@ -3052,14 +3472,39 @@
           "tmdbId": 455476
         },
         {
+          "title": "A Visitor to a Museum",
+          "year": 1989,
+          "tmdbId": 73922
+        },
+        {
+          "title": "Mindwarp",
+          "year": 1992,
+          "tmdbId": 45779
+        },
+        {
+          "title": "Escape from the 21st Century",
+          "year": 2024,
+          "tmdbId": 1242372
+        },
+        {
           "title": "The Chronicles of Riddick",
           "year": 2004,
           "tmdbId": 2789
         },
         {
-          "title": "Trancers",
+          "title": "World Without End",
+          "year": 1956,
+          "tmdbId": 75506
+        },
+        {
+          "title": "Iceman",
           "year": 1984,
-          "tmdbId": 5677
+          "tmdbId": 24749
+        },
+        {
+          "title": "Z.P.G.",
+          "year": 1972,
+          "tmdbId": 52608
         },
         {
           "title": "Bill & Ted Face the Music",
@@ -3067,19 +3512,14 @@
           "tmdbId": 501979
         },
         {
-          "title": "Fahrenheit 451",
-          "year": 2018,
-          "tmdbId": 401905
-        },
-        {
-          "title": "Steven Universe: The Movie",
-          "year": 2019,
-          "tmdbId": 537061
-        },
-        {
           "title": "Avalon",
           "year": 2001,
           "tmdbId": 10881
+        },
+        {
+          "title": "Babylon 5: The Lost Tales - Voices in the Dark",
+          "year": 2007,
+          "tmdbId": 15289
         },
         {
           "title": "2067",
@@ -3087,159 +3527,24 @@
           "tmdbId": 528085
         },
         {
-          "title": "57 Seconds",
-          "year": 2023,
-          "tmdbId": 937249
+          "title": "Steven Universe: The Movie",
+          "year": 2019,
+          "tmdbId": 537061
         },
         {
-          "title": "Back to the Future",
-          "year": 1985,
-          "tmdbId": 105
+          "title": "The Last Sharknado: It's About Time",
+          "year": 2018,
+          "tmdbId": 523849
         },
         {
-          "title": "Alienoid",
-          "year": 2022,
-          "tmdbId": 601796
+          "title": "Trancers",
+          "year": 1984,
+          "tmdbId": 5677
         },
         {
-          "title": "Sound of My Voice",
-          "year": 2011,
-          "tmdbId": 86812
-        },
-        {
-          "title": "The Great Flood",
-          "year": 2025,
-          "tmdbId": 982843
-        },
-        {
-          "title": "Frequency",
-          "year": 2000,
-          "tmdbId": 10559
-        },
-        {
-          "title": "Dune: Part Two",
-          "year": 2024,
-          "tmdbId": 693134
-        },
-        {
-          "title": "The Hunger Games: Catching Fire",
-          "year": 2013,
-          "tmdbId": 101299
-        },
-        {
-          "title": "Fahrenheit 451",
-          "year": 1966,
-          "tmdbId": 1714
-        },
-        {
-          "title": "In Time",
-          "year": 2011,
-          "tmdbId": 49530
-        },
-        {
-          "title": "The 10th Victim",
-          "year": 1965,
-          "tmdbId": 65632
-        },
-        {
-          "title": "Steins;Gate: The Movie - Load Region of Déjà Vu",
-          "year": 2013,
-          "tmdbId": 225745
-        },
-        {
-          "title": "Puppet Master II",
-          "year": 1990,
-          "tmdbId": 26954
-        },
-        {
-          "title": "Dragon Ball: Episode of Bardock",
-          "year": 2011,
-          "tmdbId": 120475
-        },
-        {
-          "title": "Afro Samurai: Resurrection",
-          "year": 2009,
-          "tmdbId": 14711
-        },
-        {
-          "title": "Fullmetal Alchemist",
-          "year": 2017,
-          "tmdbId": 426285
-        },
-        {
-          "title": "Palm Springs",
-          "year": 2020,
-          "tmdbId": 587792
-        },
-        {
-          "title": "Fantastic Four",
-          "year": 2015,
-          "tmdbId": 166424
-        },
-        {
-          "title": "Infinite",
-          "year": 2021,
-          "tmdbId": 581726
-        },
-        {
-          "title": "Underwater",
-          "year": 2020,
-          "tmdbId": 443791
-        },
-        {
-          "title": "The Invisible Man",
-          "year": 2020,
-          "tmdbId": 570670
-        },
-        {
-          "title": "Stand by Me Doraemon",
-          "year": 2014,
-          "tmdbId": 265712
-        },
-        {
-          "title": "Scooby-Doo! Frankencreepy",
-          "year": 2014,
-          "tmdbId": 284995
-        },
-        {
-          "title": "The Incredible Shrinking Man",
-          "year": 1957,
-          "tmdbId": 31682
-        },
-        {
-          "title": "Venom: The Last Dance",
-          "year": 2024,
-          "tmdbId": 912649
-        },
-        {
-          "title": "Journey to the Center of the Earth",
-          "year": 2008,
-          "tmdbId": 88751
-        },
-        {
-          "title": "Sword Art Online the Movie - Progressive - Aria of a Starless Night",
-          "year": 2021,
-          "tmdbId": 761898
-        },
-        {
-          "title": "A Sound of Thunder",
-          "year": 2005,
-          "tmdbId": 10077
-        },
-        {
-          "title": "Ravenous",
-          "year": 2017,
-          "tmdbId": 415010
-        },
-        {
-          "title": "Comet",
-          "year": 2014,
-          "tmdbId": 276908
-        },
-        {
-          "title": "Bleeding Steel",
-          "year": 2017,
-          "tmdbId": 460648
+          "title": "Shocking Dark",
+          "year": 1989,
+          "tmdbId": 66664
         }
       ],
       "extended": []
@@ -3256,6 +3561,16 @@
           "title": "Phineas and Ferb The Movie: Across the 2nd Dimension",
           "year": 2011,
           "tmdbId": 71689
+        },
+        {
+          "title": "Parallel",
+          "year": 2018,
+          "tmdbId": 426793
+        },
+        {
+          "title": "Mantra Warrior: The Legend of The Eight Moons",
+          "year": 2023,
+          "tmdbId": 1134424
         },
         {
           "title": "The One",
@@ -3278,19 +3593,9 @@
           "tmdbId": 1381
         },
         {
-          "title": "Casablanca",
-          "year": 1943,
-          "tmdbId": 289
-        },
-        {
           "title": "The Cloverfield Paradox",
           "year": 2018,
           "tmdbId": 384521
-        },
-        {
-          "title": "The Mechanical Monsters",
-          "year": 1941,
-          "tmdbId": 71129
         },
         {
           "title": "Watchmen",
@@ -3343,6 +3648,11 @@
           "tmdbId": 8426
         },
         {
+          "title": "My Science Project",
+          "year": 1985,
+          "tmdbId": 18252
+        },
+        {
           "title": "Frequencies",
           "year": 2013,
           "tmdbId": 218425
@@ -3368,9 +3678,94 @@
           "tmdbId": 536115
         },
         {
-          "title": "Battle Beyond the Stars",
+          "title": "Parallels",
+          "year": 2015,
+          "tmdbId": 328595
+        },
+        {
+          "title": "Citizen Toxie: The Toxic Avenger IV",
+          "year": 2001,
+          "tmdbId": 27601
+        },
+        {
+          "title": "The Incident",
+          "year": 2014,
+          "tmdbId": 264397
+        },
+        {
+          "title": "Puppet Master 5",
+          "year": 1994,
+          "tmdbId": 26958
+        },
+        {
+          "title": "Il migliore dei mondi",
+          "year": 2023,
+          "tmdbId": 1111796
+        },
+        {
+          "title": "Tentacles",
+          "year": 1977,
+          "tmdbId": 49158
+        },
+        {
+          "title": "Theodore Rex",
+          "year": 1995,
+          "tmdbId": 36259
+        },
+        {
+          "title": "4D Man",
+          "year": 1959,
+          "tmdbId": 26854
+        },
+        {
+          "title": "The Giant Spider Invasion",
+          "year": 1975,
+          "tmdbId": 39154
+        },
+        {
+          "title": "Babylon 5: The Road Home",
+          "year": 2023,
+          "tmdbId": 1121575
+        },
+        {
+          "title": "The Shift",
+          "year": 2023,
+          "tmdbId": 1108658
+        },
+        {
+          "title": "Hulk: Where Monsters Dwell",
+          "year": 2016,
+          "tmdbId": 422153
+        },
+        {
+          "title": "The Day Time Ended",
           "year": 1980,
-          "tmdbId": 14460
+          "tmdbId": 57949
+        },
+        {
+          "title": "Xtro 2: The Second Encounter",
+          "year": 1990,
+          "tmdbId": 55952
+        },
+        {
+          "title": "Back to Gaya",
+          "year": 2004,
+          "tmdbId": 10927
+        },
+        {
+          "title": "DC Showcase: Sgt. Rock",
+          "year": 2019,
+          "tmdbId": 618346
+        },
+        {
+          "title": "The Meaning of Life",
+          "year": 2005,
+          "tmdbId": 32539
+        },
+        {
+          "title": "The Mechanical Monsters",
+          "year": 1941,
+          "tmdbId": 71129
         },
         {
           "title": "Star Trek III: The Search for Spock",
@@ -3378,24 +3773,19 @@
           "tmdbId": 157
         },
         {
+          "title": "Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer",
+          "year": 2011,
+          "tmdbId": 76535
+        },
+        {
           "title": "Dr. Jekyll and Mr. Hyde",
           "year": 1920,
           "tmdbId": 3016
         },
         {
-          "title": "Babylon 5: The River of Souls",
-          "year": 1998,
-          "tmdbId": 10921
-        },
-        {
-          "title": "Dude, Where's My Car?",
-          "year": 2000,
-          "tmdbId": 8859
-        },
-        {
-          "title": "Jetsons: The Movie",
-          "year": 1990,
-          "tmdbId": 17009
+          "title": "Battle Beyond the Stars",
+          "year": 1980,
+          "tmdbId": 14460
         },
         {
           "title": "It's What's Inside",
@@ -3403,24 +3793,24 @@
           "tmdbId": 1052280
         },
         {
-          "title": "Doctor Who: Time Crash",
-          "year": 2007,
-          "tmdbId": 419786
-        },
-        {
-          "title": "Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer",
-          "year": 2011,
-          "tmdbId": 76535
-        },
-        {
-          "title": "Puppetmaster",
-          "year": 1989,
-          "tmdbId": 26953
+          "title": "The Door",
+          "year": 2009,
+          "tmdbId": 51365
         },
         {
           "title": "Minority Report",
           "year": 2002,
           "tmdbId": 180
+        },
+        {
+          "title": "Tetsuo II: Body Hammer",
+          "year": 1992,
+          "tmdbId": 17991
+        },
+        {
+          "title": "God Told Me To",
+          "year": 1976,
+          "tmdbId": 31579
         },
         {
           "title": "Star Trek: The Motion Picture",
@@ -3433,6 +3823,16 @@
           "tmdbId": 437
         },
         {
+          "title": "Proximity",
+          "year": 2020,
+          "tmdbId": 693158
+        },
+        {
+          "title": "Babylon 5: The River of Souls",
+          "year": 1998,
+          "tmdbId": 10921
+        },
+        {
           "title": "A-X-L",
           "year": 2018,
           "tmdbId": 438590
@@ -3441,6 +3841,16 @@
           "title": "The Thing",
           "year": 1982,
           "tmdbId": 1091
+        },
+        {
+          "title": "Nope",
+          "year": 2022,
+          "tmdbId": 762504
+        },
+        {
+          "title": "No Time for Nuts",
+          "year": 2006,
+          "tmdbId": 46247
         },
         {
           "title": "The Cell",
@@ -3453,19 +3863,19 @@
           "tmdbId": 736769
         },
         {
-          "title": "Lightyear",
-          "year": 2022,
-          "tmdbId": 718789
-        },
-        {
           "title": "Jurassic World",
           "year": 2015,
           "tmdbId": 135397
         },
         {
-          "title": "Godzilla x Kong: The New Empire",
-          "year": 2024,
-          "tmdbId": 823464
+          "title": "Jetsons: The Movie",
+          "year": 1990,
+          "tmdbId": 17009
+        },
+        {
+          "title": "The Invisible Man Returns",
+          "year": 1940,
+          "tmdbId": 28421
         },
         {
           "title": "Diary of the Dead",
@@ -3478,19 +3888,34 @@
           "tmdbId": 636706
         },
         {
+          "title": "Bud Abbott and Lou Costello Meet the Invisible Man",
+          "year": 1951,
+          "tmdbId": 33475
+        },
+        {
+          "title": "The Substance",
+          "year": 2024,
+          "tmdbId": 933260
+        },
+        {
           "title": "Aliens vs Predator: Requiem",
           "year": 2007,
           "tmdbId": 440
         },
         {
-          "title": "The Platform 2",
-          "year": 2024,
-          "tmdbId": 1125510
+          "title": "Splitting Adam",
+          "year": 2015,
+          "tmdbId": 325813
         },
         {
           "title": "Artemis Fowl",
           "year": 2020,
           "tmdbId": 475430
+        },
+        {
+          "title": "Starship Troopers 2: Hero of the Federation",
+          "year": 2004,
+          "tmdbId": 10304
         },
         {
           "title": "Night of the Comet",
@@ -3528,6 +3953,21 @@
           "tmdbId": 10865
         },
         {
+          "title": "The Lost World",
+          "year": 1960,
+          "tmdbId": 2982
+        },
+        {
+          "title": "Scanners III: The Takeover",
+          "year": 1992,
+          "tmdbId": 33305
+        },
+        {
+          "title": "The Manitou",
+          "year": 1978,
+          "tmdbId": 40060
+        },
+        {
           "title": "Oxygen",
           "year": 2021,
           "tmdbId": 471498
@@ -3548,9 +3988,24 @@
           "tmdbId": 28942
         },
         {
+          "title": "Escape from the Bronx",
+          "year": 1983,
+          "tmdbId": 69152
+        },
+        {
+          "title": "The Beast of Hollow Mountain",
+          "year": 1956,
+          "tmdbId": 108181
+        },
+        {
           "title": "Fire in the Sky",
           "year": 1993,
           "tmdbId": 15613
+        },
+        {
+          "title": "Sea Fever",
+          "year": 2020,
+          "tmdbId": 507441
         },
         {
           "title": "The In Between",
@@ -3558,34 +4013,44 @@
           "tmdbId": 818750
         },
         {
-          "title": "The Door",
-          "year": 2009,
-          "tmdbId": 51365
-        },
-        {
           "title": "Sonic the Hedgehog 3",
           "year": 2024,
           "tmdbId": 939243
         },
         {
-          "title": "Patrick",
-          "year": 1978,
-          "tmdbId": 17212
+          "title": "The Mole People",
+          "year": 1956,
+          "tmdbId": 41516
         },
         {
-          "title": "Starship Troopers 2: Hero of the Federation",
-          "year": 2004,
-          "tmdbId": 10304
+          "title": "Day of the Dead",
+          "year": 2008,
+          "tmdbId": 13613
         },
         {
-          "title": "Attack of the Killer Tomatoes!",
-          "year": 1978,
-          "tmdbId": 2182
+          "title": "Memoria",
+          "year": 2021,
+          "tmdbId": 511819
+        },
+        {
+          "title": "Kingdom of the Spiders",
+          "year": 1977,
+          "tmdbId": 30315
         },
         {
           "title": "Dawn of the Planet of the Apes",
           "year": 2014,
           "tmdbId": 119450
+        },
+        {
+          "title": "The Kovak Box",
+          "year": 2006,
+          "tmdbId": 13686
+        },
+        {
+          "title": "Back to the Future",
+          "year": 1985,
+          "tmdbId": 105
         }
       ],
       "extended": []
@@ -3593,6 +4058,16 @@
     {
       "slug": "artificial-intelligence-robotics",
       "core": [
+        {
+          "title": "Eliminators",
+          "year": 1986,
+          "tmdbId": 47822
+        },
+        {
+          "title": "Modern Inventions",
+          "year": 1937,
+          "tmdbId": 58149
+        },
         {
           "title": "Short Circuit",
           "year": 1986,
@@ -3602,6 +4077,16 @@
           "title": "Terminator 3: Rise of the Machines",
           "year": 2003,
           "tmdbId": 296
+        },
+        {
+          "title": "Bigbug",
+          "year": 2022,
+          "tmdbId": 665828
+        },
+        {
+          "title": "Dr. Goldfoot and the Bikini Machine",
+          "year": 1965,
+          "tmdbId": 26573
         },
         {
           "title": "Robot Dreams",
@@ -3614,9 +4099,9 @@
           "tmdbId": 614933
         },
         {
-          "title": "Water, Water Every Hare",
-          "year": 1952,
-          "tmdbId": 52973
+          "title": "Brian and Charles",
+          "year": 2022,
+          "tmdbId": 913814
         },
         {
           "title": "A.I. Artificial Intelligence",
@@ -3624,14 +4109,19 @@
           "tmdbId": 644
         },
         {
+          "title": "Bionic",
+          "year": 2024,
+          "tmdbId": 1025463
+        },
+        {
           "title": "I Am Mother",
           "year": 2019,
           "tmdbId": 505948
         },
         {
-          "title": "Roujin Z",
-          "year": 1991,
-          "tmdbId": 35648
+          "title": "Water, Water Every Hare",
+          "year": 1952,
+          "tmdbId": 52973
         },
         {
           "title": "M3GAN",
@@ -3644,14 +4134,19 @@
           "tmdbId": 843794
         },
         {
-          "title": "Mystery Science Theater 3000: The Movie",
-          "year": 1996,
-          "tmdbId": 3065
+          "title": "Singularity",
+          "year": 2017,
+          "tmdbId": 484886
         },
         {
           "title": "After Yang",
           "year": 2022,
           "tmdbId": 585378
+        },
+        {
+          "title": "Mystery Science Theater 3000: The Movie",
+          "year": 1996,
+          "tmdbId": 3065
         },
         {
           "title": "Real Steel",
@@ -3662,6 +4157,11 @@
           "title": "Honey, I Blew Up the Kid",
           "year": 1992,
           "tmdbId": 11158
+        },
+        {
+          "title": "The Machine",
+          "year": 2013,
+          "tmdbId": 174675
         },
         {
           "title": "D.A.R.Y.L.",
@@ -3679,14 +4179,19 @@
           "tmdbId": 19333
         },
         {
+          "title": "Roujin Z",
+          "year": 1991,
+          "tmdbId": 35648
+        },
+        {
+          "title": "Blood Machines",
+          "year": 2020,
+          "tmdbId": 536517
+        },
+        {
           "title": "Sonic the Hedgehog",
           "year": 2020,
           "tmdbId": 454626
-        },
-        {
-          "title": "Dragon Ball Super: Super Hero",
-          "year": 2022,
-          "tmdbId": 610150
         },
         {
           "title": "Bloodshot",
@@ -3694,19 +4199,34 @@
           "tmdbId": 338762
         },
         {
+          "title": "Enthiran",
+          "year": 2010,
+          "tmdbId": 148284
+        },
+        {
           "title": "Robot & Frank",
           "year": 2012,
           "tmdbId": 84329
         },
         {
-          "title": "Species",
-          "year": 1995,
-          "tmdbId": 9348
+          "title": "Eve of Destruction",
+          "year": 1991,
+          "tmdbId": 45096
         },
         {
-          "title": "The Machine",
-          "year": 2013,
-          "tmdbId": 174675
+          "title": "Megamind: The Button of Doom",
+          "year": 2011,
+          "tmdbId": 57718
+        },
+        {
+          "title": "Robot Monster",
+          "year": 1953,
+          "tmdbId": 43353
+        },
+        {
+          "title": "Ghost in the Machine",
+          "year": 1993,
+          "tmdbId": 41651
         },
         {
           "title": "The Iron Giant",
@@ -3739,11 +4259,6 @@
           "tmdbId": 475946
         },
         {
-          "title": "Mutant Chronicles",
-          "year": 2008,
-          "tmdbId": 13256
-        },
-        {
           "title": "Brain Dead",
           "year": 1990,
           "tmdbId": 5898
@@ -3759,34 +4274,49 @@
           "tmdbId": 26581
         },
         {
-          "title": "Enthiran",
-          "year": 2010,
-          "tmdbId": 148284
-        },
-        {
-          "title": "Doctor Who: The Curse of Fatal Death",
-          "year": 1999,
-          "tmdbId": 255466
-        },
-        {
-          "title": "Adela Has Not Had Supper Yet",
-          "year": 1978,
-          "tmdbId": 20087
-        },
-        {
-          "title": "Total Recall",
+          "title": "Moon 44",
           "year": 1990,
-          "tmdbId": 861
+          "tmdbId": 2927
         },
         {
-          "title": "Deadpool & Wolverine",
-          "year": 2024,
-          "tmdbId": 533535
+          "title": "Space Station 76",
+          "year": 2014,
+          "tmdbId": 253312
         },
         {
-          "title": "Black Lightning",
-          "year": 2009,
-          "tmdbId": 31162
+          "title": "R.O.T.O.R.",
+          "year": 1987,
+          "tmdbId": 31127
+        },
+        {
+          "title": "Aporia",
+          "year": 2023,
+          "tmdbId": 528502
+        },
+        {
+          "title": "Please Hold",
+          "year": 2020,
+          "tmdbId": 741607
+        },
+        {
+          "title": "Special",
+          "year": 2006,
+          "tmdbId": 13856
+        },
+        {
+          "title": "Prince Charming",
+          "year": 2001,
+          "tmdbId": 51532
+        },
+        {
+          "title": "Sonic Drone Home",
+          "year": 2022,
+          "tmdbId": 979296
+        },
+        {
+          "title": "Pokémon the Movie: Kyurem vs. the Sword of Justice",
+          "year": 2012,
+          "tmdbId": 150213
         },
         {
           "title": "Batman Ninja",
@@ -3794,9 +4324,29 @@
           "tmdbId": 485942
         },
         {
-          "title": "The Lost World",
-          "year": 1960,
-          "tmdbId": 2982
+          "title": "Total Recall",
+          "year": 1990,
+          "tmdbId": 861
+        },
+        {
+          "title": "Modern Problems",
+          "year": 1981,
+          "tmdbId": 16471
+        },
+        {
+          "title": "Deadpool & Wolverine",
+          "year": 2024,
+          "tmdbId": 533535
+        },
+        {
+          "title": "Doctor Who: The Curse of Fatal Death",
+          "year": 1999,
+          "tmdbId": 255466
+        },
+        {
+          "title": "Lightyear",
+          "year": 2022,
+          "tmdbId": 718789
         },
         {
           "title": "They Call Me Jeeg",
@@ -3804,24 +4354,49 @@
           "tmdbId": 364433
         },
         {
-          "title": "Doraemon: Nobita and the Galaxy Super-express",
+          "title": "Adela Has Not Had Supper Yet",
+          "year": 1978,
+          "tmdbId": 20087
+        },
+        {
+          "title": "Patrick",
+          "year": 1978,
+          "tmdbId": 17212
+        },
+        {
+          "title": "Gamera the Brave",
+          "year": 2006,
+          "tmdbId": 60160
+        },
+        {
+          "title": "Godzilla x Kong: The New Empire",
+          "year": 2024,
+          "tmdbId": 823464
+        },
+        {
+          "title": "Wonderland",
+          "year": 2024,
+          "tmdbId": 635996
+        },
+        {
+          "title": "Moebius",
           "year": 1996,
-          "tmdbId": 106164
+          "tmdbId": 39335
         },
         {
-          "title": "Doctor Who: Twice Upon a Time",
-          "year": 2017,
-          "tmdbId": 495151
-        },
-        {
-          "title": "Dragon Ball Z: The Return of Cooler",
-          "year": 1992,
-          "tmdbId": 39103
+          "title": "Son of Flubber",
+          "year": 1963,
+          "tmdbId": 19762
         },
         {
           "title": "Deadly Friend",
           "year": 1986,
           "tmdbId": 33278
+        },
+        {
+          "title": "It's a Summer Film!",
+          "year": 2021,
+          "tmdbId": 747983
         },
         {
           "title": "Superman",
@@ -3834,6 +4409,21 @@
           "tmdbId": 16237
         },
         {
+          "title": "Mighty Morphin Power Rangers: Once & Always",
+          "year": 2023,
+          "tmdbId": 1068141
+        },
+        {
+          "title": "Batman Unlimited: Mechs vs. Mutants",
+          "year": 2016,
+          "tmdbId": 411802
+        },
+        {
+          "title": "Starship Troopers: Traitor of Mars",
+          "year": 2017,
+          "tmdbId": 460790
+        },
+        {
           "title": "Short Circuit 2",
           "year": 1988,
           "tmdbId": 11966
@@ -3844,9 +4434,9 @@
           "tmdbId": 14199
         },
         {
-          "title": "Mighty Morphin Power Rangers: Once & Always",
-          "year": 2023,
-          "tmdbId": 1068141
+          "title": "Love",
+          "year": 2011,
+          "tmdbId": 54320
         },
         {
           "title": "Superman III",
@@ -3854,14 +4444,19 @@
           "tmdbId": 9531
         },
         {
+          "title": "Black Lightning",
+          "year": 2009,
+          "tmdbId": 31162
+        },
+        {
           "title": "Patlabor: The Movie",
           "year": 1989,
           "tmdbId": 14571
         },
         {
-          "title": "Kamen Rider SD: Strange?! Kumo Otoko",
-          "year": 1993,
-          "tmdbId": 434559
+          "title": "2.0",
+          "year": 2018,
+          "tmdbId": 373449
         },
         {
           "title": "The Electric State",
@@ -3879,14 +4474,49 @@
           "tmdbId": 482321
         },
         {
+          "title": "Archive",
+          "year": 2020,
+          "tmdbId": 606234
+        },
+        {
           "title": "Automata",
           "year": 2014,
           "tmdbId": 262543
         },
         {
-          "title": "Smart House",
-          "year": 1999,
-          "tmdbId": 35215
+          "title": "Robots",
+          "year": 2023,
+          "tmdbId": 723347
+        },
+        {
+          "title": "Kim Possible Movie: So the Drama",
+          "year": 2005,
+          "tmdbId": 20771
+        },
+        {
+          "title": "Teen Titans Go! See Space Jam",
+          "year": 2021,
+          "tmdbId": 834404
+        },
+        {
+          "title": "Elizabeth Harvest",
+          "year": 2018,
+          "tmdbId": 457041
+        },
+        {
+          "title": "Double Dragon",
+          "year": 1994,
+          "tmdbId": 2436
+        },
+        {
+          "title": "Doraemon: Nobita and the Galaxy Super-express",
+          "year": 1996,
+          "tmdbId": 106164
+        },
+        {
+          "title": "Mobile Suit Gundam SEED FREEDOM",
+          "year": 2024,
+          "tmdbId": 1146972
         },
         {
           "title": "Limitless",
@@ -3899,14 +4529,14 @@
           "tmdbId": 268531
         },
         {
+          "title": "The Lost World",
+          "year": 2001,
+          "tmdbId": 3003
+        },
+        {
           "title": "Inception",
           "year": 2010,
           "tmdbId": 27205
-        },
-        {
-          "title": "Double Dragon",
-          "year": 1994,
-          "tmdbId": 2436
         },
         {
           "title": "The Wild Robot",
@@ -3914,169 +4544,19 @@
           "tmdbId": 1184918
         },
         {
-          "title": "The Five People You Meet In Heaven",
-          "year": 2004,
-          "tmdbId": 30698
+          "title": "Arabian Adventure",
+          "year": 1979,
+          "tmdbId": 82430
         },
         {
-          "title": "Spider-Man: Homecoming",
-          "year": 2017,
-          "tmdbId": 315635
+          "title": "Night of the Bloody Apes",
+          "year": 1969,
+          "tmdbId": 42610
         },
         {
           "title": "Star Trek: Generations",
           "year": 1994,
           "tmdbId": 193
-        },
-        {
-          "title": "Superman/Shazam!: The Return of Black Adam",
-          "year": 2010,
-          "tmdbId": 43641
-        },
-        {
-          "title": "Source Code",
-          "year": 2011,
-          "tmdbId": 45612
-        },
-        {
-          "title": "Doctor Who: Voyage of the Damned",
-          "year": 2007,
-          "tmdbId": 335209
-        },
-        {
-          "title": "Nineteen Eighty-Four",
-          "year": 1984,
-          "tmdbId": 9314
-        },
-        {
-          "title": "Scooby-Doo! & Batman: The Brave and the Bold",
-          "year": 2018,
-          "tmdbId": 484862
-        },
-        {
-          "title": "Death Race",
-          "year": 2008,
-          "tmdbId": 10483
-        },
-        {
-          "title": "The Fly II",
-          "year": 1989,
-          "tmdbId": 10344
-        },
-        {
-          "title": "Batman vs Teenage Mutant Ninja Turtles",
-          "year": 2019,
-          "tmdbId": 581997
-        },
-        {
-          "title": "The Invincible Iron Man",
-          "year": 2007,
-          "tmdbId": 13647
-        },
-        {
-          "title": "Highlander: The Search for Vengeance",
-          "year": 2007,
-          "tmdbId": 13194
-        },
-        {
-          "title": "Invader Zim: Enter the Florpus",
-          "year": 2019,
-          "tmdbId": 472983
-        },
-        {
-          "title": "Secret Headquarters",
-          "year": 2022,
-          "tmdbId": 791155
-        },
-        {
-          "title": "Flubber",
-          "year": 1997,
-          "tmdbId": 9574
-        },
-        {
-          "title": "Team Thor: Part 2",
-          "year": 2017,
-          "tmdbId": 441829
-        },
-        {
-          "title": "Wizards",
-          "year": 1977,
-          "tmdbId": 16220
-        },
-        {
-          "title": "Shin Kamen Rider",
-          "year": 2023,
-          "tmdbId": 813477
-        },
-        {
-          "title": "Chappie",
-          "year": 2015,
-          "tmdbId": 198184
-        },
-        {
-          "title": "Ant-Man",
-          "year": 2015,
-          "tmdbId": 102899
-        },
-        {
-          "title": "Tammy and the T-Rex",
-          "year": 1994,
-          "tmdbId": 55563
-        },
-        {
-          "title": "Dragon Ball Z: Cooler's Revenge",
-          "year": 1991,
-          "tmdbId": 24752
-        },
-        {
-          "title": "Dragon Ball Z: Bojack Unbound",
-          "year": 1993,
-          "tmdbId": 39105
-        },
-        {
-          "title": "Archive",
-          "year": 2020,
-          "tmdbId": 606234
-        },
-        {
-          "title": "Elizabeth Harvest",
-          "year": 2018,
-          "tmdbId": 457041
-        },
-        {
-          "title": "Dragon Ball GT: A Hero's Legacy",
-          "year": 1997,
-          "tmdbId": 18095
-        },
-        {
-          "title": "Teenage Mutant Ninja Turtles: Out of the Shadows",
-          "year": 2016,
-          "tmdbId": 308531
-        },
-        {
-          "title": "Mauvais Sang",
-          "year": 1986,
-          "tmdbId": 64131
-        },
-        {
-          "title": "The Black Hole",
-          "year": 1979,
-          "tmdbId": 9570
-        },
-        {
-          "title": "Suicide Squad: Hell to Pay",
-          "year": 2018,
-          "tmdbId": 487242
-        },
-        {
-          "title": "Pokémon Heroes",
-          "year": 2002,
-          "tmdbId": 33875
-        },
-        {
-          "title": "The Return",
-          "year": 2022,
-          "tmdbId": 628866
         }
       ],
       "extended": []
@@ -4090,24 +4570,24 @@
           "tmdbId": 16000
         },
         {
+          "title": "Alien Hunter",
+          "year": 2003,
+          "tmdbId": 22076
+        },
+        {
           "title": "Battle: Los Angeles",
           "year": 2011,
           "tmdbId": 44943
         },
         {
-          "title": "Returner",
-          "year": 2002,
-          "tmdbId": 5493
+          "title": "UFO Abduction",
+          "year": 1989,
+          "tmdbId": 204611
         },
         {
           "title": "Alien Nation",
           "year": 1988,
           "tmdbId": 10128
-        },
-        {
-          "title": "Earth vs. the Flying Saucers",
-          "year": 1956,
-          "tmdbId": 18158
         },
         {
           "title": "Predators",
@@ -4120,6 +4600,11 @@
           "tmdbId": 59678
         },
         {
+          "title": "Earth vs. the Flying Saucers",
+          "year": 1956,
+          "tmdbId": 18158
+        },
+        {
           "title": "Invasion of the Body Snatchers",
           "year": 1956,
           "tmdbId": 11549
@@ -4130,9 +4615,29 @@
           "tmdbId": 9612
         },
         {
+          "title": "Journey to the West",
+          "year": 2023,
+          "tmdbId": 851977
+        },
+        {
+          "title": "Rakka",
+          "year": 2017,
+          "tmdbId": 461955
+        },
+        {
           "title": "My Stepmother Is an Alien",
           "year": 1988,
           "tmdbId": 12120
+        },
+        {
+          "title": "The Recall",
+          "year": 2017,
+          "tmdbId": 455551
+        },
+        {
+          "title": "Alive in Joburg",
+          "year": 2005,
+          "tmdbId": 45887
         },
         {
           "title": "The 5th Wave",
@@ -4160,9 +4665,9 @@
           "tmdbId": 10208
         },
         {
-          "title": "Rakka",
-          "year": 2017,
-          "tmdbId": 461955
+          "title": "Returner",
+          "year": 2002,
+          "tmdbId": 5493
         },
         {
           "title": "Starship Troopers 3: Marauder",
@@ -4170,9 +4675,49 @@
           "tmdbId": 11127
         },
         {
-          "title": "Inuyashiki",
+          "title": "Space Battleship Yamato",
+          "year": 2010,
+          "tmdbId": 61984
+        },
+        {
+          "title": "Cosmoball",
+          "year": 2020,
+          "tmdbId": 517096
+        },
+        {
+          "title": "Occupation: Rainfall",
+          "year": 2020,
+          "tmdbId": 688258
+        },
+        {
+          "title": "Revolt",
+          "year": 2017,
+          "tmdbId": 313943
+        },
+        {
+          "title": "The Mating Habits of the Earthbound Human",
+          "year": 1999,
+          "tmdbId": 17198
+        },
+        {
+          "title": "Unacknowledged",
+          "year": 2017,
+          "tmdbId": 450594
+        },
+        {
+          "title": "Occupation",
           "year": 2018,
-          "tmdbId": 447743
+          "tmdbId": 503346
+        },
+        {
+          "title": "Alien Outpost",
+          "year": 2014,
+          "tmdbId": 312526
+        },
+        {
+          "title": "Slash/Back",
+          "year": 2022,
+          "tmdbId": 934194
         },
         {
           "title": "The Cabbage Soup",
@@ -4190,6 +4735,21 @@
           "tmdbId": 10328
         },
         {
+          "title": "Abraxas, Guardian of the Universe",
+          "year": 1990,
+          "tmdbId": 37926
+        },
+        {
+          "title": "Inuyashiki",
+          "year": 2018,
+          "tmdbId": 447743
+        },
+        {
+          "title": "Alien Xmas",
+          "year": 2020,
+          "tmdbId": 656561
+        },
+        {
           "title": "Critters",
           "year": 1986,
           "tmdbId": 3980
@@ -4198,6 +4758,21 @@
           "title": "The Thing from Another World",
           "year": 1951,
           "tmdbId": 10785
+        },
+        {
+          "title": "Invaders from Mars",
+          "year": 1986,
+          "tmdbId": 31909
+        },
+        {
+          "title": "Invaders from Mars",
+          "year": 1953,
+          "tmdbId": 20424
+        },
+        {
+          "title": "Ben 10: Destroy All Aliens",
+          "year": 2012,
+          "tmdbId": 96826
         },
         {
           "title": "Killer Klowns from Outer Space",
@@ -4210,14 +4785,29 @@
           "tmdbId": 9599
         },
         {
+          "title": "Ben 10: Alien Swarm",
+          "year": 2009,
+          "tmdbId": 25642
+        },
+        {
+          "title": "This Island Earth",
+          "year": 1955,
+          "tmdbId": 831
+        },
+        {
+          "title": "Escape from Planet Earth",
+          "year": 2013,
+          "tmdbId": 68179
+        },
+        {
           "title": "Slither",
           "year": 2006,
           "tmdbId": 9035
         },
         {
-          "title": "Mac and Me",
-          "year": 1988,
-          "tmdbId": 20196
+          "title": "Attack of the 50 Ft. Woman",
+          "year": 1994,
+          "tmdbId": 74629
         },
         {
           "title": "Absolutely Anything",
@@ -4230,19 +4820,19 @@
           "tmdbId": 849
         },
         {
-          "title": "Return of the Killer Tomatoes!",
-          "year": 1988,
-          "tmdbId": 15482
-        },
-        {
-          "title": "Proximity",
-          "year": 2020,
-          "tmdbId": 693158
-        },
-        {
           "title": "Virus",
           "year": 1999,
           "tmdbId": 9423
+        },
+        {
+          "title": "What Planet Are You From?",
+          "year": 2000,
+          "tmdbId": 10416
+        },
+        {
+          "title": "Impostor",
+          "year": 2001,
+          "tmdbId": 4965
         },
         {
           "title": "Godzilla vs. Hedorah",
@@ -4250,14 +4840,9 @@
           "tmdbId": 39464
         },
         {
-          "title": "Bugonia",
-          "year": 2025,
-          "tmdbId": 701387
-        },
-        {
-          "title": "A Quiet Place: Day One",
-          "year": 2024,
-          "tmdbId": 762441
+          "title": "Alien from L.A.",
+          "year": 1988,
+          "tmdbId": 31397
         },
         {
           "title": "The Day the Earth Stood Still",
@@ -4285,34 +4870,19 @@
           "tmdbId": 20182
         },
         {
+          "title": "Osiris",
+          "year": 2025,
+          "tmdbId": 1241470
+        },
+        {
+          "title": "Wild Zero",
+          "year": 1999,
+          "tmdbId": 16231
+        },
+        {
           "title": "The Sheriff and the Satellite Kid",
           "year": 1979,
           "tmdbId": 10770
-        },
-        {
-          "title": "Lilo & Stitch",
-          "year": 2025,
-          "tmdbId": 552524
-        },
-        {
-          "title": "GANTZ:O",
-          "year": 2016,
-          "tmdbId": 396263
-        },
-        {
-          "title": "Invaders from Mars",
-          "year": 1953,
-          "tmdbId": 20424
-        },
-        {
-          "title": "Species II",
-          "year": 1998,
-          "tmdbId": 10216
-        },
-        {
-          "title": "Prey",
-          "year": 2022,
-          "tmdbId": 766507
         },
         {
           "title": "A Shaun the Sheep Movie: Farmageddon",
@@ -4320,14 +4890,49 @@
           "tmdbId": 422803
         },
         {
+          "title": "Lilo & Stitch",
+          "year": 2025,
+          "tmdbId": 552524
+        },
+        {
+          "title": "Gamera: Super Monster",
+          "year": 1980,
+          "tmdbId": 70358
+        },
+        {
+          "title": "GANTZ:O",
+          "year": 2016,
+          "tmdbId": 396263
+        },
+        {
+          "title": "Prey",
+          "year": 2022,
+          "tmdbId": 766507
+        },
+        {
+          "title": "Goké, Body Snatcher from Hell",
+          "year": 1968,
+          "tmdbId": 42628
+        },
+        {
+          "title": "Bad Channels",
+          "year": 1992,
+          "tmdbId": 48302
+        },
+        {
           "title": "Starman",
           "year": 1984,
           "tmdbId": 9663
         },
         {
-          "title": "This Island Earth",
-          "year": 1955,
-          "tmdbId": 831
+          "title": "Contamination",
+          "year": 1980,
+          "tmdbId": 39916
+        },
+        {
+          "title": "Cosmos",
+          "year": 2019,
+          "tmdbId": 639771
         },
         {
           "title": "The Host",
@@ -4335,14 +4940,29 @@
           "tmdbId": 72710
         },
         {
+          "title": "Nightwish",
+          "year": 1989,
+          "tmdbId": 69276
+        },
+        {
+          "title": "Inseminoid",
+          "year": 1981,
+          "tmdbId": 46364
+        },
+        {
           "title": "*batteries not included",
           "year": 1987,
           "tmdbId": 11548
         },
         {
-          "title": "Alien Abduction",
-          "year": 2014,
-          "tmdbId": 258193
+          "title": "Not of This Earth",
+          "year": 1988,
+          "tmdbId": 40028
+        },
+        {
+          "title": "The Deadly Spawn",
+          "year": 1983,
+          "tmdbId": 40059
         },
         {
           "title": "Body Snatchers",
@@ -4350,9 +4970,34 @@
           "tmdbId": 4722
         },
         {
-          "title": "Impostor",
-          "year": 2001,
-          "tmdbId": 4965
+          "title": "Altered",
+          "year": 2006,
+          "tmdbId": 14458
+        },
+        {
+          "title": "Attack of the 50 Foot Woman",
+          "year": 1958,
+          "tmdbId": 18724
+        },
+        {
+          "title": "I Married a Monster from Outer Space",
+          "year": 1958,
+          "tmdbId": 43117
+        },
+        {
+          "title": "Monolith",
+          "year": 2023,
+          "tmdbId": 1024721
+        },
+        {
+          "title": "Night of the Blood Beast",
+          "year": 1958,
+          "tmdbId": 109122
+        },
+        {
+          "title": "The Borrower",
+          "year": 1991,
+          "tmdbId": 40221
         },
         {
           "title": "Aliens",
@@ -4418,96 +5063,6 @@
           "title": "Eternals",
           "year": 2021,
           "tmdbId": 524434
-        },
-        {
-          "title": "Dragon Ball Z: Bardock - The Father of Goku",
-          "year": 1990,
-          "tmdbId": 39323
-        },
-        {
-          "title": "Flight of the Navigator",
-          "year": 1986,
-          "tmdbId": 10122
-        },
-        {
-          "title": "Captain Marvel",
-          "year": 2019,
-          "tmdbId": 299537
-        },
-        {
-          "title": "Evolution",
-          "year": 2001,
-          "tmdbId": 9397
-        },
-        {
-          "title": "The Purge",
-          "year": 2013,
-          "tmdbId": 158015
-        },
-        {
-          "title": "Home",
-          "year": 2015,
-          "tmdbId": 228161
-        },
-        {
-          "title": "The Fourth Kind",
-          "year": 2009,
-          "tmdbId": 22824
-        },
-        {
-          "title": "Lilo & Stitch 2: Stitch Has a Glitch",
-          "year": 2005,
-          "tmdbId": 20760
-        },
-        {
-          "title": "The Arrival",
-          "year": 1996,
-          "tmdbId": 10547
-        },
-        {
-          "title": "Prospect",
-          "year": 2018,
-          "tmdbId": 506072
-        },
-        {
-          "title": "Battlefield Earth",
-          "year": 2000,
-          "tmdbId": 5491
-        },
-        {
-          "title": "Max Steel",
-          "year": 2016,
-          "tmdbId": 286567
-        },
-        {
-          "title": "The Cat from Outer Space",
-          "year": 1978,
-          "tmdbId": 19378
-        },
-        {
-          "title": "Project: ALF",
-          "year": 1996,
-          "tmdbId": 10960
-        },
-        {
-          "title": "Parasyte: Part 2",
-          "year": 2015,
-          "tmdbId": 282070
-        },
-        {
-          "title": "Gantz: Perfect Answer",
-          "year": 2011,
-          "tmdbId": 74135
-        },
-        {
-          "title": "Long Distance",
-          "year": 2024,
-          "tmdbId": 605722
-        },
-        {
-          "title": "The Day of the Triffids",
-          "year": 1963,
-          "tmdbId": 21143
         }
       ],
       "extended": []
@@ -4551,6 +5106,26 @@
           "tmdbId": 19142
         },
         {
+          "title": "The Day of the Dolphin",
+          "year": 1973,
+          "tmdbId": 42470
+        },
+        {
+          "title": "Uninvited",
+          "year": 1988,
+          "tmdbId": 45937
+        },
+        {
+          "title": "Bionicle 3: Web of Shadows",
+          "year": 2005,
+          "tmdbId": 18224
+        },
+        {
+          "title": "Maximum Ride",
+          "year": 2016,
+          "tmdbId": 339116
+        },
+        {
           "title": "Okja",
           "year": 2017,
           "tmdbId": 387426
@@ -4561,24 +5136,29 @@
           "tmdbId": 13648
         },
         {
+          "title": "Generation X",
+          "year": 1996,
+          "tmdbId": 26623
+        },
+        {
           "title": "Quarantine",
           "year": 2008,
           "tmdbId": 13812
         },
         {
+          "title": "Watch the Skies",
+          "year": 2022,
+          "tmdbId": 916401
+        },
+        {
+          "title": "Python",
+          "year": 2000,
+          "tmdbId": 41275
+        },
+        {
           "title": "Nutty Professor II: The Klumps",
           "year": 2000,
           "tmdbId": 12107
-        },
-        {
-          "title": "Zombie Strippers!",
-          "year": 2008,
-          "tmdbId": 13009
-        },
-        {
-          "title": "Antiviral",
-          "year": 2012,
-          "tmdbId": 125490
         },
         {
           "title": "The Animal Kingdom",
@@ -4641,6 +5221,11 @@
           "tmdbId": 244267
         },
         {
+          "title": "Species",
+          "year": 1995,
+          "tmdbId": 9348
+        },
+        {
           "title": "X-Men: The Last Stand",
           "year": 2006,
           "tmdbId": 36668
@@ -4686,6 +5271,11 @@
           "tmdbId": 453405
         },
         {
+          "title": "Bugonia",
+          "year": 2025,
+          "tmdbId": 701387
+        },
+        {
           "title": "Annihilation",
           "year": 2018,
           "tmdbId": 300668
@@ -4721,6 +5311,11 @@
           "tmdbId": 13460
         },
         {
+          "title": "Doom",
+          "year": 2005,
+          "tmdbId": 8814
+        },
+        {
           "title": "The X Files: I Want to Believe",
           "year": 2008,
           "tmdbId": 8836
@@ -4744,6 +5339,11 @@
           "title": "The Relic",
           "year": 1997,
           "tmdbId": 11015
+        },
+        {
+          "title": "Species II",
+          "year": 1998,
+          "tmdbId": 10216
         },
         {
           "title": "Multiplicity",
@@ -4776,6 +5376,11 @@
           "tmdbId": 39410
         },
         {
+          "title": "Leroy & Stitch",
+          "year": 2006,
+          "tmdbId": 21316
+        },
+        {
           "title": "Paradise",
           "year": 2023,
           "tmdbId": 1140066
@@ -4784,6 +5389,11 @@
           "title": "Barb Wire",
           "year": 1996,
           "tmdbId": 11867
+        },
+        {
+          "title": "The Platform 2",
+          "year": 2024,
+          "tmdbId": 1125510
         },
         {
           "title": "The Island of Dr. Moreau",
@@ -4801,11 +5411,6 @@
           "tmdbId": 14822
         },
         {
-          "title": "The Titan",
-          "year": 2018,
-          "tmdbId": 476926
-        },
-        {
           "title": "Critters 4",
           "year": 1992,
           "tmdbId": 12525
@@ -4814,11 +5419,6 @@
           "title": "Little Fish",
           "year": 2021,
           "tmdbId": 586791
-        },
-        {
-          "title": "Tetsuo II: Body Hammer",
-          "year": 1992,
-          "tmdbId": 17991
         },
         {
           "title": "Seobok",
@@ -4836,9 +5436,29 @@
           "tmdbId": 11058
         },
         {
+          "title": "Quarantine 2: Terminal",
+          "year": 2011,
+          "tmdbId": 59115
+        },
+        {
           "title": "Man's Best Friend",
           "year": 1993,
           "tmdbId": 41759
+        },
+        {
+          "title": "Viral",
+          "year": 2016,
+          "tmdbId": 336455
+        },
+        {
+          "title": "Zombie Strippers!",
+          "year": 2008,
+          "tmdbId": 13009
+        },
+        {
+          "title": "Antiviral",
+          "year": 2012,
+          "tmdbId": 125490
         },
         {
           "title": "Bats",
@@ -4846,44 +5466,109 @@
           "tmdbId": 10496
         },
         {
-          "title": "Alligator",
+          "title": "Womb",
+          "year": 2010,
+          "tmdbId": 59457
+        },
+        {
+          "title": "Heavy Metal 2000",
+          "year": 2000,
+          "tmdbId": 16225
+        },
+        {
+          "title": "Dual",
+          "year": 2022,
+          "tmdbId": 698128
+        },
+        {
+          "title": "Virus",
           "year": 1980,
-          "tmdbId": 33518
+          "tmdbId": 41972
         },
         {
-          "title": "The Last Mimzy",
-          "year": 2007,
-          "tmdbId": 2267
+          "title": "Zombie Flesh Eaters 2",
+          "year": 1988,
+          "tmdbId": 34814
         },
         {
-          "title": "Pandorum",
-          "year": 2009,
-          "tmdbId": 19898
-        },
-        {
-          "title": "Brick",
-          "year": 2025,
-          "tmdbId": 1425045
-        },
-        {
-          "title": "Honeymoon",
+          "title": "Halo: Nightfall",
           "year": 2014,
-          "tmdbId": 254191
+          "tmdbId": 487186
         },
         {
-          "title": "The Call of Cthulhu",
-          "year": 2006,
-          "tmdbId": 20981
+          "title": "2001: A Space Travesty",
+          "year": 2000,
+          "tmdbId": 7290
         },
         {
-          "title": "The Swarm",
-          "year": 1978,
-          "tmdbId": 46878
+          "title": "TEKKEN: Blood Vengeance",
+          "year": 2011,
+          "tmdbId": 79516
         },
         {
-          "title": "Day of the Dead",
-          "year": 2008,
-          "tmdbId": 13613
+          "title": "Bionicle: Mask of Light",
+          "year": 2003,
+          "tmdbId": 19325
+        },
+        {
+          "title": "Santa Claus Conquers the Martians",
+          "year": 1964,
+          "tmdbId": 32307
+        },
+        {
+          "title": "Ghost in the Shell: The New Movie",
+          "year": 2015,
+          "tmdbId": 334376
+        },
+        {
+          "title": "Little Joe",
+          "year": 2019,
+          "tmdbId": 504585
+        },
+        {
+          "title": "Guyver: Dark Hero",
+          "year": 1994,
+          "tmdbId": 11795
+        },
+        {
+          "title": "Watchers",
+          "year": 1988,
+          "tmdbId": 33172
+        },
+        {
+          "title": "Carnosaur",
+          "year": 1993,
+          "tmdbId": 39283
+        },
+        {
+          "title": "Pandemic",
+          "year": 2016,
+          "tmdbId": 346651
+        },
+        {
+          "title": "King of Thorn",
+          "year": 2010,
+          "tmdbId": 50388
+        },
+        {
+          "title": "Nick Fury: Agent of S.H.I.E.L.D.",
+          "year": 1998,
+          "tmdbId": 27460
+        },
+        {
+          "title": "Mom and Dad Save the World",
+          "year": 1992,
+          "tmdbId": 27295
+        },
+        {
+          "title": "War-Gods of the Deep",
+          "year": 1965,
+          "tmdbId": 38267
+        },
+        {
+          "title": "Munchies",
+          "year": 1987,
+          "tmdbId": 4365
         }
       ],
       "extended": []
@@ -4932,9 +5617,19 @@
           "tmdbId": 22914
         },
         {
+          "title": "Venus Wars",
+          "year": 1989,
+          "tmdbId": 31769
+        },
+        {
           "title": "Stealth",
           "year": 2005,
           "tmdbId": 10048
+        },
+        {
+          "title": "Prisoners of the Lost Universe",
+          "year": 1983,
+          "tmdbId": 70500
         },
         {
           "title": "Small Soldiers",
@@ -4945,6 +5640,11 @@
           "title": "Toys",
           "year": 1992,
           "tmdbId": 11597
+        },
+        {
+          "title": "Ghosts of War",
+          "year": 2020,
+          "tmdbId": 608195
         },
         {
           "title": "Screamers",
@@ -4962,9 +5662,19 @@
           "tmdbId": 9823
         },
         {
+          "title": "Godzilla: City on the Edge of Battle",
+          "year": 2018,
+          "tmdbId": 492719
+        },
+        {
           "title": "Enemy Mine",
           "year": 1985,
           "tmdbId": 11864
+        },
+        {
+          "title": "Monsters of Man",
+          "year": 2020,
+          "tmdbId": 733317
         },
         {
           "title": "The War of the Worlds",
@@ -4975,11 +5685,6 @@
           "title": "Gamera 2: Attack of Legion",
           "year": 1996,
           "tmdbId": 59480
-        },
-        {
-          "title": "Ghosts of War",
-          "year": 2020,
-          "tmdbId": 608195
         },
         {
           "title": "Captain America: Civil War",
@@ -5027,6 +5732,11 @@
           "tmdbId": 10724
         },
         {
+          "title": "Battle Angel",
+          "year": 1993,
+          "tmdbId": 17189
+        },
+        {
           "title": "Captain America",
           "year": 1990,
           "tmdbId": 13995
@@ -5047,14 +5757,84 @@
           "tmdbId": 537055
         },
         {
-          "title": "Macross Plus: The Movie",
-          "year": 1995,
-          "tmdbId": 18837
+          "title": "Mutant Chronicles",
+          "year": 2008,
+          "tmdbId": 13256
         },
         {
-          "title": "A Few Good Men",
-          "year": 1992,
-          "tmdbId": 881
+          "title": "Jiu Jitsu",
+          "year": 2020,
+          "tmdbId": 590706
+        },
+        {
+          "title": "Green Lantern: Beware My Power",
+          "year": 2022,
+          "tmdbId": 887357
+        },
+        {
+          "title": "Warning Sign",
+          "year": 1985,
+          "tmdbId": 34028
+        },
+        {
+          "title": "Firebase",
+          "year": 2017,
+          "tmdbId": 463800
+        },
+        {
+          "title": "Battlestar Galactica: Blood & Chrome",
+          "year": 2012,
+          "tmdbId": 257368
+        },
+        {
+          "title": "Hollow Man II",
+          "year": 2006,
+          "tmdbId": 8997
+        },
+        {
+          "title": "Ape vs Mecha Ape",
+          "year": 2023,
+          "tmdbId": 1094844
+        },
+        {
+          "title": "Maggie Simpson in \"The Force Awakens from Its Nap\"",
+          "year": 2021,
+          "tmdbId": 825597
+        },
+        {
+          "title": "Black Magic M-66",
+          "year": 1987,
+          "tmdbId": 66045
+        },
+        {
+          "title": "C.H.U.D. II: Bud the Chud",
+          "year": 1989,
+          "tmdbId": 53150
+        },
+        {
+          "title": "Knight Rider",
+          "year": 2008,
+          "tmdbId": 209379
+        },
+        {
+          "title": "Rio 2096: A Story of Love and Fury",
+          "year": 2013,
+          "tmdbId": 173443
+        },
+        {
+          "title": "Psycho-Pass: Sinners of the System - Case.2 First Guardian",
+          "year": 2019,
+          "tmdbId": 559562
+        },
+        {
+          "title": "Spriggan",
+          "year": 1998,
+          "tmdbId": 16767
+        },
+        {
+          "title": "Family Guy Presents: Something, Something, Something, Dark Side",
+          "year": 2009,
+          "tmdbId": 625651
         },
         {
           "title": "Pixels",
@@ -5062,9 +5842,9 @@
           "tmdbId": 257344
         },
         {
-          "title": "Voyage to the Bottom of the Sea",
-          "year": 1961,
-          "tmdbId": 2160
+          "title": "Marvel One-Shot: Item 47",
+          "year": 2012,
+          "tmdbId": 119569
         },
         {
           "title": "Team Thor",
@@ -5077,9 +5857,9 @@
           "tmdbId": 240832
         },
         {
-          "title": "Marvel One-Shot: Item 47",
-          "year": 2012,
-          "tmdbId": 119569
+          "title": "Superman II: The Richard Donner Cut",
+          "year": 2006,
+          "tmdbId": 624479
         },
         {
           "title": "Dragon Ball Z: Lord Slug",
@@ -5087,9 +5867,9 @@
           "tmdbId": 39102
         },
         {
-          "title": "Ben 10: Alien Swarm",
-          "year": 2009,
-          "tmdbId": 25642
+          "title": "Buzz Lightyear of Star Command: The Adventure Begins",
+          "year": 2000,
+          "tmdbId": 16187
         },
         {
           "title": "Phantasm",
@@ -5102,19 +5882,29 @@
           "tmdbId": 98566
         },
         {
+          "title": "Doraemon: Nobita and the New Steel Troops: Winged Angels",
+          "year": 2011,
+          "tmdbId": 137227
+        },
+        {
           "title": "Godzilla vs. Mothra",
           "year": 1992,
           "tmdbId": 39465
         },
         {
-          "title": "Buzz Lightyear of Star Command: The Adventure Begins",
-          "year": 2000,
-          "tmdbId": 16187
+          "title": "Voyage to the Bottom of the Sea",
+          "year": 1961,
+          "tmdbId": 2160
         },
         {
           "title": "Project Power",
           "year": 2020,
           "tmdbId": 605116
+        },
+        {
+          "title": "Dr. Strange",
+          "year": 1978,
+          "tmdbId": 50468
         },
         {
           "title": "Don't Look Up",
@@ -5127,11 +5917,6 @@
           "tmdbId": 162215
         },
         {
-          "title": "Godzilla: Tokyo S.O.S.",
-          "year": 2003,
-          "tmdbId": 39469
-        },
-        {
           "title": "Wild Wild West",
           "year": 1999,
           "tmdbId": 8487
@@ -5142,9 +5927,9 @@
           "tmdbId": 2080
         },
         {
-          "title": "Godzilla vs. King Ghidorah",
-          "year": 1991,
-          "tmdbId": 36679
+          "title": "The Man Who Killed Hitler and Then the Bigfoot",
+          "year": 2019,
+          "tmdbId": 530081
         },
         {
           "title": "Honey, We Shrunk Ourselves",
@@ -5162,14 +5947,34 @@
           "tmdbId": 581389
         },
         {
+          "title": "Godzilla: Tokyo S.O.S.",
+          "year": 2003,
+          "tmdbId": 39469
+        },
+        {
+          "title": "Guardians",
+          "year": 2017,
+          "tmdbId": 354556
+        },
+        {
           "title": "The Giver",
           "year": 2014,
           "tmdbId": 227156
         },
         {
-          "title": "The Sky Crawlers",
-          "year": 2008,
-          "tmdbId": 15877
+          "title": "Rocketship X-M",
+          "year": 1950,
+          "tmdbId": 37744
+        },
+        {
+          "title": "Dororo",
+          "year": 2007,
+          "tmdbId": 16221
+        },
+        {
+          "title": "Smoking Causes Coughing",
+          "year": 2022,
+          "tmdbId": 872709
         },
         {
           "title": "Godzilla vs. Destoroyah",
@@ -5177,9 +5982,14 @@
           "tmdbId": 12561
         },
         {
-          "title": "Smoking Causes Coughing",
-          "year": 2022,
-          "tmdbId": 872709
+          "title": "Without Warning",
+          "year": 1980,
+          "tmdbId": 44932
+        },
+        {
+          "title": "Primitive War",
+          "year": 2025,
+          "tmdbId": 1257009
         },
         {
           "title": "King Kong vs. Godzilla",
@@ -5202,14 +6012,29 @@
           "tmdbId": 8247
         },
         {
+          "title": "The Sky Crawlers",
+          "year": 2008,
+          "tmdbId": 15877
+        },
+        {
+          "title": "Crossworlds",
+          "year": 1996,
+          "tmdbId": 17821
+        },
+        {
           "title": "Starcrash",
           "year": 1978,
           "tmdbId": 22049
         },
         {
-          "title": "Guardians",
-          "year": 2017,
-          "tmdbId": 354556
+          "title": "Pokémon Ranger and the Temple of the Sea",
+          "year": 2006,
+          "tmdbId": 16808
+        },
+        {
+          "title": "Megalodon",
+          "year": 2018,
+          "tmdbId": 523931
         },
         {
           "title": "Mad Max 2",
@@ -5232,6 +6057,16 @@
           "tmdbId": 1903
         },
         {
+          "title": "Spider-Man: Homecoming",
+          "year": 2017,
+          "tmdbId": 315635
+        },
+        {
+          "title": "Source Code",
+          "year": 2011,
+          "tmdbId": 45612
+        },
+        {
           "title": "Black Panther: Wakanda Forever",
           "year": 2022,
           "tmdbId": 505642
@@ -5240,111 +6075,6 @@
           "title": "Time Bandits",
           "year": 1981,
           "tmdbId": 36819
-        },
-        {
-          "title": "Bumblebee",
-          "year": 2018,
-          "tmdbId": 424783
-        },
-        {
-          "title": "Teenage Mutant Ninja Turtles II: The Secret of the Ooze",
-          "year": 1991,
-          "tmdbId": 1497
-        },
-        {
-          "title": "Final Fantasy VII: Advent Children",
-          "year": 2005,
-          "tmdbId": 647
-        },
-        {
-          "title": "Ghost in the Shell 2: Innocence",
-          "year": 2004,
-          "tmdbId": 12140
-        },
-        {
-          "title": "Underworld: Blood Wars",
-          "year": 2016,
-          "tmdbId": 346672
-        },
-        {
-          "title": "Hibernatus",
-          "year": 1969,
-          "tmdbId": 2462
-        },
-        {
-          "title": "Wonder Woman",
-          "year": 2009,
-          "tmdbId": 15359
-        },
-        {
-          "title": "Superman: Red Son",
-          "year": 2020,
-          "tmdbId": 618355
-        },
-        {
-          "title": "On the Beach",
-          "year": 1959,
-          "tmdbId": 35412
-        },
-        {
-          "title": "Slaughterhouse-Five",
-          "year": 1972,
-          "tmdbId": 24559
-        },
-        {
-          "title": "Ewoks: The Battle for Endor",
-          "year": 1985,
-          "tmdbId": 10372
-        },
-        {
-          "title": "Macross: Do You Remember Love?",
-          "year": 1984,
-          "tmdbId": 14132
-        },
-        {
-          "title": "Pokémon: Jirachi - Wish Maker",
-          "year": 2003,
-          "tmdbId": 36218
-        },
-        {
-          "title": "Gurren Lagann the Movie: The Lights in the Sky Are Stars",
-          "year": 2009,
-          "tmdbId": 23452
-        },
-        {
-          "title": "Yu-Gi-Oh! The Movie",
-          "year": 2004,
-          "tmdbId": 11052
-        },
-        {
-          "title": "Dororo",
-          "year": 2007,
-          "tmdbId": 16221
-        },
-        {
-          "title": "Appleseed Alpha",
-          "year": 2014,
-          "tmdbId": 269650
-        },
-        {
-          "title": "Primitive War",
-          "year": 2025,
-          "tmdbId": 1257009
-        },
-        {
-          "title": "When Dinosaurs Ruled the Earth",
-          "year": 1970,
-          "tmdbId": 35002
-        },
-        {
-          "title": "Marvel One-Shot: The Consultant",
-          "year": 2011,
-          "tmdbId": 76122
-        },
-        {
-          "title": "The Colony",
-          "year": 2013,
-          "tmdbId": 178809
         }
       ],
       "extended": []
@@ -5358,6 +6088,11 @@
           "tmdbId": 28763
         },
         {
+          "title": "Schlock",
+          "year": 1973,
+          "tmdbId": 54123
+        },
+        {
           "title": "Ebirah, Horror of the Deep",
           "year": 1966,
           "tmdbId": 3115
@@ -5366,6 +6101,11 @@
           "title": "Monster Trucks",
           "year": 2016,
           "tmdbId": 262841
+        },
+        {
+          "title": "The Bride",
+          "year": 1985,
+          "tmdbId": 29077
         },
         {
           "title": "Rodan",
@@ -5408,9 +6148,59 @@
           "tmdbId": 22899
         },
         {
-          "title": "Monsters of Man",
-          "year": 2020,
-          "tmdbId": 733317
+          "title": "Tremors 5: Bloodlines",
+          "year": 2015,
+          "tmdbId": 339530
+        },
+        {
+          "title": "Space Amoeba",
+          "year": 1970,
+          "tmdbId": 38221
+        },
+        {
+          "title": "Mega Shark vs. Giant Octopus",
+          "year": 2009,
+          "tmdbId": 17911
+        },
+        {
+          "title": "The Blood Beast Terror",
+          "year": 1968,
+          "tmdbId": 77173
+        },
+        {
+          "title": "The Creeping Terror",
+          "year": 1964,
+          "tmdbId": 31275
+        },
+        {
+          "title": "Lady Frankenstein",
+          "year": 1971,
+          "tmdbId": 3122
+        },
+        {
+          "title": "Big Man Japan",
+          "year": 2007,
+          "tmdbId": 11693
+        },
+        {
+          "title": "The Monster That Challenged the World",
+          "year": 1957,
+          "tmdbId": 53949
+        },
+        {
+          "title": "It Came from Beneath the Sea",
+          "year": 1955,
+          "tmdbId": 29959
+        },
+        {
+          "title": "The Horror of Frankenstein",
+          "year": 1970,
+          "tmdbId": 3145
+        },
+        {
+          "title": "Perfect Creature",
+          "year": 2007,
+          "tmdbId": 18726
         },
         {
           "title": "The Wraith",
@@ -5433,24 +6223,24 @@
           "tmdbId": 590223
         },
         {
-          "title": "It! The Terror from Beyond Space",
-          "year": 1958,
-          "tmdbId": 27179
-        },
-        {
-          "title": "Humanoids from the Deep",
-          "year": 1980,
-          "tmdbId": 29343
-        },
-        {
           "title": "Creature from the Black Lagoon",
           "year": 1954,
           "tmdbId": 10973
         },
         {
-          "title": "The Return of Godzilla",
+          "title": "The Lost Skeleton of Cadavra",
+          "year": 2001,
+          "tmdbId": 18841
+        },
+        {
+          "title": "The Dungeonmaster",
           "year": 1984,
-          "tmdbId": 421467
+          "tmdbId": 27244
+        },
+        {
+          "title": "The Giant Gila Monster",
+          "year": 1959,
+          "tmdbId": 34077
         },
         {
           "title": "Independence Day",
@@ -5548,6 +6338,11 @@
           "tmdbId": 39108
         },
         {
+          "title": "A Quiet Place: Day One",
+          "year": 2024,
+          "tmdbId": 762441
+        },
+        {
           "title": "Evangelion: 2.0 You Can (Not) Advance",
           "year": 2009,
           "tmdbId": 22843
@@ -5608,6 +6403,11 @@
           "tmdbId": 3107
         },
         {
+          "title": "Godzilla vs. King Ghidorah",
+          "year": 1991,
+          "tmdbId": 36679
+        },
+        {
           "title": "Superman: Doomsday",
           "year": 2007,
           "tmdbId": 13640
@@ -5621,6 +6421,11 @@
           "title": "Doctor Who: The Waters of Mars",
           "year": 2009,
           "tmdbId": 281979
+        },
+        {
+          "title": "Body Bags",
+          "year": 1993,
+          "tmdbId": 31578
         },
         {
           "title": "Godzilla, King of the Monsters!",
@@ -5653,6 +6458,11 @@
           "tmdbId": 365177
         },
         {
+          "title": "Humanoids from the Deep",
+          "year": 1980,
+          "tmdbId": 29343
+        },
+        {
           "title": "Hulk vs. Wolverine",
           "year": 2009,
           "tmdbId": 15257
@@ -5671,6 +6481,16 @@
           "title": "Mad God",
           "year": 2021,
           "tmdbId": 846867
+        },
+        {
+          "title": "Our Man Flint",
+          "year": 1966,
+          "tmdbId": 23728
+        },
+        {
+          "title": "Amphibian Man",
+          "year": 1961,
+          "tmdbId": 43685
         },
         {
           "title": "The Toxic Avenger Part II",
@@ -5693,6 +6513,11 @@
           "tmdbId": 26957
         },
         {
+          "title": "It! The Terror from Beyond Space",
+          "year": 1958,
+          "tmdbId": 27179
+        },
+        {
           "title": "Attack",
           "year": 2022,
           "tmdbId": 799155
@@ -5708,134 +6533,54 @@
           "tmdbId": 464111
         },
         {
-          "title": "The Thaw",
-          "year": 2009,
-          "tmdbId": 23410
+          "title": "At the Earth's Core",
+          "year": 1976,
+          "tmdbId": 26398
         },
         {
-          "title": "UFO",
-          "year": 2018,
-          "tmdbId": 426865
+          "title": "Warlords of Atlantis",
+          "year": 1978,
+          "tmdbId": 30117
         },
         {
-          "title": "The Empire Strikes Back",
-          "year": 1980,
-          "tmdbId": 1891
+          "title": "There's Nothing Out There",
+          "year": 1991,
+          "tmdbId": 41775
         },
         {
-          "title": "The Fly",
-          "year": 1986,
-          "tmdbId": 9426
+          "title": "Creature",
+          "year": 1985,
+          "tmdbId": 58903
         },
         {
-          "title": "RoboCop",
-          "year": 1987,
-          "tmdbId": 5548
+          "title": "It Lives Again",
+          "year": 1978,
+          "tmdbId": 28155
         },
         {
-          "title": "Eternal Sunshine of the Spotless Mind",
-          "year": 2004,
-          "tmdbId": 38
+          "title": "Gamera vs. Jiger",
+          "year": 1970,
+          "tmdbId": 70327
         },
         {
-          "title": "Bicentennial Man",
-          "year": 1999,
-          "tmdbId": 2277
-        },
-        {
-          "title": "The Rocky Horror Picture Show",
-          "year": 1975,
-          "tmdbId": 36685
-        },
-        {
-          "title": "Videodrome",
-          "year": 1983,
-          "tmdbId": 837
-        },
-        {
-          "title": "Spider-Man: No Way Home",
-          "year": 2021,
-          "tmdbId": 634649
-        },
-        {
-          "title": "Waterworld",
-          "year": 1995,
-          "tmdbId": 9804
-        },
-        {
-          "title": "Austin Powers: The Spy Who Shagged Me",
-          "year": 1999,
-          "tmdbId": 817
-        },
-        {
-          "title": "Honey, I Shrunk the Kids",
-          "year": 1989,
-          "tmdbId": 9354
-        },
-        {
-          "title": "Guardians of the Galaxy Vol. 3",
-          "year": 2023,
-          "tmdbId": 447365
-        },
-        {
-          "title": "The Island",
+          "title": "Man-Thing",
           "year": 2005,
-          "tmdbId": 1635
+          "tmdbId": 18882
         },
         {
-          "title": "Poor Things",
-          "year": 2023,
-          "tmdbId": 792307
+          "title": "Monster on the Campus",
+          "year": 1958,
+          "tmdbId": 34593
         },
         {
-          "title": "Strange Days",
-          "year": 1995,
-          "tmdbId": 281
+          "title": "Big Ass Spider!",
+          "year": 2013,
+          "tmdbId": 166822
         },
         {
-          "title": "The Day After Tomorrow",
-          "year": 2004,
-          "tmdbId": 435
-        },
-        {
-          "title": "Free Guy",
-          "year": 2021,
-          "tmdbId": 550988
-        },
-        {
-          "title": "RoboCop 2",
-          "year": 1990,
-          "tmdbId": 5549
-        },
-        {
-          "title": "Batman & Robin",
-          "year": 1997,
-          "tmdbId": 415
-        },
-        {
-          "title": "Despicable Me 4",
-          "year": 2024,
-          "tmdbId": 519182
-        },
-        {
-          "title": "The Wandering Earth",
-          "year": 2019,
-          "tmdbId": 535167
-        },
-        {
-          "title": "Escape to Witch Mountain",
-          "year": 1975,
-          "tmdbId": 14821
-        },
-        {
-          "title": "Pokémon 4Ever",
-          "year": 2001,
-          "tmdbId": 12600
-        },
-        {
-          "title": "Gabriel",
-          "year": 2007,
-          "tmdbId": 9997
+          "title": "The People That Time Forgot",
+          "year": 1977,
+          "tmdbId": 27591
         }
       ],
       "extended": []
@@ -5847,6 +6592,11 @@
           "title": "Heart of a Dog",
           "year": 1988,
           "tmdbId": 43680
+        },
+        {
+          "title": "Mutant Action",
+          "year": 1993,
+          "tmdbId": 25466
         },
         {
           "title": "Bill & Ted's Excellent Adventure",
@@ -5864,9 +6614,14 @@
           "tmdbId": 1266798
         },
         {
-          "title": "Mutant Action",
-          "year": 1993,
-          "tmdbId": 25466
+          "title": "Assassination Classroom: Graduation",
+          "year": 2016,
+          "tmdbId": 359628
+        },
+        {
+          "title": "Yor: The Hunter from the Future",
+          "year": 1983,
+          "tmdbId": 38219
         },
         {
           "title": "Insurgent",
@@ -5897,6 +6652,11 @@
           "title": "Divergent",
           "year": 2014,
           "tmdbId": 157350
+        },
+        {
+          "title": "Fingernails",
+          "year": 2023,
+          "tmdbId": 790459
         },
         {
           "title": "Gattaca",
@@ -5962,6 +6722,11 @@
           "title": "Sexmission",
           "year": 1984,
           "tmdbId": 19673
+        },
+        {
+          "title": "The Return of Godzilla",
+          "year": 1984,
+          "tmdbId": 421467
         },
         {
           "title": "Futurama: Into the Wild Green Yonder",
@@ -6054,9 +6819,84 @@
           "tmdbId": 17421
         },
         {
+          "title": "Foe",
+          "year": 2023,
+          "tmdbId": 760245
+        },
+        {
+          "title": "The Beast Within",
+          "year": 1982,
+          "tmdbId": 40219
+        },
+        {
+          "title": "Batman: Return of the Caped Crusaders",
+          "year": 2016,
+          "tmdbId": 411736
+        },
+        {
+          "title": "Addio fottuti musi verdi",
+          "year": 2017,
+          "tmdbId": 469876
+        },
+        {
+          "title": "The Cured",
+          "year": 2017,
+          "tmdbId": 469721
+        },
+        {
+          "title": "Peter Pan",
+          "year": 1988,
+          "tmdbId": 46188
+        },
+        {
+          "title": "Evilspeak",
+          "year": 1981,
+          "tmdbId": 39868
+        },
+        {
+          "title": "Orange: Future",
+          "year": 2016,
+          "tmdbId": 419094
+        },
+        {
+          "title": "Plan 75",
+          "year": 2022,
+          "tmdbId": 958487
+        },
+        {
+          "title": "Return to Nuke 'Em High Volume 1",
+          "year": 2013,
+          "tmdbId": 136585
+        },
+        {
+          "title": "Here Alone",
+          "year": 2016,
+          "tmdbId": 390582
+        },
+        {
+          "title": "Atlas Shrugged: Part I",
+          "year": 2011,
+          "tmdbId": 56780
+        },
+        {
+          "title": "Sing a Bit of Harmony",
+          "year": 2021,
+          "tmdbId": 741335
+        },
+        {
+          "title": "Stung",
+          "year": 2015,
+          "tmdbId": 254472
+        },
+        {
           "title": "My Super Ex-Girlfriend",
           "year": 2006,
           "tmdbId": 4474
+        },
+        {
+          "title": "24 Hours to Live",
+          "year": 2017,
+          "tmdbId": 470114
         },
         {
           "title": "Time Trap",
@@ -6064,19 +6904,14 @@
           "tmdbId": 455839
         },
         {
+          "title": "Monster High 2",
+          "year": 2023,
+          "tmdbId": 1039960
+        },
+        {
           "title": "Stargate: Continuum",
           "year": 2008,
           "tmdbId": 12914
-        },
-        {
-          "title": "Supergirl",
-          "year": 1984,
-          "tmdbId": 9651
-        },
-        {
-          "title": "High Life",
-          "year": 2018,
-          "tmdbId": 376865
         },
         {
           "title": "Krrish",
@@ -6084,9 +6919,39 @@
           "tmdbId": 32740
         },
         {
-          "title": "Brainstorm",
-          "year": 1983,
-          "tmdbId": 15050
+          "title": "Inception: The Cobol Job",
+          "year": 2010,
+          "tmdbId": 64956
+        },
+        {
+          "title": "Supergirl",
+          "year": 1984,
+          "tmdbId": 9651
+        },
+        {
+          "title": "Baby: Secret of the Lost Legend",
+          "year": 1985,
+          "tmdbId": 19736
+        },
+        {
+          "title": "Krrish 3",
+          "year": 2013,
+          "tmdbId": 204435
+        },
+        {
+          "title": "Iceman",
+          "year": 2014,
+          "tmdbId": 105001
+        },
+        {
+          "title": "Books of Blood",
+          "year": 2020,
+          "tmdbId": 715123
+        },
+        {
+          "title": "High Life",
+          "year": 2018,
+          "tmdbId": 376865
         },
         {
           "title": "Swamp Thing",
@@ -6097,6 +6962,11 @@
           "title": "Project Almanac",
           "year": 2015,
           "tmdbId": 227719
+        },
+        {
+          "title": "I Am Not a Serial Killer",
+          "year": 2016,
+          "tmdbId": 381034
         },
         {
           "title": "Fantastic Voyage",
@@ -6124,14 +6994,29 @@
           "tmdbId": 985
         },
         {
-          "title": "Godzilla: Planet of the Monsters",
-          "year": 2017,
-          "tmdbId": 449574
-        },
-        {
           "title": "War of the Worlds",
           "year": 2005,
           "tmdbId": 74
+        },
+        {
+          "title": "Rollerball",
+          "year": 2002,
+          "tmdbId": 11535
+        },
+        {
+          "title": "Rememory",
+          "year": 2017,
+          "tmdbId": 395814
+        },
+        {
+          "title": "The Survivalist",
+          "year": 2015,
+          "tmdbId": 329004
+        },
+        {
+          "title": "Gantz: Perfect Answer",
+          "year": 2011,
+          "tmdbId": 74135
         },
         {
           "title": "Twilight Zone: The Movie",
@@ -6139,14 +7024,19 @@
           "tmdbId": 15301
         },
         {
-          "title": "God Told Me To",
-          "year": 1976,
-          "tmdbId": 31579
+          "title": "New Rose Hotel",
+          "year": 1999,
+          "tmdbId": 21430
         },
         {
-          "title": "Save the Green Planet!",
-          "year": 2003,
-          "tmdbId": 11297
+          "title": "Seoul Station",
+          "year": 2016,
+          "tmdbId": 389868
+        },
+        {
+          "title": "Girl vs. Monster",
+          "year": 2012,
+          "tmdbId": 138038
         },
         {
           "title": "The Animal",
@@ -6159,14 +7049,24 @@
           "tmdbId": 1084199
         },
         {
-          "title": "Right at Your Door",
-          "year": 2006,
-          "tmdbId": 15664
+          "title": "The Man Who Could Cheat Death",
+          "year": 1959,
+          "tmdbId": 28770
         },
         {
-          "title": "Books of Blood",
-          "year": 2020,
-          "tmdbId": 715123
+          "title": "Universal Soldier: Day of Reckoning",
+          "year": 2012,
+          "tmdbId": 122857
+        },
+        {
+          "title": "Tales That Witness Madness",
+          "year": 1973,
+          "tmdbId": 42468
+        },
+        {
+          "title": "Save the Green Planet!",
+          "year": 2003,
+          "tmdbId": 11297
         },
         {
           "title": "Knowing",
@@ -6179,34 +7079,14 @@
           "tmdbId": 158852
         },
         {
-          "title": "Inception: The Cobol Job",
-          "year": 2010,
-          "tmdbId": 64956
+          "title": "Doom: Annihilation",
+          "year": 2019,
+          "tmdbId": 520901
         },
         {
-          "title": "The Signal",
-          "year": 2007,
-          "tmdbId": 13059
-        },
-        {
-          "title": "Jeruzalem",
-          "year": 2016,
-          "tmdbId": 339547
-        },
-        {
-          "title": "Rollerball",
-          "year": 2002,
-          "tmdbId": 11535
-        },
-        {
-          "title": "The Survivalist",
-          "year": 2015,
-          "tmdbId": 329004
-        },
-        {
-          "title": "Seoul Station",
-          "year": 2016,
-          "tmdbId": 389868
+          "title": "Hobgoblins",
+          "year": 1988,
+          "tmdbId": 31245
         }
       ],
       "extended": []
@@ -6225,9 +7105,19 @@
           "tmdbId": 902
         },
         {
-          "title": "Equals",
-          "year": 2015,
-          "tmdbId": 301875
+          "title": "Freaked",
+          "year": 1993,
+          "tmdbId": 17796
+        },
+        {
+          "title": "Battle at Big Rock",
+          "year": 2019,
+          "tmdbId": 630322
+        },
+        {
+          "title": "Pixels",
+          "year": 2010,
+          "tmdbId": 136921
         },
         {
           "title": "Frankenstein",
@@ -6245,14 +7135,14 @@
           "tmdbId": 7191
         },
         {
-          "title": "Robots",
-          "year": 2005,
-          "tmdbId": 9928
-        },
-        {
           "title": "Weird Science",
           "year": 1985,
           "tmdbId": 11814
+        },
+        {
+          "title": "Robots",
+          "year": 2005,
+          "tmdbId": 9928
         },
         {
           "title": "The Incredible Hulk",
@@ -6325,11 +7215,6 @@
           "tmdbId": 20410
         },
         {
-          "title": "Taxi Driver",
-          "year": 1976,
-          "tmdbId": 103
-        },
-        {
           "title": "Mr. Destiny",
           "year": 1990,
           "tmdbId": 2612
@@ -6380,14 +7265,104 @@
           "tmdbId": 39462
         },
         {
+          "title": "Cosmic Princess Kaguya!",
+          "year": 2026,
+          "tmdbId": 1575337
+        },
+        {
+          "title": "Realive",
+          "year": 2016,
+          "tmdbId": 399612
+        },
+        {
+          "title": "Mondocane",
+          "year": 2021,
+          "tmdbId": 744278
+        },
+        {
+          "title": "The Incredible Melting Man",
+          "year": 1977,
+          "tmdbId": 40231
+        },
+        {
+          "title": "The Sender",
+          "year": 1982,
+          "tmdbId": 69870
+        },
+        {
+          "title": "Napping Princess",
+          "year": 2017,
+          "tmdbId": 428288
+        },
+        {
+          "title": "Doraemon: Nobita's Treasure Island",
+          "year": 2018,
+          "tmdbId": 495925
+        },
+        {
+          "title": "Funky Forest: The First Contact",
+          "year": 2005,
+          "tmdbId": 21136
+        },
+        {
+          "title": "Y2K",
+          "year": 2024,
+          "tmdbId": 1094274
+        },
+        {
+          "title": "Invasion of the Bee Girls",
+          "year": 1973,
+          "tmdbId": 27084
+        },
+        {
+          "title": "Chrysalis",
+          "year": 2007,
+          "tmdbId": 13336
+        },
+        {
+          "title": "Dude, Where's My Car?",
+          "year": 2000,
+          "tmdbId": 8859
+        },
+        {
+          "title": "Collision Earth",
+          "year": 2011,
+          "tmdbId": 85949
+        },
+        {
           "title": "Timescape",
           "year": 1992,
           "tmdbId": 37420
         },
         {
+          "title": "Puppetmaster",
+          "year": 1989,
+          "tmdbId": 26953
+        },
+        {
+          "title": "Abbott and Costello Meet Dr. Jekyll and Mr. Hyde",
+          "year": 1953,
+          "tmdbId": 3023
+        },
+        {
           "title": "Next Gen",
           "year": 2018,
           "tmdbId": 523777
+        },
+        {
+          "title": "Zoe",
+          "year": 2018,
+          "tmdbId": 458005
+        },
+        {
+          "title": "Thunder Force",
+          "year": 2021,
+          "tmdbId": 615678
+        },
+        {
+          "title": "Black Mirror: Bandersnatch",
+          "year": 2018,
+          "tmdbId": 569547
         },
         {
           "title": "Super 8",
@@ -6400,59 +7375,9 @@
           "tmdbId": 107985
         },
         {
-          "title": "Thunder Force",
-          "year": 2021,
-          "tmdbId": 615678
-        },
-        {
-          "title": "Ticks",
-          "year": 1993,
-          "tmdbId": 34098
-        },
-        {
-          "title": "Black Moon Rising",
-          "year": 1986,
-          "tmdbId": 36349
-        },
-        {
-          "title": "24 Hours to Live",
-          "year": 2017,
-          "tmdbId": 470114
-        },
-        {
-          "title": "Abbott and Costello Meet Dr. Jekyll and Mr. Hyde",
-          "year": 1953,
-          "tmdbId": 3023
-        },
-        {
-          "title": "Alone",
-          "year": 2017,
-          "tmdbId": 420950
-        },
-        {
-          "title": "Viral",
-          "year": 2016,
-          "tmdbId": 336455
-        },
-        {
-          "title": "Lust of the Vampire",
-          "year": 1957,
-          "tmdbId": 28061
-        },
-        {
-          "title": "Zoe",
-          "year": 2018,
-          "tmdbId": 458005
-        },
-        {
-          "title": "Quarantine 2: Terminal",
-          "year": 2011,
-          "tmdbId": 59115
-        },
-        {
-          "title": "Illang: The Wolf Brigade",
-          "year": 2018,
-          "tmdbId": 467824
+          "title": "Eegah",
+          "year": 1962,
+          "tmdbId": 31287
         },
         {
           "title": "Assimilate",
@@ -6460,9 +7385,14 @@
           "tmdbId": 528985
         },
         {
-          "title": "I Am Not a Serial Killer",
-          "year": 2016,
-          "tmdbId": 381034
+          "title": "Ghost Recon: Alpha",
+          "year": 2012,
+          "tmdbId": 107170
+        },
+        {
+          "title": "I Was a Teenage Werewolf",
+          "year": 1957,
+          "tmdbId": 43228
         },
         {
           "title": "Hostile",
@@ -6470,9 +7400,199 @@
           "tmdbId": 461992
         },
         {
-          "title": "Sea Fever",
+          "title": "The Similars",
+          "year": 2015,
+          "tmdbId": 268105
+        },
+        {
+          "title": "Orbiter 9",
+          "year": 2017,
+          "tmdbId": 437311
+        },
+        {
+          "title": "Strange Invaders",
+          "year": 1983,
+          "tmdbId": 47892
+        },
+        {
+          "title": "Demonic",
+          "year": 2021,
+          "tmdbId": 774021
+        },
+        {
+          "title": "Area 51",
+          "year": 2015,
+          "tmdbId": 57876
+        },
+        {
+          "title": "Phoenix Forgotten",
+          "year": 2017,
+          "tmdbId": 443319
+        },
+        {
+          "title": "Black Friday",
+          "year": 2021,
+          "tmdbId": 765869
+        },
+        {
+          "title": "Ash",
+          "year": 2025,
+          "tmdbId": 931349
+        },
+        {
+          "title": "The Empire Strikes Back",
+          "year": 1980,
+          "tmdbId": 1891
+        },
+        {
+          "title": "The Fly",
+          "year": 1986,
+          "tmdbId": 9426
+        },
+        {
+          "title": "Eternal Sunshine of the Spotless Mind",
+          "year": 2004,
+          "tmdbId": 38
+        },
+        {
+          "title": "The Rocky Horror Picture Show",
+          "year": 1975,
+          "tmdbId": 36685
+        },
+        {
+          "title": "Austin Powers: International Man of Mystery",
+          "year": 1997,
+          "tmdbId": 816
+        },
+        {
+          "title": "Spider-Man: No Way Home",
+          "year": 2021,
+          "tmdbId": 634649
+        },
+        {
+          "title": "I, Robot",
+          "year": 2004,
+          "tmdbId": 2048
+        },
+        {
+          "title": "Honey, I Shrunk the Kids",
+          "year": 1989,
+          "tmdbId": 9354
+        },
+        {
+          "title": "Guardians of the Galaxy Vol. 3",
+          "year": 2023,
+          "tmdbId": 447365
+        },
+        {
+          "title": "Guardians of the Galaxy Vol. 2",
+          "year": 2017,
+          "tmdbId": 283995
+        },
+        {
+          "title": "The Island",
+          "year": 2005,
+          "tmdbId": 1635
+        },
+        {
+          "title": "Poor Things",
+          "year": 2023,
+          "tmdbId": 792307
+        },
+        {
+          "title": "Teenage Mutant Ninja Turtles",
+          "year": 1990,
+          "tmdbId": 1498
+        },
+        {
+          "title": "Strange Days",
+          "year": 1995,
+          "tmdbId": 281
+        },
+        {
+          "title": "Nineteen Eighty-Four",
+          "year": 1984,
+          "tmdbId": 9314
+        },
+        {
+          "title": "Moonraker",
+          "year": 1979,
+          "tmdbId": 698
+        },
+        {
+          "title": "The Day After Tomorrow",
+          "year": 2004,
+          "tmdbId": 435
+        },
+        {
+          "title": "The Hunger Games: Catching Fire",
+          "year": 2013,
+          "tmdbId": 101299
+        },
+        {
+          "title": "Fahrenheit 451",
+          "year": 1966,
+          "tmdbId": 1714
+        },
+        {
+          "title": "Free Guy",
+          "year": 2021,
+          "tmdbId": 550988
+        },
+        {
+          "title": "Scanners",
+          "year": 1981,
+          "tmdbId": 9538
+        },
+        {
+          "title": "Fantastic Planet",
+          "year": 1973,
+          "tmdbId": 16306
+        },
+        {
+          "title": "Frequency",
+          "year": 2000,
+          "tmdbId": 10559
+        },
+        {
+          "title": "Idiocracy",
+          "year": 2006,
+          "tmdbId": 7512
+        },
+        {
+          "title": "Death Race",
+          "year": 2008,
+          "tmdbId": 10483
+        },
+        {
+          "title": "In Time",
+          "year": 2011,
+          "tmdbId": 49530
+        },
+        {
+          "title": "Tenet",
           "year": 2020,
-          "tmdbId": 507441
+          "tmdbId": 577922
+        },
+        {
+          "title": "Palm Springs",
+          "year": 2020,
+          "tmdbId": 587792
+        },
+        {
+          "title": "RoboCop 2",
+          "year": 1990,
+          "tmdbId": 5549
+        },
+        {
+          "title": "A Grand Day Out",
+          "year": 1990,
+          "tmdbId": 530
+        },
+        {
+          "title": "Resident Evil: Extinction",
+          "year": 2007,
+          "tmdbId": 7737
         }
       ],
       "extended": []
@@ -6481,24 +7601,34 @@
       "slug": "retrofuturism-steampunk-dieselpunk",
       "core": [
         {
+          "title": "A Ticket to Space",
+          "year": 2006,
+          "tmdbId": 13748
+        },
+        {
+          "title": "The Cathedral",
+          "year": 2002,
+          "tmdbId": 15990
+        },
+        {
           "title": "The League of Extraordinary Gentlemen",
           "year": 2003,
           "tmdbId": 8698
         },
         {
-          "title": "Electroma",
-          "year": 2006,
-          "tmdbId": 13529
+          "title": "Electric Dragon 80000V",
+          "year": 2001,
+          "tmdbId": 27245
         },
         {
-          "title": "Sunset Boulevard",
-          "year": 1950,
-          "tmdbId": 599
+          "title": "Equals",
+          "year": 2015,
+          "tmdbId": 301875
         },
         {
-          "title": "Family Guy Presents: Something, Something, Something, Dark Side",
-          "year": 2009,
-          "tmdbId": 625651
+          "title": "Cosmic Scrat-tastrophe",
+          "year": 2015,
+          "tmdbId": 367326
         },
         {
           "title": "The Fantastic 4: First Steps",
@@ -6536,14 +7666,34 @@
           "tmdbId": 42469
         },
         {
-          "title": "Babylon 5: Thirdspace",
-          "year": 1998,
-          "tmdbId": 10941
+          "title": "Retro Puppet Master",
+          "year": 1999,
+          "tmdbId": 26960
         },
         {
-          "title": "Cyborg She",
+          "title": "Arif V 216",
+          "year": 2018,
+          "tmdbId": 450720
+        },
+        {
+          "title": "We Are from the Future",
           "year": 2008,
-          "tmdbId": 19486
+          "tmdbId": 40709
+        },
+        {
+          "title": "Electroma",
+          "year": 2006,
+          "tmdbId": 13529
+        },
+        {
+          "title": "The ChubbChubbs!",
+          "year": 2002,
+          "tmdbId": 27042
+        },
+        {
+          "title": "Master of the World",
+          "year": 1961,
+          "tmdbId": 72693
         },
         {
           "title": "The Man with Two Brains",
@@ -6551,14 +7701,29 @@
           "tmdbId": 11591
         },
         {
-          "title": "Charly",
-          "year": 1968,
-          "tmdbId": 29146
+          "title": "Almost Home",
+          "year": 2014,
+          "tmdbId": 256346
         },
         {
-          "title": "Minutemen",
-          "year": 2008,
-          "tmdbId": 22371
+          "title": "Martians vs Mexicans",
+          "year": 2018,
+          "tmdbId": 387836
+        },
+        {
+          "title": "Auntie Edna",
+          "year": 2018,
+          "tmdbId": 546728
+        },
+        {
+          "title": "World of Tomorrow",
+          "year": 2015,
+          "tmdbId": 303867
+        },
+        {
+          "title": "The Moon",
+          "year": 2023,
+          "tmdbId": 753091
         },
         {
           "title": "Melancholia",
@@ -6566,9 +7731,24 @@
           "tmdbId": 62215
         },
         {
+          "title": "Cyborg She",
+          "year": 2008,
+          "tmdbId": 19486
+        },
+        {
           "title": "Safety Not Guaranteed",
           "year": 2012,
           "tmdbId": 84332
+        },
+        {
+          "title": "Alone",
+          "year": 2017,
+          "tmdbId": 420950
+        },
+        {
+          "title": "The Monolith Monsters",
+          "year": 1957,
+          "tmdbId": 52196
         },
         {
           "title": "Piranha",
@@ -6576,9 +7756,19 @@
           "tmdbId": 24831
         },
         {
+          "title": "Return of the Killer Tomatoes!",
+          "year": 1988,
+          "tmdbId": 15482
+        },
+        {
           "title": "Ultraman: Rising",
           "year": 2024,
           "tmdbId": 829402
+        },
+        {
+          "title": "Charly",
+          "year": 1968,
+          "tmdbId": 29146
         },
         {
           "title": "Rabid",
@@ -6601,6 +7791,11 @@
           "tmdbId": 26912
         },
         {
+          "title": "Groot Takes a Bath",
+          "year": 2022,
+          "tmdbId": 1010821
+        },
+        {
           "title": "Perfect Sense",
           "year": 2011,
           "tmdbId": 51999
@@ -6616,6 +7811,11 @@
           "tmdbId": 300681
         },
         {
+          "title": "Shock Waves",
+          "year": 1977,
+          "tmdbId": 26680
+        },
+        {
           "title": "Memories",
           "year": 1995,
           "tmdbId": 42994
@@ -6624,6 +7824,26 @@
           "title": "The Boys from Brazil",
           "year": 1978,
           "tmdbId": 16241
+        },
+        {
+          "title": "Memoirs of an Invisible Man",
+          "year": 1992,
+          "tmdbId": 2687
+        },
+        {
+          "title": "Minutemen",
+          "year": 2008,
+          "tmdbId": 22371
+        },
+        {
+          "title": "Clara",
+          "year": 2018,
+          "tmdbId": 466532
+        },
+        {
+          "title": "Doraemon: Nobita and the Windmasters",
+          "year": 2003,
+          "tmdbId": 98613
         },
         {
           "title": "The Stepford Wives",
@@ -6651,9 +7871,19 @@
           "tmdbId": 339967
         },
         {
-          "title": "Groot Takes a Bath",
+          "title": "The Jetsons Meet the Flintstones",
+          "year": 1987,
+          "tmdbId": 36868
+        },
+        {
+          "title": "Groot's Pursuit",
           "year": 2022,
-          "tmdbId": 1010821
+          "tmdbId": 1010820
+        },
+        {
+          "title": "The Lost Thing",
+          "year": 2010,
+          "tmdbId": 58515
         },
         {
           "title": "X: The Man with the X-Ray Eyes",
@@ -6661,14 +7891,14 @@
           "tmdbId": 32569
         },
         {
-          "title": "Superman II: The Richard Donner Cut",
-          "year": 2006,
-          "tmdbId": 624479
-        },
-        {
           "title": "Brightburn",
           "year": 2019,
           "tmdbId": 531309
+        },
+        {
+          "title": "Godzilla: Planet of the Monsters",
+          "year": 2017,
+          "tmdbId": 449574
         },
         {
           "title": "Morgan",
@@ -6676,14 +7906,14 @@
           "tmdbId": 377264
         },
         {
-          "title": "Babylon A.D.",
-          "year": 2008,
-          "tmdbId": 9381
-        },
-        {
           "title": "Ivan Vasilyevich Changes His Profession",
           "year": 1973,
           "tmdbId": 20803
+        },
+        {
+          "title": "Megaboa",
+          "year": 2021,
+          "tmdbId": 920081
         },
         {
           "title": "The Space Between Us",
@@ -6691,19 +7921,24 @@
           "tmdbId": 365942
         },
         {
+          "title": "Scooby-Doo! Frankencreepy",
+          "year": 2014,
+          "tmdbId": 284995
+        },
+        {
           "title": "Vampire Hunter D: Bloodlust",
           "year": 2001,
           "tmdbId": 15999
         },
         {
+          "title": "The Snails",
+          "year": 1966,
+          "tmdbId": 116351
+        },
+        {
           "title": "Spring",
           "year": 2014,
           "tmdbId": 241855
-        },
-        {
-          "title": "The Substance",
-          "year": 2024,
-          "tmdbId": 933260
         },
         {
           "title": "Synchronic",
@@ -6721,6 +7956,16 @@
           "tmdbId": 526896
         },
         {
+          "title": "The Resurrected",
+          "year": 1991,
+          "tmdbId": 30694
+        },
+        {
+          "title": "Children of the Damned",
+          "year": 1964,
+          "tmdbId": 30202
+        },
+        {
           "title": "Journey 2: The Mysterious Island",
           "year": 2012,
           "tmdbId": 72545
@@ -6731,9 +7976,9 @@
           "tmdbId": 167
         },
         {
-          "title": "Bleach the Movie: Memories of Nobody",
-          "year": 2006,
-          "tmdbId": 15575
+          "title": "Attack of the Puppet People",
+          "year": 1958,
+          "tmdbId": 44585
         },
         {
           "title": "The Gorge",
@@ -6756,9 +8001,24 @@
           "tmdbId": 11285
         },
         {
+          "title": "The Swarm",
+          "year": 1978,
+          "tmdbId": 46878
+        },
+        {
           "title": "CJ7",
           "year": 2008,
           "tmdbId": 13688
+        },
+        {
+          "title": "Bleach the Movie: Memories of Nobody",
+          "year": 2006,
+          "tmdbId": 15575
+        },
+        {
+          "title": "The Robot vs. The Aztec Mummy",
+          "year": 1958,
+          "tmdbId": 31243
         },
         {
           "title": "Possessor",
@@ -6766,44 +8026,84 @@
           "tmdbId": 435615
         },
         {
+          "title": "Rupture",
+          "year": 2016,
+          "tmdbId": 345925
+        },
+        {
           "title": "Totally Killer",
           "year": 2023,
           "tmdbId": 974931
         },
         {
-          "title": "The Snails",
-          "year": 1966,
-          "tmdbId": 116351
+          "title": "The Unthinkable",
+          "year": 2018,
+          "tmdbId": 518502
         },
         {
-          "title": "Megaboa",
-          "year": 2021,
-          "tmdbId": 920081
+          "title": "The Visitor",
+          "year": 1979,
+          "tmdbId": 54013
         },
         {
-          "title": "Dual",
-          "year": 2022,
-          "tmdbId": 698128
+          "title": "The Invisible Woman",
+          "year": 1940,
+          "tmdbId": 28423
         },
         {
-          "title": "The Resurrected",
-          "year": 1991,
-          "tmdbId": 30694
+          "title": "Deep Blue Sea 2",
+          "year": 2018,
+          "tmdbId": 492336
         },
         {
-          "title": "Children of the Damned",
-          "year": 1964,
-          "tmdbId": 30202
+          "title": "Come True",
+          "year": 2020,
+          "tmdbId": 515454
         },
         {
-          "title": "V/H/S/Beyond",
+          "title": "Containment",
+          "year": 2015,
+          "tmdbId": 347548
+        },
+        {
+          "title": "The Fifth Element",
+          "year": 1997,
+          "tmdbId": 18
+        },
+        {
+          "title": "RoboCop",
+          "year": 1987,
+          "tmdbId": 5548
+        },
+        {
+          "title": "Bicentennial Man",
+          "year": 1999,
+          "tmdbId": 2277
+        },
+        {
+          "title": "Videodrome",
+          "year": 1983,
+          "tmdbId": 837
+        },
+        {
+          "title": "Dune: Part Two",
           "year": 2024,
-          "tmdbId": 1190868
+          "tmdbId": 693134
+        },
+        {
+          "title": "Waterworld",
+          "year": 1995,
+          "tmdbId": 9804
+        },
+        {
+          "title": "Austin Powers: The Spy Who Shagged Me",
+          "year": 1999,
+          "tmdbId": 817
         }
       ],
       "extended": []
     }
   ],
   "status": "final",
-  "finalizedAt": "2026-03-05T16:02:09.437Z"
+  "finalizedAt": "2026-03-05T16:08:24.260Z"
 }

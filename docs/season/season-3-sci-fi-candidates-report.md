@@ -1,12 +1,12 @@
 # Season 3 Sci-Fi Candidate Harvest Report
 
-Generated: 2026-03-05T16:00:58.147Z
+Generated: 2026-03-05T16:05:27.736Z
 Season/Pack: season-3/sci-fi
 Window: 1920-2026
 Max pages per plan (effective): 2000
 Pagination strategy: segmented year windows (TMDB hard-cap is 500 pages per query).
 Unique candidates: 41468
-Shortlist size: 2400
+Shortlist size: 5000
 
 ## Discover Plans
 

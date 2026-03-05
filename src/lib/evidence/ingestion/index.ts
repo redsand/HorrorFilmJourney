@@ -1,4 +1,4 @@
-import { chunkEvidenceDocument, type EvidenceIngestDocumentInput } from './chunking';
+import { chunkEvidenceDocument, type EvidenceIngestDocumentInput } from './chunking.ts';
 
 type PrismaEvidenceIngestionClient = {
   evidenceDocument: {
@@ -101,21 +101,21 @@ export async function ingestEvidenceDocuments(
   };
 }
 
-export type { EvidenceIngestDocumentInput } from './chunking';
-export type { EvidenceIngestionCheckpoint } from './checkpoint';
+export type { EvidenceIngestDocumentInput } from './chunking.ts';
+export type { EvidenceIngestionCheckpoint } from './checkpoint.ts';
 export {
   normalizeAndDedupeEvidenceDocuments,
   normalizeEvidenceDocumentInput,
-} from './adapters';
+} from './adapters.ts';
 export {
   LOCAL_EVIDENCE_EMBEDDING_DIM,
   LOCAL_EVIDENCE_EMBEDDING_MODEL,
   backfillEvidenceChunkEmbeddings,
   computeEvidenceChunkEmbedding,
-} from './embed';
-export { refreshEvidenceIndex } from './index-refresh';
+} from './embed.ts';
+export { refreshEvidenceIndex } from './index-refresh.ts';
 export {
   createEmptyEvidenceIngestionCheckpoint,
   filterPendingEvidenceDocuments,
   markEvidenceDocumentInCheckpoint,
-} from './checkpoint';
+} from './checkpoint.ts';
