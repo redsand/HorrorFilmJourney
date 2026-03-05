@@ -2,21 +2,21 @@ import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
 import {
   journeyWorthinessDiagnosticPass as isJourneyWorthinessDiagnosticPass,
   journeyWorthinessSelectionGatePass as isJourneyWorthinessSelectionGatePass,
   type JourneyWorthinessMovieInput,
-} from '../src/lib/journey/journey-worthiness.ts';
-import { buildSeason1LabelingFunctions, inferNodeProbabilities, type LabelingFunction } from '../src/lib/nodes/weak-supervision/index.ts';
+} from '../src/lib/journey/journey-worthiness';
+import { buildSeason1LabelingFunctions, inferNodeProbabilities, type LabelingFunction } from '../src/lib/nodes/weak-supervision/index';
 import {
   evaluateGoldSample,
   normalizeTitle,
   type GoldFixture,
-} from '../src/lib/audit/season1-node-audit.ts';
-import { TMDB_GENRE_NAME_BY_ID, TMDB_HORROR_GENRE_ID } from '../src/lib/tmdb/tmdb-normalization.ts';
-import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
-import { resolveCanonicalMovieSignals } from '../src/lib/movie/canonical-metrics.ts';
+} from '../src/lib/audit/season1-node-audit';
+import { TMDB_GENRE_NAME_BY_ID, TMDB_HORROR_GENRE_ID } from '../src/lib/tmdb/tmdb-normalization';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance';
+import { resolveCanonicalMovieSignals } from '../src/lib/movie/canonical-metrics';
 
 type CurriculumSpec = {
   seasonSlug: string;

@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence.ts';
+import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry.ts';
+import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry';
 
 const REPORT_PATH = path.resolve('docs', 'engineering', 'snapshot-db-divergence.json');
 

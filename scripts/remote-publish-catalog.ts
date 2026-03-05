@@ -6,7 +6,7 @@ import {
   parseOption,
   readVerificationStamp,
   VERIFICATION_STAMP_PATH,
-} from './catalog-release-utils.ts';
+} from './catalog-release-utils';
 
 type BackupPayload = {
   schemaVersion: 1;

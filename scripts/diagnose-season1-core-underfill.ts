@@ -1,13 +1,13 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
-import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance';
+import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness';
 import {
   resolvePerNodeCoreThreshold,
   resolvePerNodeTargetSize,
   toPairKey,
-} from '../src/lib/nodes/governance/season1-governance.ts';
+} from '../src/lib/nodes/governance/season1-governance';
 
 type Candidate = {
   nodeSlug: string;

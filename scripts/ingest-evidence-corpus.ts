@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { prisma } from '../src/lib/prisma.ts';
+import { prisma } from '../src/lib/prisma';
 import {
   createEmptyEvidenceIngestionCheckpoint,
   filterPendingEvidenceDocuments,
@@ -9,7 +9,7 @@ import {
   normalizeAndDedupeEvidenceDocuments,
   type EvidenceIngestDocumentInput,
   type EvidenceIngestionCheckpoint,
-} from '../src/lib/evidence/ingestion/index.ts';
+} from '../src/lib/evidence/ingestion/index';
 
 type IngestFileShape = {
   documents?: EvidenceIngestDocumentInput[];

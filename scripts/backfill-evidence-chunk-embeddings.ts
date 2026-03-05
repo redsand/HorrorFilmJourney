@@ -1,5 +1,5 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { backfillEvidenceChunkEmbeddings } from '../src/lib/evidence/ingestion/index.ts';
+import { prisma } from '../src/lib/prisma';
+import { backfillEvidenceChunkEmbeddings } from '../src/lib/evidence/ingestion/index';
 
 function parseArgs(): { batchSize?: number; force: boolean } {
   const args = process.argv.slice(2);

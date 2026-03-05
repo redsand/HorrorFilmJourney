@@ -4,7 +4,7 @@ import {
   getSeason3SciFiDiscoverPlans,
   SEASON3_DISCOVERY_SCORE_WEIGHT_BY_PLAN_KEY,
   type DiscoverPlan,
-} from '../src/lib/seasons/season3/sci-fi-discovery-profile.ts';
+} from '../src/lib/seasons/season3/sci-fi-discovery-profile';
 
 type TmdbDiscoverMovie = {
   id?: number;

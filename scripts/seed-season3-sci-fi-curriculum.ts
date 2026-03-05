@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { SEASON3_SCI_FI_NODE_KEYWORDS } from '../src/lib/seasons/season3/taxonomy.ts';
+import { SEASON3_SCI_FI_NODE_KEYWORDS } from '../src/lib/seasons/season3/taxonomy';
 
 type GovernanceFile = {
   seasonSlug: string;

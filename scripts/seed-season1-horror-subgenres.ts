@@ -4,13 +4,13 @@ import { PrismaClient } from '@prisma/client';
 import {
   buildSeason1LabelingFunctions,
   type LabelingFunction,
-} from '../src/lib/nodes/weak-supervision/index.ts';
+} from '../src/lib/nodes/weak-supervision/index';
 import {
   loadSeason1ClassifierArtifact,
   scoreMovieWithSeason1Classifier,
   type Season1NodeClassifierArtifact,
-} from '../src/lib/nodes/classifier/index.ts';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
+} from '../src/lib/nodes/classifier/index';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
 import {
   applySeason1GovernanceEnvOverrides,
   resolvePerNodeCoreMaxPerNode,
@@ -23,23 +23,23 @@ import {
   resolvePerNodeQualityFloor,
   resolvePerNodeTargetSize,
   toPairKey,
-} from '../src/lib/nodes/governance/season1-governance.ts';
-import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
-import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
+} from '../src/lib/nodes/governance/season1-governance';
+import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact';
+import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes';
 import {
   computeJourneyWorthiness,
   evaluateJourneyWorthinessTierGate,
   type JourneyWorthinessMovieInput,
-} from '../src/lib/journey/journey-worthiness.ts';
+} from '../src/lib/journey/journey-worthiness';
 import {
   LOCAL_MOVIE_EMBEDDING_DIM,
   LOCAL_MOVIE_EMBEDDING_MODEL,
   computeLocalMovieEmbedding,
-} from '../src/lib/movie/local-embedding.ts';
-import { isLikelyLocalPostgresUrl } from './catalog-release-utils.ts';
-import { getSeason1MustIncludeForNode } from '../src/config/seasons/season1-must-include.ts';
-import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
-import { isSeason1HorrorScope, scopeReasons } from '../src/lib/seasons/season1/scope.ts';
+} from '../src/lib/movie/local-embedding';
+import { isLikelyLocalPostgresUrl } from './catalog-release-utils';
+import { getSeason1MustIncludeForNode } from '../src/config/seasons/season1-must-include';
+import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness';
+import { isSeason1HorrorScope, scopeReasons } from '../src/lib/seasons/season1/scope';
 
 type CurriculumTitle = {
   title: string;

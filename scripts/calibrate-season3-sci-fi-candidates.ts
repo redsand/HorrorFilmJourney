@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { selectBalancedCandidates } from '../src/lib/seasons/season3/calibration-balance.ts';
-import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy.ts';
+import { selectBalancedCandidates } from '../src/lib/seasons/season3/calibration-balance';
+import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy';
 
 type NodeProb = {
   nodeSlug: string;

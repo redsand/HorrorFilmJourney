@@ -5,8 +5,8 @@ import {
   parseDirector,
   parseKeywords,
   toGenreNames,
-} from '../src/lib/tmdb/tmdb-normalization.ts';
-import { mergeCreditsWithGuard } from '../src/lib/tmdb/credits-guard.ts';
+} from '../src/lib/tmdb/tmdb-normalization';
+import { mergeCreditsWithGuard } from '../src/lib/tmdb/credits-guard';
 
 type TmdbDiscoverMovie = {
   id?: number;

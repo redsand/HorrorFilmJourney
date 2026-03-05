@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import {
   buildSeason3TrainingDataset,
   trainSeasonClassifier,
-} from '../src/lib/nodes/classifier/index.ts';
+} from '../src/lib/nodes/classifier/index';
 
 type Cli = {
   taxonomyVersion?: string;

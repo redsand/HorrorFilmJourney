@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { seedStarterHorrorCatalog } from '../src/lib/testing/catalog-seed.ts';
+import { seedStarterHorrorCatalog } from '../src/lib/testing/catalog-seed';
 
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL;

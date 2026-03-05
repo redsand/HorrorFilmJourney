@@ -1,5 +1,5 @@
-import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../../../config/seasons/season1-node-governance.ts';
-import { SEASON2_NODE_GOVERNANCE_CONFIG } from '../../../config/seasons/season2-node-governance.ts';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../../../config/seasons/season1-node-governance';
+import { SEASON2_NODE_GOVERNANCE_CONFIG } from '../../../config/seasons/season2-node-governance';
 
 export type ReleaseContract = {
   seasonSlug: string;

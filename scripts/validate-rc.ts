@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { buildRcValidationCommandPlan, resolveRcValidationOptions } from './validate-rc-plan.ts';
+import { buildRcValidationCommandPlan, resolveRcValidationOptions } from './validate-rc-plan';
 
 function run(command: string): void {
   const databaseUrl =

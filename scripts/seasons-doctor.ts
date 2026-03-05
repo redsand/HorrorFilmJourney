@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { PrismaClient } from '@prisma/client';
-import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence.ts';
-import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry.ts';
+import { computeSnapshotDivergence } from '../src/lib/audit/snapshot-db-divergence';
+import { loadSeasonIntegrityRegistry } from '../src/lib/audit/season-integrity-registry';
 
 type Config = {
   seasonSlug: string;

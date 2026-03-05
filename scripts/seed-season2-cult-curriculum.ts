@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
 
 type CurriculumTitle = {
   title: string;

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient, type NodeAssignmentTier } from '@prisma/client';
-import { listDeterministicCatalogBackfills } from '../src/lib/catalog/deterministic-tmdb-backfill.ts';
+import { listDeterministicCatalogBackfills } from '../src/lib/catalog/deterministic-tmdb-backfill';
 
 type ImportedRating = {
   source: string;

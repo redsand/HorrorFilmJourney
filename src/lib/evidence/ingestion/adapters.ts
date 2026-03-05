@@ -1,4 +1,4 @@
-import type { EvidenceIngestDocumentInput } from './chunking.ts';
+import type { EvidenceIngestDocumentInput } from './chunking';
 
 type RawEvidenceDoc = Partial<EvidenceIngestDocumentInput> & {
   movieTmdbId?: number;

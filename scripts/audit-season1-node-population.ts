@@ -4,19 +4,19 @@ import { PrismaClient } from '@prisma/client';
 import {
   buildSeason1LabelingFunctions,
   inferNodeProbabilities,
-} from '../src/lib/nodes/weak-supervision/index.ts';
+} from '../src/lib/nodes/weak-supervision/index';
 import {
   applySeason1GovernanceEnvOverrides,
   loadSeason1NodeGovernanceConfig,
   resolvePerNodeMinEligible,
   resolvePerNodeTargetSize,
-} from '../src/lib/nodes/governance/season1-governance.ts';
+} from '../src/lib/nodes/governance/season1-governance';
 import {
   type GoldFixture,
   detectUnexpectedCooccurrence,
   evaluateGoldSample,
   normalizeTitle,
-} from '../src/lib/audit/season1-node-audit.ts';
+} from '../src/lib/audit/season1-node-audit';
 
 type TaxonomyNode = {
   slug: string;

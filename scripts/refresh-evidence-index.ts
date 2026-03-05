@@ -1,5 +1,5 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { refreshEvidenceIndex } from '../src/lib/evidence/ingestion/index.ts';
+import { prisma } from '../src/lib/prisma';
+import { refreshEvidenceIndex } from '../src/lib/evidence/ingestion/index';
 
 function parseArgs(): { batchSize?: number; maxRounds?: number } {
   const args = process.argv.slice(2);

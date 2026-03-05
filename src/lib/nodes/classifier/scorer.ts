@@ -1,5 +1,5 @@
-import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types.ts';
-import { vectorizeMovie } from './features.ts';
+import type { ClassifierMovieInput, NodeProbability, Season1NodeClassifierArtifact, SeasonNodeClassifierArtifact } from './types';
+import { vectorizeMovie } from './features';
 
 function sigmoid(value: number): number {
   if (value < -30) return 0;

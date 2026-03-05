@@ -1,5 +1,5 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { ingestEvidenceDocuments } from '../src/lib/evidence/ingestion/index.ts';
+import { prisma } from '../src/lib/prisma';
+import { ingestEvidenceDocuments } from '../src/lib/evidence/ingestion/index';
 
 const FIXTURES = [
   {

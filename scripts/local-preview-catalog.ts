@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { ensureLocalDatabaseOrThrow } from './catalog-release-utils.ts';
+import { ensureLocalDatabaseOrThrow } from './catalog-release-utils';
 
 async function main(): Promise<void> {
   ensureLocalDatabaseOrThrow(process.env.DATABASE_URL);

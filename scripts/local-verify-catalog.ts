@@ -1,17 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ensureLocalDatabaseOrThrow, runCommand, writeVerificationStamp } from './catalog-release-utils.ts';
-import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
+import { ensureLocalDatabaseOrThrow, runCommand, writeVerificationStamp } from './catalog-release-utils';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance';
 import {
   computeCoverageGateMetrics,
   evaluateCoverageGate,
   type CoverageGateThresholds,
-} from '../src/lib/verification/catalog-coverage-gate.ts';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
-import { evaluateJourneyWorthinessSelectionGate } from '../src/lib/journey/journey-worthiness.ts';
-import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
-import { resolvePerNodeQualityFloor } from '../src/lib/nodes/governance/season1-governance.ts';
+} from '../src/lib/verification/catalog-coverage-gate';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
+import { evaluateJourneyWorthinessSelectionGate } from '../src/lib/journey/journey-worthiness';
+import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes';
+import { resolvePerNodeQualityFloor } from '../src/lib/nodes/governance/season1-governance';
 import {
   formatSeason1EssentialsGateFailure,
   normalizeTitle,
@@ -19,7 +19,7 @@ import {
   toEssentialLookupKeys,
   type Season1EssentialFixtureEntry,
   type Season1EssentialMissing,
-} from '../src/lib/verification/season1-essentials-gate.ts';
+} from '../src/lib/verification/season1-essentials-gate';
 
 function toPairKey(a: string, b: string): string {
   return a < b ? `${a}||${b}` : `${b}||${a}`;

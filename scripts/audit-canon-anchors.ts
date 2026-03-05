@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PrismaClient, type NodeAssignmentTier } from '@prisma/client';
-import { loadSeasonIntegrityRegistry, readAuthoritySnapshot } from '../src/lib/audit/season-integrity-registry.ts';
+import { loadSeasonIntegrityRegistry, readAuthoritySnapshot } from '../src/lib/audit/season-integrity-registry';
 
 type AnchorEntry = {
   tmdbId: number;

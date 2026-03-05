@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { findUncheckedChecklistItems } from '../src/lib/evidence/retrieval/tracker-checklist.ts';
+import { findUncheckedChecklistItems } from '../src/lib/evidence/retrieval/tracker-checklist';
 
 function parseTrackerPath(): string {
   const args = process.argv.slice(2);

@@ -1,4 +1,4 @@
-import { computeLocalTextEmbedding, LOCAL_MOVIE_EMBEDDING_DIM } from '../../movie/local-embedding.ts';
+import { computeLocalTextEmbedding, LOCAL_MOVIE_EMBEDDING_DIM } from '../../movie/local-embedding';
 
 export const LOCAL_EVIDENCE_EMBEDDING_MODEL = 'local-evidence-embedding-v1';
 export const LOCAL_EVIDENCE_EMBEDDING_DIM = LOCAL_MOVIE_EMBEDDING_DIM;

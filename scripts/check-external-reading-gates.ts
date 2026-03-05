@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { buildExternalLinkCoverageReport } from '../src/lib/companion/external-reading-ops.ts';
+import { buildExternalLinkCoverageReport } from '../src/lib/companion/external-reading-ops';
 
 async function main(): Promise<void> {
   const prisma = new PrismaClient();

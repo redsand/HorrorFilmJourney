@@ -1,6 +1,6 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { computeRetrievalGateMetricsFromRuns } from '../src/lib/evidence/retrieval/metrics.ts';
-import { evaluateRetrievalRolloutReadiness } from '../src/lib/evidence/retrieval/rollout-readiness.ts';
+import { prisma } from '../src/lib/prisma';
+import { computeRetrievalGateMetricsFromRuns } from '../src/lib/evidence/retrieval/metrics';
+import { evaluateRetrievalRolloutReadiness } from '../src/lib/evidence/retrieval/rollout-readiness';
 
 function parseTakeArg(): number {
   const args = process.argv.slice(2);

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { createSeasonNodeReleaseFromNodeMovie, publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
-import { getReleaseContract } from '../src/lib/nodes/governance/release-contract.ts';
-import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
+import { createSeasonNodeReleaseFromNodeMovie, publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact';
+import { getReleaseContract } from '../src/lib/nodes/governance/release-contract';
+import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence';
 
 type CliOptions = {
   apply: boolean;

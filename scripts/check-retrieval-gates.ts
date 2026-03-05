@@ -1,9 +1,9 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { computeRetrievalGateMetricsFromRuns } from '../src/lib/evidence/retrieval/metrics.ts';
+import { prisma } from '../src/lib/prisma';
+import { computeRetrievalGateMetricsFromRuns } from '../src/lib/evidence/retrieval/metrics';
 import {
   DEFAULT_RETRIEVAL_GATE_THRESHOLDS,
   evaluateRetrievalQualityGates,
-} from '../src/lib/evidence/retrieval/quality-gates.ts';
+} from '../src/lib/evidence/retrieval/quality-gates';
 
 function parseTakeArg(): number {
   const args = process.argv.slice(2);

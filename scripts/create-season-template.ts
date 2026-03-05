@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { loadSeasonIntegrityRegistry, type SeasonIntegritySpec } from '../src/lib/audit/season-integrity-registry.ts';
-import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy.ts';
+import { loadSeasonIntegrityRegistry, type SeasonIntegritySpec } from '../src/lib/audit/season-integrity-registry';
+import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy';
 
 type CliOptions = {
   seasonSlug: string;

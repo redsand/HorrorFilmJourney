@@ -1,6 +1,6 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { ingestEvidenceDocuments } from '../src/lib/evidence/ingestion/index.ts';
-import { createConfiguredEvidenceRetriever } from '../src/lib/evidence/retrieval/index.ts';
+import { prisma } from '../src/lib/prisma';
+import { ingestEvidenceDocuments } from '../src/lib/evidence/ingestion/index';
+import { createConfiguredEvidenceRetriever } from '../src/lib/evidence/retrieval/index';
 
 function parseArgs(): { runs: number } {
   const args = process.argv.slice(2);

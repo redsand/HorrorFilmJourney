@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { hashPassword } from '../src/lib/auth/password.ts';
+import { hashPassword } from '../src/lib/auth/password';
 
 function resolveDatabaseUrl(): string | undefined {
   return process.env.DATABASE_URL ?? process.env.DATABASE_URL_TEST ?? process.env.TEST_DATABASE_URL;

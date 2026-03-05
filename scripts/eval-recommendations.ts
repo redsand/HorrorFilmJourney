@@ -1,5 +1,5 @@
 import { InteractionStatus, PrismaClient } from '@prisma/client';
-import { evaluateOffline, type EvalRecord } from '../src/lib/recommendation/offline-eval.ts';
+import { evaluateOffline, type EvalRecord } from '../src/lib/recommendation/offline-eval';
 
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL_TEST;

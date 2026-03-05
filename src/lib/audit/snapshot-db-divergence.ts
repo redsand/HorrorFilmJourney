@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { findSeasonIntegritySpecByPair, readAuthoritySnapshot } from './season-integrity-registry.ts';
+import { findSeasonIntegritySpecByPair, readAuthoritySnapshot } from './season-integrity-registry';
 
 type SeasonAuthorityEntry = {
   seasonSlug: string;

@@ -2,21 +2,21 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { ensureLocalDatabaseOrThrow } from './catalog-release-utils.ts';
-import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance.ts';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
+import { ensureLocalDatabaseOrThrow } from './catalog-release-utils';
+import { SEASON1_NODE_GOVERNANCE_CONFIG } from '../src/config/seasons/season1-node-governance';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
 import {
   computeCoverageGateMetrics,
   type CoverageGateMetrics,
-} from '../src/lib/verification/catalog-coverage-gate.ts';
-import { computeJourneyWorthiness } from '../src/lib/journey/journey-worthiness.ts';
-import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
-import { evaluateSeason1PrepublishGate } from '../src/lib/verification/season1-prepublish-gate.ts';
+} from '../src/lib/verification/catalog-coverage-gate';
+import { computeJourneyWorthiness } from '../src/lib/journey/journey-worthiness';
+import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness';
+import { evaluateSeason1PrepublishGate } from '../src/lib/verification/season1-prepublish-gate';
 import {
   normalizeTitle,
   toEssentialLookupKeys,
   type Season1EssentialFixtureEntry,
-} from '../src/lib/verification/season1-essentials-gate.ts';
+} from '../src/lib/verification/season1-essentials-gate';
 
 type CheckResult = {
   name: string;

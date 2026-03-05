@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { PrismaClient } from '@prisma/client';
-import type { BuiltDataset, ClassifierMovieInput, DatasetRow } from './types.ts';
-import { parseCastNames, parseJsonStringArray } from './features.ts';
+import type { BuiltDataset, ClassifierMovieInput, DatasetRow } from './types';
+import { parseCastNames, parseJsonStringArray } from './features';
 
 type BuildDatasetInput = {
   seasonSlug: string;

@@ -1,7 +1,7 @@
 import {
   computeEvidenceDocumentHash,
   type EvidenceIngestDocumentInput,
-} from './chunking.ts';
+} from './chunking';
 
 export type EvidenceIngestionCheckpoint = {
   version: 1;

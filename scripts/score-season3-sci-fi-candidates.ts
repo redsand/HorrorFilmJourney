@@ -8,7 +8,7 @@ import {
   parseJsonStringArray,
   scoreMovieWithSeason3Classifier,
   type ClassifierMovieInput,
-} from '../src/lib/nodes/classifier/index.ts';
+} from '../src/lib/nodes/classifier/index';
 
 type HarvestCandidate = {
   tmdbId: number;

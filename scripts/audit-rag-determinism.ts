@@ -1,6 +1,6 @@
-import { prisma } from '../src/lib/prisma.ts';
-import { createConfiguredEvidenceRetriever } from '../src/lib/evidence/retrieval/index.ts';
-import type { EvidencePacketVM } from '../src/lib/evidence/evidence-retriever.ts';
+import { prisma } from '../src/lib/prisma';
+import { createConfiguredEvidenceRetriever } from '../src/lib/evidence/retrieval/index';
+import type { EvidencePacketVM } from '../src/lib/evidence/evidence-retriever';
 
 type QueryFixture = {
   label: string;

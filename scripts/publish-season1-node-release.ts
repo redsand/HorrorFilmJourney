@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
-import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
-import { getReleaseContract } from '../src/lib/nodes/governance/release-contract.ts';
+import { publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact';
+import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence';
+import { getReleaseContract } from '../src/lib/nodes/governance/release-contract';
 
 type Cli = {
   taxonomyVersion?: string;

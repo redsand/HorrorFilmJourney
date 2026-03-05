@@ -1,4 +1,4 @@
-import { prisma } from '../src/lib/prisma.ts';
+import { prisma } from '../src/lib/prisma';
 
 async function run(): Promise<void> {
   const packets = await prisma.evidencePacket.count();

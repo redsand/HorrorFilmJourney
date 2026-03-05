@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { applyRetrievalRolloutEnv } from '../src/lib/evidence/retrieval/rollout-env.ts';
+import { applyRetrievalRolloutEnv } from '../src/lib/evidence/retrieval/rollout-env';
 
 type RolloutArgs = {
   mode: 'cache' | 'hybrid';

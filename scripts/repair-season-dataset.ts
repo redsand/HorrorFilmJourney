@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { Prisma, PrismaClient, type NodeAssignmentTier } from '@prisma/client';
-import { computeSnapshotDivergence, type DivergenceItem, type DivergenceSummary } from '../src/lib/audit/snapshot-db-divergence.ts';
-import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact.ts';
-import { getDeterministicCatalogBackfill } from '../src/lib/catalog/deterministic-tmdb-backfill.ts';
+import { computeSnapshotDivergence, type DivergenceItem, type DivergenceSummary } from '../src/lib/audit/snapshot-db-divergence';
+import { createSeasonNodeReleaseFromNodeMovie } from '../src/lib/nodes/governance/release-artifact';
+import { getDeterministicCatalogBackfill } from '../src/lib/catalog/deterministic-tmdb-backfill';
 
 type SeasonConfig = {
   seasonSlug: 'season-1' | 'season-2';

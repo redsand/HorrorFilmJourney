@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
-import { assertCanonicalTaxonomyVersion, getReleaseContract } from './release-contract.ts';
+import { assertCanonicalTaxonomyVersion, getReleaseContract } from './release-contract';
 
 export type CreateSeasonNodeReleaseInput = {
   seasonId: string;

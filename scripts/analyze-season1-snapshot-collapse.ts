@@ -1,18 +1,18 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PrismaClient } from '@prisma/client';
-import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility.ts';
-import { evaluateJourneyWorthinessSelectionGate, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness.ts';
-import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes.ts';
+import { evaluateCurriculumEligibility } from '../src/lib/curriculum/eligibility';
+import { evaluateJourneyWorthinessSelectionGate, type JourneyWorthinessMovieInput } from '../src/lib/journey/journey-worthiness';
+import { scoreMovieForNodes } from '../src/lib/nodes/scoring/scoreMovieForNodes';
 import {
   loadSeason1NodeGovernanceConfig,
   resolvePerNodeQualityFloor,
   resolvePerNodeThreshold,
-} from '../src/lib/nodes/governance/season1-governance.ts';
-import { loadSeasonOntology } from '../src/lib/ontology/loadSeasonOntology.ts';
-import { loadSeasonPrototypePack } from '../src/lib/ontology/loadSeasonPrototypePack.ts';
-import { buildSeason1LabelingFunctions } from '../src/lib/nodes/weak-supervision/index.ts';
-import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness.ts';
+} from '../src/lib/nodes/governance/season1-governance';
+import { loadSeasonOntology } from '../src/lib/ontology/loadSeasonOntology';
+import { loadSeasonPrototypePack } from '../src/lib/ontology/loadSeasonPrototypePack';
+import { buildSeason1LabelingFunctions } from '../src/lib/nodes/weak-supervision/index';
+import { loadSeasonJourneyWorthinessConfig } from '../src/config/seasons/journey-worthiness';
 
 type Cli = {
   currentReleaseId: string;
