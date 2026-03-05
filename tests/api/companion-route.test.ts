@@ -95,15 +95,18 @@ describe('GET /api/companion', () => {
     externalReadingFindManyMock.mockResolvedValue([]);
     companionCacheUpsertMock.mockResolvedValue(null);
     companionCacheDeleteManyMock.mockResolvedValue({ count: 0 });
+    evidenceFindManyMock.mockResolvedValue([]);
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
     delete process.env.TMDB_API_KEY;
+    delete process.env.EVIDENCE_RETRIEVAL_MODE;
   });
 
   afterEach(() => {
     delete process.env.LLM_PROVIDER;
     delete process.env.USE_LLM;
     delete process.env.TMDB_API_KEY;
+    delete process.env.EVIDENCE_RETRIEVAL_MODE;
   });
 
   it('returns 400 when tmdbId is missing', async () => {
@@ -184,6 +187,41 @@ describe('GET /api/companion', () => {
     }));
     expect(body.data.externalReadings).toEqual([]);
     expect(body.data.streaming).toEqual({ region: 'US', offers: [] });
+  });
+
+  it('passes season scope to retrieval for companion evidence', async () => {
+    process.env.EVIDENCE_RETRIEVAL_MODE = 'hybrid';
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    resolveEffectivePackForUserMock.mockResolvedValueOnce({
+      packId: 'pack_cult',
+      packSlug: 'cult-classics',
+      seasonSlug: 'season-2',
+      primaryGenre: 'cult',
+    });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Scope Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: null,
+      castTop: null,
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([]);
+    externalReadingFindManyMock.mockResolvedValueOnce([]);
+
+    const response = await GET(new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
+      headers: { cookie: makeSessionCookie('user_1') },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(externalReadingFindManyMock).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({
+        movieId: 'movie_1',
+        season: { slug: 'season-2' },
+      }),
+    }));
   });
 
   it('includes externalReadings for a Season 1 film with a curated registry entry', async () => {

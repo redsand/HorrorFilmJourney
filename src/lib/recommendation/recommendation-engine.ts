@@ -3,7 +3,7 @@ import { getLlmProviderFromEnv } from '@/ai';
 import { LlmSchemaError, type LlmProvider } from '@/ai/llmProvider';
 import type { RecommendationCardNarrative } from '@/lib/contracts/narrative-contracts';
 import { recommendationCardNarrativeSchema } from '@/lib/contracts/narrative-contracts';
-import type { EvidencePacketVM, EvidenceRetriever } from '@/lib/evidence/evidence-retriever';
+import type { EvidencePacketVM, EvidenceRetriever, EvidenceRetrievalQuery } from '@/lib/evidence/evidence-retriever';
 import { packageEvidencePackets } from '@/lib/evidence/evidence-packager';
 import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
 import {
@@ -909,10 +909,13 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
       },
     });
     latestBatch?.items.forEach((item) => excludedMovieIds.add(item.movieId));
+    if (constraints.packId && !constraints.seasonSlug) {
+      throw new Error('Missing seasonSlug for pack-scoped candidate generation');
+    }
     const publishedReleaseId = constraints.packId
       ? await getPublishedSeasonNodeReleaseId(this.prisma, {
         packId: constraints.packId,
-        seasonSlug: constraints.seasonSlug ?? 'season-1',
+        seasonSlug: constraints.seasonSlug!,
       })
       : null;
     const hasPackCatalog = constraints.packId
@@ -1290,13 +1293,21 @@ export class NoExplorationPolicyV1 implements ExplorationPolicy {
 export class CachedEvidenceRetrieverV1 implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getEvidenceForMovie(movieId: string): Promise<Array<{
+  async getEvidenceForMovie(movieId: string, query?: EvidenceRetrievalQuery): Promise<Array<{
     sourceName: string;
     url?: string;
     snippet: string;
     retrievedAt: string;
     provenance?: { retrievalMode: 'cache' | 'hybrid'; sourceType: 'packet' | 'external_reading' | 'chunk' };
   }>> {
+    if (!query?.seasonSlug || (query.requireSeasonContext && !query.packSlug)) {
+      console.error('RAG_MISSING_SEASON_CONTEXT', {
+        callerId: query?.callerId ?? 'recommendation:legacy-cache',
+        requireSeasonContext: query?.requireSeasonContext === true,
+        ...(query?.seasonSlug ? { missing: 'packSlug' } : {}),
+      });
+      return [];
+    }
     const evidence = await this.prisma.evidencePacket.findMany({ where: { movieId }, orderBy: { retrievedAt: 'desc' } });
     return packageEvidencePackets(
       evidence.map((item) => ({
@@ -1512,6 +1523,10 @@ export async function generateRecommendationBatchModern(
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const excludeRecentSkippedDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
   const packPrimaryGenre = options.packPrimaryGenre ?? 'horror';
+  const seasonSlug = options.seasonSlug;
+  if (!seasonSlug) {
+    throw new Error('Missing seasonSlug for modern recommendation retrieval');
+  }
   const preferredJourneyNode = options.journeyNode ?? (
     options.packId
       ? (await prisma.journeyProgress.findFirst({
@@ -1531,7 +1546,7 @@ export async function generateRecommendationBatchModern(
     prisma,
     userId,
     packId: options.packId,
-    seasonSlug: options.seasonSlug ?? 'season-1',
+    seasonSlug,
     preferredJourneyNode,
     targetCount,
     excludeRecentSkippedDays,
@@ -1564,7 +1579,7 @@ export async function generateRecommendationBatchModern(
     excludeRecentSkippedDays,
     packPrimaryGenre,
     packId: options.packId,
-    seasonSlug: options.seasonSlug ?? 'season-1',
+    seasonSlug,
     journeyNodeSlug: resolvedJourneyNode,
     minimumYear: resolvePackMinimumYearPreference(userProfile?.horrorDNA, options.packId ?? null),
   });
@@ -1577,7 +1592,7 @@ export async function generateRecommendationBatchModern(
   const rankedIds = await deps.reranker.rerank(userId, candidateIds, {
     targetCount,
     packId: options.packId ?? null,
-    seasonSlug: options.seasonSlug ?? 'season-1',
+    seasonSlug,
   });
   console.info('[recommendations.engine] modern rerank completed', {
     durationMs: elapsedMs(rerankStartedAt),
@@ -1655,9 +1670,12 @@ export async function generateRecommendationBatchModern(
       const retrievalQueryText = `${movie.title} ${resolvedJourneyNode} reception context`;
       const evidence = await deps.evidenceRetriever.getEvidenceForMovie(movie.id, {
         region: 'US',
-        seasonSlug: options.seasonSlug ?? 'season-1',
+        seasonSlug,
+        packSlug: options.packSlug ?? null,
         packId: options.packId ?? null,
         query: retrievalQueryText,
+        requireSeasonContext: true,
+        callerId: 'recommendation:modern',
       });
       const journeyNode = `${resolvedJourneyNode}#RANK_${rank}`;
       const ratings = movie.ratings;
@@ -1940,6 +1958,7 @@ export async function generateRecommendationBatch(
   const effectiveOptions: RecommendationEngineOptions = {
     ...options,
     packId: effectivePack.packId,
+    packSlug: effectivePack.packSlug,
     seasonSlug: effectivePack.seasonSlug,
     packPrimaryGenre: effectivePack.primaryGenre,
   };

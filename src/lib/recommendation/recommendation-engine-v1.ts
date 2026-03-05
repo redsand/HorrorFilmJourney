@@ -7,6 +7,7 @@ import {
   DeterministicStubStreamingProvider,
 } from '@/lib/streaming/streaming-provider';
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
+import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
 
 export type CandidateMovie = {
   id: string;
@@ -49,6 +50,7 @@ export type RecommendationEngineOptions = {
   targetCount?: number;
   packPrimaryGenre?: string;
   packId?: string | null;
+  packSlug?: string | null;
   seasonSlug?: string;
   journeyNode?: string;
 };
@@ -222,6 +224,9 @@ export async function generateRecommendationBatchV1(
   prisma: PrismaClient,
   options: RecommendationEngineOptions = {},
 ): Promise<RecommendationBatchResult> {
+  if (!options.seasonSlug) {
+    throw new Error('Missing seasonSlug for v1 recommendation evidence');
+  }
   const targetCount = options.targetCount ?? DEFAULT_TARGET_COUNT;
   const skipDays = options.excludeRecentSkippedDays ?? DEFAULT_SKIP_DAYS;
   const packPrimaryGenre = (options.packPrimaryGenre ?? 'horror').toLowerCase();
@@ -378,35 +383,23 @@ export async function generateRecommendationBatchV1(
 
 
 
-  const evidenceByMovieId = new Map<string, Array<{
-    sourceName: string;
-    url?: string;
-    snippet: string;
-    retrievedAt: string;
-    provenance?: {
-      retrievalMode: 'cache' | 'hybrid';
-      sourceType: 'packet' | 'external_reading' | 'chunk';
-    };
-  }>>();
-  const evidenceRows = await prisma.evidencePacket.findMany({
-    where: { movieId: { in: batch.items.map((item) => item.movie.id) } },
-    orderBy: { retrievedAt: 'desc' },
-    select: { movieId: true, sourceName: true, url: true, snippet: true, retrievedAt: true },
-  });
-  for (const row of evidenceRows) {
-    const list = evidenceByMovieId.get(row.movieId) ?? [];
-    list.push({
-      sourceName: row.sourceName,
-      ...(row.url ? { url: row.url } : {}),
-      snippet: row.snippet,
-      retrievedAt: row.retrievedAt.toISOString(),
-      provenance: {
-        retrievalMode: 'cache',
-        sourceType: 'packet',
-      },
-    });
-    evidenceByMovieId.set(row.movieId, list);
-  }
+  const evidenceRetriever = createConfiguredEvidenceRetriever(prisma);
+  const evidenceByMovieId = new Map(
+    await Promise.all(
+      batch.items.map(async (item) => {
+        const evidence = await evidenceRetriever.getEvidenceForMovie(item.movie.id, {
+          region: 'US',
+          seasonSlug: options.seasonSlug,
+          packSlug: options.packSlug ?? null,
+          packId: options.packId ?? null,
+          query: `${item.movie.title} reception context`,
+          requireSeasonContext: true,
+          callerId: 'recommendation:v1',
+        });
+        return [item.movie.id, evidence] as const;
+      }),
+    ),
+  );
   return {
     batchId: batch.id,
     cards: batch.items.map((item) => {

@@ -971,9 +971,12 @@ export async function GET(request: Request): Promise<Response> {
   const evidence = await evidenceRetriever.getEvidenceForMovie(movie.id, {
     region: 'US',
     seasonSlug: effectivePack.seasonSlug,
+    packSlug: effectivePack.packSlug,
     packId: effectivePack.packId,
     query: `${movie.title} production history reception influence`,
     includeExternalReadings: true,
+    requireSeasonContext: true,
+    callerId: 'api:companion',
     topK: 8,
   });
 

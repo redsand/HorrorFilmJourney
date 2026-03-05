@@ -38,7 +38,6 @@ async function main(): Promise<void> {
       packSlug: 'horror',
       taxonomyVersion,
       releaseId: published.releaseId,
-      overrideEnv: false,
     });
 
     console.log(`[season1.publish] published release=${published.releaseId} taxonomyVersion=${published.taxonomyVersion} runId=${published.runId}`);

@@ -16,7 +16,7 @@ import { applyGovernanceWithStats } from './governance';
 type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadingCuration'> & {
   evidenceChunk?: {
     findMany: (args: {
-      where: { document: { movieId: string } };
+      where: { document: { movieId: string; seasonSlug?: string } };
       orderBy: Array<{ updatedAt: 'desc' }>;
       take: number;
       select: {
@@ -25,6 +25,8 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
         createdAt: true;
         document: {
           select: {
+            id: true;
+            seasonSlug: true;
             sourceName: true;
             url: true;
           };
@@ -34,7 +36,7 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
       text: string;
       updatedAt?: Date;
       createdAt: Date;
-      document: { sourceName: string; url: string };
+      document: { id: string; seasonSlug: string | null; sourceName: string; url: string };
     }>>;
   };
 } & {
@@ -120,11 +122,70 @@ function withFallbackProvenance(
   }));
 }
 
+type IsolationDecision = {
+  continue: boolean;
+  callerId: string;
+};
+
+function ensureIsolationScope(query: EvidenceRetrievalQuery): IsolationDecision {
+  const callerId = query.callerId?.trim() || 'unknown-caller';
+  if (query.requireSeasonContext && query.seasonSlug && !query.packSlug) {
+    console.error('RAG_MISSING_SEASON_CONTEXT', {
+      callerId,
+      requireSeasonContext: true,
+      missing: 'packSlug',
+    });
+    return { continue: false, callerId };
+  }
+  if (query.seasonSlug) {
+    return { continue: true, callerId };
+  }
+  if (query.allowCrossSeason) {
+    console.warn('RAG_GLOBAL_SCOPE_ENABLED', {
+      callerId,
+      allowCrossSeason: true,
+    });
+    return { continue: true, callerId };
+  }
+  console.error('RAG_MISSING_SEASON_CONTEXT', {
+    callerId,
+    requireSeasonContext: query.requireSeasonContext === true,
+  });
+  return { continue: false, callerId };
+}
+
+function enforceSeasonIsolationContract(
+  evidence: EvidencePacketVM[],
+  query: EvidenceRetrievalQuery,
+  callerId: string,
+): EvidencePacketVM[] {
+  if (!query.seasonSlug) {
+    return evidence;
+  }
+  return evidence.filter((item) => {
+    const itemSeasonSlug = item.provenance?.seasonSlug;
+    if (!itemSeasonSlug || itemSeasonSlug === query.seasonSlug) {
+      return true;
+    }
+    console.error('RAG_SEASON_CONTAMINATION', {
+      querySeasonSlug: query.seasonSlug,
+      chunkDocumentId: item.provenance?.documentId ?? null,
+      chunkSeasonSlug: itemSeasonSlug,
+      callerId,
+    });
+    return false;
+  });
+}
+
 class CachedEvidenceRetriever implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaEvidenceClient) {}
 
   async getEvidenceForMovie(movieId: string, rawQuery?: string | EvidenceRetrievalQuery): Promise<EvidencePacketVM[]> {
     const query = normalizeEvidenceRetrievalQuery(rawQuery);
+    const isolation = ensureIsolationScope(query);
+    if (!isolation.continue) {
+      return [];
+    }
     const evidence = await this.prisma.evidencePacket.findMany({
       where: { movieId },
       orderBy: { retrievedAt: 'desc' },
@@ -136,7 +197,7 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
         retrievedAt: true,
       },
     });
-    return withCachePacketProvenance(packageEvidencePackets(
+    const cacheEvidence = withCachePacketProvenance(packageEvidencePackets(
       evidence.map((item) => ({
         sourceName: item.sourceName,
         ...(item.url ? { url: item.url } : {}),
@@ -145,6 +206,7 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
       })),
       resolveTopK(query),
     ));
+    return enforceSeasonIsolationContract(cacheEvidence, query, isolation.callerId);
   }
 }
 
@@ -161,6 +223,14 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
     candidateCount: number;
     duplicateDrops: number;
   }> {
+    const isolation = ensureIsolationScope(input.query);
+    if (!isolation.continue) {
+      return {
+        evidence: [],
+        candidateCount: 0,
+        duplicateDrops: 0,
+      };
+    }
     const topK = resolveTopK(input.query);
     const queryText = defaultQueryText(input.query);
     const includeExternalReadings = input.query.includeExternalReadings ?? true;
@@ -210,6 +280,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         provenance: {
           retrievalMode: 'hybrid',
           sourceType: 'external_reading',
+          seasonSlug: input.query.seasonSlug,
         },
       }))
       : [];
@@ -219,6 +290,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         where: {
           document: {
             movieId: input.movieId,
+            ...(input.query.seasonSlug ? { seasonSlug: input.query.seasonSlug } : {}),
           },
         },
         orderBy: [{ updatedAt: 'desc' }],
@@ -229,6 +301,8 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
           createdAt: true,
           document: {
             select: {
+              id: true,
+              seasonSlug: true,
               sourceName: true,
               url: true,
             },
@@ -244,6 +318,8 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
       provenance: {
         retrievalMode: 'hybrid',
         sourceType: 'chunk',
+        documentId: item.document.id,
+        ...(item.document.seasonSlug ? { seasonSlug: item.document.seasonSlug } : {}),
       },
     }));
 
@@ -264,6 +340,10 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
       const provenance: EvidenceProvenance = {
         retrievalMode: 'hybrid',
         sourceType: item.provenance?.sourceType ?? 'packet',
+        ...(item.provenance?.documentId ? { documentId: item.provenance.documentId } : {}),
+        ...(item.provenance?.seasonSlug ? { seasonSlug: item.provenance.seasonSlug } : {}),
+        ...(item.provenance?.packId ? { packId: item.provenance.packId } : {}),
+        ...(item.provenance?.taxonomyVersion ? { taxonomyVersion: item.provenance.taxonomyVersion } : {}),
         rank: index + 1,
         lexicalScore: item.lexicalScore,
         semanticScore: item.semanticScore,
@@ -282,7 +362,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
     }), topK);
 
     return {
-      evidence,
+      evidence: enforceSeasonIsolationContract(evidence, input.query, isolation.callerId),
       candidateCount: corpus.length,
       duplicateDrops: governed.duplicateDrops,
     };

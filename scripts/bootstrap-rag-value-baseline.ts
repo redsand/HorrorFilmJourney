@@ -84,7 +84,10 @@ async function generateRuns(movieId: string, runs: number): Promise<void> {
       // eslint-disable-next-line no-await-in-loop
       await retriever.getEvidenceForMovie(movieId, {
         seasonSlug: 'season-1',
+        packSlug: 'horror',
         query: `rag baseline quality check ${i + 1}`,
+        requireSeasonContext: true,
+        callerId: 'script:bootstrap-rag-value-baseline',
         topK: 5,
       });
     }

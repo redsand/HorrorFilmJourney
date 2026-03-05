@@ -55,15 +55,12 @@ export function shouldFailPublish(lossRatePct: number, thresholdPct: number, ove
   return lossRatePct > thresholdPct && !override;
 }
 
-export function classifyMissingReason(movie: { posterUrl?: string | null; runtime?: number | null; castTop?: string | string[] | null; ratings?: Array<{ source: string; value: number }> } | null): string {
+export function classifyMissingReason(movie: { posterUrl?: string | null; castTop?: string | string[] | null; ratings?: Array<{ source: string; value: number }> } | null): string {
   if (!movie) {
     return 'unresolved-tmdb';
   }
   if (!movie.posterUrl) {
     return 'eligibility-gate:poster';
-  }
-  if (!Number.isFinite(movie.runtime ?? NaN)) {
-    return 'eligibility-gate:runtime';
   }
   const castCount = Array.isArray(movie.castTop) ? movie.castTop.length : (typeof movie.castTop === 'string' && movie.castTop.length > 0 ? 1 : 0);
   if (castCount === 0) {
@@ -213,7 +210,7 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
       const alt = nodeMovies.find((entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug !== authority.nodeSlug);
       const movie = await prisma.movie.findUnique({
         where: { tmdbId: authority.tmdbId },
-        select: { posterUrl: true, runtime: true, castTop: true, ratings: { select: { source: true; value: true } } },
+    select: { posterUrl: true, castTop: true, ratings: { select: { source: true, value: true } } },
       });
       if (alt) {
         nodeDriftCount += 1;
@@ -290,7 +287,8 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
     }
   }
 
-  const lossRatePercent = authorityCount === 0 ? 0 : (missingInReleaseCount / authorityCount) * 100;
+  const totalLoss = missingInReleaseCount + missingInDbCount;
+  const lossRatePercent = authorityCount === 0 ? 0 : (totalLoss / authorityCount) * 100;
 
   return {
     seasonSlug: input.seasonSlug,

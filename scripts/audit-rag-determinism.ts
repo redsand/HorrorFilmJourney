@@ -163,8 +163,11 @@ async function run(): Promise<void> {
         const evidence = await retriever.getEvidenceForMovie(movie.id, {
           query: fixture.question,
           seasonSlug: fixture.seasonSlug,
+          packSlug: fixture.packSlug,
           packId,
           includeExternalReadings: true,
+          requireSeasonContext: true,
+          callerId: 'script:audit-rag-determinism',
           topK: 8,
         });
         const details = await collectEvidenceDetails(evidence);

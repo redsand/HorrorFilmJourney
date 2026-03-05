@@ -22,8 +22,11 @@ beforeAll(() => {
 
 beforeEach(async () => {
   delete process.env.REC_ENGINE_MODE;
+  delete process.env.EVIDENCE_RETRIEVAL_MODE;
+  delete process.env.EVIDENCE_RETRIEVAL_REQUIRE_INDEX;
   process.env.SEASONS_PACKS_ENABLED = 'true';
   await prisma.recommendationDiagnostics.deleteMany();
+  await prisma.retrievalRun.deleteMany();
   await prisma.nodeMovie.deleteMany();
   await prisma.journeyNode.deleteMany();
   await prisma.evidencePacket.deleteMany();
@@ -214,5 +217,52 @@ describe('RecommendationEngine modern mode', () => {
     process.env.REC_ENGINE_MODE = 'modern';
     const batch = await generateRecommendationBatch(user.id, prisma);
     expect(batch.cards).toHaveLength(0);
+  });
+
+  it('passes season and pack scope into retrieval runs for modern recommendation evidence', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Retrieval Scope User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: pack.id,
+      },
+    });
+    const movies = await Promise.all(
+      [9401, 9402, 9403, 9404, 9405].map((tmdbId, i) =>
+        prisma.movie.create({
+          data: { tmdbId, title: `Scope ${tmdbId}`, year: 1970 + i, posterUrl: `https://img/${tmdbId}.jpg`, genres: ['horror'] },
+        }),
+      ),
+    );
+    await Promise.all(movies.map((movie) => addRatings(movie.id)));
+    await prisma.evidencePacket.createMany({
+      data: movies.map((movie, index) => ({
+        movieId: movie.id,
+        sourceName: `Scope Source ${index + 1}`,
+        url: `https://example.test/scope-${index + 1}`,
+        snippet: `Scoped packet ${index + 1}`,
+      })),
+    });
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    process.env.EVIDENCE_RETRIEVAL_MODE = 'hybrid';
+    process.env.EVIDENCE_RETRIEVAL_REQUIRE_INDEX = 'false';
+    await generateRecommendationBatch(user.id, prisma);
+
+    const runs = await prisma.retrievalRun.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: { seasonSlug: true, packId: true, queryText: true },
+    });
+    expect(runs.length).toBeGreaterThan(0);
+    expect(runs.every((run) => run.seasonSlug === 'season-1')).toBe(true);
+    expect(runs.every((run) => run.packId === pack.id)).toBe(true);
+    expect(runs.every((run) => typeof run.queryText === 'string' && run.queryText.length > 0)).toBe(true);
   });
 });

@@ -1,0 +1,109 @@
+{
+  "callSites": [
+    {
+      "path": "src/app/api/companion/route.ts:971",
+      "symbol": "GET /api/companion -> evidenceRetriever.getEvidenceForMovie",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": true,
+      "risk": "ok",
+      "notes": "Season-aware endpoint passes seasonSlug+packId with requireSeasonContext=true and callerId."
+    },
+    {
+      "path": "src/lib/recommendation/recommendation-engine.ts:1663",
+      "symbol": "generateRecommendationBatchModern -> deps.evidenceRetriever.getEvidenceForMovie",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": true,
+      "risk": "ok",
+      "notes": "Modern recommendation evidence now enforces season context and callerId."
+    },
+    {
+      "path": "src/lib/recommendation/recommendation-engine-v1.ts:389",
+      "symbol": "generateRecommendationBatchV1 -> evidenceRetriever.getEvidenceForMovie",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": true,
+      "risk": "ok",
+      "notes": "Legacy v1 now uses configured retriever contract rather than direct evidencePacket query."
+    },
+    {
+      "path": "scripts/audit-rag-determinism.ts:163",
+      "symbol": "run() -> retriever.getEvidenceForMovie",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": true,
+      "risk": "ok",
+      "notes": "Script is explicitly season-scoped with requireSeasonContext=true."
+    },
+    {
+      "path": "scripts/bootstrap-rag-value-baseline.ts:85",
+      "symbol": "generateRuns() -> retriever.getEvidenceForMovie",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": false,
+      "risk": "ok",
+      "notes": "Baseline script is season-scoped; pack not provided by fixture design."
+    },
+    {
+      "path": "src/lib/recommendation/recommendation-engine.ts:1296",
+      "symbol": "CachedEvidenceRetrieverV1.getEvidenceForMovie",
+      "seasonContextAvailable": false,
+      "passesSeasonSlug": false,
+      "passesPack": false,
+      "risk": "ok",
+      "notes": "Legacy helper now logs RAG_MISSING_SEASON_CONTEXT and returns empty when season context is absent."
+    },
+    {
+      "path": "src/lib/context/build-season-reason-panel.ts:428",
+      "symbol": "seasonBuilders map",
+      "seasonContextAvailable": true,
+      "passesSeasonSlug": true,
+      "passesPack": false,
+      "risk": "hardcoded-season-branch",
+      "notes": "Hardcoded season dispatch in explainability module (non-retrieval path)."
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "RAG-ISO-001",
+      "priority": "P0",
+      "summary": "Keep retriever season-isolation contract mandatory for season-aware callers and preserve explicit global scope flagging.",
+      "files": [
+        "src/lib/evidence/retrieval/index.ts",
+        "src/app/api/companion/route.ts",
+        "src/lib/recommendation/recommendation-engine.ts",
+        "src/lib/recommendation/recommendation-engine-v1.ts"
+      ]
+    },
+    {
+      "id": "RAG-ISO-002",
+      "priority": "P1",
+      "summary": "Add season/pack metadata to packet-level evidence storage so contamination assertions can be strict for all source types.",
+      "files": [
+        "prisma/schema.prisma",
+        "src/lib/evidence/retrieval/index.ts",
+        "src/app/api/evidence/upsert/route.ts"
+      ]
+    },
+    {
+      "id": "RAG-ISO-003",
+      "priority": "P2",
+      "summary": "Propagate taxonomyVersion into retrieval query and provenance for compatibility checks without broadening season scope.",
+      "files": [
+        "src/lib/evidence/evidence-retriever.ts",
+        "src/lib/evidence/retrieval/index.ts",
+        "src/lib/recommendation/recommendation-engine.ts"
+      ]
+    },
+    {
+      "id": "RAG-ISO-004",
+      "priority": "P2",
+      "summary": "Move explainability season dispatch from hardcoded branches to a season registry/plugin table.",
+      "files": [
+        "src/lib/context/build-season-reason-panel.ts",
+        "src/lib/context/build-film-context-explanation.ts"
+      ]
+    }
+  ]
+}

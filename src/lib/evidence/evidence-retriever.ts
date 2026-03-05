@@ -1,6 +1,10 @@
 export type EvidenceProvenance = {
   retrievalMode: 'cache' | 'hybrid';
   sourceType: 'packet' | 'external_reading' | 'chunk';
+  documentId?: string;
+  seasonSlug?: string;
+  packId?: string;
+  taxonomyVersion?: string;
   fallbackUsed?: boolean;
   fallbackReason?: 'hybrid-error' | 'empty-hybrid';
   rank?: number;
@@ -23,9 +27,14 @@ export type EvidenceRetrievalQuery = {
   region?: string;
   seasonSlug?: string;
   packId?: string | null;
+  packSlug?: string | null;
+  taxonomyVersion?: string | null;
   query?: string;
   topK?: number;
   includeExternalReadings?: boolean;
+  allowCrossSeason?: boolean;
+  requireSeasonContext?: boolean;
+  callerId?: string;
 };
 
 export function normalizeEvidenceRetrievalQuery(

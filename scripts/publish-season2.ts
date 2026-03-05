@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { createSeasonNodeReleaseFromNodeMovie, publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
+import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
 
 type CliOptions = {
   apply: boolean;
@@ -121,6 +122,13 @@ async function main(): Promise<void> {
         mode: 'curation-first',
         assignmentTotal,
       },
+    });
+
+    await enforceSnapshotGuardrail(prisma, {
+      seasonSlug: 'season-2',
+      packSlug: 'cult-classics',
+      taxonomyVersion,
+      releaseId: release.releaseId,
     });
 
     const published = await publishSeasonNodeRelease(prisma, {

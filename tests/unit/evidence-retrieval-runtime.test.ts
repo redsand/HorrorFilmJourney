@@ -144,4 +144,73 @@ describe('evidence retrieval runtime', () => {
       }),
     }));
   });
+
+  it('returns no evidence and logs when season context is missing without explicit global scope', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const evidenceFindMany = vi.fn().mockResolvedValue([
+      {
+        sourceName: 'Wikipedia',
+        url: 'https://wikipedia.test/film',
+        snippet: 'Should never load without season scope.',
+        retrievedAt: new Date('2026-01-01T00:00:00.000Z'),
+      },
+    ]);
+    const prisma = {
+      evidencePacket: { findMany: evidenceFindMany },
+      externalReadingCuration: { findMany: vi.fn().mockResolvedValue([]) },
+    } as const;
+
+    const retriever = createConfiguredEvidenceRetriever(prisma as never);
+    const result = await retriever.getEvidenceForMovie('movie_1', {
+      query: 'missing scope',
+      callerId: 'test:missing-season',
+    });
+
+    expect(result).toEqual([]);
+    expect(evidenceFindMany).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith('RAG_MISSING_SEASON_CONTEXT', expect.objectContaining({
+      callerId: 'test:missing-season',
+    }));
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('drops cross-season chunks and logs contamination when a candidate season mismatches the query season', async () => {
+    process.env.EVIDENCE_RETRIEVAL_MODE = 'hybrid';
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const prisma = {
+      evidencePacket: { findMany: vi.fn().mockResolvedValue([]) },
+      externalReadingCuration: { findMany: vi.fn().mockResolvedValue([]) },
+      evidenceChunk: {
+        findMany: vi.fn().mockResolvedValue([
+          {
+            text: 'Wrong-season evidence should be dropped.',
+            updatedAt: new Date('2026-01-02T00:00:00.000Z'),
+            createdAt: new Date('2026-01-02T00:00:00.000Z'),
+            document: {
+              id: 'doc_wrong',
+              seasonSlug: 'season-2',
+              sourceName: 'Cross Season Source',
+              url: 'https://example.test/wrong',
+            },
+          },
+        ]),
+      },
+    } as const;
+
+    const retriever = createConfiguredEvidenceRetriever(prisma as never);
+    const result = await retriever.getEvidenceForMovie('movie_1', {
+      seasonSlug: 'season-1',
+      query: 'season isolation',
+      callerId: 'test:contamination',
+    });
+
+    expect(result).toEqual([]);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('RAG_SEASON_CONTAMINATION', expect.objectContaining({
+      querySeasonSlug: 'season-1',
+      chunkDocumentId: 'doc_wrong',
+      chunkSeasonSlug: 'season-2',
+      callerId: 'test:contamination',
+    }));
+    consoleErrorSpy.mockRestore();
+  });
 });
