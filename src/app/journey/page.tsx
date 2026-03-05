@@ -438,18 +438,6 @@ export default async function HomePage({ searchParams }: { searchParams?: { watc
 
   return (
     <main className="flex flex-1 flex-col gap-4 pb-24 pt-16">
-      {experience?.state !== 'ONBOARDING_NEEDED' && experience?.state !== 'PACK_SELECTION_NEEDED' ? (
-        <Card>
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
-              <p className="mt-1 text-sm text-[var(--text-muted)]">Open the full timeline view from your profile.</p>
-            </div>
-            <Link href="/profile/journey-map"><Button variant="secondary">Open Map</Button></Link>
-          </div>
-        </Card>
-      ) : null}
-
       {experience?.state === 'PACK_SELECTION_NEEDED' && (
         <Card>
           <h2 className="text-lg font-semibold">Select Your Pack</h2>

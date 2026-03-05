@@ -9,15 +9,16 @@ export type NextInJourneyData = {
 
 type NextInJourneyProps = {
   data: NextInJourneyData | null;
+  plain?: boolean;
 };
 
-export function NextInJourney({ data }: NextInJourneyProps) {
+export function NextInJourney({ data, plain = false }: NextInJourneyProps) {
   if (!data || (data.nextCore.length === 0 && data.nextExtended.length === 0)) {
     return null;
   }
 
   return (
-    <section className="space-y-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
+    <section className={plain ? 'space-y-2 pt-3' : 'space-y-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3'}>
       <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Next in this Journey</p>
       <p className="text-sm text-[var(--text-muted)]">{data.reason}</p>
       {data.nextCore.length > 0 ? (

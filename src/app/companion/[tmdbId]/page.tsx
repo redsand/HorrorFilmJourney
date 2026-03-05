@@ -347,56 +347,70 @@ export default async function CompanionPage({
               </div>
 
               <FurtherReadingSection externalReadings={payload.externalReadings} />
-              <CinematicContextCard data={filmContext.data?.context ?? null} />
-              {filmContext.data?.reasonPanel ? (
-                <ReasonPanel {...filmContext.data.reasonPanel} />
-              ) : null}
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
-                <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
-                <p className="mt-1 text-sm text-[var(--text-muted)]">See the full timeline and movement progression from your profile.</p>
-                <Link className="mt-2 inline-flex text-xs text-[var(--text)] underline-offset-2 hover:underline" href="/profile/journey-map">
-                  Open Journey Map
-                </Link>
-              </div>
-              <NextInJourney data={nextInJourney.data} />
-
-              {nodeMovies.data ? (
-                <div className="space-y-2 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3">
-                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Core Journey</p>
-                  {nodeMovies.data.core.length > 0 ? (
-                    <ul className="space-y-1 text-sm">
-                      {nodeMovies.data.core.slice(0, 6).map((movie) => (
-                        <li key={`core-${movie.tmdbId}`}>
-                          {movie.title} {movie.year ? `(${movie.year})` : ''}
-                          {movie.watchReason ? (
-                            <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-[var(--text-muted)]">No core titles available.</p>
-                  )}
-                  {nodeMovies.data.extended.length > 0 ? (
-                    <details className="rounded border border-[var(--border)] px-2 py-1">
-                      <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                        Deep Cuts ({nodeMovies.data.extended.length})
-                      </summary>
-                      <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
-                        {nodeMovies.data.extended.slice(0, 6).map((movie) => (
-                          <li key={`extended-${movie.tmdbId}`}>
-                            {movie.title} {movie.year ? `(${movie.year})` : ''}
-                            {movie.watchReason ? (
-                              <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
-                            ) : null}
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  ) : null}
-                </div>
-              ) : null}
             </div>
+          </Card>
+
+          <CinematicContextCard data={filmContext.data?.context ?? null} />
+          {filmContext.data?.reasonPanel ? (
+            <ReasonPanel {...filmContext.data.reasonPanel} />
+          ) : null}
+          {nextInJourney.data ? (
+            <Card>
+              <NextInJourney data={nextInJourney.data} plain />
+            </Card>
+          ) : null}
+          {nodeMovies.data ? (
+            <Card className="space-y-2">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Core Journey</p>
+              {nodeMovies.data.core.length > 0 ? (
+                <ul className="space-y-1 text-sm">
+                  {nodeMovies.data.core.slice(0, 6).map((movie) => (
+                    <li key={`core-${movie.tmdbId}`}>
+                      <Link
+                        className="text-[var(--text)] underline-offset-2 hover:underline"
+                        href={`/companion/${movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+                      >
+                        {movie.title} {movie.year ? `(${movie.year})` : ''}
+                      </Link>
+                      {movie.watchReason ? (
+                        <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-[var(--text-muted)]">No core titles available.</p>
+              )}
+              {nodeMovies.data.extended.length > 0 ? (
+                <details className="px-0 py-1">
+                  <summary className="cursor-pointer text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                    Deep Cuts ({nodeMovies.data.extended.length})
+                  </summary>
+                  <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
+                    {nodeMovies.data.extended.slice(0, 6).map((movie) => (
+                      <li key={`extended-${movie.tmdbId}`}>
+                        <Link
+                          className="text-[var(--text)] underline-offset-2 hover:underline"
+                          href={`/companion/${movie.tmdbId}?spoilerPolicy=NO_SPOILERS`}
+                        >
+                          {movie.title} {movie.year ? `(${movie.year})` : ''}
+                        </Link>
+                        {movie.watchReason ? (
+                          <p className="text-xs text-[var(--text-muted)]">{movie.watchReason}</p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+            </Card>
+          ) : null}
+          <Card className="space-y-2">
+            <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Journey Map</p>
+            <p className="text-sm text-[var(--text-muted)]">See the full timeline and movement progression from your profile.</p>
+            <Link className="inline-flex text-xs text-[var(--text)] underline-offset-2 hover:underline" href="/profile/journey-map">
+              Open Journey Map
+            </Link>
           </Card>
 
           {[ 

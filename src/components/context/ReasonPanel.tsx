@@ -11,10 +11,12 @@ export function ReasonPanel({
   badges,
   scoreBlock,
   links,
-}: ReasonPanelProps) {
+  asSection = false,
+  sectionTone = 'framed',
+}: ReasonPanelProps & { asSection?: boolean; sectionTone?: 'framed' | 'plain' }) {
   const hasLinks = Array.isArray(links) && links.length > 0;
-  return (
-    <Card className="space-y-3">
+  const content = (
+    <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-base font-semibold">{reasonTitle}</p>
         <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{seasonSlug}</p>
@@ -54,6 +56,18 @@ export function ReasonPanel({
           </div>
         </div>
       ) : null}
-    </Card>
+    </>
   );
+
+  return asSection
+    ? (
+      <section className={sectionTone === 'plain' ? 'space-y-3 pt-3' : 'space-y-3 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-3'}>
+        {content}
+      </section>
+    )
+    : (
+      <Card className="space-y-3">
+        {content}
+      </Card>
+    );
 }
