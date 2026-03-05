@@ -53,6 +53,10 @@ describe('evidence retrieval runtime', () => {
 
     expect(result.length).toBe(3);
     expect(result.some((item) => item.sourceName === 'Criterion')).toBe(true);
+    expect(result.every((item) => item.provenance?.retrievalMode === 'hybrid')).toBe(true);
+    expect(result.some((item) => item.provenance?.sourceType === 'packet')).toBe(true);
+    expect(result.some((item) => item.provenance?.sourceType === 'external_reading')).toBe(true);
+    expect(result.some((item) => item.provenance?.sourceType === 'chunk')).toBe(true);
     expect(externalFindMany).toHaveBeenCalledWith(expect.objectContaining({
       where: expect.objectContaining({
         movieId: 'movie_1',
@@ -89,5 +93,55 @@ describe('evidence retrieval runtime', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]?.sourceName).toBe('Wikipedia');
+    expect(result[0]?.provenance).toEqual(expect.objectContaining({
+      retrievalMode: 'cache',
+      sourceType: 'packet',
+      fallbackUsed: true,
+      fallbackReason: 'hybrid-error',
+    }));
+  });
+
+  it('shadow mode returns cache evidence while still executing hybrid retrieval diagnostics', async () => {
+    process.env.EVIDENCE_RETRIEVAL_MODE = 'shadow';
+    const evidenceFindMany = vi.fn().mockResolvedValue([
+      {
+        sourceName: 'Wikipedia',
+        url: 'https://wikipedia.test/film',
+        snippet: 'Cache packet result.',
+        retrievedAt: new Date('2026-01-01T00:00:00.000Z'),
+      },
+    ]);
+    const externalFindMany = vi.fn().mockResolvedValue([
+      {
+        sourceName: 'Criterion',
+        url: 'https://criterion.test/essay',
+        articleTitle: 'Hybrid-only context',
+        publicationDate: new Date('2026-01-01T00:00:00.000Z'),
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      },
+    ]);
+    const retrievalRunCreate = vi.fn().mockResolvedValue({ id: 'shadow_run_1' });
+    const prisma = {
+      evidencePacket: { findMany: evidenceFindMany },
+      externalReadingCuration: { findMany: externalFindMany },
+      retrievalRun: { create: retrievalRunCreate },
+    } as const;
+
+    const retriever = createConfiguredEvidenceRetriever(prisma as never);
+    const result = await retriever.getEvidenceForMovie('movie_shadow', {
+      seasonSlug: 'season-1',
+      query: 'shadow validation',
+      topK: 5,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.sourceName).toBe('Wikipedia');
+    expect(result[0]?.provenance?.retrievalMode).toBe('cache');
+    expect(externalFindMany).toHaveBeenCalledTimes(1);
+    expect(retrievalRunCreate).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({
+        mode: 'shadow',
+      }),
+    }));
   });
 });

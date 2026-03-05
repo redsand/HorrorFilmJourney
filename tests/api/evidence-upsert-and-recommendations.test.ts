@@ -121,7 +121,14 @@ describe('evidence upsert + recommendations evidence propagation', () => {
     expect(response.status).toBe(200);
     const body = await response.json();
 
-    const targetCard = (body.data.cards as Array<{ movie: { tmdbId: number }; evidence: Array<{ sourceName: string; snippet: string }> }>).find(
+    const targetCard = (body.data.cards as Array<{
+      movie: { tmdbId: number };
+      evidence: Array<{
+        sourceName: string;
+        snippet: string;
+        provenance?: { retrievalMode: 'cache' | 'hybrid'; sourceType: 'packet' | 'external_reading' | 'chunk' };
+      }>;
+    }>).find(
       (card) => card.movie.tmdbId === targetTmdbId,
     );
 
@@ -129,5 +136,9 @@ describe('evidence upsert + recommendations evidence propagation', () => {
     expect(Array.isArray(targetCard?.evidence)).toBe(true);
     expect(targetCard?.evidence[0]?.sourceName).toBe('Wikipedia');
     expect(targetCard?.evidence[0]?.snippet).toBe('Evidence snippet text');
+    expect(targetCard?.evidence[0]?.provenance).toEqual({
+      retrievalMode: 'cache',
+      sourceType: 'packet',
+    });
   });
 });

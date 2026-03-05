@@ -1290,14 +1290,24 @@ export class NoExplorationPolicyV1 implements ExplorationPolicy {
 export class CachedEvidenceRetrieverV1 implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getEvidenceForMovie(movieId: string): Promise<Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>> {
+  async getEvidenceForMovie(movieId: string): Promise<Array<{
+    sourceName: string;
+    url?: string;
+    snippet: string;
+    retrievedAt: string;
+    provenance?: { retrievalMode: 'cache' | 'hybrid'; sourceType: 'packet' | 'external_reading' | 'chunk' };
+  }>> {
     const evidence = await this.prisma.evidencePacket.findMany({ where: { movieId }, orderBy: { retrievedAt: 'desc' } });
     return packageEvidencePackets(
       evidence.map((item) => ({
-      sourceName: item.sourceName,
-      ...(item.url ? { url: item.url } : {}),
-      snippet: item.snippet,
-      retrievedAt: item.retrievedAt.toISOString(),
+        sourceName: item.sourceName,
+        ...(item.url ? { url: item.url } : {}),
+        snippet: item.snippet,
+        retrievedAt: item.retrievedAt.toISOString(),
+        provenance: {
+          retrievalMode: 'cache',
+          sourceType: 'packet',
+        },
       })),
     );
   }

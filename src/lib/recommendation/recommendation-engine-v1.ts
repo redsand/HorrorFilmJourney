@@ -27,7 +27,16 @@ type RecommendationCard = {
   movie: CandidateMovie;
   ratings: CandidateMovie['ratings'];
   narrative: RecommendationCardNarrative;
-  evidence: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>;
+  evidence: Array<{
+    sourceName: string;
+    url?: string;
+    snippet: string;
+    retrievedAt: string;
+    provenance?: {
+      retrievalMode: 'cache' | 'hybrid';
+      sourceType: 'packet' | 'external_reading' | 'chunk';
+    };
+  }>;
 };
 
 export type RecommendationBatchResult = {
@@ -369,7 +378,16 @@ export async function generateRecommendationBatchV1(
 
 
 
-  const evidenceByMovieId = new Map<string, Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>>();
+  const evidenceByMovieId = new Map<string, Array<{
+    sourceName: string;
+    url?: string;
+    snippet: string;
+    retrievedAt: string;
+    provenance?: {
+      retrievalMode: 'cache' | 'hybrid';
+      sourceType: 'packet' | 'external_reading' | 'chunk';
+    };
+  }>>();
   const evidenceRows = await prisma.evidencePacket.findMany({
     where: { movieId: { in: batch.items.map((item) => item.movie.id) } },
     orderBy: { retrievedAt: 'desc' },
@@ -382,6 +400,10 @@ export async function generateRecommendationBatchV1(
       ...(row.url ? { url: row.url } : {}),
       snippet: row.snippet,
       retrievedAt: row.retrievedAt.toISOString(),
+      provenance: {
+        retrievalMode: 'cache',
+        sourceType: 'packet',
+      },
     });
     evidenceByMovieId.set(row.movieId, list);
   }

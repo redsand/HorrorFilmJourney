@@ -171,6 +171,10 @@ describe('GET /api/companion', () => {
     ).toBe(true);
     expect(body.data.spoilerPolicy).toBe('NO_SPOILERS');
     expect(Array.isArray(body.data.evidence)).toBe(true);
+    expect(body.data.evidence[0]?.provenance).toEqual(expect.objectContaining({
+      retrievalMode: 'cache',
+      sourceType: 'packet',
+    }));
     expect(body.data.externalReadings).toEqual([]);
     expect(body.data.streaming).toEqual({ region: 'US', offers: [] });
   });

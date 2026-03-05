@@ -1,3 +1,4 @@
+import type { EvidencePacketVM } from '@/lib/evidence/evidence-retriever';
 import type { RetrievalEvidenceCandidate } from './types';
 
 const RRF_K = 60;
@@ -10,7 +11,7 @@ function rankBy(values: number[]): number[] {
 }
 
 export function reciprocalRankFusion(
-  items: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>,
+  items: EvidencePacketVM[],
   lexicalScores: number[],
   semanticScores: number[],
 ): RetrievalEvidenceCandidate[] {
@@ -33,4 +34,3 @@ export function reciprocalRankFusion(
     };
   });
 }
-

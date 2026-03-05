@@ -50,6 +50,21 @@ const zEvidenceItem = z
     url: z.string().optional(),
     snippet: z.string(),
     retrievedAt: z.string(),
+    provenance: z
+      .object({
+        retrievalMode: z.enum(['cache', 'hybrid']),
+        sourceType: z.enum(['packet', 'external_reading', 'chunk']),
+        fallbackUsed: z.boolean().optional(),
+        fallbackReason: z.enum(['hybrid-error', 'empty-hybrid']).optional(),
+        rank: z.number().int().positive().optional(),
+        lexicalScore: z.number().optional(),
+        semanticScore: z.number().optional(),
+        fusedScore: z.number().optional(),
+        rankLexical: z.number().int().positive().optional(),
+        rankSemantic: z.number().int().positive().optional(),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 

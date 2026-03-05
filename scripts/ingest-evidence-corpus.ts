@@ -1,22 +1,34 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { prisma } from '../src/lib/prisma.ts';
 import {
+  createEmptyEvidenceIngestionCheckpoint,
+  filterPendingEvidenceDocuments,
   ingestEvidenceDocuments,
+  markEvidenceDocumentInCheckpoint,
   type EvidenceIngestDocumentInput,
+  type EvidenceIngestionCheckpoint,
 } from '../src/lib/evidence/ingestion/index.ts';
 
 type IngestFileShape = {
   documents?: EvidenceIngestDocumentInput[];
 };
 
-function parseArgs(): { inputPath: string } {
+function parseArgs(): { inputPath: string; checkpointPath?: string; resume: boolean } {
   const args = process.argv.slice(2);
   const inputFlagIndex = args.findIndex((arg) => arg === '--input');
   if (inputFlagIndex < 0 || !args[inputFlagIndex + 1]) {
     throw new Error('Missing required --input <path> argument');
   }
-  return { inputPath: resolve(process.cwd(), args[inputFlagIndex + 1]!) };
+  const checkpointFlagIndex = args.findIndex((arg) => arg === '--checkpoint');
+  const checkpointPath = checkpointFlagIndex >= 0 && args[checkpointFlagIndex + 1]
+    ? resolve(process.cwd(), args[checkpointFlagIndex + 1]!)
+    : undefined;
+  return {
+    inputPath: resolve(process.cwd(), args[inputFlagIndex + 1]!),
+    checkpointPath,
+    resume: args.includes('--resume'),
+  };
 }
 
 function loadDocuments(inputPath: string): EvidenceIngestDocumentInput[] {
@@ -29,16 +41,57 @@ function loadDocuments(inputPath: string): EvidenceIngestDocumentInput[] {
   return docs;
 }
 
+function loadCheckpoint(checkpointPath: string): EvidenceIngestionCheckpoint {
+  if (!existsSync(checkpointPath)) {
+    return createEmptyEvidenceIngestionCheckpoint();
+  }
+
+  const raw = readFileSync(checkpointPath, 'utf8');
+  const parsed = JSON.parse(raw) as Partial<EvidenceIngestionCheckpoint>;
+  return {
+    version: 1,
+    updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : new Date(0).toISOString(),
+    completed: parsed.completed && typeof parsed.completed === 'object'
+      ? parsed.completed as Record<string, string>
+      : {},
+  };
+}
+
+function writeCheckpoint(checkpointPath: string, checkpoint: EvidenceIngestionCheckpoint): void {
+  mkdirSync(dirname(checkpointPath), { recursive: true });
+  writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2), 'utf8');
+}
+
 async function run(): Promise<void> {
-  const { inputPath } = parseArgs();
+  const { inputPath, checkpointPath, resume } = parseArgs();
   const documents = loadDocuments(inputPath);
-  const result = await ingestEvidenceDocuments(prisma, documents);
+
+  let checkpoint = checkpointPath ? loadCheckpoint(checkpointPath) : createEmptyEvidenceIngestionCheckpoint();
+  const { pending, skipped } = resume
+    ? filterPendingEvidenceDocuments(documents, checkpoint)
+    : { pending: documents, skipped: [] as EvidenceIngestDocumentInput[] };
+
+  let documentsProcessed = 0;
+  let chunksWritten = 0;
+  for (const document of pending) {
+    // Process one-at-a-time so checkpoint writes can resume safely after interruption.
+    const result = await ingestEvidenceDocuments(prisma, [document]);
+    documentsProcessed += result.documentsProcessed;
+    chunksWritten += result.chunksWritten;
+    if (checkpointPath) {
+      checkpoint = markEvidenceDocumentInCheckpoint(checkpoint, document);
+      writeCheckpoint(checkpointPath, checkpoint);
+    }
+  }
 
   console.log(JSON.stringify({
     ok: true,
     inputPath,
-    documents: result.documentsProcessed,
-    chunksWritten: result.chunksWritten,
+    ...(checkpointPath ? { checkpointPath } : {}),
+    ...(resume ? { resumed: true } : {}),
+    skipped: skipped.length,
+    documents: documentsProcessed,
+    chunksWritten,
   }, null, 2));
 }
 

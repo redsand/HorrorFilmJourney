@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import { buildRcValidationCommandPlan, resolveRcValidationOptions } from './validate-rc-plan.ts';
 
 function run(command: string): void {
   const databaseUrl =
@@ -17,15 +18,10 @@ function run(command: string): void {
 }
 
 function main(): void {
-  run('npx prisma validate');
-  run('npm run prisma:generate');
-  run('npm run reset:test-db');
-  run('npm run lint');
-  run('npm test -- tests/unit');
-  run('npm test -- tests/api tests/prisma tests/acceptance');
-  run('npm run test:e2e');
-  if (process.env.SKIP_EXTERNAL_LINK_GATES !== 'true') {
-    run('npm run check:external-links:gates');
+  const options = resolveRcValidationOptions(process.env);
+  const plan = buildRcValidationCommandPlan(options);
+  for (const command of plan) {
+    run(command);
   }
   console.log('RC validation passed.');
 }

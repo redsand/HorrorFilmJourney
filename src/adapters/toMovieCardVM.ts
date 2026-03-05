@@ -88,11 +88,24 @@ export function toMovieCardVM(batch: RecommendationBatchPayload): MovieCardVM[] 
         journeyNode: card.narrative.journeyNode,
         nextStepHint: card.narrative.nextStepHint,
       },
-      evidence: (card as { evidence?: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string | Date }> }).evidence?.map((item) => ({
+      evidence: (card as {
+        evidence?: Array<{
+          sourceName: string;
+          url?: string;
+          snippet: string;
+          retrievedAt: string | Date;
+          provenance?: unknown;
+        }>;
+      }).evidence?.map((item) => ({
         sourceName: item.sourceName,
         ...(item.url ? { url: item.url } : {}),
         snippet: item.snippet,
         retrievedAt: typeof item.retrievedAt === 'string' ? item.retrievedAt : item.retrievedAt.toISOString(),
+        ...(
+          'provenance' in item && item.provenance && typeof item.provenance === 'object'
+            ? { provenance: item.provenance }
+            : {}
+        ),
       })) ?? [],
     };
   });

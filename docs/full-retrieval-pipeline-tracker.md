@@ -60,14 +60,14 @@ Legend:
 
 ### Phase A: Contracts and Gates
 - [x] Define `EvidenceRetrieverV2` contract (query, filters, topK, provenance, scores).
-- [ ] Define quality gates and thresholds (`recall@k`, citation-valid-rate, empty-hit-rate, duplicate-rate, p95 latency).
-- [ ] Add response contract for retrieval provenance in recommendation/companion payloads.
+- [x] Define quality gates and thresholds (`recall@k`, citation-valid-rate, empty-hit-rate, duplicate-rate, p95 latency).
+- [x] Add response contract for retrieval provenance in recommendation/companion payloads.
 
 Exit criteria:
 - Contract docs + interface compile + baseline tests added.
 
 ### Phase B: Data Model and Migration
-- [ ] Add corpus/chunk tables (movie-linked) + embedding metadata.
+- [x] Add corpus/chunk tables (movie-linked) + embedding metadata.
 - [x] Add retrieval run + diagnostics persistence model.
 - [x] Migration + Prisma generate/deploy verified.
 
@@ -79,7 +79,7 @@ Exit criteria:
 - [~] Normalize + dedupe pipeline.
 - [x] Chunking module with deterministic chunk IDs.
 - [~] Embedding write path + index refresh job.
-- [ ] Idempotent run checkpoints and resume support.
+- [x] Idempotent run checkpoints and resume support.
 
 Exit criteria:
 - Re-running jobs yields stable outputs with same inputs.
@@ -107,15 +107,15 @@ Exit criteria:
 ### Phase F: CI + Observability
 - [x] Add deterministic retrieval fixtures + regression tests.
 - [x] Add diagnostics/metrics emission and admin visibility.
-- [~] Add CI gates for overlap/citation/retrieval health.
+- [x] Add CI gates for overlap/citation/retrieval health.
 
 Exit criteria:
 - CI blocks regressions, metrics emitted consistently.
 
 ### Phase G: Rollout
-- [ ] Shadow mode validation.
-- [ ] Progressive rollout (10% -> 50% -> 100%).
-- [ ] Rollback script and operator runbook.
+- [x] Shadow mode validation.
+- [~] Progressive rollout (10% -> 50% -> 100%).
+- [x] Rollback script and operator runbook.
 
 Exit criteria:
 - Production stable at 100% with no quality regressions.
@@ -123,7 +123,7 @@ Exit criteria:
 ## 5) Task Backlog (Granular)
 
 ### Immediate Sprint (next implementation slice)
-- [ ] Add retrieval schema models and migration.
+- [x] Add retrieval schema models and migration.
 - [x] Create `src/lib/evidence/retrieval/` module scaffold:
   - [x] `types.ts`
   - [x] `lexical-retriever.ts`
@@ -137,7 +137,7 @@ Exit criteria:
 
 ### Secondary Sprint
 - [~] Build ingestion + chunking scripts in `scripts/`.
-- [ ] Add offline eval command for retrieval quality.
+- [x] Add offline eval command for retrieval quality.
 - [x] Add admin debug endpoint for retrieval traces.
 
 ## 6) Acceptance Criteria (Definition of Done)
@@ -181,11 +181,30 @@ npm run prisma:generate
 npx prisma migrate deploy
 ```
 
+Measurable value report:
+```bash
+npm run bootstrap:rag:value -- --runs 25
+npm run measure:rag:value
+npm run measure:rag:value -- --enforce
+```
+
+Rollout / rollback helper:
+```bash
+npm run retrieval:rollout -- --mode hybrid --requireIndex false --env .env.production --dryRun
+npm run retrieval:rollout -- --mode cache --requireIndex false --env .env.production
+npm run assess:retrieval:rollout -- --take 500
+```
+
 Season 1 node pipeline:
 ```bash
 node --experimental-strip-types scripts/seed-season1-horror-subgenres.ts
 node --experimental-strip-types scripts/publish-season1-node-release.ts
 node --experimental-strip-types scripts/audit-season1-node-population.ts
+```
+
+Evidence ingestion (resume-capable):
+```bash
+npm run ingest:evidence:corpus -- --input <file> --resume --checkpoint artifacts/evidence-ingest-checkpoint.json
 ```
 
 Tests (current relevant):
@@ -226,4 +245,10 @@ npx vitest run tests/prisma/season1-weak-supervision-fixture.test.ts
 - 2026-03-04: Added retrieval metrics module (`src/lib/evidence/retrieval/metrics.ts`) and gate-check command `npm run check:retrieval:gates` for CI/operator blocking on degraded retrieval health.
 - 2026-03-04: Added persisted retrieval quality signals on `RetrievalRun` (`duplicateRate`, `citationValidRate`) via migration `20260311134000_retrieval_run_quality_metrics`, with hybrid retriever runtime computing/storing real values for gate evaluation.
 - 2026-03-04: Added narrative-aware citation validity computation in recommendation runtime (`computeCitationValidRateFromNarrative`) and post-compose backfill to update matching retrieval runs with real `citationValidRate`.
+- 2026-03-04: Added retrieval provenance contract to recommendation and companion evidence payloads (mode/source/fallback + hybrid scoring metadata), updated canonical `MovieCardVM` schema, and covered with runtime/route/integration tests.
+- 2026-03-04: Added evidence ingestion checkpoint/resume support with deterministic content-hash skipping (`--resume --checkpoint ...`) and unit coverage in `tests/unit/evidence-ingestion-checkpoint.test.ts`.
+- 2026-03-04: Added measurable retrieval value report command `npm run measure:rag:value` (optionally `--enforce`) with explicit goals for retrieval health, corpus coverage, and observability sample size.
+- 2026-03-04: Wired retrieval gate enforcement into release validation plan (`scripts/validate-rc.ts`) alongside existing external-link gates, with env-controlled skips and unit coverage for the command plan.
+- 2026-03-04: Added retrieval rollout/rollback operator support via `npm run retrieval:rollout` and runbook `docs/retrieval-rollout-runbook.md`, including dry-run safe env updates for `EVIDENCE_RETRIEVAL_MODE` and `EVIDENCE_RETRIEVAL_REQUIRE_INDEX`.
+- 2026-03-04: Added shadow-mode runtime (`EVIDENCE_RETRIEVAL_MODE=shadow`) that serves cache responses while running hybrid retrieval diagnostics, plus rollout readiness assessor `npm run assess:retrieval:rollout` with stage-level measurable outputs (canary/ramp/full).
 

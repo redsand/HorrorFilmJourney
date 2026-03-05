@@ -1,6 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import type {
   EvidencePacketVM,
+  EvidenceProvenance,
   EvidenceRetriever,
   EvidenceRetrievalQuery,
 } from '@/lib/evidence/evidence-retriever';
@@ -57,10 +58,16 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
   };
 };
 
-type EvidenceRetrievalMode = 'cache' | 'hybrid';
+type EvidenceRetrievalMode = 'cache' | 'hybrid' | 'shadow';
 
 function resolveRetrievalMode(): EvidenceRetrievalMode {
-  return process.env.EVIDENCE_RETRIEVAL_MODE === 'hybrid' ? 'hybrid' : 'cache';
+  if (process.env.EVIDENCE_RETRIEVAL_MODE === 'hybrid') {
+    return 'hybrid';
+  }
+  if (process.env.EVIDENCE_RETRIEVAL_MODE === 'shadow') {
+    return 'shadow';
+  }
+  return 'cache';
 }
 
 function retrievalRequireIndex(): boolean {
@@ -86,6 +93,33 @@ function toIsoString(value: Date | string): string {
   return new Date(value).toISOString();
 }
 
+function withCachePacketProvenance(evidence: EvidencePacketVM[]): EvidencePacketVM[] {
+  return evidence.map((item, index) => ({
+    ...item,
+    provenance: {
+      retrievalMode: 'cache',
+      sourceType: 'packet',
+      rank: index + 1,
+    },
+  }));
+}
+
+function withFallbackProvenance(
+  evidence: EvidencePacketVM[],
+  fallbackReason: 'hybrid-error' | 'empty-hybrid',
+): EvidencePacketVM[] {
+  return evidence.map((item) => ({
+    ...item,
+    provenance: {
+      ...item.provenance,
+      retrievalMode: 'cache',
+      sourceType: 'packet',
+      fallbackUsed: true,
+      fallbackReason,
+    },
+  }));
+}
+
 class CachedEvidenceRetriever implements EvidenceRetriever {
   constructor(private readonly prisma: PrismaEvidenceClient) {}
 
@@ -102,7 +136,7 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
         retrievedAt: true,
       },
     });
-    return packageEvidencePackets(
+    return withCachePacketProvenance(packageEvidencePackets(
       evidence.map((item) => ({
         sourceName: item.sourceName,
         ...(item.url ? { url: item.url } : {}),
@@ -110,7 +144,7 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
         retrievedAt: toIsoString(item.retrievedAt),
       })),
       resolveTopK(query),
-    );
+    ));
   }
 }
 
@@ -142,6 +176,10 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
       ...(item.url ? { url: item.url } : {}),
       snippet: item.snippet,
       retrievedAt: toIsoString(item.retrievedAt),
+      provenance: {
+        retrievalMode: 'hybrid',
+        sourceType: 'packet',
+      },
     }));
 
     const externalEvidence: EvidencePacketVM[] = includeExternalReadings && input.query.seasonSlug
@@ -164,6 +202,10 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         url: item.url,
         snippet: item.articleTitle,
         retrievedAt: toIsoString(item.publicationDate ?? item.createdAt),
+        provenance: {
+          retrievalMode: 'hybrid',
+          sourceType: 'external_reading',
+        },
       }))
       : [];
 
@@ -194,6 +236,10 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
       ...(item.document.url ? { url: item.document.url } : {}),
       snippet: item.text,
       retrievedAt: toIsoString(item.updatedAt ?? item.createdAt),
+      provenance: {
+        retrievalMode: 'hybrid',
+        sourceType: 'chunk',
+      },
     }));
 
     const corpus = [...packetEvidence, ...externalEvidence, ...chunkEvidence];
@@ -209,12 +255,26 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
     const semanticScores = semanticScoreEvidence(corpus, queryText);
     const fused = reciprocalRankFusion(corpus, lexicalScores, semanticScores);
     const governed = applyGovernanceWithStats(fused, topK);
-    const evidence = packageEvidencePackets(governed.selected.map((item) => ({
-      sourceName: item.sourceName,
-      ...(item.url ? { url: item.url } : {}),
-      snippet: item.snippet,
-      retrievedAt: item.retrievedAt,
-    })), topK);
+    const evidence = packageEvidencePackets(governed.selected.map((item, index) => {
+      const provenance: EvidenceProvenance = {
+        retrievalMode: 'hybrid',
+        sourceType: item.provenance?.sourceType ?? 'packet',
+        rank: index + 1,
+        lexicalScore: item.lexicalScore,
+        semanticScore: item.semanticScore,
+        fusedScore: item.fusedScore,
+        rankLexical: item.rankLexical,
+        rankSemantic: item.rankSemantic,
+      };
+
+      return {
+        sourceName: item.sourceName,
+        ...(item.url ? { url: item.url } : {}),
+        snippet: item.snippet,
+        retrievedAt: item.retrievedAt,
+        provenance,
+      };
+    }), topK);
 
     return {
       evidence,
@@ -228,7 +288,10 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
   private readonly fallback: CachedEvidenceRetriever;
   private readonly hybrid: HybridEvidenceRetriever;
 
-  constructor(private readonly prisma: PrismaEvidenceClient) {
+  constructor(
+    private readonly prisma: PrismaEvidenceClient,
+    private readonly retrievalMode: 'hybrid' | 'shadow' = 'hybrid',
+  ) {
     this.fallback = new CachedEvidenceRetriever(prisma);
     this.hybrid = new HybridEvidenceRetriever(prisma);
   }
@@ -250,7 +313,7 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
     await this.prisma.retrievalRun.create({
       data: {
         movieId: input.movieId,
-        mode: 'hybrid',
+        mode: this.retrievalMode,
         fallbackUsed: input.fallbackUsed,
         ...(input.fallbackReason ? { fallbackReason: input.fallbackReason } : {}),
         ...(input.query.seasonSlug ? { seasonSlug: input.query.seasonSlug } : {}),
@@ -303,7 +366,7 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
         citationValidRate: 1,
         latencyMs: Date.now() - startedAt,
       });
-      return fallbackResult;
+      return withFallbackProvenance(fallbackResult, 'empty-hybrid');
     } catch (error) {
       if (retrievalRequireIndex()) {
         throw error;
@@ -320,8 +383,29 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
         citationValidRate: 1,
         latencyMs: Date.now() - startedAt,
       });
-      return fallbackResult;
+      return withFallbackProvenance(fallbackResult, 'hybrid-error');
     }
+  }
+}
+
+class ShadowEvidenceRetriever implements EvidenceRetriever {
+  private readonly cache: CachedEvidenceRetriever;
+  private readonly shadowHybrid: HybridWithFallbackEvidenceRetriever;
+
+  constructor(prisma: PrismaEvidenceClient) {
+    this.cache = new CachedEvidenceRetriever(prisma);
+    this.shadowHybrid = new HybridWithFallbackEvidenceRetriever(prisma, 'shadow');
+  }
+
+  async getEvidenceForMovie(movieId: string, rawQuery?: string | EvidenceRetrievalQuery): Promise<EvidencePacketVM[]> {
+    const query = normalizeEvidenceRetrievalQuery(rawQuery);
+    const cacheResult = await this.cache.getEvidenceForMovie(movieId, query);
+    try {
+      await this.shadowHybrid.getEvidenceForMovie(movieId, query);
+    } catch {
+      // Shadow mode must never fail user-facing retrieval responses.
+    }
+    return cacheResult;
   }
 }
 
@@ -329,6 +413,9 @@ export function createConfiguredEvidenceRetriever(prisma: PrismaEvidenceClient):
   const mode = resolveRetrievalMode();
   if (mode === 'hybrid') {
     return new HybridWithFallbackEvidenceRetriever(prisma);
+  }
+  if (mode === 'shadow') {
+    return new ShadowEvidenceRetriever(prisma);
   }
   return new CachedEvidenceRetriever(prisma);
 }

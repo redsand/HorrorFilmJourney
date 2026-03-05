@@ -1,8 +1,22 @@
+export type EvidenceProvenance = {
+  retrievalMode: 'cache' | 'hybrid';
+  sourceType: 'packet' | 'external_reading' | 'chunk';
+  fallbackUsed?: boolean;
+  fallbackReason?: 'hybrid-error' | 'empty-hybrid';
+  rank?: number;
+  lexicalScore?: number;
+  semanticScore?: number;
+  fusedScore?: number;
+  rankLexical?: number;
+  rankSemantic?: number;
+};
+
 export type EvidencePacketVM = {
   sourceName: string;
   url?: string;
   snippet: string;
   retrievedAt: string;
+  provenance?: EvidenceProvenance;
 };
 
 export type EvidenceRetrievalQuery = {

@@ -96,13 +96,29 @@ describe('toMovieCardVM adapter', () => {
 
   it('maps evidence packets when present', () => {
     const batch = buildBatch();
-    (batch.cards[0] as typeof batch.cards[0] & { evidence?: Array<{ sourceName: string; snippet: string; retrievedAt: string }> }).evidence = [
-      { sourceName: 'Wikipedia', snippet: 'Evidence snippet', retrievedAt: '2026-01-01T00:00:00.000Z' },
+    (batch.cards[0] as typeof batch.cards[0] & {
+      evidence?: Array<{
+        sourceName: string;
+        snippet: string;
+        retrievedAt: string;
+        provenance?: { retrievalMode: 'cache' | 'hybrid'; sourceType: 'packet' | 'external_reading' | 'chunk' };
+      }>;
+    }).evidence = [
+      {
+        sourceName: 'Wikipedia',
+        snippet: 'Evidence snippet',
+        retrievedAt: '2026-01-01T00:00:00.000Z',
+        provenance: { retrievalMode: 'hybrid', sourceType: 'packet' },
+      },
     ];
 
     const result = toMovieCardVM(batch);
     expect(result[0]?.evidence).toHaveLength(1);
     expect(result[0]?.evidence[0]?.sourceName).toBe('Wikipedia');
+    expect(result[0]?.evidence[0]?.provenance).toEqual({
+      retrievalMode: 'hybrid',
+      sourceType: 'packet',
+    });
   });
 
   it('filters non-score additional ratings and falls back to reception aggregate', () => {

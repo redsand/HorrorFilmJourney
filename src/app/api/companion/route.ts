@@ -61,7 +61,24 @@ type CompanionResponsePayload = {
     }>;
   };
   spoilerPolicy: SpoilerPolicy;
-  evidence: Array<{ sourceName: string; url?: string; snippet: string; retrievedAt: string }>;
+  evidence: Array<{
+    sourceName: string;
+    url?: string;
+    snippet: string;
+    retrievedAt: string;
+    provenance?: {
+      retrievalMode: 'cache' | 'hybrid';
+      sourceType: 'packet' | 'external_reading' | 'chunk';
+      fallbackUsed?: boolean;
+      fallbackReason?: 'hybrid-error' | 'empty-hybrid';
+      rank?: number;
+      lexicalScore?: number;
+      semanticScore?: number;
+      fusedScore?: number;
+      rankLexical?: number;
+      rankSemantic?: number;
+    };
+  }>;
   externalReadings?: ExternalReading[];
 };
 type TmdbCreditPerson = { name?: string; job?: string; character?: string };
