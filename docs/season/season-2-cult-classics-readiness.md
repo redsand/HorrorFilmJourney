@@ -1,6 +1,6 @@
 # Season 2 Cult Classics Readiness
 
-Generated: 2026-03-05T19:07:25.250Z
+Generated: 2026-03-05T19:16:25.404Z
 
 ## Coverage
 
@@ -53,7 +53,7 @@ Generated: 2026-03-05T19:07:25.250Z
 
 ## Needs Human Resolution
 
-- origins-of-cult-cinema: SalÃ², or the 120 Days of Sodom (1975) — Not resolved from local DB or TMDB search
+- origins-of-cult-cinema: SalÃƒÂ², or the 120 Days of Sodom (1975) — Not resolved from local DB or TMDB search
 
 ## Remaining Work Before Enabling
 
