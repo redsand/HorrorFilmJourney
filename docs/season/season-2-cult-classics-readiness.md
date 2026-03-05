@@ -1,6 +1,6 @@
 # Season 2 Cult Classics Readiness
 
-Generated: 2026-03-05T18:53:41.859Z
+Generated: 2026-03-05T19:07:25.250Z
 
 ## Coverage
 
@@ -37,7 +37,7 @@ Generated: 2026-03-05T18:53:41.859Z
 | modern-cult-phenomena | 0 | 0 | 0 | 0 | 72 |
 | midnight-movies | 0 | 0 | 0 | 0 | 43 |
 | eurocult | 0 | 0 | 0 | 0 | 25 |
-| cult-horror | 0 | 0 | 0 | 1 | 64 |
+| cult-horror | 0 | 0 | 0 | 1 | 65 |
 
 ## Duplicate Analysis
 
@@ -48,8 +48,8 @@ Generated: 2026-03-05T18:53:41.859Z
 - TMDB discovery attempts: 0
 - TMDB discovery inserted: 0
 - Review queue candidates: 42
-- Duplicate titles across nodes: 88
-- Duplicate rate: 13.31%
+- Duplicate titles across nodes: 89
+- Duplicate rate: 13.46%
 
 ## Needs Human Resolution
 

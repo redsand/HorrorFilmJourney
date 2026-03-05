@@ -1,19 +1,209 @@
 {
-  "entries": [
-    {
-      "title": "The Big Lebowski",
-      "year": 1998,
-      "reason": "user-required-cult-anchor"
-    },
-    {
-      "title": "Scarface",
-      "year": 1983,
-      "reason": "user-required-cult-anchor"
-    },
-    {
-      "title": "Pulp Fiction",
-      "year": 1994,
-      "reason": "user-required-cult-anchor"
-    }
-  ]
+    "entries":  [
+                    {
+                        "title":  "The Big Lebowski",
+                        "year":  1998,
+                        "reason":  "user-required-cult-anchor"
+                    },
+                    {
+                        "title":  "Scarface",
+                        "year":  1983,
+                        "reason":  "user-required-cult-anchor"
+                    },
+                    {
+                        "title":  "Pulp Fiction",
+                        "year":  1994,
+                        "reason":  "user-required-cult-anchor"
+                    },
+                    {
+                        "title":  "Akira",
+                        "year":  1988,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Ghost in the Shell",
+                        "year":  1995,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Perfect Blue",
+                        "year":  1997,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Princess Mononoke",
+                        "year":  1997,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Heavy Metal",
+                        "year":  1981,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Fritz the Cat",
+                        "year":  1972,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Belladonna of Sadness",
+                        "year":  1973,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Watership Down",
+                        "year":  1978,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "The Last Unicorn",
+                        "year":  1982,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "The Secret of NIMH",
+                        "year":  1982,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Nausicaa of the Valley of the Wind",
+                        "year":  1984,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Vampire Hunter D",
+                        "year":  1985,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Wicked City",
+                        "year":  1987,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Ninja Scroll",
+                        "year":  1993,
+                        "reason":  "cult-anime-classic"
+                    },
+                    {
+                        "title":  "Renaissance",
+                        "year":  2006,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+                        "year":  2003,
+                        "reason":  "cult-animation-classic"
+                    },
+                    {
+                        "title":  "Drive",
+                        "year":  2011,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Spring Breakers",
+                        "year":  2012,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Cabin in the Woods",
+                        "year":  2012,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "It Follows",
+                        "year":  2014,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "The Guest",
+                        "year":  2014,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Raw",
+                        "year":  2016,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "The Neon Demon",
+                        "year":  2016,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Mandy",
+                        "year":  2018,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Hereditary",
+                        "year":  2018,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Midsommar",
+                        "year":  2019,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "The Lighthouse",
+                        "year":  2019,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Possessor",
+                        "year":  2020,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Titane",
+                        "year":  2021,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Malignant",
+                        "year":  2021,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Pearl",
+                        "year":  2022,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Terrifier 2",
+                        "year":  2022,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Barbarian",
+                        "year":  2022,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "X",
+                        "year":  2022,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Skinamarink",
+                        "year":  2022,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Late Night with the Devil",
+                        "year":  2023,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Talk to Me",
+                        "year":  2023,
+                        "reason":  "modern-cult-classic"
+                    },
+                    {
+                        "title":  "Infinity Pool",
+                        "year":  2023,
+                        "reason":  "modern-cult-classic"
+                    }
+                ]
 }
