@@ -151,7 +151,12 @@ class CachedEvidenceRetriever implements EvidenceRetriever {
 class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
   constructor(private readonly prisma: PrismaEvidenceClient) {}
 
-  async retrieve(input: { movieId: string; query: EvidenceRetrievalQuery }): Promise<{
+  async retrieve(input: { movieId: string; query: EvidenceRetrievalQuery }): Promise<EvidencePacketVM[]> {
+    const result = await this.retrieveWithStats(input);
+    return result.evidence;
+  }
+
+  async retrieveWithStats(input: { movieId: string; query: EvidenceRetrievalQuery }): Promise<{
     evidence: EvidencePacketVM[];
     candidateCount: number;
     duplicateDrops: number;
@@ -332,7 +337,7 @@ class HybridWithFallbackEvidenceRetriever implements EvidenceRetriever {
     const query = normalizeEvidenceRetrievalQuery(rawQuery);
     const startedAt = Date.now();
     try {
-      const hybridResult = await this.hybrid.retrieve({ movieId, query });
+      const hybridResult = await this.hybrid.retrieveWithStats({ movieId, query });
       const citationValidCount = hybridResult.evidence.filter((item) =>
         item.sourceName.trim().length > 0 && item.snippet.trim().length > 0).length;
       const citationValidRate = hybridResult.evidence.length > 0
