@@ -846,480 +846,6 @@
       ]
     },
     {
-      "slug": "psychotronic-cinema",
-      "core": [
-        {
-          "title": "Reefer Madness",
-          "year": 1936,
-          "tmdbId": null
-        },
-        {
-          "title": "Robot Monster",
-          "year": 1953,
-          "tmdbId": 43353
-        },
-        {
-          "title": "The Giant Claw",
-          "year": 1957,
-          "tmdbId": 36089
-        },
-        {
-          "title": "Plan 9 from Outer Space",
-          "year": 1959,
-          "tmdbId": null
-        },
-        {
-          "title": "The Beast of Yucca Flats",
-          "year": 1961,
-          "tmdbId": 22727
-        },
-        {
-          "title": "Santa Claus Conquers the Martians",
-          "year": 1964,
-          "tmdbId": 32307
-        },
-        {
-          "title": "The Creeping Terror",
-          "year": 1964,
-          "tmdbId": 31275
-        },
-        {
-          "title": "The Horror of Party Beach",
-          "year": 1964,
-          "tmdbId": 42794
-        },
-        {
-          "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
-          "year": 1964,
-          "tmdbId": 31383
-        },
-        {
-          "title": "Manos: The Hands of Fate",
-          "year": 1966,
-          "tmdbId": 22293
-        },
-        {
-          "title": "Branded to Kill",
-          "year": 1967,
-          "tmdbId": 17905
-        },
-        {
-          "title": "Female Prisoner #701 Scorpion",
-          "year": 1972,
-          "tmdbId": 71138
-        },
-        {
-          "title": "The Star Wars Holiday Special",
-          "year": 1978,
-          "tmdbId": 74849
-        },
-        {
-          "title": "Cannibal Apocalypse",
-          "year": 1980,
-          "tmdbId": 8692
-        },
-        {
-          "title": "The Apple",
-          "year": 1980,
-          "tmdbId": 49069
-        },
-        {
-          "title": "Basket Case",
-          "year": 1982,
-          "tmdbId": 27813
-        },
-        {
-          "title": "The Boxers Omen",
-          "year": 1983,
-          "tmdbId": null
-        },
-        {
-          "title": "The Room",
-          "year": 2003,
-          "tmdbId": 17473
-        }
-      ],
-      "extended": [
-        {
-          "title": "Plan 9 from Outer Space",
-          "year": 1957,
-          "tmdbId": 10513
-        },
-        {
-          "title": "Funeral Parade of Roses",
-          "year": 1969,
-          "tmdbId": null
-        },
-        {
-          "title": "Female Prisoner Scorpion Jailhouse 41",
-          "year": 1972,
-          "tmdbId": null
-        },
-        {
-          "title": "Female Prisoner Scorpion 701s Grudge Song",
-          "year": 1973,
-          "tmdbId": null
-        },
-        {
-          "title": "Sex and Fury",
-          "year": 1973,
-          "tmdbId": null
-        },
-        {
-          "title": "School of the Holy Beast",
-          "year": 1974,
-          "tmdbId": null
-        },
-        {
-          "title": "Dangerous Encounters of the First Kind",
-          "year": 1980,
-          "tmdbId": null
-        },
-        {
-          "title": "Turkey Shoot",
-          "year": 1982,
-          "tmdbId": 39899
-        },
-        {
-          "title": "Yor: The Hunter from the Future",
-          "year": 1983,
-          "tmdbId": 38219
-        },
-        {
-          "title": "Gymkata",
-          "year": 1985,
-          "tmdbId": 14570
-        },
-        {
-          "title": "Mr. Vampire",
-          "year": 1985,
-          "tmdbId": 67342
-        },
-        {
-          "title": "Class of Nuke 'Em High",
-          "year": 1986,
-          "tmdbId": 26554
-        },
-        {
-          "title": "The Seventh Curse",
-          "year": 1986,
-          "tmdbId": 39900
-        },
-        {
-          "title": "The Wraith",
-          "year": 1986,
-          "tmdbId": 10017
-        },
-        {
-          "title": "A Chinese Ghost Story",
-          "year": 1987,
-          "tmdbId": 30421
-        },
-        {
-          "title": "Hard Ticket to Hawaii",
-          "year": 1987,
-          "tmdbId": 26011
-        },
-        {
-          "title": "Miami Connection",
-          "year": 1987,
-          "tmdbId": 59558
-        },
-        {
-          "title": "Over the Top",
-          "year": 1987,
-          "tmdbId": 1825
-        },
-        {
-          "title": "Silent Night, Deadly Night Part 2",
-          "year": 1987,
-          "tmdbId": 50719
-        },
-        {
-          "title": "Street Trash",
-          "year": 1987,
-          "tmdbId": 22172
-        },
-        {
-          "title": "Hobgoblins",
-          "year": 1988,
-          "tmdbId": 31245
-        },
-        {
-          "title": "Mac and Me",
-          "year": 1988,
-          "tmdbId": 20196
-        },
-        {
-          "title": "No Holds Barred",
-          "year": 1989,
-          "tmdbId": 39002
-        },
-        {
-          "title": "Robot Jox",
-          "year": 1989,
-          "tmdbId": null
-        },
-        {
-          "title": "Robot Jox",
-          "year": 1990,
-          "tmdbId": 15618
-        },
-        {
-          "title": "Troll 2",
-          "year": 1990,
-          "tmdbId": 26914
-        },
-        {
-          "title": "Cool as Ice",
-          "year": 1991,
-          "tmdbId": 1496
-        },
-        {
-          "title": "Samurai Cop",
-          "year": 1991,
-          "tmdbId": 65374
-        },
-        {
-          "title": "Showdown in Little Tokyo",
-          "year": 1991,
-          "tmdbId": 13154
-        },
-        {
-          "title": "Dr. Lamb",
-          "year": 1992,
-          "tmdbId": null
-        },
-        {
-          "title": "The Bride with White Hair",
-          "year": 1993,
-          "tmdbId": null
-        },
-        {
-          "title": "The Heroic Trio",
-          "year": 1993,
-          "tmdbId": 43636
-        },
-        {
-          "title": "The Untold Story",
-          "year": 1993,
-          "tmdbId": 39857
-        },
-        {
-          "title": "Street Fighter",
-          "year": 1994,
-          "tmdbId": 11667
-        },
-        {
-          "title": "Showgirls",
-          "year": 1995,
-          "tmdbId": 10802
-        },
-        {
-          "title": "Ebola Syndrome",
-          "year": 1996,
-          "tmdbId": 24922
-        },
-        {
-          "title": "Batman & Robin",
-          "year": 1997,
-          "tmdbId": 415
-        },
-        {
-          "title": "Double Team",
-          "year": 1997,
-          "tmdbId": 9405
-        },
-        {
-          "title": "Battlefield Earth",
-          "year": 2000,
-          "tmdbId": 5491
-        },
-        {
-          "title": "Ben & Arthur",
-          "year": 2002,
-          "tmdbId": 31130
-        },
-        {
-          "title": "The Core",
-          "year": 2003,
-          "tmdbId": 9341
-        },
-        {
-          "title": "Suburban Sasquatch",
-          "year": 2004,
-          "tmdbId": 84297
-        },
-        {
-          "title": "The Happening",
-          "year": 2008,
-          "tmdbId": 8645
-        },
-        {
-          "title": "Birdemic: Shock and Terror",
-          "year": 2010,
-          "tmdbId": 40016
-        },
-        {
-          "title": "Who Killed Captain Alex?",
-          "year": 2010,
-          "tmdbId": 316776
-        }
-      ]
-    },
-    {
-      "slug": "cult-horror",
-      "core": [
-        {
-          "title": "The Texas Chain Saw Massacre",
-          "year": 1974,
-          "tmdbId": 30497
-        },
-        {
-          "title": "Dawn of the Dead",
-          "year": 1978,
-          "tmdbId": 923
-        },
-        {
-          "title": "The Evil Dead",
-          "year": 1981,
-          "tmdbId": 764
-        },
-        {
-          "title": "The Thing",
-          "year": 1982,
-          "tmdbId": 1091
-        },
-        {
-          "title": "Sleepaway Camp",
-          "year": 1983,
-          "tmdbId": 13567
-        },
-        {
-          "title": "Re-Animator",
-          "year": 1985,
-          "tmdbId": 1694
-        },
-        {
-          "title": "The Return of the Living Dead",
-          "year": 1985,
-          "tmdbId": 10925
-        },
-        {
-          "title": "Hellraiser",
-          "year": 1987,
-          "tmdbId": 9003
-        },
-        {
-          "title": "Near Dark",
-          "year": 1987,
-          "tmdbId": 11879
-        }
-      ],
-      "extended": [
-        {
-          "title": "Black Christmas",
-          "year": 1974,
-          "tmdbId": 16938
-        },
-        {
-          "title": "The Hills Have Eyes",
-          "year": 1977,
-          "tmdbId": 12262
-        },
-        {
-          "title": "City of the Living Dead",
-          "year": 1980,
-          "tmdbId": null
-        },
-        {
-          "title": "Nightmare City",
-          "year": 1980,
-          "tmdbId": 28319
-        },
-        {
-          "title": "Zombie Holocaust",
-          "year": 1980,
-          "tmdbId": null
-        },
-        {
-          "title": "Burial Ground",
-          "year": 1981,
-          "tmdbId": null
-        },
-        {
-          "title": "The House by the Cemetery",
-          "year": 1981,
-          "tmdbId": null
-        },
-        {
-          "title": "Demons 2",
-          "year": 1986,
-          "tmdbId": 40342
-        },
-        {
-          "title": "From Beyond",
-          "year": 1986,
-          "tmdbId": 14510
-        },
-        {
-          "title": "Prince of Darkness",
-          "year": 1987,
-          "tmdbId": 8852
-        },
-        {
-          "title": "StageFright",
-          "year": 1987,
-          "tmdbId": null
-        },
-        {
-          "title": "Killer Klowns from Outer Space",
-          "year": 1988,
-          "tmdbId": 16296
-        },
-        {
-          "title": "Phantasm II",
-          "year": 1988,
-          "tmdbId": 15158
-        },
-        {
-          "title": "Pet Sematary",
-          "year": 1989,
-          "tmdbId": 8913
-        },
-        {
-          "title": "The Church",
-          "year": 1989,
-          "tmdbId": 40364
-        },
-        {
-          "title": "Army of Darkness",
-          "year": 1992,
-          "tmdbId": 766
-        },
-        {
-          "title": "Candyman",
-          "year": 1992,
-          "tmdbId": 7013
-        },
-        {
-          "title": "Phantasm III: Lord of the Dead",
-          "year": 1994,
-          "tmdbId": 16139
-        },
-        {
-          "title": "Cube",
-          "year": 1997,
-          "tmdbId": null
-        },
-        {
-          "title": "Event Horizon",
-          "year": 1997,
-          "tmdbId": 8413
-        }
-      ]
-    },
-    {
       "slug": "cult-science-fiction",
       "core": [
         {
@@ -1727,6 +1253,158 @@
       ]
     },
     {
+      "slug": "cult-horror",
+      "core": [
+        {
+          "title": "The Texas Chain Saw Massacre",
+          "year": 1974,
+          "tmdbId": 30497
+        },
+        {
+          "title": "Dawn of the Dead",
+          "year": 1978,
+          "tmdbId": 923
+        },
+        {
+          "title": "The Evil Dead",
+          "year": 1981,
+          "tmdbId": 764
+        },
+        {
+          "title": "The Thing",
+          "year": 1982,
+          "tmdbId": 1091
+        },
+        {
+          "title": "Sleepaway Camp",
+          "year": 1983,
+          "tmdbId": 13567
+        },
+        {
+          "title": "Re-Animator",
+          "year": 1985,
+          "tmdbId": 1694
+        },
+        {
+          "title": "The Return of the Living Dead",
+          "year": 1985,
+          "tmdbId": 10925
+        },
+        {
+          "title": "Hellraiser",
+          "year": 1987,
+          "tmdbId": 9003
+        },
+        {
+          "title": "Near Dark",
+          "year": 1987,
+          "tmdbId": 11879
+        }
+      ],
+      "extended": [
+        {
+          "title": "Black Christmas",
+          "year": 1974,
+          "tmdbId": 16938
+        },
+        {
+          "title": "The Hills Have Eyes",
+          "year": 1977,
+          "tmdbId": 12262
+        },
+        {
+          "title": "City of the Living Dead",
+          "year": 1980,
+          "tmdbId": null
+        },
+        {
+          "title": "Nightmare City",
+          "year": 1980,
+          "tmdbId": 28319
+        },
+        {
+          "title": "Zombie Holocaust",
+          "year": 1980,
+          "tmdbId": null
+        },
+        {
+          "title": "Burial Ground",
+          "year": 1981,
+          "tmdbId": null
+        },
+        {
+          "title": "The House by the Cemetery",
+          "year": 1981,
+          "tmdbId": null
+        },
+        {
+          "title": "Demons 2",
+          "year": 1986,
+          "tmdbId": 40342
+        },
+        {
+          "title": "From Beyond",
+          "year": 1986,
+          "tmdbId": 14510
+        },
+        {
+          "title": "Prince of Darkness",
+          "year": 1987,
+          "tmdbId": 8852
+        },
+        {
+          "title": "StageFright",
+          "year": 1987,
+          "tmdbId": null
+        },
+        {
+          "title": "Killer Klowns from Outer Space",
+          "year": 1988,
+          "tmdbId": 16296
+        },
+        {
+          "title": "Phantasm II",
+          "year": 1988,
+          "tmdbId": 15158
+        },
+        {
+          "title": "Pet Sematary",
+          "year": 1989,
+          "tmdbId": 8913
+        },
+        {
+          "title": "The Church",
+          "year": 1989,
+          "tmdbId": 40364
+        },
+        {
+          "title": "Army of Darkness",
+          "year": 1992,
+          "tmdbId": 766
+        },
+        {
+          "title": "Candyman",
+          "year": 1992,
+          "tmdbId": 7013
+        },
+        {
+          "title": "Phantasm III: Lord of the Dead",
+          "year": 1994,
+          "tmdbId": 16139
+        },
+        {
+          "title": "Cube",
+          "year": 1997,
+          "tmdbId": null
+        },
+        {
+          "title": "Event Horizon",
+          "year": 1997,
+          "tmdbId": 8413
+        }
+      ]
+    },
+    {
       "slug": "outsider-cinema",
       "core": [
         {
@@ -2129,6 +1807,590 @@
       ]
     },
     {
+      "slug": "psychotronic-cinema",
+      "core": [
+        {
+          "title": "Reefer Madness",
+          "year": 1936,
+          "tmdbId": null
+        },
+        {
+          "title": "Robot Monster",
+          "year": 1953,
+          "tmdbId": 43353
+        },
+        {
+          "title": "The Giant Claw",
+          "year": 1957,
+          "tmdbId": 36089
+        },
+        {
+          "title": "Plan 9 from Outer Space",
+          "year": 1959,
+          "tmdbId": null
+        },
+        {
+          "title": "The Beast of Yucca Flats",
+          "year": 1961,
+          "tmdbId": 22727
+        },
+        {
+          "title": "Santa Claus Conquers the Martians",
+          "year": 1964,
+          "tmdbId": 32307
+        },
+        {
+          "title": "The Creeping Terror",
+          "year": 1964,
+          "tmdbId": 31275
+        },
+        {
+          "title": "The Horror of Party Beach",
+          "year": 1964,
+          "tmdbId": 42794
+        },
+        {
+          "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+          "year": 1964,
+          "tmdbId": 31383
+        },
+        {
+          "title": "Manos: The Hands of Fate",
+          "year": 1966,
+          "tmdbId": 22293
+        },
+        {
+          "title": "Branded to Kill",
+          "year": 1967,
+          "tmdbId": 17905
+        },
+        {
+          "title": "Female Prisoner #701 Scorpion",
+          "year": 1972,
+          "tmdbId": 71138
+        },
+        {
+          "title": "The Star Wars Holiday Special",
+          "year": 1978,
+          "tmdbId": 74849
+        },
+        {
+          "title": "Cannibal Apocalypse",
+          "year": 1980,
+          "tmdbId": 8692
+        },
+        {
+          "title": "The Apple",
+          "year": 1980,
+          "tmdbId": 49069
+        },
+        {
+          "title": "Basket Case",
+          "year": 1982,
+          "tmdbId": 27813
+        },
+        {
+          "title": "The Boxers Omen",
+          "year": 1983,
+          "tmdbId": null
+        },
+        {
+          "title": "The Room",
+          "year": 2003,
+          "tmdbId": 17473
+        }
+      ],
+      "extended": [
+        {
+          "title": "Plan 9 from Outer Space",
+          "year": 1957,
+          "tmdbId": 10513
+        },
+        {
+          "title": "Funeral Parade of Roses",
+          "year": 1969,
+          "tmdbId": null
+        },
+        {
+          "title": "Female Prisoner Scorpion Jailhouse 41",
+          "year": 1972,
+          "tmdbId": null
+        },
+        {
+          "title": "Female Prisoner Scorpion 701s Grudge Song",
+          "year": 1973,
+          "tmdbId": null
+        },
+        {
+          "title": "Sex and Fury",
+          "year": 1973,
+          "tmdbId": null
+        },
+        {
+          "title": "School of the Holy Beast",
+          "year": 1974,
+          "tmdbId": null
+        },
+        {
+          "title": "Dangerous Encounters of the First Kind",
+          "year": 1980,
+          "tmdbId": null
+        },
+        {
+          "title": "Turkey Shoot",
+          "year": 1982,
+          "tmdbId": 39899
+        },
+        {
+          "title": "Yor: The Hunter from the Future",
+          "year": 1983,
+          "tmdbId": 38219
+        },
+        {
+          "title": "Gymkata",
+          "year": 1985,
+          "tmdbId": 14570
+        },
+        {
+          "title": "Mr. Vampire",
+          "year": 1985,
+          "tmdbId": 67342
+        },
+        {
+          "title": "Class of Nuke 'Em High",
+          "year": 1986,
+          "tmdbId": 26554
+        },
+        {
+          "title": "The Seventh Curse",
+          "year": 1986,
+          "tmdbId": 39900
+        },
+        {
+          "title": "The Wraith",
+          "year": 1986,
+          "tmdbId": 10017
+        },
+        {
+          "title": "A Chinese Ghost Story",
+          "year": 1987,
+          "tmdbId": 30421
+        },
+        {
+          "title": "Hard Ticket to Hawaii",
+          "year": 1987,
+          "tmdbId": 26011
+        },
+        {
+          "title": "Miami Connection",
+          "year": 1987,
+          "tmdbId": 59558
+        },
+        {
+          "title": "Over the Top",
+          "year": 1987,
+          "tmdbId": 1825
+        },
+        {
+          "title": "Silent Night, Deadly Night Part 2",
+          "year": 1987,
+          "tmdbId": 50719
+        },
+        {
+          "title": "Street Trash",
+          "year": 1987,
+          "tmdbId": 22172
+        },
+        {
+          "title": "Hobgoblins",
+          "year": 1988,
+          "tmdbId": 31245
+        },
+        {
+          "title": "Mac and Me",
+          "year": 1988,
+          "tmdbId": 20196
+        },
+        {
+          "title": "No Holds Barred",
+          "year": 1989,
+          "tmdbId": 39002
+        },
+        {
+          "title": "Robot Jox",
+          "year": 1989,
+          "tmdbId": null
+        },
+        {
+          "title": "Robot Jox",
+          "year": 1990,
+          "tmdbId": 15618
+        },
+        {
+          "title": "Troll 2",
+          "year": 1990,
+          "tmdbId": 26914
+        },
+        {
+          "title": "Cool as Ice",
+          "year": 1991,
+          "tmdbId": 1496
+        },
+        {
+          "title": "Samurai Cop",
+          "year": 1991,
+          "tmdbId": 65374
+        },
+        {
+          "title": "Showdown in Little Tokyo",
+          "year": 1991,
+          "tmdbId": 13154
+        },
+        {
+          "title": "Dr. Lamb",
+          "year": 1992,
+          "tmdbId": null
+        },
+        {
+          "title": "The Bride with White Hair",
+          "year": 1993,
+          "tmdbId": null
+        },
+        {
+          "title": "The Heroic Trio",
+          "year": 1993,
+          "tmdbId": 43636
+        },
+        {
+          "title": "The Untold Story",
+          "year": 1993,
+          "tmdbId": 39857
+        },
+        {
+          "title": "Street Fighter",
+          "year": 1994,
+          "tmdbId": 11667
+        },
+        {
+          "title": "Showgirls",
+          "year": 1995,
+          "tmdbId": 10802
+        },
+        {
+          "title": "Ebola Syndrome",
+          "year": 1996,
+          "tmdbId": 24922
+        },
+        {
+          "title": "Batman & Robin",
+          "year": 1997,
+          "tmdbId": 415
+        },
+        {
+          "title": "Double Team",
+          "year": 1997,
+          "tmdbId": 9405
+        },
+        {
+          "title": "Battlefield Earth",
+          "year": 2000,
+          "tmdbId": 5491
+        },
+        {
+          "title": "Ben & Arthur",
+          "year": 2002,
+          "tmdbId": 31130
+        },
+        {
+          "title": "The Core",
+          "year": 2003,
+          "tmdbId": 9341
+        },
+        {
+          "title": "Suburban Sasquatch",
+          "year": 2004,
+          "tmdbId": 84297
+        },
+        {
+          "title": "The Happening",
+          "year": 2008,
+          "tmdbId": 8645
+        },
+        {
+          "title": "Birdemic: Shock and Terror",
+          "year": 2010,
+          "tmdbId": 40016
+        },
+        {
+          "title": "Who Killed Captain Alex?",
+          "year": 2010,
+          "tmdbId": 316776
+        }
+      ]
+    },
+    {
+      "slug": "video-store-era",
+      "core": [
+        {
+          "title": "Glen or Glenda",
+          "year": 1953,
+          "tmdbId": 24018
+        },
+        {
+          "title": "The Long Hair of Death",
+          "year": 1964,
+          "tmdbId": 83121
+        },
+        {
+          "title": "Mudhoney",
+          "year": 1965,
+          "tmdbId": 5719
+        },
+        {
+          "title": "Countess Dracula",
+          "year": 1971,
+          "tmdbId": 39043
+        },
+        {
+          "title": "Shock Waves",
+          "year": 1977,
+          "tmdbId": 26680
+        },
+        {
+          "title": "The Howling",
+          "year": 1981,
+          "tmdbId": 11298
+        },
+        {
+          "title": "Poltergeist",
+          "year": 1982,
+          "tmdbId": 609
+        },
+        {
+          "title": "The Sword and the Sorcerer",
+          "year": 1982,
+          "tmdbId": 13945
+        },
+        {
+          "title": "Night of the Comet",
+          "year": 1984,
+          "tmdbId": 18462
+        },
+        {
+          "title": "Clue",
+          "year": 1985,
+          "tmdbId": 15196
+        },
+        {
+          "title": "Fright Night",
+          "year": 1985,
+          "tmdbId": 11797
+        },
+        {
+          "title": "The Last Dragon",
+          "year": 1985,
+          "tmdbId": 13938
+        },
+        {
+          "title": "The Stuff",
+          "year": 1985,
+          "tmdbId": 18502
+        },
+        {
+          "title": "Big Trouble in Little China",
+          "year": 1986,
+          "tmdbId": 6978
+        },
+        {
+          "title": "Chopping Mall",
+          "year": 1986,
+          "tmdbId": 28941
+        },
+        {
+          "title": "The Fly",
+          "year": 1986,
+          "tmdbId": 9426
+        }
+      ],
+      "extended": [
+        {
+          "title": "Hawk the Slayer",
+          "year": 1980,
+          "tmdbId": null
+        },
+        {
+          "title": "The Beastmaster",
+          "year": 1982,
+          "tmdbId": 16441
+        },
+        {
+          "title": "Fire and Ice",
+          "year": 1983,
+          "tmdbId": 15035
+        },
+        {
+          "title": "Red Sonja",
+          "year": 1985,
+          "tmdbId": 9626
+        },
+        {
+          "title": "Gothic",
+          "year": 1986,
+          "tmdbId": null
+        },
+        {
+          "title": "Night of the Creeps",
+          "year": 1986,
+          "tmdbId": 15762
+        },
+        {
+          "title": "Gothic",
+          "year": 1987,
+          "tmdbId": 33516
+        },
+        {
+          "title": "Masters of the Universe",
+          "year": 1987,
+          "tmdbId": 11649
+        },
+        {
+          "title": "The Gate",
+          "year": 1987,
+          "tmdbId": 6917
+        },
+        {
+          "title": "The Hidden",
+          "year": 1987,
+          "tmdbId": 12476
+        },
+        {
+          "title": "The Lost Boys",
+          "year": 1987,
+          "tmdbId": 1547
+        },
+        {
+          "title": "The Monster Squad",
+          "year": 1987,
+          "tmdbId": 13509
+        },
+        {
+          "title": "The Video Dead",
+          "year": 1987,
+          "tmdbId": 26677
+        },
+        {
+          "title": "976-EVIL",
+          "year": 1988,
+          "tmdbId": 24038
+        },
+        {
+          "title": "Brain Damage",
+          "year": 1988,
+          "tmdbId": 27814
+        },
+        {
+          "title": "Dead Heat",
+          "year": 1988,
+          "tmdbId": 40095
+        },
+        {
+          "title": "Hellbound: Hellraiser II",
+          "year": 1988,
+          "tmdbId": 9064
+        },
+        {
+          "title": "Pumpkinhead",
+          "year": 1988,
+          "tmdbId": 26515
+        },
+        {
+          "title": "Return of the Killer Tomatoes!",
+          "year": 1988,
+          "tmdbId": 15482
+        },
+        {
+          "title": "Waxwork",
+          "year": 1988,
+          "tmdbId": 29095
+        },
+        {
+          "title": "Warlock",
+          "year": 1989,
+          "tmdbId": 11342
+        },
+        {
+          "title": "Darkman",
+          "year": 1990,
+          "tmdbId": 9556
+        },
+        {
+          "title": "Gate II",
+          "year": 1990,
+          "tmdbId": 40729
+        },
+        {
+          "title": "Grim Prairie Tales",
+          "year": 1990,
+          "tmdbId": 66706
+        },
+        {
+          "title": "Nightbreed",
+          "year": 1990,
+          "tmdbId": 20481
+        },
+        {
+          "title": "The Gate II: Trespassers",
+          "year": 1990,
+          "tmdbId": null
+        },
+        {
+          "title": "Tremors",
+          "year": 1990,
+          "tmdbId": 9362
+        },
+        {
+          "title": "The People Under the Stairs",
+          "year": 1991,
+          "tmdbId": 13122
+        },
+        {
+          "title": "The Crow",
+          "year": 1994,
+          "tmdbId": 9495
+        },
+        {
+          "title": "The Addiction",
+          "year": 1995,
+          "tmdbId": 34996
+        },
+        {
+          "title": "The Relic",
+          "year": 1997,
+          "tmdbId": 11015
+        },
+        {
+          "title": "Cube",
+          "year": 1998,
+          "tmdbId": 431
+        },
+        {
+          "title": "Deep Rising",
+          "year": 1998,
+          "tmdbId": 9457
+        },
+        {
+          "title": "The Faculty",
+          "year": 1998,
+          "tmdbId": 9276
+        },
+        {
+          "title": "House on Haunted Hill",
+          "year": 1999,
+          "tmdbId": 11377
+        }
+      ]
+    },
+    {
       "slug": "camp-cult-comedy",
       "core": [
         {
@@ -2497,268 +2759,6 @@
           "title": "Tucker and Dale vs. Evil",
           "year": 2010,
           "tmdbId": 46838
-        }
-      ]
-    },
-    {
-      "slug": "video-store-era",
-      "core": [
-        {
-          "title": "Glen or Glenda",
-          "year": 1953,
-          "tmdbId": 24018
-        },
-        {
-          "title": "The Long Hair of Death",
-          "year": 1964,
-          "tmdbId": 83121
-        },
-        {
-          "title": "Mudhoney",
-          "year": 1965,
-          "tmdbId": 5719
-        },
-        {
-          "title": "Countess Dracula",
-          "year": 1971,
-          "tmdbId": 39043
-        },
-        {
-          "title": "Shock Waves",
-          "year": 1977,
-          "tmdbId": 26680
-        },
-        {
-          "title": "The Howling",
-          "year": 1981,
-          "tmdbId": 11298
-        },
-        {
-          "title": "Poltergeist",
-          "year": 1982,
-          "tmdbId": 609
-        },
-        {
-          "title": "The Sword and the Sorcerer",
-          "year": 1982,
-          "tmdbId": 13945
-        },
-        {
-          "title": "Night of the Comet",
-          "year": 1984,
-          "tmdbId": 18462
-        },
-        {
-          "title": "Clue",
-          "year": 1985,
-          "tmdbId": 15196
-        },
-        {
-          "title": "Fright Night",
-          "year": 1985,
-          "tmdbId": 11797
-        },
-        {
-          "title": "The Last Dragon",
-          "year": 1985,
-          "tmdbId": 13938
-        },
-        {
-          "title": "The Stuff",
-          "year": 1985,
-          "tmdbId": 18502
-        },
-        {
-          "title": "Big Trouble in Little China",
-          "year": 1986,
-          "tmdbId": 6978
-        },
-        {
-          "title": "Chopping Mall",
-          "year": 1986,
-          "tmdbId": 28941
-        },
-        {
-          "title": "The Fly",
-          "year": 1986,
-          "tmdbId": 9426
-        }
-      ],
-      "extended": [
-        {
-          "title": "Hawk the Slayer",
-          "year": 1980,
-          "tmdbId": null
-        },
-        {
-          "title": "The Beastmaster",
-          "year": 1982,
-          "tmdbId": 16441
-        },
-        {
-          "title": "Fire and Ice",
-          "year": 1983,
-          "tmdbId": 15035
-        },
-        {
-          "title": "Red Sonja",
-          "year": 1985,
-          "tmdbId": 9626
-        },
-        {
-          "title": "Gothic",
-          "year": 1986,
-          "tmdbId": null
-        },
-        {
-          "title": "Night of the Creeps",
-          "year": 1986,
-          "tmdbId": 15762
-        },
-        {
-          "title": "Gothic",
-          "year": 1987,
-          "tmdbId": 33516
-        },
-        {
-          "title": "Masters of the Universe",
-          "year": 1987,
-          "tmdbId": 11649
-        },
-        {
-          "title": "The Gate",
-          "year": 1987,
-          "tmdbId": 6917
-        },
-        {
-          "title": "The Hidden",
-          "year": 1987,
-          "tmdbId": 12476
-        },
-        {
-          "title": "The Lost Boys",
-          "year": 1987,
-          "tmdbId": 1547
-        },
-        {
-          "title": "The Monster Squad",
-          "year": 1987,
-          "tmdbId": 13509
-        },
-        {
-          "title": "The Video Dead",
-          "year": 1987,
-          "tmdbId": 26677
-        },
-        {
-          "title": "976-EVIL",
-          "year": 1988,
-          "tmdbId": 24038
-        },
-        {
-          "title": "Brain Damage",
-          "year": 1988,
-          "tmdbId": 27814
-        },
-        {
-          "title": "Dead Heat",
-          "year": 1988,
-          "tmdbId": 40095
-        },
-        {
-          "title": "Hellbound: Hellraiser II",
-          "year": 1988,
-          "tmdbId": 9064
-        },
-        {
-          "title": "Pumpkinhead",
-          "year": 1988,
-          "tmdbId": 26515
-        },
-        {
-          "title": "Return of the Killer Tomatoes!",
-          "year": 1988,
-          "tmdbId": 15482
-        },
-        {
-          "title": "Waxwork",
-          "year": 1988,
-          "tmdbId": 29095
-        },
-        {
-          "title": "Warlock",
-          "year": 1989,
-          "tmdbId": 11342
-        },
-        {
-          "title": "Darkman",
-          "year": 1990,
-          "tmdbId": 9556
-        },
-        {
-          "title": "Gate II",
-          "year": 1990,
-          "tmdbId": 40729
-        },
-        {
-          "title": "Grim Prairie Tales",
-          "year": 1990,
-          "tmdbId": 66706
-        },
-        {
-          "title": "Nightbreed",
-          "year": 1990,
-          "tmdbId": 20481
-        },
-        {
-          "title": "The Gate II: Trespassers",
-          "year": 1990,
-          "tmdbId": null
-        },
-        {
-          "title": "Tremors",
-          "year": 1990,
-          "tmdbId": 9362
-        },
-        {
-          "title": "The People Under the Stairs",
-          "year": 1991,
-          "tmdbId": 13122
-        },
-        {
-          "title": "The Crow",
-          "year": 1994,
-          "tmdbId": 9495
-        },
-        {
-          "title": "The Addiction",
-          "year": 1995,
-          "tmdbId": 34996
-        },
-        {
-          "title": "The Relic",
-          "year": 1997,
-          "tmdbId": 11015
-        },
-        {
-          "title": "Cube",
-          "year": 1998,
-          "tmdbId": 431
-        },
-        {
-          "title": "Deep Rising",
-          "year": 1998,
-          "tmdbId": 9457
-        },
-        {
-          "title": "The Faculty",
-          "year": 1998,
-          "tmdbId": 9276
-        },
-        {
-          "title": "House on Haunted Hill",
-          "year": 1999,
-          "tmdbId": 11377
         }
       ]
     },

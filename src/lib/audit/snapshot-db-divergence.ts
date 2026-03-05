@@ -37,11 +37,14 @@ export type DivergenceSummary = {
   packSlug: string;
   taxonomyVersion: string;
   curatorAuthorityCount: number;
+  authorityCoreCount: number;
   missingInDbCount: number;
   missingInReleaseCount: number;
   tierDriftCount: number;
   nodeDriftCount: number;
   lossRatePercent: number;
+  releaseCoreCount: number;
+  coreCountDelta: number;
   items: DivergenceItem[];
 };
 
@@ -50,6 +53,7 @@ const SEASON1_SNAPSHOT_PATH = path.resolve(
   'season1-horror-snapshot-2026-03-04T19-19-00-138Z.json',
 );
 const SEASON2_SNAPSHOT_PATH = path.resolve('docs', 'season', 'season-2-cult-classics-mastered.json');
+const RELEASE_CORE_CONTRACT_DIR = path.resolve('artifacts', 'release-core-contract');
 
 export function shouldFailPublish(lossRatePct: number, thresholdPct: number, override: boolean): boolean {
   return lossRatePct > thresholdPct && !override;
@@ -182,6 +186,7 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
 
   const authorityItems = await loadAuthoritySnapshot(input.seasonSlug);
   const authorityCount = authorityItems.length;
+  const authorityCoreCount = authorityItems.reduce((count, entry) => (entry.tier === 'CORE' ? count + 1 : count), 0);
   const nodeMovies = await loadNodeMovies(prisma, pack.id, input.taxonomyVersion);
   const dbMap = buildTmdbMap(nodeMovies);
 
@@ -195,6 +200,7 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
     releaseId = published?.id ?? null;
   }
   const releaseAssignments = releaseId ? await loadReleaseAssignments(prisma, releaseId) : [];
+  const releaseCoreCount = releaseAssignments.length;
   const releaseMap = buildTmdbMap(releaseAssignments);
 
   const items: DivergenceItem[] = [];
@@ -297,11 +303,14 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
     packSlug: input.packSlug,
     taxonomyVersion: input.taxonomyVersion,
     curatorAuthorityCount: authorityCount,
+    authorityCoreCount,
     missingInDbCount,
     missingInReleaseCount,
     tierDriftCount,
     nodeDriftCount,
     lossRatePercent: Number(lossRatePercent.toFixed(2)),
+    releaseCoreCount,
+    coreCountDelta: releaseCoreCount - authorityCoreCount,
     items,
   };
 }
@@ -320,6 +329,29 @@ export async function emitUnresolvedReport(summary: DivergenceSummary): Promise<
   return filename;
 }
 
+async function ensureReleaseContractDir(): Promise<string> {
+  await fs.mkdir(RELEASE_CORE_CONTRACT_DIR, { recursive: true });
+  return RELEASE_CORE_CONTRACT_DIR;
+}
+
+export async function emitReleaseContractReport(summary: DivergenceSummary): Promise<string> {
+  const dir = await ensureReleaseContractDir();
+  const releaseDiffs = summary.items.filter((item) => item.category === 'missing-in-release' || item.category === 'node-drift');
+  const report = {
+    generatedAt: new Date().toISOString(),
+    seasonSlug: summary.seasonSlug,
+    packSlug: summary.packSlug,
+    taxonomyVersion: summary.taxonomyVersion,
+    snapshotCoreCount: summary.authorityCoreCount,
+    releaseCoreCount: summary.releaseCoreCount,
+    delta: summary.coreCountDelta,
+    releaseDiffs,
+  };
+  const filename = path.join(dir, `${summary.seasonSlug}-release-core-contract.json`);
+  await fs.writeFile(filename, JSON.stringify(report, null, 2), 'utf8');
+  return filename;
+}
+
 export async function enforceSnapshotGuardrail(prisma: PrismaClient, input: {
   seasonSlug: string;
   packSlug: 'horror' | 'cult-classics';
@@ -335,6 +367,7 @@ export async function enforceSnapshotGuardrail(prisma: PrismaClient, input: {
     releaseId: input.releaseId,
   });
   await emitUnresolvedReport(summary);
+  await emitReleaseContractReport(summary);
   const threshold = input.thresholdPercent ?? Number(process.env.SNAPSHOT_DIVERGENCE_THRESHOLD_PCT ?? '2');
   const override = input.overrideEnv ?? process.env.SNAPSHOT_DIVERGENCE_OVERRIDE === 'true';
   if (shouldFailPublish(summary.lossRatePercent, threshold, override)) {

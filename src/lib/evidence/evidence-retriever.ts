@@ -2,6 +2,7 @@ export type EvidenceProvenance = {
   retrievalMode: 'cache' | 'hybrid';
   sourceType: 'packet' | 'external_reading' | 'chunk';
   documentId?: string;
+  chunkId?: string;
   seasonSlug?: string;
   packId?: string;
   taxonomyVersion?: string;

@@ -20,6 +20,7 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
       orderBy: Array<{ updatedAt: 'desc' }>;
       take: number;
       select: {
+        id: true;
         text: true;
         updatedAt: true;
         createdAt: true;
@@ -33,6 +34,7 @@ type PrismaEvidenceClient = Pick<PrismaClient, 'evidencePacket' | 'externalReadi
         };
       };
     }) => Promise<Array<{
+      id: string;
       text: string;
       updatedAt?: Date;
       createdAt: Date;
@@ -296,6 +298,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         orderBy: [{ updatedAt: 'desc' }],
         take: 100,
         select: {
+          id: true,
           text: true,
           updatedAt: true,
           createdAt: true,
@@ -319,6 +322,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         retrievalMode: 'hybrid',
         sourceType: 'chunk',
         documentId: item.document.id,
+        chunkId: item.id,
         ...(item.document.seasonSlug ? { seasonSlug: item.document.seasonSlug } : {}),
       },
     }));
@@ -341,6 +345,7 @@ class HybridEvidenceRetriever implements EvidenceRetrieverV2 {
         retrievalMode: 'hybrid',
         sourceType: item.provenance?.sourceType ?? 'packet',
         ...(item.provenance?.documentId ? { documentId: item.provenance.documentId } : {}),
+        ...(item.provenance?.chunkId ? { chunkId: item.provenance.chunkId } : {}),
         ...(item.provenance?.seasonSlug ? { seasonSlug: item.provenance.seasonSlug } : {}),
         ...(item.provenance?.packId ? { packId: item.provenance.packId } : {}),
         ...(item.provenance?.taxonomyVersion ? { taxonomyVersion: item.provenance.taxonomyVersion } : {}),

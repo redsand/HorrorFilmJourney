@@ -3,419 +3,1382 @@
   "packSlug": "horror",
   "nodes": [
     {
-      "slug": "supernatural-horror",
-      "name": "Supernatural Horror",
+      "slug": "gothic-horror",
+      "name": "Gothic Horror",
       "titles": [
-        { "title": "The Exorcist", "year": 1973 },
-        { "title": "The Conjuring", "year": 2013 },
-        { "title": "Poltergeist", "year": 1982 },
-        { "title": "The Sixth Sense", "year": 1999 },
-        { "title": "The Ring", "year": 2002 },
-        { "title": "Ringu", "year": 1998 },
-        { "title": "The Others", "year": 2001 },
-        { "title": "Paranormal Activity", "year": 2007 },
-        { "title": "Insidious", "year": 2010 },
-        { "title": "The Haunting", "year": 1963 },
-        { "title": "The Innocents", "year": 1961 },
-        { "title": "The Amityville Horror", "year": 1979 },
-        { "title": "Sinister", "year": 2012 },
-        { "title": "The Grudge", "year": 2004 },
-        { "title": "Ju-On: The Grudge", "year": 2002 },
-        { "title": "Drag Me to Hell", "year": 2009 },
-        { "title": "The Changeling", "year": 1980 },
-        { "title": "The Autopsy of Jane Doe", "year": 2016 },
-        { "title": "The Babadook", "year": 2014 },
-        { "title": "The Witch in the Window", "year": 2018 }
-      ]
-    },
-    {
-      "slug": "psychological-horror",
-      "name": "Psychological Horror",
-      "titles": [
-        { "title": "Psycho", "year": 1960 },
-        { "title": "The Shining", "year": 1980 },
-        { "title": "Black Swan", "year": 2010 },
-        { "title": "Repulsion", "year": 1965 },
-        { "title": "Rosemary's Baby", "year": 1968 },
-        { "title": "The Lighthouse", "year": 2019 },
-        { "title": "Saint Maud", "year": 2019 },
-        { "title": "Jacob's Ladder", "year": 1990 },
-        { "title": "Session 9", "year": 2001 },
-        { "title": "The Tenant", "year": 1976 },
-        { "title": "The Machinist", "year": 2004 },
-        { "title": "Possession", "year": 1981 },
-        { "title": "Don't Look Now", "year": 1973 },
-        { "title": "Perfect Blue", "year": 1997 },
-        { "title": "Enemy", "year": 2013 },
-        { "title": "The Invitation", "year": 2015 },
-        { "title": "It Comes at Night", "year": 2017 },
-        { "title": "The Night House", "year": 2020 },
-        { "title": "Mother!", "year": 2017 },
-        { "title": "Lost Highway", "year": 1997 }
+        {
+          "title": "Dracula",
+          "year": 1931
+        },
+        {
+          "title": "Frankenstein",
+          "year": 1931
+        },
+        {
+          "title": "Bride of Frankenstein",
+          "year": 1935
+        },
+        {
+          "title": "The Haunting",
+          "year": 1963
+        },
+        {
+          "title": "The Innocents",
+          "year": 1961
+        },
+        {
+          "title": "Crimson Peak",
+          "year": 2015
+        },
+        {
+          "title": "Bram Stoker's Dracula",
+          "year": 1992
+        },
+        {
+          "title": "The Others",
+          "year": 2001
+        },
+        {
+          "title": "Rebecca",
+          "year": 1940
+        },
+        {
+          "title": "Sleepy Hollow",
+          "year": 1999
+        },
+        {
+          "title": "The Woman in Black",
+          "year": 2012
+        },
+        {
+          "title": "The Uninvited",
+          "year": 1944
+        },
+        {
+          "title": "The Fall of the House of Usher",
+          "year": 1960
+        },
+        {
+          "title": "The Lodger",
+          "year": 1927
+        },
+        {
+          "title": "Interview with the Vampire",
+          "year": 1994
+        },
+        {
+          "title": "The Pit and the Pendulum",
+          "year": 1961
+        },
+        {
+          "title": "The Devil's Backbone",
+          "year": 2001
+        },
+        {
+          "title": "The Orphanage",
+          "year": 2007
+        },
+        {
+          "title": "Black Sunday",
+          "year": 1960
+        },
+        {
+          "title": "Nosferatu",
+          "year": 1922
+        }
       ]
     },
     {
       "slug": "slasher-serial-killer",
       "name": "Slasher / Serial Killer",
       "titles": [
-        { "title": "Halloween", "year": 1978 },
-        { "title": "Friday the 13th", "year": 1980 },
-        { "title": "A Nightmare on Elm Street", "year": 1984 },
-        { "title": "The Texas Chain Saw Massacre", "year": 1974 },
-        { "title": "Scream", "year": 1996 },
-        { "title": "Black Christmas", "year": 1974 },
-        { "title": "My Bloody Valentine", "year": 1981 },
-        { "title": "The Burning", "year": 1981 },
-        { "title": "Sleepaway Camp", "year": 1983 },
-        { "title": "Maniac", "year": 1980 },
-        { "title": "Candyman", "year": 1992 },
-        { "title": "Peeping Tom", "year": 1960 },
-        { "title": "The House That Jack Built", "year": 2018 },
-        { "title": "Henry: Portrait of a Serial Killer", "year": 1986 },
-        { "title": "American Psycho", "year": 2000 },
-        { "title": "Behind the Mask: The Rise of Leslie Vernon", "year": 2006 },
-        { "title": "Hatchet", "year": 2006 },
-        { "title": "The Town That Dreaded Sundown", "year": 1976 },
-        { "title": "Psycho II", "year": 1983 },
-        { "title": "Terrifier", "year": 2016 }
+        {
+          "title": "Halloween",
+          "year": 1978
+        },
+        {
+          "title": "Friday the 13th",
+          "year": 1980
+        },
+        {
+          "title": "A Nightmare on Elm Street",
+          "year": 1984
+        },
+        {
+          "title": "The Texas Chain Saw Massacre",
+          "year": 1974
+        },
+        {
+          "title": "Scream",
+          "year": 1996
+        },
+        {
+          "title": "Black Christmas",
+          "year": 1974
+        },
+        {
+          "title": "My Bloody Valentine",
+          "year": 1981
+        },
+        {
+          "title": "The Burning",
+          "year": 1981
+        },
+        {
+          "title": "Sleepaway Camp",
+          "year": 1983
+        },
+        {
+          "title": "Maniac",
+          "year": 1980
+        },
+        {
+          "title": "Candyman",
+          "year": 1992
+        },
+        {
+          "title": "Peeping Tom",
+          "year": 1960
+        },
+        {
+          "title": "The House That Jack Built",
+          "year": 2018
+        },
+        {
+          "title": "Henry: Portrait of a Serial Killer",
+          "year": 1986
+        },
+        {
+          "title": "American Psycho",
+          "year": 2000
+        },
+        {
+          "title": "Behind the Mask: The Rise of Leslie Vernon",
+          "year": 2006
+        },
+        {
+          "title": "Hatchet",
+          "year": 2006
+        },
+        {
+          "title": "The Town That Dreaded Sundown",
+          "year": 1976
+        },
+        {
+          "title": "Psycho II",
+          "year": 1983
+        },
+        {
+          "title": "Terrifier",
+          "year": 2016
+        }
       ]
     },
     {
       "slug": "creature-monster",
       "name": "Creature / Monster",
       "titles": [
-        { "title": "Jaws", "year": 1975 },
-        { "title": "Alien", "year": 1979 },
-        { "title": "The Thing", "year": 1982 },
-        { "title": "Predator", "year": 1987 },
-        { "title": "Godzilla", "year": 1954 },
-        { "title": "King Kong", "year": 1933 },
-        { "title": "The Host", "year": 2006 },
-        { "title": "Tremors", "year": 1990 },
-        { "title": "Cloverfield", "year": 2008 },
-        { "title": "The Fly", "year": 1986 },
-        { "title": "An American Werewolf in London", "year": 1981 },
-        { "title": "The Descent", "year": 2005 },
-        { "title": "The Mist", "year": 2007 },
-        { "title": "Gremlins", "year": 1984 },
-        { "title": "Pumpkinhead", "year": 1988 },
-        { "title": "Lake Placid", "year": 1999 },
-        { "title": "The Ritual", "year": 2017 },
-        { "title": "The Relic", "year": 1997 },
-        { "title": "Jeepers Creepers", "year": 2001 },
-        { "title": "Attack the Block", "year": 2011 }
-      ]
-    },
-    {
-      "slug": "body-horror",
-      "name": "Body Horror",
-      "titles": [
-        { "title": "The Fly", "year": 1986 },
-        { "title": "Videodrome", "year": 1983 },
-        { "title": "The Thing", "year": 1982 },
-        { "title": "Tetsuo: The Iron Man", "year": 1989 },
-        { "title": "Possessor", "year": 2020 },
-        { "title": "Crimes of the Future", "year": 2022 },
-        { "title": "Raw", "year": 2016 },
-        { "title": "Titane", "year": 2021 },
-        { "title": "Society", "year": 1989 },
-        { "title": "The Brood", "year": 1979 },
-        { "title": "Rabid", "year": 1977 },
-        { "title": "Altered States", "year": 1980 },
-        { "title": "Hellraiser", "year": 1987 },
-        { "title": "Antiviral", "year": 2012 },
-        { "title": "The Skin I Live In", "year": 2011 },
-        { "title": "Bite", "year": 2015 },
-        { "title": "Contracted", "year": 2013 },
-        { "title": "Slither", "year": 2006 },
-        { "title": "American Mary", "year": 2012 },
-        { "title": "The Substance", "year": 2024 }
-      ]
-    },
-    {
-      "slug": "cosmic-horror",
-      "name": "Cosmic Horror",
-      "titles": [
-        { "title": "The Thing", "year": 1982 },
-        { "title": "Annihilation", "year": 2018 },
-        { "title": "In the Mouth of Madness", "year": 1994 },
-        { "title": "Event Horizon", "year": 1997 },
-        { "title": "The Void", "year": 2016 },
-        { "title": "Color Out of Space", "year": 2019 },
-        { "title": "The Endless", "year": 2017 },
-        { "title": "Prince of Darkness", "year": 1987 },
-        { "title": "The Lighthouse", "year": 2019 },
-        { "title": "The Mist", "year": 2007 },
-        { "title": "Under the Skin", "year": 2013 },
-        { "title": "Resolution", "year": 2012 },
-        { "title": "The Beyond", "year": 1981 },
-        { "title": "Dagon", "year": 2001 },
-        { "title": "Banshee Chapter", "year": 2013 },
-        { "title": "The Call of Cthulhu", "year": 2005 },
-        { "title": "Glorious", "year": 2022 },
-        { "title": "Mandy", "year": 2018 },
-        { "title": "The Borderlands", "year": 2013 },
-        { "title": "Coherence", "year": 2013 }
-      ]
-    },
-    {
-      "slug": "folk-horror",
-      "name": "Folk Horror",
-      "titles": [
-        { "title": "The Wicker Man", "year": 1973 },
-        { "title": "The Witch", "year": 2015, "altTitle": "The VVitch" },
-        { "title": "Midsommar", "year": 2019 },
-        { "title": "The Blood on Satan's Claw", "year": 1971 },
-        { "title": "Witchfinder General", "year": 1968 },
-        { "title": "Kill List", "year": 2011 },
-        { "title": "The Ritual", "year": 2017 },
-        { "title": "A Field in England", "year": 2013 },
-        { "title": "Apostle", "year": 2018 },
-        { "title": "The Medium", "year": 2021 },
-        { "title": "Wake Wood", "year": 2009 },
-        { "title": "Hagazussa", "year": 2017 },
-        { "title": "November", "year": 2017 },
-        { "title": "The Hallow", "year": 2015 },
-        { "title": "The Wailing", "year": 2016 },
-        { "title": "Lamb", "year": 2021 },
-        { "title": "Robin Redbreast", "year": 1970 },
-        { "title": "The Hole in the Ground", "year": 2019 },
-        { "title": "Picnic at Hanging Rock", "year": 1975 },
-        { "title": "The Witch in the Window", "year": 2018 }
-      ]
-    },
-    {
-      "slug": "sci-fi-horror",
-      "name": "Sci-Fi Horror",
-      "titles": [
-        { "title": "Alien", "year": 1979 },
-        { "title": "The Thing", "year": 1982 },
-        { "title": "Event Horizon", "year": 1997 },
-        { "title": "Annihilation", "year": 2018 },
-        { "title": "The Fly", "year": 1986 },
-        { "title": "Under the Skin", "year": 2013 },
-        { "title": "Sunshine", "year": 2007 },
-        { "title": "Pitch Black", "year": 2000 },
-        { "title": "Species", "year": 1995 },
-        { "title": "Pandorum", "year": 2009 },
-        { "title": "Life", "year": 2017 },
-        { "title": "Possessor", "year": 2020 },
-        { "title": "Upgrade", "year": 2018 },
-        { "title": "Cube", "year": 1997 },
-        { "title": "The Invisible Man", "year": 2020 },
-        { "title": "Scanners", "year": 1981 },
-        { "title": "Invasion of the Body Snatchers", "year": 1978 },
-        { "title": "The Faculty", "year": 1998 },
-        { "title": "Splice", "year": 2009 },
-        { "title": "Virus", "year": 1999 }
-      ]
-    },
-    {
-      "slug": "found-footage",
-      "name": "Found Footage",
-      "titles": [
-        { "title": "The Blair Witch Project", "year": 1999 },
-        { "title": "Paranormal Activity", "year": 2007 },
-        { "title": "REC", "year": 2007 },
-        { "title": "Cloverfield", "year": 2008 },
-        { "title": "The Last Exorcism", "year": 2010 },
-        { "title": "As Above, So Below", "year": 2014 },
-        { "title": "Hell House LLC", "year": 2015 },
-        { "title": "The Taking of Deborah Logan", "year": 2014 },
-        { "title": "Host", "year": 2020 },
-        { "title": "Creep", "year": 2014 },
-        { "title": "Creep 2", "year": 2017 },
-        { "title": "Grave Encounters", "year": 2011 },
-        { "title": "The Bay", "year": 2012 },
-        { "title": "Noroi: The Curse", "year": 2005 },
-        { "title": "The Poughkeepsie Tapes", "year": 2007 },
-        { "title": "The Borderlands", "year": 2013 },
-        { "title": "Gonjiam: Haunted Asylum", "year": 2018 },
-        { "title": "Lake Mungo", "year": 2008 },
-        { "title": "V/H/S", "year": 2012 },
-        { "title": "V/H/S/2", "year": 2013 }
-      ]
-    },
-    {
-      "slug": "survival-horror",
-      "name": "Survival Horror",
-      "titles": [
-        { "title": "The Descent", "year": 2005 },
-        { "title": "The Texas Chain Saw Massacre", "year": 1974 },
-        { "title": "The Shallows", "year": 2016 },
-        { "title": "Crawl", "year": 2019 },
-        { "title": "28 Days Later", "year": 2002 },
-        { "title": "The Ruins", "year": 2008 },
-        { "title": "Frozen", "year": 2010 },
-        { "title": "The Edge", "year": 1997 },
-        { "title": "Backcountry", "year": 2014 },
-        { "title": "The Grey", "year": 2011 },
-        { "title": "Deliverance", "year": 1972 },
-        { "title": "The Ritual", "year": 2017 },
-        { "title": "The Hills Have Eyes", "year": 1977 },
-        { "title": "Wrong Turn", "year": 2003 },
-        { "title": "The Reef", "year": 2010 },
-        { "title": "The Descent Part II", "year": 2009 },
-        { "title": "Predator", "year": 1987 },
-        { "title": "A Quiet Place", "year": 2018 },
-        { "title": "The Silence", "year": 2019 },
-        { "title": "Eden Lake", "year": 2008 }
-      ]
-    },
-    {
-      "slug": "apocalyptic-horror",
-      "name": "Apocalyptic Horror",
-      "titles": [
-        { "title": "Night of the Living Dead", "year": 1968 },
-        { "title": "Dawn of the Dead", "year": 1978 },
-        { "title": "28 Days Later", "year": 2002 },
-        { "title": "The Road", "year": 2009 },
-        { "title": "Train to Busan", "year": 2016 },
-        { "title": "World War Z", "year": 2013 },
-        { "title": "I Am Legend", "year": 2007 },
-        { "title": "The Girl with All the Gifts", "year": 2016 },
-        { "title": "The Crazies", "year": 2010 },
-        { "title": "A Quiet Place", "year": 2018 },
-        { "title": "Children of Men", "year": 2006 },
-        { "title": "The Last Man on Earth", "year": 1964 },
-        { "title": "Pontypool", "year": 2008 },
-        { "title": "Carriers", "year": 2009 },
-        { "title": "Bird Box", "year": 2018 },
-        { "title": "The Mist", "year": 2007 },
-        { "title": "The Sadness", "year": 2021 },
-        { "title": "Cargo", "year": 2017 },
-        { "title": "Zombieland", "year": 2009 },
-        { "title": "The Battery", "year": 2012 }
-      ]
-    },
-    {
-      "slug": "gothic-horror",
-      "name": "Gothic Horror",
-      "titles": [
-        { "title": "Dracula", "year": 1931 },
-        { "title": "Frankenstein", "year": 1931 },
-        { "title": "Bride of Frankenstein", "year": 1935 },
-        { "title": "The Haunting", "year": 1963 },
-        { "title": "The Innocents", "year": 1961 },
-        { "title": "Crimson Peak", "year": 2015 },
-        { "title": "Bram Stoker's Dracula", "year": 1992 },
-        { "title": "The Others", "year": 2001 },
-        { "title": "Rebecca", "year": 1940 },
-        { "title": "Sleepy Hollow", "year": 1999 },
-        { "title": "The Woman in Black", "year": 2012 },
-        { "title": "The Uninvited", "year": 1944 },
-        { "title": "The Fall of the House of Usher", "year": 1960 },
-        { "title": "The Lodger", "year": 1927 },
-        { "title": "Interview with the Vampire", "year": 1994 },
-        { "title": "The Pit and the Pendulum", "year": 1961 },
-        { "title": "The Devil's Backbone", "year": 2001 },
-        { "title": "The Orphanage", "year": 2007 },
-        { "title": "Black Sunday", "year": 1960 },
-        { "title": "Nosferatu", "year": 1922 }
+        {
+          "title": "Jaws",
+          "year": 1975
+        },
+        {
+          "title": "Alien",
+          "year": 1979
+        },
+        {
+          "title": "The Thing",
+          "year": 1982
+        },
+        {
+          "title": "Predator",
+          "year": 1987
+        },
+        {
+          "title": "Godzilla",
+          "year": 1954
+        },
+        {
+          "title": "King Kong",
+          "year": 1933
+        },
+        {
+          "title": "The Host",
+          "year": 2006
+        },
+        {
+          "title": "Tremors",
+          "year": 1990
+        },
+        {
+          "title": "Cloverfield",
+          "year": 2008
+        },
+        {
+          "title": "The Fly",
+          "year": 1986
+        },
+        {
+          "title": "An American Werewolf in London",
+          "year": 1981
+        },
+        {
+          "title": "The Descent",
+          "year": 2005
+        },
+        {
+          "title": "The Mist",
+          "year": 2007
+        },
+        {
+          "title": "Gremlins",
+          "year": 1984
+        },
+        {
+          "title": "Pumpkinhead",
+          "year": 1988
+        },
+        {
+          "title": "Lake Placid",
+          "year": 1999
+        },
+        {
+          "title": "The Ritual",
+          "year": 2017
+        },
+        {
+          "title": "The Relic",
+          "year": 1997
+        },
+        {
+          "title": "Jeepers Creepers",
+          "year": 2001
+        },
+        {
+          "title": "Attack the Block",
+          "year": 2011
+        }
       ]
     },
     {
       "slug": "horror-comedy",
       "name": "Horror Comedy",
       "titles": [
-        { "title": "Shaun of the Dead", "year": 2004 },
-        { "title": "Evil Dead II", "year": 1987 },
-        { "title": "What We Do in the Shadows", "year": 2014 },
-        { "title": "Tucker and Dale vs Evil", "year": 2010 },
-        { "title": "Gremlins", "year": 1984 },
-        { "title": "Beetlejuice", "year": 1988 },
-        { "title": "The Cabin in the Woods", "year": 2011 },
-        { "title": "Zombieland", "year": 2009 },
-        { "title": "Re-Animator", "year": 1985 },
-        { "title": "Army of Darkness", "year": 1992 },
-        { "title": "Young Frankenstein", "year": 1974 },
-        { "title": "Return of the Living Dead", "year": 1985 },
-        { "title": "Braindead", "year": 1992, "altTitle": "Dead Alive" },
-        { "title": "Little Shop of Horrors", "year": 1986 },
-        { "title": "Happy Death Day", "year": 2017 },
-        { "title": "The Frighteners", "year": 1996 },
-        { "title": "Slither", "year": 2006 },
-        { "title": "Scary Movie", "year": 2000 },
-        { "title": "Bubba Ho-Tep", "year": 2002 },
-        { "title": "The Menu", "year": 2022 }
+        {
+          "title": "Shaun of the Dead",
+          "year": 2004
+        },
+        {
+          "title": "Evil Dead II",
+          "year": 1987
+        },
+        {
+          "title": "What We Do in the Shadows",
+          "year": 2014
+        },
+        {
+          "title": "Tucker and Dale vs Evil",
+          "year": 2010
+        },
+        {
+          "title": "Gremlins",
+          "year": 1984
+        },
+        {
+          "title": "Beetlejuice",
+          "year": 1988
+        },
+        {
+          "title": "The Cabin in the Woods",
+          "year": 2011
+        },
+        {
+          "title": "Zombieland",
+          "year": 2009
+        },
+        {
+          "title": "Re-Animator",
+          "year": 1985
+        },
+        {
+          "title": "Army of Darkness",
+          "year": 1992
+        },
+        {
+          "title": "Young Frankenstein",
+          "year": 1974
+        },
+        {
+          "title": "Return of the Living Dead",
+          "year": 1985
+        },
+        {
+          "title": "Braindead",
+          "year": 1992,
+          "altTitle": "Dead Alive"
+        },
+        {
+          "title": "Little Shop of Horrors",
+          "year": 1986
+        },
+        {
+          "title": "Happy Death Day",
+          "year": 2017
+        },
+        {
+          "title": "The Frighteners",
+          "year": 1996
+        },
+        {
+          "title": "Slither",
+          "year": 2006
+        },
+        {
+          "title": "Scary Movie",
+          "year": 2000
+        },
+        {
+          "title": "Bubba Ho-Tep",
+          "year": 2002
+        },
+        {
+          "title": "The Menu",
+          "year": 2022
+        }
+      ]
+    },
+    {
+      "slug": "psychological-horror",
+      "name": "Psychological Horror",
+      "titles": [
+        {
+          "title": "Psycho",
+          "year": 1960
+        },
+        {
+          "title": "The Shining",
+          "year": 1980
+        },
+        {
+          "title": "Black Swan",
+          "year": 2010
+        },
+        {
+          "title": "Repulsion",
+          "year": 1965
+        },
+        {
+          "title": "Rosemary's Baby",
+          "year": 1968
+        },
+        {
+          "title": "The Lighthouse",
+          "year": 2019
+        },
+        {
+          "title": "Saint Maud",
+          "year": 2019
+        },
+        {
+          "title": "Jacob's Ladder",
+          "year": 1990
+        },
+        {
+          "title": "Session 9",
+          "year": 2001
+        },
+        {
+          "title": "The Tenant",
+          "year": 1976
+        },
+        {
+          "title": "The Machinist",
+          "year": 2004
+        },
+        {
+          "title": "Possession",
+          "year": 1981
+        },
+        {
+          "title": "Don't Look Now",
+          "year": 1973
+        },
+        {
+          "title": "Perfect Blue",
+          "year": 1997
+        },
+        {
+          "title": "Enemy",
+          "year": 2013
+        },
+        {
+          "title": "The Invitation",
+          "year": 2015
+        },
+        {
+          "title": "It Comes at Night",
+          "year": 2017
+        },
+        {
+          "title": "The Night House",
+          "year": 2020
+        },
+        {
+          "title": "Mother!",
+          "year": 2017
+        },
+        {
+          "title": "Lost Highway",
+          "year": 1997
+        }
+      ]
+    },
+    {
+      "slug": "sci-fi-horror",
+      "name": "Sci-Fi Horror",
+      "titles": [
+        {
+          "title": "Alien",
+          "year": 1979
+        },
+        {
+          "title": "The Thing",
+          "year": 1982
+        },
+        {
+          "title": "Event Horizon",
+          "year": 1997
+        },
+        {
+          "title": "Annihilation",
+          "year": 2018
+        },
+        {
+          "title": "The Fly",
+          "year": 1986
+        },
+        {
+          "title": "Under the Skin",
+          "year": 2013
+        },
+        {
+          "title": "Sunshine",
+          "year": 2007
+        },
+        {
+          "title": "Pitch Black",
+          "year": 2000
+        },
+        {
+          "title": "Species",
+          "year": 1995
+        },
+        {
+          "title": "Pandorum",
+          "year": 2009
+        },
+        {
+          "title": "Life",
+          "year": 2017
+        },
+        {
+          "title": "Possessor",
+          "year": 2020
+        },
+        {
+          "title": "Upgrade",
+          "year": 2018
+        },
+        {
+          "title": "Cube",
+          "year": 1997
+        },
+        {
+          "title": "The Invisible Man",
+          "year": 2020
+        },
+        {
+          "title": "Scanners",
+          "year": 1981
+        },
+        {
+          "title": "Invasion of the Body Snatchers",
+          "year": 1978
+        },
+        {
+          "title": "The Faculty",
+          "year": 1998
+        },
+        {
+          "title": "Splice",
+          "year": 2009
+        },
+        {
+          "title": "Virus",
+          "year": 1999
+        }
+      ]
+    },
+    {
+      "slug": "supernatural-horror",
+      "name": "Supernatural Horror",
+      "titles": [
+        {
+          "title": "The Exorcist",
+          "year": 1973
+        },
+        {
+          "title": "The Conjuring",
+          "year": 2013
+        },
+        {
+          "title": "Poltergeist",
+          "year": 1982
+        },
+        {
+          "title": "The Sixth Sense",
+          "year": 1999
+        },
+        {
+          "title": "The Ring",
+          "year": 2002
+        },
+        {
+          "title": "Ringu",
+          "year": 1998
+        },
+        {
+          "title": "The Others",
+          "year": 2001
+        },
+        {
+          "title": "Paranormal Activity",
+          "year": 2007
+        },
+        {
+          "title": "Insidious",
+          "year": 2010
+        },
+        {
+          "title": "The Haunting",
+          "year": 1963
+        },
+        {
+          "title": "The Innocents",
+          "year": 1961
+        },
+        {
+          "title": "The Amityville Horror",
+          "year": 1979
+        },
+        {
+          "title": "Sinister",
+          "year": 2012
+        },
+        {
+          "title": "The Grudge",
+          "year": 2004
+        },
+        {
+          "title": "Ju-On: The Grudge",
+          "year": 2002
+        },
+        {
+          "title": "Drag Me to Hell",
+          "year": 2009
+        },
+        {
+          "title": "The Changeling",
+          "year": 1980
+        },
+        {
+          "title": "The Autopsy of Jane Doe",
+          "year": 2016
+        },
+        {
+          "title": "The Babadook",
+          "year": 2014
+        },
+        {
+          "title": "The Witch in the Window",
+          "year": 2018
+        }
       ]
     },
     {
       "slug": "splatter-extreme",
       "name": "Splatter / Extreme Horror",
       "titles": [
-        { "title": "Cannibal Holocaust", "year": 1980 },
-        { "title": "Martyrs", "year": 2008 },
-        { "title": "Inside", "year": 2007 },
-        { "title": "A Serbian Film", "year": 2010 },
-        { "title": "Ichi the Killer", "year": 2001 },
-        { "title": "Dead Alive", "year": 1992, "altTitle": "Braindead" },
-        { "title": "Hostel", "year": 2005 },
-        { "title": "Saw", "year": 2004 },
-        { "title": "The Sadness", "year": 2021 },
-        { "title": "Terrifier 2", "year": 2022 },
-        { "title": "August Underground", "year": 2001 },
-        { "title": "Nekromantik", "year": 1987 },
-        { "title": "Grotesque", "year": 2009 },
-        { "title": "High Tension", "year": 2003 },
-        { "title": "Guinea Pig: Flower of Flesh and Blood", "year": 1985 },
-        { "title": "The Green Inferno", "year": 2013 },
-        { "title": "Frontiers", "year": 2007 },
-        { "title": "The Human Centipede", "year": 2009 },
-        { "title": "The Human Centipede 2", "year": 2011 },
-        { "title": "Terrifier", "year": 2016 }
+        {
+          "title": "Cannibal Holocaust",
+          "year": 1980
+        },
+        {
+          "title": "Martyrs",
+          "year": 2008
+        },
+        {
+          "title": "Inside",
+          "year": 2007
+        },
+        {
+          "title": "A Serbian Film",
+          "year": 2010
+        },
+        {
+          "title": "Ichi the Killer",
+          "year": 2001
+        },
+        {
+          "title": "Dead Alive",
+          "year": 1992,
+          "altTitle": "Braindead"
+        },
+        {
+          "title": "Hostel",
+          "year": 2005
+        },
+        {
+          "title": "Saw",
+          "year": 2004
+        },
+        {
+          "title": "The Sadness",
+          "year": 2021
+        },
+        {
+          "title": "Terrifier 2",
+          "year": 2022
+        },
+        {
+          "title": "August Underground",
+          "year": 2001
+        },
+        {
+          "title": "Nekromantik",
+          "year": 1987
+        },
+        {
+          "title": "Grotesque",
+          "year": 2009
+        },
+        {
+          "title": "High Tension",
+          "year": 2003
+        },
+        {
+          "title": "Guinea Pig: Flower of Flesh and Blood",
+          "year": 1985
+        },
+        {
+          "title": "The Green Inferno",
+          "year": 2013
+        },
+        {
+          "title": "Frontiers",
+          "year": 2007
+        },
+        {
+          "title": "The Human Centipede",
+          "year": 2009
+        },
+        {
+          "title": "The Human Centipede 2",
+          "year": 2011
+        },
+        {
+          "title": "Terrifier",
+          "year": 2016
+        }
       ]
     },
     {
-      "slug": "social-domestic-horror",
-      "name": "Social / Domestic Horror",
+      "slug": "body-horror",
+      "name": "Body Horror",
       "titles": [
-        { "title": "Get Out", "year": 2017 },
-        { "title": "The Stepford Wives", "year": 1975 },
-        { "title": "The Babadook", "year": 2014 },
-        { "title": "Hereditary", "year": 2018 },
-        { "title": "Us", "year": 2019 },
-        { "title": "The Invitation", "year": 2015 },
-        { "title": "Funny Games", "year": 1997 },
-        { "title": "Mother!", "year": 2017 },
-        { "title": "Speak No Evil", "year": 2022 },
-        { "title": "The Purge", "year": 2013 },
-        { "title": "The Others", "year": 2001 },
-        { "title": "Rosemary's Baby", "year": 1968 },
-        { "title": "His House", "year": 2020 },
-        { "title": "The Lodge", "year": 2019 },
-        { "title": "The People Under the Stairs", "year": 1991 },
-        { "title": "Barbarian", "year": 2022 },
-        { "title": "Parasite", "year": 2019 },
-        { "title": "The Menu", "year": 2022 },
-        { "title": "The Strangers", "year": 2008 },
-        { "title": "We Need to Talk About Kevin", "year": 2011 }
+        {
+          "title": "The Fly",
+          "year": 1986
+        },
+        {
+          "title": "Videodrome",
+          "year": 1983
+        },
+        {
+          "title": "The Thing",
+          "year": 1982
+        },
+        {
+          "title": "Tetsuo: The Iron Man",
+          "year": 1989
+        },
+        {
+          "title": "Possessor",
+          "year": 2020
+        },
+        {
+          "title": "Crimes of the Future",
+          "year": 2022
+        },
+        {
+          "title": "Raw",
+          "year": 2016
+        },
+        {
+          "title": "Titane",
+          "year": 2021
+        },
+        {
+          "title": "Society",
+          "year": 1989
+        },
+        {
+          "title": "The Brood",
+          "year": 1979
+        },
+        {
+          "title": "Rabid",
+          "year": 1977
+        },
+        {
+          "title": "Altered States",
+          "year": 1980
+        },
+        {
+          "title": "Hellraiser",
+          "year": 1987
+        },
+        {
+          "title": "Antiviral",
+          "year": 2012
+        },
+        {
+          "title": "The Skin I Live In",
+          "year": 2011
+        },
+        {
+          "title": "Bite",
+          "year": 2015
+        },
+        {
+          "title": "Contracted",
+          "year": 2013
+        },
+        {
+          "title": "Slither",
+          "year": 2006
+        },
+        {
+          "title": "American Mary",
+          "year": 2012
+        },
+        {
+          "title": "The Substance",
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "slug": "survival-horror",
+      "name": "Survival Horror",
+      "titles": [
+        {
+          "title": "The Descent",
+          "year": 2005
+        },
+        {
+          "title": "The Texas Chain Saw Massacre",
+          "year": 1974
+        },
+        {
+          "title": "The Shallows",
+          "year": 2016
+        },
+        {
+          "title": "Crawl",
+          "year": 2019
+        },
+        {
+          "title": "28 Days Later",
+          "year": 2002
+        },
+        {
+          "title": "The Ruins",
+          "year": 2008
+        },
+        {
+          "title": "Frozen",
+          "year": 2010
+        },
+        {
+          "title": "The Edge",
+          "year": 1997
+        },
+        {
+          "title": "Backcountry",
+          "year": 2014
+        },
+        {
+          "title": "The Grey",
+          "year": 2011
+        },
+        {
+          "title": "Deliverance",
+          "year": 1972
+        },
+        {
+          "title": "The Ritual",
+          "year": 2017
+        },
+        {
+          "title": "The Hills Have Eyes",
+          "year": 1977
+        },
+        {
+          "title": "Wrong Turn",
+          "year": 2003
+        },
+        {
+          "title": "The Reef",
+          "year": 2010
+        },
+        {
+          "title": "The Descent Part II",
+          "year": 2009
+        },
+        {
+          "title": "Predator",
+          "year": 1987
+        },
+        {
+          "title": "A Quiet Place",
+          "year": 2018
+        },
+        {
+          "title": "The Silence",
+          "year": 2019
+        },
+        {
+          "title": "Eden Lake",
+          "year": 2008
+        }
+      ]
+    },
+    {
+      "slug": "apocalyptic-horror",
+      "name": "Apocalyptic Horror",
+      "titles": [
+        {
+          "title": "Night of the Living Dead",
+          "year": 1968
+        },
+        {
+          "title": "Dawn of the Dead",
+          "year": 1978
+        },
+        {
+          "title": "28 Days Later",
+          "year": 2002
+        },
+        {
+          "title": "The Road",
+          "year": 2009
+        },
+        {
+          "title": "Train to Busan",
+          "year": 2016
+        },
+        {
+          "title": "World War Z",
+          "year": 2013
+        },
+        {
+          "title": "I Am Legend",
+          "year": 2007
+        },
+        {
+          "title": "The Girl with All the Gifts",
+          "year": 2016
+        },
+        {
+          "title": "The Crazies",
+          "year": 2010
+        },
+        {
+          "title": "A Quiet Place",
+          "year": 2018
+        },
+        {
+          "title": "Children of Men",
+          "year": 2006
+        },
+        {
+          "title": "The Last Man on Earth",
+          "year": 1964
+        },
+        {
+          "title": "Pontypool",
+          "year": 2008
+        },
+        {
+          "title": "Carriers",
+          "year": 2009
+        },
+        {
+          "title": "Bird Box",
+          "year": 2018
+        },
+        {
+          "title": "The Mist",
+          "year": 2007
+        },
+        {
+          "title": "The Sadness",
+          "year": 2021
+        },
+        {
+          "title": "Cargo",
+          "year": 2017
+        },
+        {
+          "title": "Zombieland",
+          "year": 2009
+        },
+        {
+          "title": "The Battery",
+          "year": 2012
+        }
       ]
     },
     {
       "slug": "experimental-horror",
       "name": "Experimental Horror",
       "titles": [
-        { "title": "Eraserhead", "year": 1977 },
-        { "title": "Begotten", "year": 1989 },
-        { "title": "The Lighthouse", "year": 2019 },
-        { "title": "Skinamarink", "year": 2022 },
-        { "title": "Mandy", "year": 2018 },
-        { "title": "The Reflecting Skin", "year": 1990 },
-        { "title": "Possession", "year": 1981 },
-        { "title": "Climax", "year": 2018 },
-        { "title": "Santa Sangre", "year": 1989 },
-        { "title": "Hausu", "year": 1977 },
-        { "title": "Tetsuo: The Iron Man", "year": 1989 },
-        { "title": "The Strange Color of Your Body's Tears", "year": 2013 },
-        { "title": "Beyond the Black Rainbow", "year": 2010 },
-        { "title": "The Color of Pomegranates", "year": 1969 },
-        { "title": "Under the Skin", "year": 2013 },
-        { "title": "The Forbidden Room", "year": 2015 },
-        { "title": "Valhalla Rising", "year": 2009 },
-        { "title": "A Field in England", "year": 2013 },
-        { "title": "In Fabric", "year": 2018 },
-        { "title": "The Wolf House", "year": 2018 }
+        {
+          "title": "Eraserhead",
+          "year": 1977
+        },
+        {
+          "title": "Begotten",
+          "year": 1989
+        },
+        {
+          "title": "The Lighthouse",
+          "year": 2019
+        },
+        {
+          "title": "Skinamarink",
+          "year": 2022
+        },
+        {
+          "title": "Mandy",
+          "year": 2018
+        },
+        {
+          "title": "The Reflecting Skin",
+          "year": 1990
+        },
+        {
+          "title": "Possession",
+          "year": 1981
+        },
+        {
+          "title": "Climax",
+          "year": 2018
+        },
+        {
+          "title": "Santa Sangre",
+          "year": 1989
+        },
+        {
+          "title": "Hausu",
+          "year": 1977
+        },
+        {
+          "title": "Tetsuo: The Iron Man",
+          "year": 1989
+        },
+        {
+          "title": "The Strange Color of Your Body's Tears",
+          "year": 2013
+        },
+        {
+          "title": "Beyond the Black Rainbow",
+          "year": 2010
+        },
+        {
+          "title": "The Color of Pomegranates",
+          "year": 1969
+        },
+        {
+          "title": "Under the Skin",
+          "year": 2013
+        },
+        {
+          "title": "The Forbidden Room",
+          "year": 2015
+        },
+        {
+          "title": "Valhalla Rising",
+          "year": 2009
+        },
+        {
+          "title": "A Field in England",
+          "year": 2013
+        },
+        {
+          "title": "In Fabric",
+          "year": 2018
+        },
+        {
+          "title": "The Wolf House",
+          "year": 2018
+        }
+      ]
+    },
+    {
+      "slug": "found-footage",
+      "name": "Found Footage",
+      "titles": [
+        {
+          "title": "The Blair Witch Project",
+          "year": 1999
+        },
+        {
+          "title": "Paranormal Activity",
+          "year": 2007
+        },
+        {
+          "title": "REC",
+          "year": 2007
+        },
+        {
+          "title": "Cloverfield",
+          "year": 2008
+        },
+        {
+          "title": "The Last Exorcism",
+          "year": 2010
+        },
+        {
+          "title": "As Above, So Below",
+          "year": 2014
+        },
+        {
+          "title": "Hell House LLC",
+          "year": 2015
+        },
+        {
+          "title": "The Taking of Deborah Logan",
+          "year": 2014
+        },
+        {
+          "title": "Host",
+          "year": 2020
+        },
+        {
+          "title": "Creep",
+          "year": 2014
+        },
+        {
+          "title": "Creep 2",
+          "year": 2017
+        },
+        {
+          "title": "Grave Encounters",
+          "year": 2011
+        },
+        {
+          "title": "The Bay",
+          "year": 2012
+        },
+        {
+          "title": "Noroi: The Curse",
+          "year": 2005
+        },
+        {
+          "title": "The Poughkeepsie Tapes",
+          "year": 2007
+        },
+        {
+          "title": "The Borderlands",
+          "year": 2013
+        },
+        {
+          "title": "Gonjiam: Haunted Asylum",
+          "year": 2018
+        },
+        {
+          "title": "Lake Mungo",
+          "year": 2008
+        },
+        {
+          "title": "V/H/S",
+          "year": 2012
+        },
+        {
+          "title": "V/H/S/2",
+          "year": 2013
+        }
+      ]
+    },
+    {
+      "slug": "cosmic-horror",
+      "name": "Cosmic Horror",
+      "titles": [
+        {
+          "title": "The Thing",
+          "year": 1982
+        },
+        {
+          "title": "Annihilation",
+          "year": 2018
+        },
+        {
+          "title": "In the Mouth of Madness",
+          "year": 1994
+        },
+        {
+          "title": "Event Horizon",
+          "year": 1997
+        },
+        {
+          "title": "The Void",
+          "year": 2016
+        },
+        {
+          "title": "Color Out of Space",
+          "year": 2019
+        },
+        {
+          "title": "The Endless",
+          "year": 2017
+        },
+        {
+          "title": "Prince of Darkness",
+          "year": 1987
+        },
+        {
+          "title": "The Lighthouse",
+          "year": 2019
+        },
+        {
+          "title": "The Mist",
+          "year": 2007
+        },
+        {
+          "title": "Under the Skin",
+          "year": 2013
+        },
+        {
+          "title": "Resolution",
+          "year": 2012
+        },
+        {
+          "title": "The Beyond",
+          "year": 1981
+        },
+        {
+          "title": "Dagon",
+          "year": 2001
+        },
+        {
+          "title": "Banshee Chapter",
+          "year": 2013
+        },
+        {
+          "title": "The Call of Cthulhu",
+          "year": 2005
+        },
+        {
+          "title": "Glorious",
+          "year": 2022
+        },
+        {
+          "title": "Mandy",
+          "year": 2018
+        },
+        {
+          "title": "The Borderlands",
+          "year": 2013
+        },
+        {
+          "title": "Coherence",
+          "year": 2013
+        }
+      ]
+    },
+    {
+      "slug": "folk-horror",
+      "name": "Folk Horror",
+      "titles": [
+        {
+          "title": "The Wicker Man",
+          "year": 1973
+        },
+        {
+          "title": "The Witch",
+          "year": 2015,
+          "altTitle": "The VVitch"
+        },
+        {
+          "title": "Midsommar",
+          "year": 2019
+        },
+        {
+          "title": "The Blood on Satan's Claw",
+          "year": 1971
+        },
+        {
+          "title": "Witchfinder General",
+          "year": 1968
+        },
+        {
+          "title": "Kill List",
+          "year": 2011
+        },
+        {
+          "title": "The Ritual",
+          "year": 2017
+        },
+        {
+          "title": "A Field in England",
+          "year": 2013
+        },
+        {
+          "title": "Apostle",
+          "year": 2018
+        },
+        {
+          "title": "The Medium",
+          "year": 2021
+        },
+        {
+          "title": "Wake Wood",
+          "year": 2009
+        },
+        {
+          "title": "Hagazussa",
+          "year": 2017
+        },
+        {
+          "title": "November",
+          "year": 2017
+        },
+        {
+          "title": "The Hallow",
+          "year": 2015
+        },
+        {
+          "title": "The Wailing",
+          "year": 2016
+        },
+        {
+          "title": "Lamb",
+          "year": 2021
+        },
+        {
+          "title": "Robin Redbreast",
+          "year": 1970
+        },
+        {
+          "title": "The Hole in the Ground",
+          "year": 2019
+        },
+        {
+          "title": "Picnic at Hanging Rock",
+          "year": 1975
+        },
+        {
+          "title": "The Witch in the Window",
+          "year": 2018
+        }
+      ]
+    },
+    {
+      "slug": "social-domestic-horror",
+      "name": "Social / Domestic Horror",
+      "titles": [
+        {
+          "title": "Get Out",
+          "year": 2017
+        },
+        {
+          "title": "The Stepford Wives",
+          "year": 1975
+        },
+        {
+          "title": "The Babadook",
+          "year": 2014
+        },
+        {
+          "title": "Hereditary",
+          "year": 2018
+        },
+        {
+          "title": "Us",
+          "year": 2019
+        },
+        {
+          "title": "The Invitation",
+          "year": 2015
+        },
+        {
+          "title": "Funny Games",
+          "year": 1997
+        },
+        {
+          "title": "Mother!",
+          "year": 2017
+        },
+        {
+          "title": "Speak No Evil",
+          "year": 2022
+        },
+        {
+          "title": "The Purge",
+          "year": 2013
+        },
+        {
+          "title": "The Others",
+          "year": 2001
+        },
+        {
+          "title": "Rosemary's Baby",
+          "year": 1968
+        },
+        {
+          "title": "His House",
+          "year": 2020
+        },
+        {
+          "title": "The Lodge",
+          "year": 2019
+        },
+        {
+          "title": "The People Under the Stairs",
+          "year": 1991
+        },
+        {
+          "title": "Barbarian",
+          "year": 2022
+        },
+        {
+          "title": "Parasite",
+          "year": 2019
+        },
+        {
+          "title": "The Menu",
+          "year": 2022
+        },
+        {
+          "title": "The Strangers",
+          "year": 2008
+        },
+        {
+          "title": "We Need to Talk About Kevin",
+          "year": 2011
+        }
       ]
     }
   ]

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { createSeasonNodeReleaseFromNodeMovie, publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
+import { getReleaseContract } from '../src/lib/nodes/governance/release-contract.ts';
 import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
 
 type CliOptions = {
@@ -24,7 +25,12 @@ function parseCliArgs(): CliOptions {
 async function main(): Promise<void> {
   const options = parseCliArgs();
   const prisma = new PrismaClient();
-  const taxonomyVersion = process.env.SEASON2_TAXONOMY_VERSION?.trim() || 'season-2-cult-v3';
+  const contract = getReleaseContract({ seasonSlug: 'season-2', packSlug: 'cult-classics' });
+  const envTaxonomyVersion = process.env.SEASON2_TAXONOMY_VERSION?.trim();
+  if (envTaxonomyVersion && envTaxonomyVersion !== contract.taxonomyVersion) {
+    throw new Error(`Season 2 publishes must use taxonomyVersion ${contract.taxonomyVersion}`);
+  }
+  const taxonomyVersion = envTaxonomyVersion ?? contract.taxonomyVersion;
   const runId = process.env.SEASON2_ASSIGNMENT_RUN_ID?.trim() || `season2-curated-${new Date().toISOString()}`;
 
   try {

@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { publishSeasonNodeRelease } from '../src/lib/nodes/governance/release-artifact.ts';
 import { enforceSnapshotGuardrail } from '../src/lib/audit/snapshot-db-divergence.ts';
+import { getReleaseContract } from '../src/lib/nodes/governance/release-contract.ts';
 
 type Cli = {
   taxonomyVersion?: string;
@@ -23,7 +24,11 @@ function parseCli(): Cli {
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   const cli = parseCli();
-  const taxonomyVersion = cli.taxonomyVersion ?? 'season-1-horror-v3.5';
+  const contract = getReleaseContract({ seasonSlug: 'season-1', packSlug: 'horror' });
+  if (cli.taxonomyVersion && cli.taxonomyVersion !== contract.taxonomyVersion) {
+    throw new Error(`Season 1 publishes must use taxonomyVersion ${contract.taxonomyVersion}`);
+  }
+  const taxonomyVersion = cli.taxonomyVersion ?? contract.taxonomyVersion;
 
   try {
     const published = await publishSeasonNodeRelease(prisma, {

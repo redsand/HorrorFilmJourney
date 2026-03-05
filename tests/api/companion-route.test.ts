@@ -100,6 +100,7 @@ describe('GET /api/companion', () => {
     delete process.env.USE_LLM;
     delete process.env.TMDB_API_KEY;
     delete process.env.EVIDENCE_RETRIEVAL_MODE;
+    process.env.COMPANION_MIN_GROUNDED_CHUNKS = '0';
   });
 
   afterEach(() => {
@@ -107,6 +108,7 @@ describe('GET /api/companion', () => {
     delete process.env.USE_LLM;
     delete process.env.TMDB_API_KEY;
     delete process.env.EVIDENCE_RETRIEVAL_MODE;
+    delete process.env.COMPANION_MIN_GROUNDED_CHUNKS;
   });
 
   it('returns 400 when tmdbId is missing', async () => {
@@ -222,6 +224,29 @@ describe('GET /api/companion', () => {
         season: { slug: 'season-2' },
       }),
     }));
+  });
+
+  it('abstains when grounded chunk evidence is below threshold', async () => {
+    process.env.COMPANION_MIN_GROUNDED_CHUNKS = '2';
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Companion Grounding Test',
+      year: 1999,
+      posterUrl: 'https://img/123.jpg',
+      director: 'John Carpenter',
+      castTop: [{ name: 'Kurt Russell', role: 'R.J. MacReady' }],
+      ratings: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([]);
+
+    const response = await GET(new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
+      headers: { cookie: makeSessionCookie('user_1') },
+    }));
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.data.sections.productionNotes[0]).toContain('enough season-scoped evidence');
   });
 
   it('includes externalReadings for a Season 1 film with a curated registry entry', async () => {

@@ -644,180 +644,6 @@
       ]
     },
     {
-      "slug": "psychotronic-cinema",
-      "name": "So-Bad-It's-Good",
-      "titles": [
-        {
-          "title": "Reefer Madness",
-          "year": 1936
-        },
-        {
-          "title": "Robot Monster",
-          "year": 1953
-        },
-        {
-          "title": "The Giant Claw",
-          "year": 1957
-        },
-        {
-          "title": "Plan 9 from Outer Space",
-          "year": 1959
-        },
-        {
-          "title": "The Beast of Yucca Flats",
-          "year": 1961
-        },
-        {
-          "title": "Santa Claus Conquers the Martians",
-          "year": 1964
-        },
-        {
-          "title": "The Creeping Terror",
-          "year": 1964
-        },
-        {
-          "title": "The Horror of Party Beach",
-          "year": 1964
-        },
-        {
-          "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
-          "year": 1964
-        },
-        {
-          "title": "Manos: The Hands of Fate",
-          "year": 1966
-        },
-        {
-          "title": "The Star Wars Holiday Special",
-          "year": 1978
-        },
-        {
-          "title": "The Apple",
-          "year": 1980
-        },
-        {
-          "title": "Yor, the Hunter from the Future",
-          "year": 1983
-        },
-        {
-          "title": "Gymkata",
-          "year": 1985
-        },
-        {
-          "title": "The Wraith",
-          "year": 1986
-        },
-        {
-          "title": "Hard Ticket to Hawaii",
-          "year": 1987
-        },
-        {
-          "title": "Miami Connection",
-          "year": 1987
-        },
-        {
-          "title": "Over the Top",
-          "year": 1987
-        },
-        {
-          "title": "Silent Night, Deadly Night Part 2",
-          "year": 1987
-        },
-        {
-          "title": "Hobgoblins",
-          "year": 1988
-        },
-        {
-          "title": "Mac and Me",
-          "year": 1988
-        },
-        {
-          "title": "No Holds Barred",
-          "year": 1989
-        },
-        {
-          "title": "Robot Jox",
-          "year": 1989
-        },
-        {
-          "title": "Troll 2",
-          "year": 1990
-        },
-        {
-          "title": "Cool as Ice",
-          "year": 1991
-        },
-        {
-          "title": "Riki-Oh: The Story of Ricky",
-          "year": 1991
-        },
-        {
-          "title": "Samurai Cop",
-          "year": 1991
-        },
-        {
-          "title": "Showdown in Little Tokyo",
-          "year": 1991
-        },
-        {
-          "title": "Street Fighter",
-          "year": 1994
-        },
-        {
-          "title": "Showgirls",
-          "year": 1995
-        },
-        {
-          "title": "Batman & Robin",
-          "year": 1997
-        },
-        {
-          "title": "Double Team",
-          "year": 1997
-        },
-        {
-          "title": "Battlefield Earth",
-          "year": 2000
-        },
-        {
-          "title": "Ben and Arthur",
-          "year": 2002
-        },
-        {
-          "title": "The Core",
-          "year": 2003
-        },
-        {
-          "title": "The Room",
-          "year": 2003
-        },
-        {
-          "title": "Suburban Sasquatch",
-          "year": 2004
-        },
-        {
-          "title": "The Wicker Man",
-          "year": 2006
-        },
-        {
-          "title": "The Happening",
-          "year": 2008
-        },
-        {
-          "title": "Birdemic: Shock and Terror",
-          "year": 2010
-        },
-        {
-          "title": "Who Killed Captain Alex?",
-          "year": 2010
-        }
-      ],
-      "subgenres": [
-        "So-bad-it's-good",
-        "Meme-era cult"
-      ]
-    },
-    {
       "slug": "cult-science-fiction",
       "name": "Cult Sci-Fi & Fantasy",
       "titles": [
@@ -1391,6 +1217,180 @@
       "subgenres": [
         "Punk/transgressive",
         "Goth / alternative youth cult"
+      ]
+    },
+    {
+      "slug": "psychotronic-cinema",
+      "name": "So-Bad-It's-Good",
+      "titles": [
+        {
+          "title": "Reefer Madness",
+          "year": 1936
+        },
+        {
+          "title": "Robot Monster",
+          "year": 1953
+        },
+        {
+          "title": "The Giant Claw",
+          "year": 1957
+        },
+        {
+          "title": "Plan 9 from Outer Space",
+          "year": 1959
+        },
+        {
+          "title": "The Beast of Yucca Flats",
+          "year": 1961
+        },
+        {
+          "title": "Santa Claus Conquers the Martians",
+          "year": 1964
+        },
+        {
+          "title": "The Creeping Terror",
+          "year": 1964
+        },
+        {
+          "title": "The Horror of Party Beach",
+          "year": 1964
+        },
+        {
+          "title": "The Incredibly Strange Creatures Who Stopped Living and Became Mixed-Up Zombies!!?",
+          "year": 1964
+        },
+        {
+          "title": "Manos: The Hands of Fate",
+          "year": 1966
+        },
+        {
+          "title": "The Star Wars Holiday Special",
+          "year": 1978
+        },
+        {
+          "title": "The Apple",
+          "year": 1980
+        },
+        {
+          "title": "Yor, the Hunter from the Future",
+          "year": 1983
+        },
+        {
+          "title": "Gymkata",
+          "year": 1985
+        },
+        {
+          "title": "The Wraith",
+          "year": 1986
+        },
+        {
+          "title": "Hard Ticket to Hawaii",
+          "year": 1987
+        },
+        {
+          "title": "Miami Connection",
+          "year": 1987
+        },
+        {
+          "title": "Over the Top",
+          "year": 1987
+        },
+        {
+          "title": "Silent Night, Deadly Night Part 2",
+          "year": 1987
+        },
+        {
+          "title": "Hobgoblins",
+          "year": 1988
+        },
+        {
+          "title": "Mac and Me",
+          "year": 1988
+        },
+        {
+          "title": "No Holds Barred",
+          "year": 1989
+        },
+        {
+          "title": "Robot Jox",
+          "year": 1989
+        },
+        {
+          "title": "Troll 2",
+          "year": 1990
+        },
+        {
+          "title": "Cool as Ice",
+          "year": 1991
+        },
+        {
+          "title": "Riki-Oh: The Story of Ricky",
+          "year": 1991
+        },
+        {
+          "title": "Samurai Cop",
+          "year": 1991
+        },
+        {
+          "title": "Showdown in Little Tokyo",
+          "year": 1991
+        },
+        {
+          "title": "Street Fighter",
+          "year": 1994
+        },
+        {
+          "title": "Showgirls",
+          "year": 1995
+        },
+        {
+          "title": "Batman & Robin",
+          "year": 1997
+        },
+        {
+          "title": "Double Team",
+          "year": 1997
+        },
+        {
+          "title": "Battlefield Earth",
+          "year": 2000
+        },
+        {
+          "title": "Ben and Arthur",
+          "year": 2002
+        },
+        {
+          "title": "The Core",
+          "year": 2003
+        },
+        {
+          "title": "The Room",
+          "year": 2003
+        },
+        {
+          "title": "Suburban Sasquatch",
+          "year": 2004
+        },
+        {
+          "title": "The Wicker Man",
+          "year": 2006
+        },
+        {
+          "title": "The Happening",
+          "year": 2008
+        },
+        {
+          "title": "Birdemic: Shock and Terror",
+          "year": 2010
+        },
+        {
+          "title": "Who Killed Captain Alex?",
+          "year": 2010
+        }
+      ],
+      "subgenres": [
+        "So-bad-it's-good",
+        "Meme-era cult"
       ]
     },
     {

@@ -10,6 +10,12 @@ import { getPublishedNodesForMovie } from '@/lib/nodes/published-snapshot';
 import { createConfiguredEvidenceRetriever } from '@/lib/evidence/retrieval';
 import { buildFilmContextExplanation } from '@/lib/context/build-film-context-explanation';
 import { buildSeasonReasonPanel } from '@/lib/context/build-season-reason-panel';
+import {
+  DEFAULT_GROUNDING_REFUSAL_TEMPLATE,
+  enforceCitationCoverage,
+  formatChunkCitation,
+  type GroundingChunk,
+} from '@/lib/rag/grounding';
 
 type SpoilerPolicy = 'NO_SPOILERS' | 'LIGHT' | 'FULL';
 const ALL_SPOILER_POLICIES: SpoilerPolicy[] = ['NO_SPOILERS', 'LIGHT', 'FULL'];
@@ -73,6 +79,7 @@ type CompanionResponsePayload = {
       sourceType: 'packet' | 'external_reading' | 'chunk';
       fallbackUsed?: boolean;
       fallbackReason?: 'hybrid-error' | 'empty-hybrid';
+      chunkId?: string;
       rank?: number;
       lexicalScore?: number;
       semanticScore?: number;
@@ -142,6 +149,33 @@ const COMPANION_LLM_JSON_SCHEMA = {
     },
   },
 } as const;
+
+function companionMinGroundedChunks(): number {
+  const parsed = Number.parseInt(process.env.COMPANION_MIN_GROUNDED_CHUNKS ?? '', 10);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    return 2;
+  }
+  return parsed;
+}
+
+function collectGroundingChunks(
+  evidence: Array<{
+    snippet: string;
+    provenance?: {
+      sourceType?: 'packet' | 'external_reading' | 'chunk';
+      documentId?: string;
+      chunkId?: string;
+    };
+  }>,
+): GroundingChunk[] {
+  return evidence
+    .filter((item) => item.provenance?.sourceType === 'chunk' && item.provenance.documentId && item.provenance.chunkId)
+    .map((item) => ({
+      documentId: item.provenance!.documentId!,
+      chunkId: item.provenance!.chunkId!,
+      snippet: item.snippet,
+    }));
+}
 
 
 function normalizeSpoilerPolicy(value: string | null): SpoilerPolicy | null {
@@ -508,7 +542,7 @@ async function generateCompanionLlmOutput(input: {
   title: string;
   year: number | null;
   facts: TmdbCompanionFacts | null;
-  evidence: Array<{ sourceName: string; snippet: string }>;
+  evidence: Array<{ sourceName: string; snippet: string; citationId?: string }>;
   cinematicContext?: {
     nodeName?: string;
     tier?: string;
@@ -542,6 +576,7 @@ async function generateCompanionLlmOutput(input: {
           'fullSummary must include full plot arc including ending.',
           'trivia must include exactly 5 concise facts.',
           'Avoid invented details. If uncertain, explicitly say unknown.',
+          'For factual statements, include at least one citation token from the provided evidence IDs, formatted exactly like [doc:... chunk:...].',
         ].join(' '),
         user: JSON.stringify({
           movie: {
@@ -554,6 +589,7 @@ async function generateCompanionLlmOutput(input: {
           },
           cinematicContext: input.cinematicContext ?? null,
           evidence: input.evidence.slice(0, 5).map((item) => ({
+            ...(item.citationId ? { id: item.citationId } : {}),
             sourceName: item.sourceName,
             snippet: firstLine(item.snippet, 220),
           })),
@@ -588,6 +624,26 @@ async function generateCompanionLlmOutput(input: {
     }
   }
   return { output: null, reason: `PROVIDER_ERROR:${lastErrorMessage}` };
+}
+
+function enforceGroundedCompanionOutput(
+  llmOutput: CompanionLlmOutput | null,
+  groundingChunks: GroundingChunk[],
+): CompanionLlmOutput | null {
+  if (!llmOutput) {
+    return null;
+  }
+  if (groundingChunks.length === 0) {
+    return llmOutput;
+  }
+  const [lightSummary] = enforceCitationCoverage([llmOutput.lightSummary], groundingChunks);
+  const [fullSummary] = enforceCitationCoverage([llmOutput.fullSummary], groundingChunks);
+  const trivia = enforceCitationCoverage(llmOutput.trivia, groundingChunks).slice(0, 5);
+  return {
+    lightSummary: lightSummary ?? llmOutput.lightSummary,
+    fullSummary: fullSummary ?? llmOutput.fullSummary,
+    trivia: trivia.length > 0 ? trivia : llmOutput.trivia,
+  };
 }
 
 
@@ -778,11 +834,33 @@ function buildSections(
   ratings: RatingRow[],
   evidenceCount: number,
   llmOutput: CompanionLlmOutput | null,
+  grounding: {
+    insufficientEvidence: boolean;
+    groundingChunks: GroundingChunk[];
+  },
   cinematicContext?: {
     whyParagraph?: string;
     reasonBullets?: string[];
   },
 ) {
+  if (grounding.insufficientEvidence) {
+    const citation = grounding.groundingChunks[0] ? ` ${formatChunkCitation(grounding.groundingChunks[0])}` : '';
+    const uncertainty = `${DEFAULT_GROUNDING_REFUSAL_TEMPLATE}${citation}`;
+    return {
+      productionNotes: [uncertainty],
+      historicalNotes: [uncertainty],
+      receptionNotes: [uncertainty],
+      techniqueBreakdown: [uncertainty],
+      influenceMap: [uncertainty],
+      afterWatchingReflection: [
+        'What missing context would help you evaluate this film more confidently?',
+        'Which aspect of the film would you like evidence for first?',
+        'Would you like a spoiler-safe summary from verified sources once evidence is available?',
+      ],
+      trivia: [uncertainty, uncertainty, uncertainty, uncertainty, uncertainty],
+    };
+  }
+
   const title = input.facts?.title ?? input.title;
   const year = input.facts?.year ?? input.year;
   const yearText = year ? ` (${year})` : '';
@@ -979,6 +1057,9 @@ export async function GET(request: Request): Promise<Response> {
     callerId: 'api:companion',
     topK: 8,
   });
+  const groundingChunks = collectGroundingChunks(evidence);
+  const minGroundedChunks = companionMinGroundedChunks();
+  const insufficientGroundingEvidence = groundingChunks.length < minGroundedChunks;
 
   const cast = parseCast(movie.castTop);
   const tmdbFetch = await loadTmdbCompanionFacts({
@@ -1101,28 +1182,36 @@ export async function GET(request: Request): Promise<Response> {
     ]
     : movieRatings;
 
-  const llmResult = await generateCompanionLlmOutput({
-    title: tmdbFacts?.title ?? movie.title,
-    year: tmdbFacts?.year ?? movie.year,
-    facts: tmdbFacts,
-    evidence: evidence.map((item) => ({ sourceName: item.sourceName, snippet: item.snippet })),
-    cinematicContext: {
-      ...(filmContext
-        ? {
-          nodeName: filmContext.nodeName,
-          tier: filmContext.tier,
-          whyParagraph: filmContext.whyParagraph,
-        }
-        : {}),
-      ...(reasonPanel
-        ? {
-          reasonTitle: reasonPanel.reasonTitle,
-          reasonBullets: reasonPanel.bullets.slice(0, 3),
-        }
-        : {}),
-    },
-  });
-  const llmOutput = llmResult.output;
+  const llmResult = insufficientGroundingEvidence
+    ? { output: null, reason: 'INSUFFICIENT_EVIDENCE' as const }
+    : await generateCompanionLlmOutput({
+      title: tmdbFacts?.title ?? movie.title,
+      year: tmdbFacts?.year ?? movie.year,
+      facts: tmdbFacts,
+      evidence: evidence.map((item) => ({
+        sourceName: item.sourceName,
+        snippet: item.snippet,
+        ...(item.provenance?.documentId && item.provenance?.chunkId
+          ? { citationId: formatChunkCitation({ documentId: item.provenance.documentId, chunkId: item.provenance.chunkId, snippet: item.snippet }) }
+          : {}),
+      })),
+      cinematicContext: {
+        ...(filmContext
+          ? {
+            nodeName: filmContext.nodeName,
+            tier: filmContext.tier,
+            whyParagraph: filmContext.whyParagraph,
+          }
+          : {}),
+        ...(reasonPanel
+          ? {
+            reasonTitle: reasonPanel.reasonTitle,
+            reasonBullets: reasonPanel.bullets.slice(0, 3),
+          }
+          : {}),
+      },
+    });
+  const llmOutput = enforceGroundedCompanionOutput(llmResult.output, groundingChunks);
 
   // Fetch the most recent narrative data for this movie
   const latestRecommendationItem = await prisma.recommendationItem.findFirst({
@@ -1161,6 +1250,10 @@ export async function GET(request: Request): Promise<Response> {
       responseRatings,
       evidence.length,
       llmOutput,
+      {
+        insufficientEvidence: insufficientGroundingEvidence,
+        groundingChunks,
+      },
       {
         ...(filmContext ? { whyParagraph: filmContext.whyParagraph } : {}),
         ...(reasonPanel ? { reasonBullets: reasonPanel.bullets.slice(0, 2) } : {}),
