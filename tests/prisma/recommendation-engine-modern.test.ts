@@ -219,6 +219,48 @@ describe('RecommendationEngine modern mode', () => {
     expect(batch.cards).toHaveLength(0);
   });
 
+  it('returns identical batches when only fallback candidates are available', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Deterministic Fallback User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: pack.id,
+      },
+    });
+
+    const fallbackTmdbIds = [10331, 923, 7018, 20766, 396535];
+    const fallbackMovies = await Promise.all(
+      fallbackTmdbIds.map((tmdbId, index) =>
+        prisma.movie.create({
+          data: {
+            tmdbId,
+            title: `Fallback ${tmdbId}`,
+            year: 1990 + index,
+            posterUrl: `https://img/${tmdbId}.jpg`,
+            genres: ['horror'],
+          },
+        }),
+      ),
+    );
+    await Promise.all(fallbackMovies.map((movie) => addRatings(movie.id)));
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const first = await generateRecommendationBatch(user.id, prisma);
+    const second = await generateRecommendationBatch(user.id, prisma);
+
+    const firstIds = first.cards.map((card) => card.movie.tmdbId);
+    const secondIds = second.cards.map((card) => card.movie.tmdbId);
+    expect(firstIds).toEqual(secondIds);
+    expect(firstIds.length).toBeGreaterThan(0);
+  });
+
   it('passes season and pack scope into retrieval runs for modern recommendation evidence', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Retrieval Scope User' } });
     const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });

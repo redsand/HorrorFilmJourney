@@ -102,6 +102,7 @@ describe('evidence retrieval season isolation', () => {
 
     const season1Evidence = await retriever.getEvidenceForMovie(movie.id, {
       seasonSlug: 'season-1',
+      packSlug: 'horror',
       query: 'season one context',
       requireSeasonContext: true,
       callerId: 'test:integration',
@@ -109,6 +110,7 @@ describe('evidence retrieval season isolation', () => {
     });
     const season2Evidence = await retriever.getEvidenceForMovie(movie.id, {
       seasonSlug: 'season-2',
+      packSlug: 'cult-classics',
       query: 'season two context',
       requireSeasonContext: true,
       callerId: 'test:integration',

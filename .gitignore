@@ -5,3 +5,6 @@ npm-debug.log*
 .env
 prisma/dev.db
 prisma/test.db
+.claude
+artifacts
+backups

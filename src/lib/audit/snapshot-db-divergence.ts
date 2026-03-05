@@ -253,36 +253,38 @@ export async function computeSnapshotDivergence(prisma: PrismaClient, input: {
       });
     }
 
-    const releaseMatches = releaseAssignments.filter(
-      (entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug === authority.nodeSlug,
-    );
-    if (releaseMatches.length === 0) {
-      const altRelease = releaseAssignments.find(
-        (entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug !== authority.nodeSlug,
+    if (authority.tier === 'CORE') {
+      const releaseMatches = releaseAssignments.filter(
+        (entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug === authority.nodeSlug,
       );
-      if (altRelease) {
-        nodeDriftCount += 1;
-        items.push({
-          category: 'node-drift',
-          seasonSlug: authority.seasonSlug,
-          packSlug: authority.packSlug,
-          nodeSlug: authority.nodeSlug,
-          tmdbId: authority.tmdbId,
-          tier: authority.tier,
-          observedNodeSlug: altRelease.nodeSlug,
-          reason: 'slug-mismatch',
-        });
-      } else {
-        missingInReleaseCount += 1;
-        items.push({
-          category: 'missing-in-release',
-          seasonSlug: authority.seasonSlug,
-          packSlug: authority.packSlug,
-          nodeSlug: authority.nodeSlug,
-          tmdbId: authority.tmdbId,
-          tier: authority.tier,
-          reason: 'not published',
-        });
+      if (releaseMatches.length === 0) {
+        const altRelease = releaseAssignments.find(
+          (entry) => entry.tmdbId === authority.tmdbId && entry.nodeSlug !== authority.nodeSlug,
+        );
+        if (altRelease) {
+          nodeDriftCount += 1;
+          items.push({
+            category: 'node-drift',
+            seasonSlug: authority.seasonSlug,
+            packSlug: authority.packSlug,
+            nodeSlug: authority.nodeSlug,
+            tmdbId: authority.tmdbId,
+            tier: authority.tier,
+            observedNodeSlug: altRelease.nodeSlug,
+            reason: 'slug-mismatch',
+          });
+        } else {
+          missingInReleaseCount += 1;
+          items.push({
+            category: 'missing-in-release',
+            seasonSlug: authority.seasonSlug,
+            packSlug: authority.packSlug,
+            nodeSlug: authority.nodeSlug,
+            tmdbId: authority.tmdbId,
+            tier: authority.tier,
+            reason: 'not published',
+          });
+        }
       }
     }
   }

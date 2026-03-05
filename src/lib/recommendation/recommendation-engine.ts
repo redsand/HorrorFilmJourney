@@ -18,7 +18,6 @@ import {
 } from '@/lib/recommendation/recommendation-engine-v1';
 import { DeterministicStubStreamingProvider } from '@/lib/streaming/streaming-provider';
 import { StreamingLookupService } from '@/lib/streaming/streaming-lookup-service';
-import { syncTmdbHorrorCandidates } from '@/lib/tmdb/live-candidate-sync';
 import { resolveEffectivePackForUser } from '@/lib/packs/pack-resolver';
 import { TasteComputationService } from '@/lib/taste/taste-computation-service';
 import { buildPackScopedInteractionWhere } from '@/lib/packs/interaction-scope';
@@ -30,6 +29,7 @@ import {
   getCachedNarrativeIfFresh,
   NARRATIVE_VERSION,
 } from '@/lib/recommendation/narrative-cache';
+import { loadFallbackTmdbIds } from '@/lib/recommendation/candidate-fallback';
 
 type RatingBundle = CandidateMovie['ratings'];
 function nowMs(): number {
@@ -82,8 +82,19 @@ export type CandidateConstraints = {
   packPrimaryGenre: string;
   packId?: string | null;
   seasonSlug?: string;
+  packSlug?: string | null;
   journeyNodeSlug?: string;
   minimumYear?: number | null;
+};
+
+type CandidateMovieRow = {
+  id: string;
+  tmdbId: number;
+  year: number | null;
+  posterUrl: string;
+  genres: string[] | null;
+  posterLastValidatedAt: Date | null;
+  ratings: Array<{ source: string }>;
 };
 
 export type RecommendationContext = {
@@ -877,6 +888,55 @@ function resolveNarrativeModel(llmProvider?: LlmProvider): string {
 export class SqlCandidateGeneratorV1 implements CandidateGenerator {
   constructor(private readonly prisma: PrismaClient) {}
 
+  private async loadReleaseCandidateMovieIds(releaseId: string): Promise<string[]> {
+    const items = await this.prisma.seasonNodeReleaseItem.findMany({
+      where: { releaseId },
+      select: { movieId: true },
+    });
+    return Array.from(new Set(items.map((item) => item.movieId)));
+  }
+
+  private async loadNodeAssignmentMovieIds(packId: string): Promise<string[]> {
+    const assignments = await this.prisma.nodeMovie.findMany({
+      where: {
+        node: { packId },
+      },
+      orderBy: { movieId: 'asc' },
+      select: { movieId: true },
+    });
+    return Array.from(new Set(assignments.map((item) => item.movieId)));
+  }
+
+  private async loadFallbackCandidateMovieIds(seasonSlug?: string, packSlug?: string | null): Promise<string[]> {
+    const tmdbIds = await loadFallbackTmdbIds(seasonSlug, packSlug ?? undefined);
+    if (!tmdbIds.length) {
+      return [];
+    }
+    const movies = await this.prisma.movie.findMany({
+      where: { tmdbId: { in: tmdbIds } },
+      orderBy: { tmdbId: 'asc' },
+      select: { id: true },
+    });
+    return movies.map((movie) => movie.id);
+  }
+
+  private async resolvePackCandidateMovieIds(constraints: CandidateConstraints, publishedReleaseId: string | null): Promise<string[]> {
+    if (!constraints.packId) {
+      return [];
+    }
+    if (publishedReleaseId) {
+      const releaseIds = await this.loadReleaseCandidateMovieIds(publishedReleaseId);
+      if (releaseIds.length > 0) {
+        return releaseIds;
+      }
+    }
+    const nodeIds = await this.loadNodeAssignmentMovieIds(constraints.packId);
+    if (nodeIds.length > 0) {
+      return nodeIds;
+    }
+    return this.loadFallbackCandidateMovieIds(constraints.seasonSlug, constraints.packSlug ?? undefined);
+  }
+
   async generateCandidates(userId: string, constraints: CandidateConstraints): Promise<CandidateMovieId[]> {
     const skipCutoff = new Date(Date.now() - constraints.excludeRecentSkippedDays * 24 * 60 * 60 * 1000);
     const seenInteractions = await this.prisma.userMovieInteraction.findMany({
@@ -918,58 +978,45 @@ export class SqlCandidateGeneratorV1 implements CandidateGenerator {
         seasonSlug: constraints.seasonSlug!,
       })
       : null;
-    const hasPackCatalog = constraints.packId
-      ? (
-        publishedReleaseId
-          ? (await this.prisma.seasonNodeReleaseItem.count({ where: { releaseId: publishedReleaseId } })) > 0
-          : (await this.prisma.nodeMovie.count({
-            where: {
-              tier: 'CORE',
-              node: {
-                packId: constraints.packId,
-              },
-            },
-          })) > 0
-      )
-      : false;
-    const usePackScopedPool = hasPackCatalog && constraints.packPrimaryGenre.toLowerCase() !== 'horror';
-
-    const allMovies = await this.prisma.movie.findMany({
-      where: constraints.packId
-        ? usePackScopedPool
-          ? {
-            ...(publishedReleaseId
-              ? {
-                releaseAssignments: {
-                  some: {
-                    releaseId: publishedReleaseId,
-                  },
-                },
-              }
-              : {
-                nodeAssignments: {
-                  some: {
-                    tier: 'CORE',
-                    node: {
-                      packId: constraints.packId,
-                    },
-                  },
-                },
-              }),
-          }
-          : undefined
-        : undefined,
-      orderBy: { tmdbId: 'asc' },
-      select: { id: true, tmdbId: true, year: true, posterUrl: true, genres: true, posterLastValidatedAt: true, ratings: { select: { source: true } } },
-    });
+    const candidateMovieIds = constraints.packId
+      ? await this.resolvePackCandidateMovieIds(constraints, publishedReleaseId)
+      : [];
+    const selectFields = {
+      id: true,
+      tmdbId: true,
+      year: true,
+      posterUrl: true,
+      genres: true,
+      posterLastValidatedAt: true,
+      ratings: { select: { source: true } },
+    } as const;
+    let allMovies: CandidateMovieRow[] = [];
+    if (constraints.packId) {
+      if (candidateMovieIds.length > 0) {
+        allMovies = await this.prisma.movie.findMany({
+          where: { id: { in: candidateMovieIds } },
+          orderBy: { tmdbId: 'asc' },
+          select: selectFields,
+        });
+      } else {
+        allMovies = [];
+      }
+    } else {
+      allMovies = await this.prisma.movie.findMany({
+        orderBy: { tmdbId: 'asc' },
+        select: selectFields,
+      });
+    }
     const eligible = allMovies
       .filter((movie) => !excludedMovieIds.has(movie.id))
       .filter((movie) => constraints.minimumYear === null || constraints.minimumYear === undefined || (movie.year !== null && movie.year >= constraints.minimumYear))
-      .filter((movie) => (
-        constraints.packId && usePackScopedPool
-          ? true
-          : normalizeGenres(movie.genres).map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase())
-      ))
+      .filter((movie) => {
+        if (constraints.packId) {
+          return true;
+        }
+        const genres = normalizeGenres(movie.genres);
+        return genres.map((genre) => genre.toLowerCase()).includes(constraints.packPrimaryGenre.toLowerCase());
+      })
       .filter((movie) => isRecommendationEligibleMovie({
         posterUrl: movie.posterUrl,
         posterLastValidatedAt: movie.posterLastValidatedAt,
@@ -1579,6 +1626,7 @@ export async function generateRecommendationBatchModern(
     excludeRecentSkippedDays,
     packPrimaryGenre,
     packId: options.packId,
+    packSlug: options.packSlug ?? null,
     seasonSlug,
     journeyNodeSlug: resolvedJourneyNode,
     minimumYear: resolvePackMinimumYearPreference(userProfile?.horrorDNA, options.packId ?? null),
@@ -1933,11 +1981,6 @@ export async function generateRecommendationBatch(
   options: RecommendationEngineOptions = {},
 ): Promise<RecommendationBatchResult> {
   const startedAt = nowMs();
-  const tmdbSyncStartedAt = nowMs();
-  await syncTmdbHorrorCandidates(prisma);
-  console.info('[recommendations.engine] tmdb sync completed', {
-    durationMs: elapsedMs(tmdbSyncStartedAt),
-  });
 
   let llmProvider: LlmProvider | undefined;
   const llmProviderStartedAt = nowMs();
