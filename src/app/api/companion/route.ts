@@ -82,6 +82,11 @@ type CompanionResponsePayload = {
     };
   }>;
   externalReadings?: ExternalReading[];
+  codex?: {
+    whyImportant: string;
+    whatItTeaches: string;
+    watchFor: [string, string, string];
+  };
 };
 type TmdbCreditPerson = { name?: string; job?: string; character?: string };
 type TmdbMoviePayload = {
@@ -1115,6 +1120,29 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
   const llmOutput = llmResult.output;
+
+  // Fetch the most recent narrative data for this movie
+  const latestRecommendationItem = await prisma.recommendationItem.findFirst({
+    where: {
+      movieId: movie.id,
+      narrativeHash: {
+        not: null,
+      },
+    },
+    orderBy: {
+      narrativeGeneratedAt: 'desc',
+    },
+  });
+  const codex = latestRecommendationItem ? {
+    whyImportant: latestRecommendationItem.whyImportant,
+    whatItTeaches: latestRecommendationItem.whatItTeaches,
+    watchFor: Array.isArray(latestRecommendationItem.watchFor)
+      ? (latestRecommendationItem.watchFor as unknown[])
+        .filter((item): item is string => typeof item === 'string')
+        .slice(0, 3) as [string, string, string]
+      : ['Key visual motif', 'Atmosphere and pacing', 'Character performance beat'],
+  } : undefined;
+
   const payloadsByPolicy = new Map<SpoilerPolicy, CompanionResponsePayload>();
   let fullyPopulatedAny = false;
   for (const policy of ALL_SPOILER_POLICIES) {
@@ -1173,6 +1201,7 @@ export async function GET(request: Request): Promise<Response> {
       spoilerPolicy: policy,
       evidence,
       externalReadings,
+      ...(codex ? { codex } : {}),
     };
     const fullyPopulated = isCompanionFullyPopulated({
       usedTmdbFacts: Boolean(tmdbFacts),

@@ -368,6 +368,23 @@ export default async function CompanionPage({
             </div>
           </Card>
 
+          {payload.codex ? (
+            <Card>
+              <h3 className="text-sm font-semibold tracking-tight">Why It Matters</h3>
+              <p className="mt-2 text-sm leading-relaxed">{payload.codex.whyImportant}</p>
+
+              <h3 className="mt-4 text-sm font-semibold tracking-tight">What It Teaches</h3>
+              <p className="mt-2 text-sm leading-relaxed">{payload.codex.whatItTeaches}</p>
+
+              <h3 className="mt-4 text-sm font-semibold tracking-tight">Watch For</h3>
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
+                {payload.codex.watchFor.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
+
           <CinematicContextCard data={filmContext.data?.context ?? null} />
           {filmContext.data?.reasonPanel ? (
             <ReasonPanel {...filmContext.data.reasonPanel} />

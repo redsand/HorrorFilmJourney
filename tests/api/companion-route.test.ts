@@ -14,6 +14,7 @@ const {
   companionCacheFindUniqueMock,
   companionCacheUpsertMock,
   companionCacheDeleteManyMock,
+  recommendationItemFindFirstMock,
   getLlmProviderFromEnvMock,
   generateJsonMock,
 } = vi.hoisted(() => ({
@@ -28,6 +29,7 @@ const {
   companionCacheFindUniqueMock: vi.fn(),
   companionCacheUpsertMock: vi.fn(),
   companionCacheDeleteManyMock: vi.fn(),
+  recommendationItemFindFirstMock: vi.fn(),
   getLlmProviderFromEnvMock: vi.fn(),
   generateJsonMock: vi.fn(),
 }));
@@ -44,6 +46,9 @@ vi.mock('@/lib/prisma', () => ({
       findUnique: companionCacheFindUniqueMock,
       upsert: companionCacheUpsertMock,
       deleteMany: companionCacheDeleteManyMock,
+    },
+    recommendationItem: {
+      findFirst: recommendationItemFindFirstMock,
     },
   },
 }));
@@ -73,11 +78,13 @@ describe('GET /api/companion', () => {
     companionCacheFindUniqueMock.mockReset();
     companionCacheUpsertMock.mockReset();
     companionCacheDeleteManyMock.mockReset();
+    recommendationItemFindFirstMock.mockReset();
     getLlmProviderFromEnvMock.mockReset();
     generateJsonMock.mockReset();
     companionCacheFindUniqueMock.mockResolvedValue(null);
     movieStreamingCacheFindUniqueMock.mockResolvedValue(null);
     userTasteProfileFindUniqueMock.mockResolvedValue(null);
+    recommendationItemFindFirstMock.mockResolvedValue(null);
     resolveEffectivePackForUserMock.mockResolvedValue({
       packId: 'pack_horror',
       packSlug: 'horror',
@@ -535,5 +542,81 @@ describe('GET /api/companion', () => {
       .map((call) => call[0]?.where?.movieId_spoilerPolicy?.spoilerPolicy)
       .sort();
     expect(policiesWritten).toEqual(['FULL', 'LIGHT', 'NO_SPOILERS']);
+  });
+
+  it('includes codex data when recommendation item exists', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Test Film',
+      year: 2020,
+      posterUrl: 'https://img/123.jpg',
+      director: 'Test Director',
+      castTop: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([
+      {
+        sourceName: 'Source A',
+        url: 'https://example.com/a',
+        snippet: 'Snippet A',
+        retrievedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ]);
+    recommendationItemFindFirstMock.mockResolvedValueOnce({
+      whyImportant: 'This film is important because...',
+      whatItTeaches: 'Viewers learn about...',
+      watchFor: ['Visual element 1', 'Sound design', 'Editing technique'],
+    });
+
+    const request = new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
+      headers: {
+        cookie: makeSessionCookie('user_1'),
+      },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(body.data.codex).toEqual({
+      whyImportant: 'This film is important because...',
+      whatItTeaches: 'Viewers learn about...',
+      watchFor: ['Visual element 1', 'Sound design', 'Editing technique'],
+    });
+  });
+
+  it('excludes codex when recommendation item does not exist', async () => {
+    userFindUniqueMock.mockResolvedValueOnce({ id: 'user_1' });
+    movieFindUniqueMock.mockResolvedValueOnce({
+      id: 'movie_1',
+      tmdbId: 123,
+      title: 'Test Film',
+      year: 2020,
+      posterUrl: 'https://img/123.jpg',
+      director: 'Test Director',
+      castTop: [],
+    });
+    evidenceFindManyMock.mockResolvedValueOnce([
+      {
+        sourceName: 'Source A',
+        url: 'https://example.com/a',
+        snippet: 'Snippet A',
+        retrievedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ]);
+    recommendationItemFindFirstMock.mockResolvedValueOnce(null);
+
+    const request = new Request('http://localhost/api/companion?tmdbId=123&spoilerPolicy=NO_SPOILERS', {
+      headers: {
+        cookie: makeSessionCookie('user_1'),
+      },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(body.data.codex).toBeUndefined();
   });
 });
