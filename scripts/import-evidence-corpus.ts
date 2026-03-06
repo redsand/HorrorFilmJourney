@@ -50,8 +50,8 @@ function isValidPayload(value: unknown): value is ImportPayload {
   if (!value || typeof value !== "object") return false;
   const payload = value as Partial<ImportPayload>;
   return Boolean(
-    typeof payload.generatedAt === "string"
-    && Array.isArray(payloay.documents)
+    typeof payload.generatedAt === "string" &&
+    Array.isArray(payload.documents)
   );
 }
 
@@ -65,42 +65,76 @@ async function main(): Promise<void> {
 
   const prisma = new PrismaClient();
   try {
-    const tmdIds = new Set(parsed.documents.map((d) => d.movieTmdbId));
+    const tmdbIds = [...new Set(parsed.documents.map((d) => d.movieTmdbId))];
     const movies = await prisma.movie.findMany({
-      where: { tmdbId: {[[�N�ˋ��YY�HHK��[X���Y��YK�Y�Y��YK�_K�JN�ۜ�[ݚYRY�UY�H�]�X\
-[ݚY\˛X\
+      where: { tmdbId: { in: tmdbIds } },
+      select: { id: true, tmdbId: true },
+    });
+    const movieIdByTmdb = new Map(movies.map((m) => [m.tmdbId, m.id]));
 
-JHO��K�YYK�YH\��ۜ�
-JN�ۜ�Z\��[��Y�Y�Hˋ��YY�K��[\�
-Y
-HO�[[ݚYRY�UY��\�Y
-JNY�
-Z\��[��Y�Y˛[���
-H�ۜ��K��\���\��[�Έ	�Z\��[��Y�Y˛[��HQ�Q�����[�[��][�ˈ�\��L�	�Z\��[��Y�Y˜�X�JL
-K���[���_X
-NB��]��[Y[��[\ܝYH]��[Y[����\YH]�[���[\ܝYH��܈
-�ۜ���و\��Y���[Y[��H�ۜ�[ݚYRYH[ݚYRY�UY���]
-�˛[ݚYUY�Y
-NY�
-[[ݚYRY
-H��[Y[����\Y
-���۝[�YNB���ۜ�\�\�Y��H]�Z]�\�XK�]�Y[��Q��[Y[��\�\�
-�\�N����\��S�[YW�\�����\��S�[YN��˜��\��S�[YK\���˝\�HK�ܙX]N��[ݚYRY��X\�۔�YΈ�˜�X\�۔�Y����\��S�[YN��˜��\��S�[YK�\���˝\��]N��˝]K��۝[���˘�۝[���۝[�\���˘�۝[�\��X�\�Y]��˜X�\�Y]��]�]J�˜X�\�Y]
-H��[�X�[��N��˛X�[��K�WK�\]N��[ݚYRY��X\�۔�YΈ�˜�X\�۔�Y��]N��˝]K��۝[���˘�۝[���۝[�\���˘�۝[�\��X�\�Y]��˜X�\�Y]��]�]J�˜X�\�Y]
-H��[�X�[��N��˛X�[��K�K��[X����Y��YK�K�JN�]�Z]�\�XK�]�Y[��P�[�˙[]SX[�J��\�N����[Y[�Y�\�\�Y�˚Y�HJN�Y�
-�˘�[��˛[���
-H]�Z]�\�XK�]�Y[��P�[�˘ܙX]SX[�J]N��˘�[��˛X\
+    console.log(`Starting import of ${parsed.documents.length} documents for ${tmdbIds.length} movies...`);
 
-�[��HO�
-Y��[�˚Y���[Y[�Y�\�\�Y�˚Y��[��[�^��[�˘�[��[�^�^��[�˝^��\���[���[�˘�\���[������[�˙[X�Y[�ՙX�܈��[X�Y[�ՙX�܎��[�˙[X�Y[�ՙX�܋�[X�Y[��[�[��[�˙[X�Y[��[�[�[X�Y[��[N��[�˙[X�Y[��[K�H��WJK�JJK���\\X�]\Έ�YK�JN�[���[\ܝY
-�H�˘�[��˛[��B���[Y[��[\ܝY
-��B���ۜ��K���]�Y[��H�ܜ\�[\ܝ��\]N�[�]Iܙ\���J�K�[�]
-_X
-N�ۜ��K����[[X\�N���[Y[��I���[Y[��[\ܝYH��\YI���[Y[����\YH�[���I��[���[\ܝYX
-NH�[�[H]�Z]�\�XK�\��ۛ�X�
+    let docCount = 0;
+    let chunkCount = 0;
 
-NB�B��XZ[�
-K��]�
+    for (const doc of parsed.documents) {
+      const movieId = movieIdByTmdb.get(doc.movieTmdbId);
+      if (!movieId) {
+        continue;
+      }
 
-\��܊HO��ۜ��K�\��܊�]�Y[��H�ܜ\�[\ܝ�Z[Y�N�ۜ��K�\��܊\��܈[��[��[و\��܈�\��܋�Y\��Y�H���[��\��܊JN���\�˙^]
-JNJN�
+      const upserted = await prisma.evidenceDocument.upsert({
+        where: { sourceName_url: { sourceName: doc.sourceName, url: doc.url } },
+        create: {
+          movieId,
+          seasonSlug: doc.seasonSlug,
+          sourceName: doc.sourceName,
+          url: doc.url,
+          title: doc.title,
+          content: doc.content,
+          contentHash: doc.contentHash,
+          publishedAt: doc.publishedAt ? new Date(doc.publishedAt) : null,
+          license: doc.license,
+        },
+        update: {
+          movieId,
+          seasonSlug: doc.seasonSlug,
+          title: doc.title,
+          content: doc.content,
+          contentHash: doc.contentHash,
+          publishedAt: doc.publishedAt ? new Date(doc.publishedAt) : null,
+          license: doc.license,
+        },
+      });
+
+      await prisma.evidenceChunk.deleteMany({ where: { documentId: upserted.id } });
+
+      if (doc.chunks.length > 0) {
+        await prisma.evidenceChunk.createMany({
+          data: doc.chunks.map((c) => ({
+            id: c.id,
+            documentId: upserted.id,
+            chunkIndex: c.chunkIndex,
+            text: c.text,
+            charCount: c.charCount,
+            embeddingModel: c.embeddingModel,
+            embeddingDim: c.embeddingDim,
+            embeddingVector: c.embeddingVector as any,
+          })),
+        });
+        chunkCount += doc.chunks.length;
+      }
+      docCount++;
+    }
+
+    console.log(`Import complete: ${docCount} documents, ${chunkCount} chunks.`);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main().catch((error) => {
+  console.error("Evidence corpus import failed");
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});
