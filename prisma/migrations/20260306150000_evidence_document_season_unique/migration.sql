@@ -10,5 +10,7 @@ DROP INDEX IF EXISTS "EvidenceDocument_sourceName_url_key";
 -- Add the new three-column unique index (seasonSlug is nullable, so two
 -- rows with the same sourceName+url and both seasonSlug=NULL would still
 -- collide — acceptable, as null-season documents are global/unscoped).
-CREATE UNIQUE INDEX IF NOT EXISTS "EvidenceDocument_sourceName_url_seasonSlug_key"
+-- Drop first in case a previous partial run left it behind.
+DROP INDEX IF EXISTS "EvidenceDocument_sourceName_url_seasonSlug_key";
+CREATE UNIQUE INDEX "EvidenceDocument_sourceName_url_seasonSlug_key"
   ON "EvidenceDocument" ("sourceName", "url", "seasonSlug");
