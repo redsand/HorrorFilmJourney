@@ -40,10 +40,16 @@
         movieId = uuid;
       }
 
+      const seasonSlug = document.seasonSlug ?? null;
+      if (!seasonSlug) {
+        console.log('  Skipping document without seasonSlug:', document.sourceName, document.url);
+        skipped++;
+        continue;
+      }
       const chunked = chunkEvidenceDocument(document);
       const upserted = await prisma.evidenceDocument.upsert({
-        where: { sourceName_url_seasonSlug: { sourceName: document.sourceName, url: document.url, seasonSlug: document.seasonSlug ?? null } },
-        create: { movieId, seasonSlug: document.seasonSlug, sourceName: document.sourceName, url: document.url, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt:
+        where: { sourceName_url_seasonSlug: { sourceName: document.sourceName, url: document.url, seasonSlug } },
+        create: { movieId, seasonSlug, sourceName: document.sourceName, url: document.url, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt:
   document.publishedAt ? new Date(document.publishedAt) : null, license: document.license },
         update: { movieId, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt: document.publishedAt ? new
   Date(document.publishedAt) : null, license: document.license },
