@@ -34,6 +34,8 @@
         const uuid = tmdbToUuid.get(tmdbId);
         if (!uuid) {
           console.log('  Skipping movie not found in DB:', document.movieId, '(' + document.title + ')');
+          skipped++;
+          continue;
         }
         movieId = uuid;
       }
