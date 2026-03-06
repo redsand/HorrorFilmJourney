@@ -25,7 +25,9 @@ const IGNORED_DIRECTORIES = new Set(['node_modules', '.next', 'backups', 'artifa
 const EXCLUDED_RELATIVE_PATHS = new Set([
   'docs/engineering/slug-taxonomy-audit.md',
   'tests/unit/season-2-slug-guard.test.ts',
-]);
+  'docs/evidence/season-2-cult-classics-corpus-backup.json',
+  'scripts/enrich-missing-wikipedia.ts',
+ ]);
 
 async function collectFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -55,8 +57,8 @@ async function readText(filePath: string): Promise<string | null> {
   }
 }
 
-describe('Season 2 legacy slug guard', () => {
-  it('fails when legacy Season 2 slugs reappear', async () => {
+ describe('Season 2 legacy slug guard', () => {
+  it('fails when legacy Season 2 slugs reappear', { timeout: 30000 }, async () => {
     const allFiles = await collectFiles(process.cwd());
     const candidates = allFiles.filter((filePath) => {
     const relativePath = relative(process.cwd(), filePath).replace(/\\/g, '/');

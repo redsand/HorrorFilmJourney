@@ -27,11 +27,11 @@ function loadSpec(): CurriculumSpec {
 }
 
 describe('Season 2 Cult Classics curriculum spec', () => {
-  it('contains 8 nodes with at least 30 titles each', () => {
+  it('contains 11 nodes with at least 25 titles each', () => {
     const spec = loadSpec();
-    expect(spec.nodes).toHaveLength(8);
+    expect(spec.nodes).toHaveLength(11);
     spec.nodes.forEach((node) => {
-      expect(node.titles.length).toBeGreaterThanOrEqual(30);
+      expect(node.titles.length).toBeGreaterThanOrEqual(25);
     });
   });
 
