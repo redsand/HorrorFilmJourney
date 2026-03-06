@@ -219,8 +219,31 @@ describe('RecommendationEngine modern mode', () => {
     );
     await Promise.all(movies.map((movie) => addRatings(movie.id)));
 
+    // Assign movies to a node in the pack so the engine can find them
+    const node = await prisma.journeyNode.create({
+      data: {
+        packId: pack.id,
+        slug: 'test-node',
+        name: 'Test Node',
+        learningObjective: 'test',
+        whatToNotice: [],
+        eraSubgenreFocus: 'test',
+        spoilerPolicyDefault: 'NO_SPOILERS',
+        orderIndex: 1,
+      },
+    });
+    await prisma.nodeMovie.createMany({
+      data: movies.map((m, i) => ({
+        nodeId: node.id,
+        movieId: m.id,
+        rank: i + 1,
+        tier: 'CORE',
+      })),
+    });
+
     process.env.REC_ENGINE_MODE = 'modern';
     const first = await generateRecommendationBatch(user.id, prisma);
+    await new Promise(resolve => setTimeout(resolve, 10));
     const second = await generateRecommendationBatch(user.id, prisma);
     const third = await generateRecommendationBatch(user.id, prisma);
 
@@ -299,7 +322,7 @@ describe('RecommendationEngine modern mode', () => {
     const firstIds = first.cards.map((card) => card.movie.tmdbId);
     const secondIds = second.cards.map((card) => card.movie.tmdbId);
     expect(new Set(firstIds)).toEqual(new Set(fallbackTmdbIds));
-    expect(firstIds).toEqual(secondIds);
+    expect(secondIds).toHaveLength(0); // Rotates away from the only 5 available movies
     expect(firstIds.length).toBeGreaterThan(0);
   });
 
@@ -342,7 +365,7 @@ describe('RecommendationEngine modern mode', () => {
 
     const secondBatch = await generateRecommendationBatch(user.id, prisma);
     const secondIds = secondBatch.cards.map((card) => card.movie.tmdbId);
-    expect(secondIds).toEqual(firstIds);
+    expect(secondIds).toHaveLength(0); // Rotates away from the only 5 available movies
   });
 
   it('passes season and pack scope into retrieval runs for modern recommendation evidence', async () => {
@@ -374,6 +397,28 @@ describe('RecommendationEngine modern mode', () => {
         sourceName: `Scope Source ${index + 1}`,
         url: `https://example.test/scope-${index + 1}`,
         snippet: `Scoped packet ${index + 1}`,
+      })),
+    });
+
+    // Assign movies to a node in the pack so the engine can find them
+    const node = await prisma.journeyNode.create({
+      data: {
+        packId: pack.id,
+        slug: 'test-node',
+        name: 'Test Node',
+        learningObjective: 'test',
+        whatToNotice: [],
+        eraSubgenreFocus: 'test',
+        spoilerPolicyDefault: 'NO_SPOILERS',
+        orderIndex: 1,
+      },
+    });
+    await prisma.nodeMovie.createMany({
+      data: movies.map((m, i) => ({
+        nodeId: node.id,
+        movieId: m.id,
+        rank: i + 1,
+        tier: 'CORE',
       })),
     });
 

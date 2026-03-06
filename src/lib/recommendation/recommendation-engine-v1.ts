@@ -123,7 +123,18 @@ function toRatings(
 ): CandidateMovie['ratings'] | null {
   const validScaleRatings = ratings.filter((rating) => rating.scale === '10' || rating.scale === '100');
   const imdb = validScaleRatings.find((rating) => rating.source === 'IMDB');
-  if (!imdb || validScaleRatings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
+  if (!imdb) {
+    console.debug('[recommendations.debug] toRatings failed: no IMDB', {
+      sources: ratings.map((r) => r.source),
+    });
+    return null;
+  }
+  if (validScaleRatings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
+    console.debug('[recommendations.debug] toRatings failed: not enough sources', {
+      count: validScaleRatings.length,
+      required: MIN_RATING_SOURCES_FOR_ELIGIBILITY,
+      sources: validScaleRatings.map((r) => r.source),
+    });
     return null;
   }
 
@@ -138,6 +149,10 @@ function toRatings(
     }));
 
   if (additional.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1) {
+    console.debug('[recommendations.debug] toRatings failed: not enough additional sources', {
+      count: additional.length,
+      required: MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1,
+    });
     return null;
   }
 

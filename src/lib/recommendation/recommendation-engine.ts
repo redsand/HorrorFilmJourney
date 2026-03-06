@@ -46,6 +46,11 @@ function toRatings(
   const validScaleRatings = ratings.filter((rating) => rating.scale === '10' || rating.scale === '100');
   const imdb = validScaleRatings.find((rating) => rating.source === 'IMDB');
   if (!imdb || validScaleRatings.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY) {
+    console.info('[recommendations.debug] toRatings failed eligibility', {
+      hasImdb: Boolean(imdb),
+      validCount: validScaleRatings.length,
+      min: MIN_RATING_SOURCES_FOR_ELIGIBILITY,
+    });
     return null;
   }
 
@@ -60,6 +65,10 @@ function toRatings(
     }));
 
   if (additional.length < MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1) {
+    console.info('[recommendations.debug] toRatings failed additional count', {
+      additionalCount: additional.length,
+      min: MIN_RATING_SOURCES_FOR_ELIGIBILITY - 1,
+    });
     return null;
   }
 
@@ -1684,11 +1693,13 @@ export async function generateRecommendationBatchModern(
   });
 
   const selectedIds = exploration.finalRankedIds.slice(0, targetCount);
+  console.info('[recommendations.debug] selectedIds', { selectedIds });
   const moviesStartedAt = nowMs();
   const movies = await prisma.movie.findMany({
     where: { id: { in: selectedIds } },
     select: { id: true, tmdbId: true, title: true, year: true, posterUrl: true, genres: true, ratings: { select: { source: true, value: true, scale: true, rawValue: true } } },
   });
+  console.info('[recommendations.debug] loaded movies', { count: movies.length });
   console.info('[recommendations.engine] modern movies loaded', {
     durationMs: elapsedMs(moviesStartedAt),
     selectedCount: selectedIds.length,
