@@ -29,7 +29,17 @@ export default async function LandingPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-6 pb-12 pt-4">
+    <div className="relative flex flex-1 flex-col">
+      <Image
+        src="/landing-background.png"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[rgba(5,5,8,0.78)]" />
+    <main className="relative flex flex-1 flex-col gap-6 pb-12 pt-4">
 
       {/* Hero */}
       <section className="relative overflow-hidden rounded-2xl border border-[rgba(193,18,31,0.5)] bg-[rgba(8,8,10,0.98)] p-7 shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
@@ -131,7 +141,7 @@ export default async function LandingPage() {
             ['Light Summary', 'What to know before you watch — no spoilers.'],
             ['Full Deep Dive', 'Craft, subtext, cultural context, and lasting impact.'],
             ['Production Trivia', 'Five sourced facts from behind the scenes.'],
-            ['Spoiler Control', 'NO_SPOILERS / LIGHT / FULL — you decide what you see.'],
+            ['Spoiler Control', 'Choose how deep to go — clean preview, light hints, or full breakdown. You decide.'],
           ].map(([title, body]) => (
             <li key={title} className="flex gap-2.5">
               <span className="mt-0.5 shrink-0 text-[var(--cc-accent-2)]">→</span>
@@ -193,5 +203,6 @@ export default async function LandingPage() {
       </section>
 
     </main>
+    </div>
   );
 }
