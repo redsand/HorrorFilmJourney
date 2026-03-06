@@ -7,7 +7,7 @@ import { HorrorMistOverlay } from '@/components/layout/HorrorMistOverlay';
 import { getActiveThemeForRequest } from '@/lib/theme/getActiveThemeForRequest';
 import { getActivePackForRequest } from '@/lib/packs/getActivePackForRequest';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import './globals.css';
+import '../globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seasonName, seasonDescription } = await getActivePackForRequest();

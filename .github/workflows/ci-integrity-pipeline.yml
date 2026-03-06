@@ -1,0 +1,123 @@
+name: CI Integrity Pipeline
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  seasons_doctor_dry_run:
+    name: Seasons Doctor (Dry Run)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run seasons doctor dry-run
+        continue-on-error: true
+        run: npm run seasons:doctor:dry-run
+
+      - name: Upload seasons doctor artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seasons-doctor-artifacts
+          path: docs/engineering/season-doctor/*
+          if-no-files-found: warn
+
+  rag_grounding_harness:
+    name: RAG Grounding Harness
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run grounding harness
+        continue-on-error: true
+        run: npx vitest run tests/rag/grounding.test.ts
+
+  release_core_contract:
+    name: Release Core Contract
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run release core contract test
+        continue-on-error: true
+        run: npx vitest run tests/unit/release-core-contract.test.ts
+
+      - name: Upload release core contract artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-core-contract-artifacts
+          path: artifacts/release-core-contract/*
+          if-no-files-found: warn
+
+  canon_anchor_audit:
+    name: Canon Anchor Audit
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run canon anchor audit
+        continue-on-error: true
+        run: node --experimental-strip-types scripts/audit-canon-anchors.ts
+
+      - name: Upload canon anchor report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canon-anchor-integrity-report
+          path: docs/engineering/canon-anchor-integrity-report.json
+          if-no-files-found: warn

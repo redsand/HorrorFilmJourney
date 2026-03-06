@@ -1,0 +1,35 @@
+name: Seasons Doctor (Read Only)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 9 * * *'
+
+jobs:
+  season_doctor_readonly:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Run seasons doctor (dry-run, non-blocking)
+        continue-on-error: true
+        run: npm run seasons:doctor:dry-run
+
+      - name: Upload season doctor reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: season-doctor-readonly-report
+          path: docs/engineering/season-doctor/
+          if-no-files-found: warn
