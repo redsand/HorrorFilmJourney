@@ -283,7 +283,7 @@ describe('RecommendationEngine modern mode', () => {
     expect(batch.cards).toHaveLength(0);
   });
 
-  it('returns identical batches when only fallback candidates are available', async () => {
+  it('returns empty second batch when all fallback candidates are exhausted by rotation window', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Deterministic Fallback User' } });
     const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
     const pack = await prisma.genrePack.create({
@@ -326,7 +326,36 @@ describe('RecommendationEngine modern mode', () => {
     expect(firstIds.length).toBeGreaterThan(0);
   });
 
-  it('returns deterministic fallback batches for Season 2 cult-classics', async () => {
+  it('returns all fallback candidates on first call when no prior batch exists', async () => {
+    const user = await prisma.user.create({ data: { displayName: 'Fresh Fallback User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: { userId: user.id, onboardingCompleted: true, tolerance: 3, pacePreference: 'balanced', selectedPackId: pack.id },
+    });
+
+    const fallbackTmdbIds = season1FallbackSpec.tmdbIds.slice(0, 5);
+    const fallbackMovies = await Promise.all(
+      fallbackTmdbIds.map((tmdbId, index) =>
+        prisma.movie.create({
+          data: { tmdbId, title: `Fallback ${tmdbId}`, year: 1990 + index, posterUrl: `https://img/${tmdbId}.jpg`, genres: ['horror'] },
+        }),
+      ),
+    );
+    await Promise.all(fallbackMovies.map((movie) => addRatings(movie.id)));
+
+    process.env.REC_ENGINE_MODE = 'modern';
+    const batch = await generateRecommendationBatch(user.id, prisma);
+    const ids = batch.cards.map((card) => card.movie.tmdbId);
+
+    expect(new Set(ids)).toEqual(new Set(fallbackTmdbIds));
+    expect(ids.length).toBeGreaterThan(0);
+    expect(batch.cards.every((card) => card.movie.posterUrl.length > 0)).toBe(true);
+  });
+
+  it('returns empty second batch when all Season 2 fallback candidates are exhausted by rotation window', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Cult Fallback User' } });
     const season2 = await prisma.season.create({ data: { slug: 'season-2', name: 'Season 2', isActive: true } });
     const cultPack = await prisma.genrePack.create({

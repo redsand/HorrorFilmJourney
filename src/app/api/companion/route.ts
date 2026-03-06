@@ -574,10 +574,9 @@ async function generateCompanionLlmOutput(input: {
           'Do not include analysis, reasoning, markdown, or code fences.',
           'lightSummary must summarize beginning and middle only (no ending). Inform with provided evidence.',
           'fullSummary must include full plot arc including ending. Inform with provided evidence.',
-          'trivia must include exactly 5 concise, interesting trivia questions (with their answers in parentheses) about the film production or lore. Use your internal knowledge for trivia, prioritizing it over provided evidence.',
+          'trivia must include exactly 5 concise questions about the film\'s production history, cultural impact, or notable craft decisions, each with the answer in parentheses. Use provided evidence as your primary source.',
           'Avoid invented details. If uncertain, explicitly say unknown.',
-          'For factual summaries (lightSummary and fullSummary), you MUST include at least one citation token from the provided evidence IDs, formatted exactly like [doc:... chunk:...].',
-          'For trivia, do NOT include citations.',
+          'For all fields (lightSummary, fullSummary, and trivia items drawn from evidence), include at least one citation token from the provided evidence IDs, formatted exactly like [doc:... chunk:...].',
         ].join(' '),
         user: JSON.stringify({
           movie: {
@@ -644,11 +643,12 @@ function enforceGroundedCompanionOutput(
 
   const [lightSummary] = enforceCitationCoverage([llmOutput.lightSummary], groundingChunks);
   const [fullSummary] = enforceCitationCoverage([llmOutput.fullSummary], groundingChunks);
+  const trivia = enforceCitationCoverage(llmOutput.trivia, groundingChunks).slice(0, 5);
 
   return {
     lightSummary: lightSummary ?? llmOutput.lightSummary,
     fullSummary: fullSummary ?? llmOutput.fullSummary,
-    trivia: llmOutput.trivia.map((t) => t.trim()).filter((t) => t.length > 0).slice(0, 5),
+    trivia: trivia.length > 0 ? trivia : llmOutput.trivia.map((t) => t.trim()).filter((t) => t.length > 0).slice(0, 5),
   };
 }
 

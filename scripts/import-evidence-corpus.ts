@@ -84,7 +84,7 @@ async function main(): Promise<void> {
       }
 
       const upserted = await prisma.evidenceDocument.upsert({
-        where: { sourceName_url: { sourceName: doc.sourceName, url: doc.url } },
+        where: { sourceName_url_seasonSlug: { sourceName: doc.sourceName, url: doc.url, seasonSlug: doc.seasonSlug ?? null } },
         create: {
           movieId,
           seasonSlug: doc.seasonSlug,
@@ -98,7 +98,6 @@ async function main(): Promise<void> {
         },
         update: {
           movieId,
-          seasonSlug: doc.seasonSlug,
           title: doc.title,
           content: doc.content,
           contentHash: doc.contentHash,

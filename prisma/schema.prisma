@@ -190,7 +190,7 @@ model EvidenceDocument {
   movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
   chunks EvidenceChunk[]
 
-  @@unique([sourceName, url])
+  @@unique([sourceName, url, seasonSlug])
   @@index([movieId, createdAt])
   @@index([seasonSlug, createdAt])
 }

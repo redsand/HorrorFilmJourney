@@ -42,10 +42,10 @@
 
       const chunked = chunkEvidenceDocument(document);
       const upserted = await prisma.evidenceDocument.upsert({
-        where: { sourceName_url: { sourceName: document.sourceName, url: document.url } },
+        where: { sourceName_url_seasonSlug: { sourceName: document.sourceName, url: document.url, seasonSlug: document.seasonSlug ?? null } },
         create: { movieId, seasonSlug: document.seasonSlug, sourceName: document.sourceName, url: document.url, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt:
   document.publishedAt ? new Date(document.publishedAt) : null, license: document.license },
-        update: { movieId, seasonSlug: document.seasonSlug, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt: document.publishedAt ? new
+        update: { movieId, title: document.title, content: document.content, contentHash: chunked.documentHash, publishedAt: document.publishedAt ? new
   Date(document.publishedAt) : null, license: document.license },
       });
 
