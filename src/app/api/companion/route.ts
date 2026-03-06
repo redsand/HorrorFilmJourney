@@ -572,11 +572,12 @@ async function generateCompanionLlmOutput(input: {
           'Generate movie companion notes.',
           'Return strict JSON only.',
           'Do not include analysis, reasoning, markdown, or code fences.',
-          'lightSummary must summarize beginning and middle only (no ending).',
-          'fullSummary must include full plot arc including ending.',
-          'trivia must include exactly 5 concise facts.',
+          'lightSummary must summarize beginning and middle only (no ending). Inform with provided evidence.',
+          'fullSummary must include full plot arc including ending. Inform with provided evidence.',
+          'trivia must include exactly 5 concise, interesting trivia questions (with their answers in parentheses) about the film production or lore. Use your internal knowledge for trivia, prioritizing it over provided evidence.',
           'Avoid invented details. If uncertain, explicitly say unknown.',
-          'For factual statements, include at least one citation token from the provided evidence IDs, formatted exactly like [doc:... chunk:...].',
+          'For factual summaries (lightSummary and fullSummary), you MUST include at least one citation token from the provided evidence IDs, formatted exactly like [doc:... chunk:...].',
+          'For trivia, do NOT include citations.',
         ].join(' '),
         user: JSON.stringify({
           movie: {
@@ -634,15 +635,20 @@ function enforceGroundedCompanionOutput(
     return null;
   }
   if (groundingChunks.length === 0) {
-    return llmOutput;
+    return {
+      lightSummary: llmOutput.lightSummary.trim(),
+      fullSummary: llmOutput.fullSummary.trim(),
+      trivia: llmOutput.trivia.map((t) => t.trim()).filter((t) => t.length > 0).slice(0, 5),
+    };
   }
+
   const [lightSummary] = enforceCitationCoverage([llmOutput.lightSummary], groundingChunks);
   const [fullSummary] = enforceCitationCoverage([llmOutput.fullSummary], groundingChunks);
-  const trivia = enforceCitationCoverage(llmOutput.trivia, groundingChunks).slice(0, 5);
+
   return {
     lightSummary: lightSummary ?? llmOutput.lightSummary,
     fullSummary: fullSummary ?? llmOutput.fullSummary,
-    trivia: trivia.length > 0 ? trivia : llmOutput.trivia,
+    trivia: llmOutput.trivia.map((t) => t.trim()).filter((t) => t.length > 0).slice(0, 5),
   };
 }
 
@@ -844,8 +850,7 @@ function buildSections(
   },
 ) {
   if (grounding.insufficientEvidence) {
-    const citation = grounding.groundingChunks[0] ? ` ${formatChunkCitation(grounding.groundingChunks[0])}` : '';
-    const uncertainty = `${DEFAULT_GROUNDING_REFUSAL_TEMPLATE}${citation}`;
+    const uncertainty = DEFAULT_GROUNDING_REFUSAL_TEMPLATE;
     return {
       productionNotes: [uncertainty],
       historicalNotes: [uncertainty],

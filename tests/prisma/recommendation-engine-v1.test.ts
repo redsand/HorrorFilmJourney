@@ -47,7 +47,7 @@ describe('RecommendationEngine v1', () => {
     await prisma.userMovieInteraction.create({ data: { userId: user.id, movieId: movies[0]!.id, status: InteractionStatus.WATCHED, rating: 4 } });
     await prisma.userMovieInteraction.create({ data: { userId: user.id, movieId: movies[1]!.id, status: InteractionStatus.ALREADY_SEEN, rating: 5 } });
 
-    const result = await generateRecommendationBatchV1(user.id, prisma);
+    const result = await generateRecommendationBatchV1(user.id, prisma, { seasonSlug: 'season-1', packSlug: 'horror' });
     expect(result.cards).toHaveLength(4);
     expect(result.cards.find((card) => card.movie.tmdbId === 1)).toBeUndefined();
     expect(result.cards.find((card) => card.movie.tmdbId === 2)).toBeUndefined();
@@ -68,7 +68,7 @@ describe('RecommendationEngine v1', () => {
     await addRatings(twoSources.id, true, 1);
     await addRatings(eligible.id, true, 3);
 
-    const result = await generateRecommendationBatchV1(user.id, prisma);
+    const result = await generateRecommendationBatchV1(user.id, prisma, { seasonSlug: 'season-1', packSlug: 'horror' });
     const ids = result.cards.map((card) => card.movie.tmdbId);
 
     expect(ids).toContain(304);
@@ -93,7 +93,7 @@ describe('RecommendationEngine v1', () => {
     });
     await addRatings(movie.id, true, 3);
 
-    const result = await generateRecommendationBatchV1(user.id, prisma);
+    const result = await generateRecommendationBatchV1(user.id, prisma, { seasonSlug: 'season-1', packSlug: 'horror' });
     expect(result.cards).toHaveLength(1);
     expect(result.cards[0]?.movie.posterUrl).toBe('/api/posters/3801');
   });
@@ -116,8 +116,8 @@ describe('RecommendationEngine v1', () => {
     );
     await Promise.all(movies.map((movie) => addRatings(movie.id)));
 
-    const batchOne = await generateRecommendationBatchV1(user.id, prisma);
-    const batchTwo = await generateRecommendationBatchV1(user.id, prisma);
+    const batchOne = await generateRecommendationBatchV1(user.id, prisma, { seasonSlug: 'season-1', packSlug: 'horror' });
+    const batchTwo = await generateRecommendationBatchV1(user.id, prisma, { seasonSlug: 'season-1', packSlug: 'horror' });
 
     const batchOneIds = new Set(batchOne.cards.map((card) => card.movie.tmdbId));
     const overlap = batchTwo.cards.filter((card) => batchOneIds.has(card.movie.tmdbId));

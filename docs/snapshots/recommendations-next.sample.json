@@ -1,6 +1,6 @@
 {
   "data": {
-    "batchId": "cmmczlekq001x5sy4xkrsa90y",
+    "batchId": "cmme7c40f001xycvrs2073hrk",
     "cards": [
       {
         "movie": {
@@ -67,7 +67,8 @@
             "retrievedAt": "2026-01-01T00:00:00.000Z",
             "provenance": {
               "retrievalMode": "cache",
-              "sourceType": "packet"
+              "sourceType": "packet",
+              "rank": 1
             }
           }
         ]
@@ -141,7 +142,8 @@
             "retrievedAt": "2026-01-01T00:00:00.000Z",
             "provenance": {
               "retrievalMode": "cache",
-              "sourceType": "packet"
+              "sourceType": "packet",
+              "rank": 1
             }
           }
         ]
@@ -205,7 +207,8 @@
             "retrievedAt": "2026-01-01T00:00:00.000Z",
             "provenance": {
               "retrievalMode": "cache",
-              "sourceType": "packet"
+              "sourceType": "packet",
+              "rank": 1
             }
           }
         ]
@@ -275,7 +278,8 @@
             "retrievedAt": "2026-01-01T00:00:00.000Z",
             "provenance": {
               "retrievalMode": "cache",
-              "sourceType": "packet"
+              "sourceType": "packet",
+              "rank": 1
             }
           }
         ]
@@ -345,7 +349,8 @@
             "retrievedAt": "2026-01-01T00:00:00.000Z",
             "provenance": {
               "retrievalMode": "cache",
-              "sourceType": "packet"
+              "sourceType": "packet",
+              "rank": 1
             }
           }
         ]
@@ -354,23 +359,23 @@
     "interactionContext": [
       {
         "tmdbId": 802,
-        "recommendationItemId": "cmmczlekr001z5sy49gtsv92j"
+        "recommendationItemId": "cmme7c40f001zycvrkty7df55"
       },
       {
         "tmdbId": 803,
-        "recommendationItemId": "cmmczlekr00205sy43nkefw28"
+        "recommendationItemId": "cmme7c40g0020ycvrkw7uhwos"
       },
       {
         "tmdbId": 804,
-        "recommendationItemId": "cmmczlekr00215sy4at747e5u"
+        "recommendationItemId": "cmme7c40g0021ycvr3tzmgqi2"
       },
       {
         "tmdbId": 805,
-        "recommendationItemId": "cmmczleks00225sy4sd9zffi8"
+        "recommendationItemId": "cmme7c40g0022ycvra4wn7ea0"
       },
       {
         "tmdbId": 806,
-        "recommendationItemId": "cmmczleks00235sy4rsoxrvok"
+        "recommendationItemId": "cmme7c40g0023ycvrtzyjnzg1"
       }
     ]
   },

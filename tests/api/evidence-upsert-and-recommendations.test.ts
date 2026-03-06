@@ -139,6 +139,7 @@ describe('evidence upsert + recommendations evidence propagation', () => {
     expect(targetCard?.evidence[0]?.provenance).toEqual({
       retrievalMode: 'cache',
       sourceType: 'packet',
+      rank: 1,
     });
   });
 });

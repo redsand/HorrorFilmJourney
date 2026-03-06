@@ -96,13 +96,17 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
           slug: true,
           isEnabled: true,
           primaryGenre: true,
-          season: { select: { slug: true } },
+          season: {
+            select: {
+              slug: true,
+            },
+          },
         },
       },
     },
   });
 
-  if (profile?.selectedPack && profile.selectedPack.isEnabled) {
+  if (profile?.selectedPack && profile.selectedPack.isEnabled && profile.selectedPack.season?.slug) {
     return {
       packId: profile.selectedPack.id,
       packSlug: profile.selectedPack.slug,
@@ -111,6 +115,7 @@ export async function resolveEffectivePackForUser(prisma: PrismaClient, userId: 
     };
   }
 
+  // If no selected pack, or selected pack is disabled, or selectedPack.season.slug is missing
   await prisma.userProfile.upsert({
     where: { userId },
     create: {

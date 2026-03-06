@@ -49,6 +49,20 @@ beforeEach(async () => {
 describe('RecommendationEngine modern mode', () => {
   it('rotates away from the previous batch while enforcing ratings and poster in cards', async () => {
     const user = await prisma.user.create({ data: { displayName: 'Mode User' } });
+    const season = await prisma.season.create({ data: { slug: 'season-1', name: 'Season 1', isActive: true } });
+    const pack = await prisma.genrePack.create({
+      data: { slug: 'horror', name: 'Horror', seasonId: season.id, isEnabled: true, primaryGenre: 'horror' },
+    });
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        onboardingCompleted: true,
+        tolerance: 3,
+        pacePreference: 'balanced',
+        selectedPackId: pack.id,
+      },
+    });
+
     const movies = await Promise.all(
       [601, 602, 603, 604, 605, 606].map((tmdbId, i) =>
         prisma.movie.create({ data: { tmdbId, title: `Movie ${tmdbId}`, year: 2000 + i, posterUrl: `https://img/${tmdbId}.jpg`, genres: ['horror'] } }),
@@ -58,6 +72,31 @@ describe('RecommendationEngine modern mode', () => {
 
     process.env.REC_ENGINE_MODE = 'v1';
     const v1 = await generateRecommendationBatch(user.id, prisma);
+
+    // Assign movies to the effective pack so modern engine can find them
+    const effectivePack = await prisma.genrePack.findFirst({ where: { isEnabled: true } });
+    if (effectivePack) {
+      const node = await prisma.journeyNode.create({
+        data: {
+          packId: effectivePack.id,
+          slug: 'test-node',
+          name: 'Test Node',
+          learningObjective: 'test',
+          whatToNotice: [],
+          eraSubgenreFocus: 'test',
+          spoilerPolicyDefault: 'NO_SPOILERS',
+          orderIndex: 1,
+        }
+      });
+      await prisma.nodeMovie.createMany({
+        data: movies.map((m, i) => ({
+          nodeId: node.id,
+          movieId: m.id,
+          rank: i + 1,
+          tier: 'CORE'
+        }))
+      });
+    }
 
     process.env.REC_ENGINE_MODE = 'modern';
     const modern = await generateRecommendationBatch(user.id, prisma);

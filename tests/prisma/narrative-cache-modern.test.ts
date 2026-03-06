@@ -144,7 +144,7 @@ describe('narrative cache in modern generation', () => {
         evidenceRetriever: { getEvidenceForMovie: async () => evidence },
         narrativeComposer: composer,
       },
-      { targetCount: 1 },
+      { targetCount: 1, seasonSlug: 'season-1', packSlug: 'horror' },
     );
 
     expect(provider.generateJson).not.toHaveBeenCalled();
@@ -217,7 +217,7 @@ describe('narrative cache in modern generation', () => {
         evidenceRetriever: { getEvidenceForMovie: async () => newEvidence },
         narrativeComposer: composer,
       },
-      { targetCount: 1 },
+      { targetCount: 1, seasonSlug: 'season-1', packSlug: 'horror' },
     );
 
     expect(provider.generateJson).toHaveBeenCalledTimes(1);

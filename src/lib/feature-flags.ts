@@ -1,3 +1,3 @@
 export function seasonsPacksEnabled(): boolean {
-  return true;
+  return process.env.SEASONS_PACKS_ENABLED === 'true';
 }
