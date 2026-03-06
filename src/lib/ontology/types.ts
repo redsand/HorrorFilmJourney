@@ -12,6 +12,12 @@ export type NodeRelationship = {
   notes?: string;
 };
 
+export type CanonAnchor = {
+  title: string;
+  year: number;
+  tmdbId?: number;
+};
+
 export type OntologyNode = {
   slug: string;
   name: string;
@@ -23,6 +29,8 @@ export type OntologyNode = {
   requiredEvidence?: string[];
   keywordRules?: OntologyKeywordRule[];
   relationships?: NodeRelationship[];
+  canonAnchors?: CanonAnchor[];
+  orderIndex?: number;
 };
 
 export type SeasonOntology = {

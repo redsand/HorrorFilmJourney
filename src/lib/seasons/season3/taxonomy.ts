@@ -10,82 +10,62 @@ export const SEASON3_SCI_FI_TAXONOMY: Season3SciFiNodeTaxonomy[] = [
   {
     slug: 'proto-science-fiction',
     kind: 'historical-movement',
-    keywords: ['silent', 'early', 'metropolis', 'frankenstein', 'futurism'],
+    keywords: ['silent', 'early', 'metropolis', 'frankenstein', 'futurism', 'automaton', 'mad scientist', 'invisible man'],
   },
   {
-    slug: 'space-opera',
+    slug: 'atomic-age-science-fiction',
     kind: 'historical-movement',
-    keywords: ['space', 'star', 'galaxy', 'planet', 'spaceship', 'interstellar'],
+    keywords: ['atomic', 'nuclear', 'radiation', 'giant', 'mutation', 'bomb', 'cold war', 'forbidden planet'],
   },
   {
-    slug: 'hard-science-fiction',
+    slug: 'cold-war-paranoia',
+    kind: 'historical-movement',
+    keywords: ['cold war', 'infiltration', 'conformity', 'doomsday', 'conspiracy', 'pod people', 'red scare', 'spy'],
+  },
+  {
+    slug: 'space-race-cinema',
+    kind: 'historical-movement',
+    keywords: ['space', 'astronaut', 'orbital', 'mission', 'planet', 'monolith', '2001', 'moon landing'],
+  },
+  {
+    slug: 'new-hollywood-science-fiction',
+    kind: 'historical-movement',
+    keywords: ['dystopia', 'counterculture', 'state control', 'conditioning', 'soylent', 'population', 'thx'],
+  },
+  {
+    slug: 'philosophical-science-fiction',
     kind: 'hybrid',
-    keywords: ['science', 'physics', 'astronaut', 'experiment', 'orbital', 'quantum'],
+    keywords: ['consciousness', 'identity', 'memory', 'perception', 'existential', 'stalker', 'contemplative'],
+  },
+  {
+    slug: 'blockbuster-science-fiction',
+    kind: 'historical-movement',
+    keywords: ['star wars', 'galaxy', 'empire', 'force', 'alien', 'terminator', 'et', 'spectacle'],
   },
   {
     slug: 'cyberpunk',
     kind: 'historical-movement',
-    keywords: ['cyber', 'hacker', 'virtual', 'android', 'matrix', 'neon'],
+    keywords: ['cyber', 'hacker', 'virtual', 'android', 'matrix', 'neon', 'replicant', 'megacorp'],
   },
   {
-    slug: 'dystopian-science-fiction',
-    kind: 'historical-movement',
-    keywords: ['dystopia', 'totalitarian', 'surveillance', 'future society', 'authoritarian'],
-  },
-  {
-    slug: 'post-apocalyptic-science-fiction',
-    kind: 'historical-movement',
-    keywords: ['apocalypse', 'post apocalyptic', 'wasteland', 'collapse', 'nuclear'],
-  },
-  {
-    slug: 'time-travel-science-fiction',
+    slug: 'ai-cinema',
     kind: 'motif',
-    keywords: ['time travel', 'future', 'past', 'timeline', 'paradox', 'loop'],
+    keywords: ['artificial intelligence', 'robot', 'android', 'machine learning', 'sentience', 'hal', 'ex machina'],
   },
   {
-    slug: 'alternate-history-multiverse',
+    slug: 'alien-encounter',
     kind: 'motif',
-    keywords: ['multiverse', 'alternate', 'parallel', 'alternate history', 'dimension'],
+    keywords: ['alien', 'extraterrestrial', 'first contact', 'invasion', 'ufo', 'signal', 'arrival', 'district 9'],
   },
   {
-    slug: 'artificial-intelligence-robotics',
+    slug: 'time-travel',
     kind: 'motif',
-    keywords: ['ai', 'artificial intelligence', 'robot', 'android', 'machine'],
+    keywords: ['time travel', 'timeline', 'paradox', 'future self', 'time machine', 'loop', 'bootstrap'],
   },
   {
-    slug: 'alien-contact-invasion',
-    kind: 'motif',
-    keywords: ['alien', 'invasion', 'extraterrestrial', 'ufo', 'first contact'],
-  },
-  {
-    slug: 'biopunk-genetic-engineering',
-    kind: 'motif',
-    keywords: ['genetic', 'clone', 'virus', 'bio', 'mutation', 'dna'],
-  },
-  {
-    slug: 'military-science-fiction',
-    kind: 'motif',
-    keywords: ['war', 'soldier', 'military', 'battle', 'combat', 'weapon'],
-  },
-  {
-    slug: 'science-fiction-horror',
+    slug: 'modern-speculative',
     kind: 'hybrid',
-    keywords: ['horror', 'creature', 'monster', 'infection', 'body horror', 'terror'],
-  },
-  {
-    slug: 'social-speculative-science-fiction',
-    kind: 'hybrid',
-    keywords: ['society', 'class', 'identity', 'political', 'social', 'speculative'],
-  },
-  {
-    slug: 'new-weird-cosmic-science-fiction',
-    kind: 'hybrid',
-    keywords: ['cosmic', 'weird', 'eldritch', 'surreal', 'dream', 'lovecraft'],
-  },
-  {
-    slug: 'retrofuturism-steampunk-dieselpunk',
-    kind: 'historical-movement',
-    keywords: ['retro', 'steampunk', 'dieselpunk', 'clockwork', 'victorian'],
+    keywords: ['near future', 'climate', 'civilizational', 'interstellar', 'annihilation', 'children of men', 'gravity'],
   },
 ];
 

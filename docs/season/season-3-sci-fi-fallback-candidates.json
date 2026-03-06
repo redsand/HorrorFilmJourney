@@ -1,5 +1,65 @@
 {
   "seasonSlug": "season-3",
   "packSlug": "sci-fi",
-  "tmdbIds": []
+  "note": "Manual fallback list for canonical films the TMDB discover harvest cannot reach. Primary reasons: not tagged genre 878; short film format; extremely low TMDB vote count; cold war political drama miscategorized as Drama/Thriller only. All TMDB IDs should be verified before a production harvest run.",
+  "tmdbIds": [
+    935,
+    8338,
+    17295,
+    1428,
+    5765,
+    16667,
+    10530
+  ],
+  "manifest": [
+    {
+      "tmdbId": 935,
+      "title": "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
+      "year": 1964,
+      "node": "cold-war-paranoia",
+      "reason": "TMDB tagged Comedy/Drama only — not genre 878. Foundational Cold War paranoia text. Cannot be reached by any genre-878-gated discover plan."
+    },
+    {
+      "tmdbId": 8338,
+      "title": "The Manchurian Candidate",
+      "year": 1962,
+      "node": "cold-war-paranoia",
+      "reason": "TMDB tagged Drama/Thriller only. Canonical Cold War infiltration/conformity film. Not genre 878."
+    },
+    {
+      "tmdbId": 17295,
+      "title": "Fail Safe",
+      "year": 1964,
+      "node": "cold-war-paranoia",
+      "reason": "TMDB tagged Drama/Thriller only. Mutually assured destruction as speculative scenario. Not genre 878."
+    },
+    {
+      "tmdbId": 1428,
+      "title": "Alphaville, une étrange aventure de Lemmy Caution",
+      "year": 1965,
+      "node": "philosophical-science-fiction",
+      "reason": "TMDB tagged genre 878 but ~1,200 votes. May appear in pool at low rank but too low-scored for calibration floor. Godard's sci-fi noir is mandatory curriculum."
+    },
+    {
+      "tmdbId": 5765,
+      "title": "The Day the Earth Stood Still",
+      "year": 1951,
+      "node": "atomic-age-science-fiction",
+      "reason": "TMDB tagged genre 878. Low vote count (~3,500). Defining atomic-age first-contact film. Likely present in pool but at risk of calibration floor exclusion."
+    },
+    {
+      "tmdbId": 16667,
+      "title": "Colossus: The Forbin Project",
+      "year": 1970,
+      "node": "ai-cinema",
+      "reason": "TMDB tagged genre 878. Very low vote count (~700). Direct predecessor to Ex Machina / Her narratively. Foundational AI-cinema text."
+    },
+    {
+      "tmdbId": 10530,
+      "title": "La Jetée",
+      "year": 1962,
+      "node": "time-travel",
+      "reason": "28-minute short film. TMDB does not surface short films in discover results regardless of genre tag. Founding text of the time-travel node. Must be injected manually. TMDB ID requires verification — short films are indexed inconsistently."
+    }
+  ]
 }

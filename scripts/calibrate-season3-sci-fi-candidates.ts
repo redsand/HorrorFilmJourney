@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { selectBalancedCandidates } from '../src/lib/seasons/season3/calibration-balance';
+import { deduplicateFranchiseSequels } from '../src/lib/seasons/season3/franchise-deduplication';
 import { SEASON3_SCI_FI_NODE_SLUGS } from '../src/lib/seasons/season3/taxonomy';
 
 type NodeProb = {
@@ -33,28 +34,72 @@ const OUTPUT_PATH = path.resolve('docs', 'season', 'season-3-sci-fi-candidates-c
 const REPORT_PATH = path.resolve('docs', 'season', 'season-3-sci-fi-candidates-calibration.md');
 
 const SCI_FI_GENRE_ID = 878;
+// Aligned with the 12-node Season 3 sci-fi curriculum ontology.
+// Each term maps to at least one ontology node's canonical vocabulary.
 const SCI_FI_TERMS = [
+  // Core genre identifier
   'sci fi',
   'science fiction',
+  // proto-science-fiction
+  'futurism',
+  'automaton',
+  'mad scientist',
+  // atomic-age-science-fiction
+  'atomic',
+  'radiation',
+  'nuclear',
+  // cold-war-paranoia
+  'cold war',
+  'infiltration',
+  'conformity',
+  // space-race-cinema
   'space',
+  'astronaut',
+  'orbital',
+  // new-hollywood-science-fiction
+  'dystopia',
+  'dystopian',
+  'state control',
+  // philosophical-science-fiction
+  'consciousness',
+  'identity',
+  // blockbuster-science-fiction / general
   'alien',
   'robot',
   'android',
+  // cyberpunk
   'cyberpunk',
-  'dystopian',
+  'hacker',
+  'virtual',
+  // ai-cinema
+  'artificial intelligence',
+  'sentient',
+  // alien-encounter
+  'extraterrestrial',
+  'first contact',
+  // time-travel
   'time travel',
+  'timeline',
+  'paradox',
+  // modern-speculative
   'future',
-  'multiverse',
+  'near future',
   'post apocalyptic',
+  'multiverse',
 ];
 
+// Franchise filter targets franchises where sci-fi is incidental to IP, not the
+// primary creative purpose. Star Wars is intentionally omitted — it is a direct
+// curriculum candidate for blockbuster-science-fiction.
 const FRANCHISE_PATTERNS = [
   'avengers',
   'justice league',
-  'star wars',
   'transformers',
   'fast and furious',
+  'fast furious',
   'mission impossible',
+  'godzilla vs',
+  'kong vs',
 ];
 
 function parseIntEnv(name: string, fallback: number): number {
@@ -174,8 +219,19 @@ async function main(): Promise<void> {
     }))
     .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title));
 
-  const pool = [...accepted, ...fallbackTopUp]
+  const sortedPool = [...accepted, ...fallbackTopUp]
     .sort((a, b) => b.strength - a.strength || b.sciFiScore - a.sciFiScore || a.title.localeCompare(b.title));
+
+  // Priority 8: Deduplicate franchise sequels before balanced selection.
+  // This trims valuable franchises (Back to the Future, Star Wars, Alien, etc.)
+  // to their maxFromGroup best entries, preventing a single franchise from
+  // consuming multiple curriculum slots. The pool is sorted by strength first
+  // so the best entry from each franchise is always the one that survives.
+  const { kept: pool, removed: franchiseRemoved } = deduplicateFranchiseSequels(sortedPool);
+  rejected.push(
+    ...franchiseRemoved.map((r) => ({ tmdbId: r.tmdbId, title: r.title, year: null, reason: r.reason })),
+  );
+
   const calibrated = selectBalancedCandidates(pool, {
     targetCount,
     perNodeFloor,

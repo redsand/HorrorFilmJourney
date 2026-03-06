@@ -111,6 +111,18 @@ async function fetchDiscoverPage(input: {
   if (input.plan.withoutGenres && input.plan.withoutGenres.length > 0) {
     url.searchParams.set('without_genres', input.plan.withoutGenres.join('|'));
   }
+  if (input.plan.withOriginalLanguages && input.plan.withOriginalLanguages.length > 0) {
+    url.searchParams.set('with_original_language', input.plan.withOriginalLanguages.join('|'));
+  }
+  if (input.plan.withKeywords && input.plan.withKeywords.length > 0) {
+    url.searchParams.set('with_keywords', input.plan.withKeywords.join('|'));
+  }
+  if (input.plan.withPeople && input.plan.withPeople.length > 0) {
+    url.searchParams.set('with_people', input.plan.withPeople.join('|'));
+  }
+  if (typeof input.plan.minVoteAverage === 'number') {
+    url.searchParams.set('vote_average.gte', String(input.plan.minVoteAverage));
+  }
 
   const response = await fetch(url.toString(), {
     method: 'GET',
@@ -144,7 +156,10 @@ function scoreCandidate(movie: Candidate): number {
   const discoveryPlanWeight = movie.discoveryKeys
     .map((key) => SEASON3_DISCOVERY_SCORE_WEIGHT_BY_PLAN_KEY[key] ?? 0)
     .reduce((sum, weight) => sum + weight, 0);
-  const vintageBonus = movie.year && movie.year < 2000 ? 2 : movie.year && movie.year < 2010 ? 1 : 0;
+  const vintageBonus = movie.year && movie.year < 1950 ? 4
+    : movie.year && movie.year < 2000 ? 2
+    : movie.year && movie.year < 2010 ? 1
+    : 0;
 
   let score = 0;
   score += Math.min(12, Math.log10(Math.max(1, voteCount)) * 3.4);
