@@ -16,10 +16,13 @@ param(
   ,
   [string]$Season2MasteredFile = "",
   [switch]$ImportSeason2Mastered,
+  [string]$Season3MasteredFile = "",
+  [switch]$ImportSeason3Mastered,
   [string]$Season1SnapshotFile = "",
   [switch]$ImportSeason1Snapshot,
   [switch]$UpdateSeasons,
   [switch]$PublishSeason2,
+  [switch]$PublishSeason3,
   [string]$EvidenceCorpusFile = "",
   [switch]$ImportEvidenceCorpus
 )
@@ -48,6 +51,10 @@ if (-not [string]::IsNullOrWhiteSpace($CatalogBackupFile) -and -not $Bootstrap.I
 
 if ($ImportSeason2Mastered.IsPresent -and [string]::IsNullOrWhiteSpace($Season2MasteredFile)) {
     throw "ImportSeason2Mastered requires -Season2MasteredFile."
+}
+
+if ($ImportSeason3Mastered.IsPresent -and [string]::IsNullOrWhiteSpace($Season3MasteredFile)) {
+    throw "ImportSeason3Mastered requires -Season3MasteredFile."
 }
 
 if ($ImportEvidenceCorpus.IsPresent -and [string]::IsNullOrWhiteSpace($EvidenceCorpusFile)) {
@@ -143,6 +150,20 @@ if ($ImportSeason2Mastered.IsPresent) {
   Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season2:cult -- --input $season2RemotePath`""
 }
 
+if ($ImportSeason3Mastered.IsPresent) {
+  if (-not (Test-Path $Season3MasteredFile)) {
+    throw "Season 3 mastered file not found: $Season3MasteredFile"
+  }
+  $season3Name = [System.IO.Path]::GetFileName($Season3MasteredFile)
+  $season3RemoteDir = "$RemoteAppRoot/shared/backups"
+  $season3RemotePath = "$season3RemoteDir/$season3Name"
+  Write-Host "Uploading Season 3 mastered file to remote: $season3Name"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"mkdir -p $season3RemoteDir`""
+  Exec-OrThrow "scp -i `"$resolvedKey`" `"$Season3MasteredFile`" ${User}@${HostName}:$season3RemotePath"
+  Write-Host "Importing Season 3 mastered file on remote"
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; npm run import:season3:sci-fi -- --input $season3RemotePath`""
+}
+
 if ($ImportSeason1Snapshot.IsPresent) {
   if (-not (Test-Path $Season1SnapshotFile)) {
     throw "Season 1 snapshot file not found: $Season1SnapshotFile"
@@ -173,8 +194,9 @@ if ($ImportSeason1Snapshot.IsPresent) {
 
 if ($UpdateSeasons.IsPresent) {
   Write-Host "Running season update pipeline on remote"
-  $publishFlag = if ($PublishSeason2.IsPresent) { "PUBLISH_SEASON2_ON_UPDATE=true" } else { "PUBLISH_SEASON2_ON_UPDATE=false" }
-  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; $publishFlag npm run update:seasons`""
+  $publish2Flag = if ($PublishSeason2.IsPresent) { "PUBLISH_SEASON2_ON_UPDATE=true" } else { "PUBLISH_SEASON2_ON_UPDATE=false" }
+  $publish3Flag = if ($PublishSeason3.IsPresent) { "PUBLISH_SEASON3_ON_UPDATE=true" } else { "PUBLISH_SEASON3_ON_UPDATE=false" }
+  Exec-OrThrow "ssh -i `"$resolvedKey`" ${User}@${HostName} `"set -a; . $RemoteAppRoot/shared/.env; set +a; cd $RemoteAppRoot/current; $publish2Flag $publish3Flag npm run update:seasons`""
 }
 
 

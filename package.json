@@ -38,6 +38,7 @@
     "export:season2:cult": "tsx scripts/export-season2-mastered.ts",
     "export:season2:canonical": "tsx scripts/export-season2-canonical.ts",
     "import:season2:cult": "tsx scripts/import-season2-mastered.ts",
+    "import:season3:sci-fi": "tsx scripts/import-season3-mastered.ts",
     "export:season1:snapshot": "tsx scripts/export-season1-snapshot.ts",
     "import:season1:snapshot": "tsx scripts/import-season1-snapshot.ts",
     "catalog:backup": "tsx scripts/catalog-backup.ts",
