@@ -215,13 +215,16 @@ async function main(): Promise<void> {
     const result = await fetchWikipediaFull(film.wikipediaTitle);
     if (result) {
       documents.push({
-        movieId: `tmdb:${film.tmdbId}`,
+        movieTmdbId: film.tmdbId,
         seasonSlug: SEASON_SLUG,
         sourceName: 'wikipedia',
         url: result.url,
         title: film.title,
         content: result.content,
+        contentHash: contentHash(result.content),
+        publishedAt: null,
         license: 'CC-BY-SA',
+        chunks: [],
       });
       process.stdout.write(`ok (${result.content.length} chars)\n`);
       wikiOk++;
@@ -241,13 +244,16 @@ async function main(): Promise<void> {
     const content = await fetchExternalContent(source.url);
     if (content) {
       documents.push({
-        movieId: `tmdb:${source.tmdbId}`,
+        movieTmdbId: source.tmdbId,
         seasonSlug: SEASON_SLUG,
         sourceName: source.sourceName,
         url: source.url,
         title: source.label,
         content,
+        contentHash: contentHash(content),
+        publishedAt: null,
         license: source.license,
+        chunks: [],
       });
       process.stdout.write(`ok (${content.length} chars)\n`);
       extOk++;
@@ -266,6 +272,7 @@ async function main(): Promise<void> {
     pack: 'sci-fi',
     movieCount: FILMS.length,
     documentCount: documents.length,
+    chunkCount: 0,
     documents,
   };
   await fs.writeFile(OUTPUT_PATH, `${JSON.stringify(corpus, null, 2)}\n`, 'utf8');
