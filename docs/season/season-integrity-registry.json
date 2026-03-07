@@ -33,7 +33,7 @@
       "packName": "Sci-Fi",
       "taxonomyVersion": "season-3-sci-fi-v1",
       "snapshotFormat": "mastered-nodes",
-      "snapshotPath": "docs/season/season-3-sci-fi-mastered.template.json",
+      "snapshotPath": "docs/season/season-3-sci-fi-mastered.json",
       "anchorPath": "docs/season/season-3-sci-fi-anchors.json",
       "fallbackPath": "docs/season/season-3-sci-fi-fallback-candidates.json",
       "governancePath": "docs/season/season-3-sci-fi-node-governance.json",

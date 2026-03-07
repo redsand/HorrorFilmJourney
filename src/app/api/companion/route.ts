@@ -257,6 +257,11 @@ function formatRuntime(runtimeMinutes?: number): string {
   return `${h}h ${m}m`;
 }
 
+function stripCitationTokens(text: string): string {
+    return text.replace(/\s*\[doc:[^\]\s]+\s+chunk:[^\]\s]+\]/g, '').trim();
+}
+
+
 function parseYear(value?: string): number | undefined {
   if (!value || value.length < 4) {
     return undefined;
@@ -643,7 +648,7 @@ function enforceGroundedCompanionOutput(
 
   const [lightSummary] = enforceCitationCoverage([llmOutput.lightSummary], groundingChunks);
   const [fullSummary] = enforceCitationCoverage([llmOutput.fullSummary], groundingChunks);
-  const trivia = enforceCitationCoverage(llmOutput.trivia, groundingChunks).slice(0, 5);
+  const trivia = enforceCitationCoverage(llmOutput.trivia, groundingChunks).map(stripCitationTokens).slice(0, 5);
 
   return {
     lightSummary: lightSummary ?? llmOutput.lightSummary,
@@ -929,26 +934,27 @@ function buildSections(
     `Genre lineage: connect this title's ${genresText} patterns to modern horror techniques.`,
   ];
   const topCast = input.facts?.cast.slice(0, 3).map((item) => item.name).join(', ');
-  const fallbackTrivia = [
-    topCast
-      ? `Top-billed cast includes ${topCast}.`
-      : 'Companion prompt: notice recurring visual motifs and how often they return.',
-    input.facts?.director
-      ? `Directed by ${input.facts.director}.`
-      : `${title} director metadata is currently unavailable.`,
-    input.facts?.genres.length
-      ? `Primary genre tags: ${input.facts.genres.join(', ')}.`
-      : `${title} genre metadata is currently limited.`,
-    input.facts?.runtimeMinutes ? `Runtime: ${formatRuntime(input.facts.runtimeMinutes)}.` : 'Runtime metadata is currently unavailable.',
-    typeof input.facts?.popularity === 'number' ? `TMDB popularity index: ${input.facts.popularity}.` : 'TMDB popularity index unavailable.',
-    evidenceCount > 0
-      ? `Evidence-backed notes available: ${evidenceCount} source${evidenceCount === 1 ? '' : 's'}.`
-      : 'No evidence packets are currently stored for this title.',
-    year ? `Release window note: ${title} (${year}) reflects genre patterns of its period.` : `Release window note for ${title} is unknown.`,
-    input.facts?.tagline
-      ? `Tagline focus: "${firstLine(input.facts.tagline, 90)}".`
-      : `${title} trivia fallback: production trivia is limited in local metadata.`,
+
+  const genericTriviaPrompts = [
+    `What specific camera technique or lighting choice in ${title} creates its most memorable shot?`,
+    `Which scene in ${title} required the most takes, and what made it difficult to capture?`,
+    `How did the production design of ${title} reflect or contrast with its genre conventions?`,
+    `What behind-the-scenes story from ${title} became industry legend?`,
+    `Which practical effect in ${title} was more challenging than expected?`,
+    `What alternate ending was considered for ${title}?`,
+    `How did the sound design in ${title} enhance its emotional impact?`,
+    `Which actor in ${title} improvised a line that made the final cut?`,
+    `What location challenge nearly disrupted the ${title} shoot?`,
+    `Which visual motif in ${title} was added during post-production?`,
   ];
+  const fallbackTrivia: string[] = [];
+  for (let i = 0; i < 5 && fallbackTrivia.length < 5; i++) {
+    const prompt = genericTriviaPrompts[i % genericTriviaPrompts.length];
+    if (!trivia.includes(prompt)) {
+      fallbackTrivia.push(prompt);
+    }
+  }
+
   const trivia = [...(llmOutput?.trivia ?? [])];
   for (const line of fallbackTrivia) {
     if (trivia.length >= 5) {
@@ -1056,7 +1062,7 @@ export async function GET(request: Request): Promise<Response> {
     seasonSlug: effectivePack.seasonSlug,
     packSlug: effectivePack.packSlug,
     packId: effectivePack.packId,
-    query: `${movie.title} production history reception influence`,
+    query: `${movie.title} behind the scenes production trivia filming anecdotes director interview cast preparation`,
     includeExternalReadings: true,
     requireSeasonContext: true,
     callerId: 'api:companion',

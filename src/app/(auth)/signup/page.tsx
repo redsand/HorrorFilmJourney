@@ -14,9 +14,9 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
-      <Card className="w-full max-w-sm">
-        <h1 className="text-xl font-semibold">Sign up</h1>
+    
+      <Card className="w-full max-w-sm rounded-2xl border border-[rgba(193,18,31,0.5)] bg-[rgba(8,8,10,0.96)] p-7 shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
+        <h1 className="text-xl font-semibold text-center">Sign up</h1>
         <form
           className="mt-4 space-y-3"
           onSubmit={async (event) => {
@@ -50,6 +50,6 @@ export default function SignupPage() {
           <Button className="w-full" type="submit">{loading ? 'Creating account...' : 'Create account'}</Button>
         </form>
       </Card>
-    </main>
+    
   );
 }
