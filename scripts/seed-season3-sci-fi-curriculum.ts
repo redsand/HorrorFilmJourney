@@ -116,6 +116,7 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient();
   const apiKey = process.env.TMDB_API_KEY?.trim();
   const nodeSize = parseIntEnv('SEASON3_NODE_SIZE', 40);
+  const extendedSize = parseIntEnv('SEASON3_EXTENDED_SIZE', 60);
   const runId = process.env.SEASON3_ASSIGNMENT_RUN_ID?.trim() || `season3-seed-${new Date().toISOString()}`;
   const publish = process.argv.includes('--apply');
   const inputArg = process.argv.find((arg) => arg.startsWith('--input='))?.slice('--input='.length).trim();
@@ -181,8 +182,9 @@ async function main(): Promise<void> {
 
     const sortedNodes = nodes.sort((a, b) => a.orderIndex - b.orderIndex);
     const usedTmdb = new Set<number>();
-    const assignments: Array<{ nodeId: string; nodeSlug: string; tmdbId: number; rank: number; coreRank: number }> = [];
+    const assignments: Array<{ nodeId: string; nodeSlug: string; tmdbId: number; rank: number; coreRank: number; tier: 'CORE' | 'EXTENDED' }> = [];
     const perNodeCount = new Map(sortedNodes.map((node) => [node.id, 0]));
+    const perNodeExtendedCount = new Map(sortedNodes.map((node) => [node.id, 0]));
 
     const pickBestForNode = (nodeSlug: string, requirePositiveSignal: boolean): Candidate | null => {
       let best: { candidate: Candidate; score: number; base: number } | null = null;
@@ -200,36 +202,39 @@ async function main(): Promise<void> {
       return best?.candidate ?? null;
     };
 
-    const roundRobinAssign = (requirePositiveSignal: boolean): boolean => {
+    const roundRobinAssign = (requirePositiveSignal: boolean, tier: 'CORE' | 'EXTENDED'): boolean => {
       let assignedAny = false;
+      const targetSize = tier === 'CORE' ? nodeSize : extendedSize;
+      const countMap = tier === 'CORE' ? perNodeCount : perNodeExtendedCount;
+
       for (const node of sortedNodes) {
-        const count = perNodeCount.get(node.id) ?? 0;
-        if (count >= nodeSize) continue;
+        const count = countMap.get(node.id) ?? 0;
+        if (count >= targetSize) continue;
         const picked = pickBestForNode(node.slug, requirePositiveSignal);
         if (!picked) continue;
         usedTmdb.add(picked.tmdbId);
-        const nextRank = count + 1;
-        perNodeCount.set(node.id, nextRank);
+        const nextRank = (tier === 'CORE' ? 0 : nodeSize) + count + 1;
+        countMap.set(node.id, count + 1);
         assignments.push({
           nodeId: node.id,
           nodeSlug: node.slug,
           tmdbId: picked.tmdbId,
           rank: nextRank,
-          coreRank: nextRank,
+          coreRank: tier === 'CORE' ? nextRank : 0,
+          tier,
         });
         assignedAny = true;
       }
       return assignedAny;
     };
 
-    // Pass 1: assign only candidates with explicit signal for each node.
-    while (roundRobinAssign(true)) {
-      // continue until no node can be filled with a positive signal candidate.
-    }
-    // Pass 2: soft backfill remaining slots if candidates remain.
-    while (roundRobinAssign(false)) {
-      // continue until no further candidates remain or all nodes hit nodeSize.
-    }
+    // CORE Pass 1: explicit signal
+    while (roundRobinAssign(true, 'CORE')) { }
+    // CORE Pass 2: soft backfill
+    while (roundRobinAssign(false, 'CORE')) { }
+
+    // EXTENDED Pass: explicit signal only for quality
+    while (roundRobinAssign(true, 'EXTENDED')) { }
 
     if (assignments.length === 0) {
       throw new Error('No assignments could be produced for Season 3.');
@@ -326,8 +331,8 @@ async function main(): Promise<void> {
             nodeId: assignment.nodeId,
             movieId: movie.id,
             rank: assignment.rank,
-            coreRank: assignment.coreRank,
-            tier: 'CORE',
+            coreRank: assignment.coreRank > 0 ? assignment.coreRank : null,
+            tier: assignment.tier,
             source: 'season3-sci-fi-seed',
             score: 1,
             finalScore: 1,
@@ -399,30 +404,45 @@ async function main(): Promise<void> {
       timeout: 600000,
     });
 
-    const nodeMap = new Map<string, { core: Array<{ title: string; year: number | null; tmdbId: number }> }>();
-    for (const item of release.items) {
-      const bucket = nodeMap.get(item.node.slug) ?? { core: [] };
-      bucket.core.push({
-        title: item.movie.title,
-        year: item.movie.year,
-        tmdbId: item.movie.tmdbId,
-      });
+    // MASTERED SNAPSHOT GENERATION
+    const allAssigned = await prisma.nodeMovie.findMany({
+      where: {
+        node: { packId: pack.id },
+        taxonomyVersion: governance.taxonomyVersion,
+      },
+      include: {
+        node: { select: { slug: true, orderIndex: true } },
+        movie: { select: { tmdbId: true, title: true, year: true } },
+      },
+      orderBy: [{ node: { orderIndex: 'asc' } }, { rank: 'asc' }],
+    });
+
+    const nodeMap = new Map<string, { core: any[]; extended: any[] }>();
+    for (const item of allAssigned) {
+      const bucket = nodeMap.get(item.node.slug) ?? { core: [], extended: [] };
+      const film = { title: item.movie.title, year: item.movie.year, tmdbId: item.movie.tmdbId };
+      if (item.tier === 'CORE') bucket.core.push(film);
+      else bucket.extended.push(film);
       nodeMap.set(item.node.slug, bucket);
     }
+
+    const coreTotal = allAssigned.filter(a => a.tier === 'CORE').length;
+    const extendedTotal = allAssigned.filter(a => a.tier === 'EXTENDED').length;
+
     const mastered = {
       season: 'sci-fi',
       taxonomyVersion: governance.taxonomyVersion,
       summary: {
-        coreCount: release.items.length,
-        extendedCount: 0,
-        totalUnique: release.items.length,
+        coreCount: coreTotal,
+        extendedCount: extendedTotal,
+        totalUnique: new Set(allAssigned.map(a => a.movieId)).size,
       },
       nodes: nodes
         .sort((a, b) => a.orderIndex - b.orderIndex)
         .map((node) => ({
           slug: node.slug,
           core: nodeMap.get(node.slug)?.core ?? [],
-          extended: [],
+          extended: nodeMap.get(node.slug)?.extended ?? [],
         })),
       status: publish ? 'final' : 'draft',
       finalizedAt: publish ? new Date().toISOString() : null,

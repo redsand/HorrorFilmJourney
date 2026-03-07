@@ -179,16 +179,20 @@ export default async function LandingPage() {
                     From Metropolis to Interstellar — 12 sub-genres tracing humanity&apos;s dreams and fears through atomic anxiety, space exploration, cyberpunk dystopias, and AI ethics.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
-                    {['Atomic Age', 'Space Race', 'Cyberpunk', 'AI Cinema', 'Time Travel', 'Modern Speculative'].map((genre) => (
+                    {['Proto-Sci-Fi', 'Atomic Age', 'Space Race', 'New Hollywood', 'Cyberpunk', 'AI Cinema', 'Alien Encounter', 'Time Travel'].map((genre) => (
                       <span key={genre} className="rounded bg-[rgba(255,255,255,0.06)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">{genre}</span>
                     ))}
-                    <span className="rounded bg-[rgba(255,255,255,0.04)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">+6 more</span>
+                    <span className="rounded bg-[rgba(255,255,255,0.04)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">+4 more</span>
                   </div>
                 </div>
                 <div className="hidden sm:flex flex-col items-end gap-1">
                   <div className="text-right">
-                    <span className="text-2xl font-semibold">1,600+</span>
+                    <span className="text-2xl font-semibold">1,200+</span>
                     <span className="ml-1 text-xs text-[var(--text-muted)]">films</span>
+                  </div>
+                  <div className="flex gap-2 text-[10px]">
+                    <span className="text-[var(--cc-accent-2)]">Core: 480</span>
+                    <span className="text-[var(--text-muted)]">Extended: 720+</span>
                   </div>
                 </div>
               </div>
