@@ -27,7 +27,7 @@ const GOVERNANCE_PATH = path.resolve('docs/season/season-3-sci-fi-node-governanc
 const MASTERED_PATH   = path.resolve('docs/season/season-3-sci-fi-mastered.json');
 const SEASON_SLUG     = 'season-3';
 const PACK_SLUG       = 'sci-fi';
-const TAXONOMY        = 'season-3-sci-fi-v1';
+const TAXONOMY        = 'season-3-sci-fi-v2';
 const MIN_CORE_PER_NODE = 20;
 const MAX_LOSS_RATE_PCT  = 5;
 

@@ -1,7 +1,7 @@
 {
   "seasonSlug": "season-3",
   "packSlug": "sci-fi",
-  "taxonomyVersion": "season-3-sci-fi-v1",
+  "taxonomyVersion": "season-3-sci-fi-v2",
   "defaults": {
     "threshold": 0.65,
     "targetSize": 48,
@@ -14,12 +14,32 @@
       "targetSize": 48,
       "minEligible": 24
     },
-    "space-opera": {
+    "atomic-age-science-fiction": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
     },
-    "hard-science-fiction": {
+    "cold-war-paranoia": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "space-race-cinema": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "new-hollywood-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "philosophical-science-fiction": {
+      "threshold": 0.65,
+      "targetSize": 48,
+      "minEligible": 24
+    },
+    "blockbuster-science-fiction": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
@@ -29,62 +49,22 @@
       "targetSize": 48,
       "minEligible": 24
     },
-    "dystopian-science-fiction": {
+    "ai-cinema": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
     },
-    "post-apocalyptic-science-fiction": {
+    "alien-encounter": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
     },
-    "time-travel-science-fiction": {
+    "time-travel": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
     },
-    "alternate-history-multiverse": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "artificial-intelligence-robotics": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "alien-contact-invasion": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "biopunk-genetic-engineering": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "military-science-fiction": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "science-fiction-horror": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "social-speculative-science-fiction": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "new-weird-cosmic-science-fiction": {
-      "threshold": 0.65,
-      "targetSize": 48,
-      "minEligible": 24
-    },
-    "retrofuturism-steampunk-dieselpunk": {
+    "modern-speculative": {
       "threshold": 0.65,
       "targetSize": 48,
       "minEligible": 24
@@ -94,29 +74,25 @@
     "disallowedPairs": [
       [
         "proto-science-fiction",
-        "retrofuturism-steampunk-dieselpunk"
+        "blockbuster-science-fiction"
       ]
     ],
     "penalizedPairs": [
       [
-        "dystopian-science-fiction",
-        "post-apocalyptic-science-fiction"
+        "atomic-age-science-fiction",
+        "cold-war-paranoia"
       ],
       [
-        "artificial-intelligence-robotics",
+        "ai-cinema",
         "cyberpunk"
       ],
       [
-        "alien-contact-invasion",
-        "military-science-fiction"
+        "alien-encounter",
+        "space-race-cinema"
       ],
       [
-        "social-speculative-science-fiction",
-        "dystopian-science-fiction"
-      ],
-      [
-        "time-travel-science-fiction",
-        "alternate-history-multiverse"
+        "modern-speculative",
+        "new-hollywood-science-fiction"
       ]
     ]
   }

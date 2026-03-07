@@ -248,10 +248,11 @@ async function main(): Promise<void> {
     }
 
     await prisma.$transaction(async (tx) => {
+      // Clear ALL existing assignments for this pack to avoid unique constraint violations
+      // when migrating between taxonomy versions that share node slugs.
       await tx.nodeMovie.deleteMany({
         where: {
           node: { packId: pack.id },
-          taxonomyVersion: governance.taxonomyVersion,
         },
       });
 
