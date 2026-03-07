@@ -47,9 +47,7 @@ function parseCli(): CliOptions {
 }
 
 async function fetchWikipediaContent(title: string, year: number | null): Promise<{ content: string; url: string } | null> {
-  const apiKey = process.env.WIKIPEDIA_API_KEY;
-  
-  // Try multiple title formats
+  // Try multiple title formats — same approach as enrich-wikipedia-full.ts (w/api.php, full article)
   const titleFormats = year
     ? [
         `${title} (${year} film)`,
@@ -60,28 +58,26 @@ async function fetchWikipediaContent(title: string, year: number | null): Promis
 
   for (const format of titleFormats) {
     try {
-      const encodedTitle = encodeURIComponent(format);
-      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`;
-      
-      const response = await fetch(url, {
-        headers: apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {},
-      });
-      
+      const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=true&titles=${encodeURIComponent(format)}&format=json&redirects=true`;
+      const response = await fetch(apiUrl, { headers: { 'User-Agent': 'CinemaCodex/1.0' } });
       if (!response.ok) continue;
-      
-      const data = await response.json() as { extract?: string; content_urls?: { desktop?: { page: string } } };
-      
-      if (data.extract && data.extract.length > 100) {
-        return {
-          content: data.extract,
-          url: data.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodedTitle}`,
-        };
-      }
+      const data = await response.json() as { query?: { pages?: Record<string, { extract?: string }> } };
+      const pages = data.query?.pages;
+      if (!pages) continue;
+      const pageId = Object.keys(pages)[0];
+      if (!pageId || pageId === '-1') continue;
+      const extract = pages[pageId]?.extract;
+      if (!extract || extract.length < 100) continue;
+      if (extract.includes('may refer to:')) continue;
+      return {
+        content: extract,
+        url: `https://en.wikipedia.org/wiki/${encodeURIComponent(format.replace(/ /g, '_'))}`,
+      };
     } catch {
       continue;
     }
   }
-  
+
   return null;
 }
 
