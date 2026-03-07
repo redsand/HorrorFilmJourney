@@ -26,7 +26,7 @@ function parseCli() {
     throw new Error('Missing required flag: --season <season-1|season-2>');
   }
   const season = args[seasonIndex + 1];
-  if (!['season-1', 'season-2'].includes(season)) {
+  if (!['season-1', 'season-2', 'season-3'].includes(season)) {
     throw new Error('Invalid season: ' + season);
   }
   return { season };
@@ -56,7 +56,7 @@ function extractPageTitleFromUrl(url) {
 
 async function main() {
   const { season } = parseCli();
-  const packMap = { 'season-1': 'horror', 'season-2': 'cult-classics' };
+  const packMap = { 'season-1': 'horror', 'season-2': 'cult-classics', 'season-3': 'sci-fi' };
   const corpusPath = resolve('docs/evidence/' + season + '-' + packMap[season] + '-corpus.json');
   console.log('Enriching:', corpusPath);
   const corpusData = await readFile(corpusPath, 'utf-8');

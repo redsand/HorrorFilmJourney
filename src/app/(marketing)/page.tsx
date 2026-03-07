@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -52,7 +52,7 @@ export default async function LandingPage() {
           <div className="relative">
             <div className="flex justify-center">
               <Image
-                src="/cinemacodex.png"
+                src="/cinemacodex_cropped_optimized.png"
                 alt="CinemaCodex"
                 width={480}
                 height={270}
@@ -107,31 +107,92 @@ export default async function LandingPage() {
 
         {/* Active seasons */}
         <section>
-          <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">Current Curriculum</p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {[
-              {
-                season: 'Season 1',
-                name: 'Horror Classics',
-                desc: 'The definitive canon — Psycho, The Shining, Hereditary, and 40+ essential films that built the genre.',
-                badge: 'Active',
-              },
-              {
-                season: 'Season 2',
-                name: 'Cult Cinema',
-                desc: 'Midnight movies, transgressive art, and overlooked masterpieces from the margins of film history.',
-                badge: 'New',
-              },
-            ].map(({ season, name, desc, badge }) => (
-              <Card key={season} className="border-[rgba(193,18,31,0.35)]">
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">{season}</p>
-                  <span className="rounded-full bg-[rgba(193,18,31,0.18)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--cc-accent-2)]">{badge}</span>
+          <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">Our Curriculum</p>
+          <div className="space-y-4">
+            {/* Season 1 */}
+            <Card className="border-[rgba(193,18,31,0.35)]">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold">Horror Classics</h3>
+                    <span className="rounded-full bg-[rgba(34,197,94,0.15)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-green-400">Active</span>
+                  </div>
+                  <p className="mt-1.5 text-sm leading-6 text-[var(--text-muted)]">
+                    The definitive canon — from silent-era terrors to modern masterpieces. 16 sub-genres spanning supernatural, psychological, slasher, cosmic horror, and beyond.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {['Supernatural', 'Psychological', 'Slasher', 'Creature', 'Body Horror', 'Cosmic', 'Folk', 'Gothic'].map((genre) => (
+                      <span key={genre} className="rounded bg-[rgba(255,255,255,0.06)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">{genre}</span>
+                    ))}
+                    <span className="rounded bg-[rgba(255,255,255,0.04)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">+8 more</span>
+                  </div>
                 </div>
-                <h3 className="mt-1.5 text-base font-semibold">{name}</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[var(--text-muted)]">{desc}</p>
-              </Card>
-            ))}
+                <div className="hidden sm:flex flex-col items-end gap-1">
+                  <div className="text-right">
+                    <span className="text-2xl font-semibold">1,680+</span>
+                    <span className="ml-1 text-xs text-[var(--text-muted)]">films</span>
+                  </div>
+                  <div className="flex gap-2 text-[10px]">
+                    <span className="text-[var(--cc-accent-2)]">Core: 400+</span>
+                    <span className="text-[var(--text-muted)]">Extended: 1,280+</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Season 2 */}
+            <Card className="border-[rgba(193,18,31,0.35)]">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold">Cult Cinema</h3>
+                    <span className="rounded-full bg-[rgba(193,18,31,0.18)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--cc-accent-2)]">New</span>
+                  </div>
+                  <p className="mt-1.5 text-sm leading-6 text-[var(--text-muted)]">
+                    Midnight movies, grindhouse oddities, and rediscovered gems. 11 sub-genres covering psychotronic cinema, video store culture, and outsider masterpieces.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {['Midnight Movies', 'Grindhouse', 'Eurocult', 'Psychotronic', 'Cult Horror', 'Outsider'].map((genre) => (
+                      <span key={genre} className="rounded bg-[rgba(255,255,255,0.06)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">{genre}</span>
+                    ))}
+                    <span className="rounded bg-[rgba(255,255,255,0.04)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">+5 more</span>
+                  </div>
+                </div>
+                <div className="hidden sm:flex flex-col items-end gap-1">
+                  <div className="text-right">
+                    <span className="text-2xl font-semibold">560+</span>
+                    <span className="ml-1 text-xs text-[var(--text-muted)]">films</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Season 3 */}
+            <Card className="border-[rgba(193,18,31,0.25)]">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold">Science Fiction</h3>
+                    <span className="rounded-full bg-[rgba(255,255,255,0.08)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Coming Soon</span>
+                  </div>
+                  <p className="mt-1.5 text-sm leading-6 text-[var(--text-muted)]">
+                    From Metropolis to Interstellar — 12 sub-genres tracing humanity&apos;s dreams and fears through atomic anxiety, space exploration, cyberpunk dystopias, and AI ethics.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {['Atomic Age', 'Space Race', 'Cyberpunk', 'AI Cinema', 'Time Travel', 'Modern Speculative'].map((genre) => (
+                      <span key={genre} className="rounded bg-[rgba(255,255,255,0.06)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">{genre}</span>
+                    ))}
+                    <span className="rounded bg-[rgba(255,255,255,0.04)] px-2 py-0.5 text-[11px] text-[var(--text-muted)]">+6 more</span>
+                  </div>
+                </div>
+                <div className="hidden sm:flex flex-col items-end gap-1">
+                  <div className="text-right">
+                    <span className="text-2xl font-semibold">1,600+</span>
+                    <span className="ml-1 text-xs text-[var(--text-muted)]">films</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
         </section>
 
