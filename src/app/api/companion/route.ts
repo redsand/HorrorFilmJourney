@@ -947,21 +947,16 @@ function buildSections(
     `What location challenge nearly disrupted the ${title} shoot?`,
     `Which visual motif in ${title} was added during post-production?`,
   ];
-  const fallbackTrivia: string[] = [];
-  for (let i = 0; i < 5 && fallbackTrivia.length < 5; i++) {
-    const prompt = genericTriviaPrompts[i % genericTriviaPrompts.length];
-    if (!trivia.includes(prompt)) {
-      fallbackTrivia.push(prompt);
-    }
-  }
 
-  const trivia = [...(llmOutput?.trivia ?? [])];
-  for (const line of fallbackTrivia) {
-    if (trivia.length >= 5) {
-      break;
+    const trivia = [...(llmOutput?.trivia ?? [])];
+    const fallbackTrivia: string[] = [];
+    for (let i = 0; i < 5 && fallbackTrivia.length < 5; i++) {
+      const prompt = genericTriviaPrompts[i % genericTriviaPrompts.length];
+      if (!trivia.includes(prompt)) {
+        fallbackTrivia.push(prompt);
+      }
     }
-    trivia.push(line);
-  }
+
 
   if (spoilerPolicy === 'LIGHT') {
     productionNotes.push('Light hint: watch how early setup choices escalate through the midpoint.');
