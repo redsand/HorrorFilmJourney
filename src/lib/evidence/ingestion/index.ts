@@ -57,7 +57,7 @@
 
       await prisma.evidenceChunk.deleteMany({ where: { documentId: upserted.id } });
       if (chunked.chunks.length > 0) {
-        await prisma.evidenceChunk.createMany({ data: chunked.chunks.map(c => ({ id: c.id, documentId: upserted.id, chunkIndex: c.chunkIndex, text: c.text, charCount: c.charCount })) });
+        await prisma.evidenceChunk.createMany({ skipDuplicates: true, data: chunked.chunks.map(c => ({ id: c.id, documentId: upserted.id, chunkIndex: c.chunkIndex, text: c.text, charCount: c.charCount })) });
         chunksWritten += chunked.chunks.length;
       }
     }
